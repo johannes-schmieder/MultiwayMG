@@ -20,5 +20,9 @@ nalgebra.workspace = true
 cmg = { workspace = true, optional = true }
 schwarz-precond = { workspace = true, optional = true }
 
+[[example]]
+name = "feasibility_matrix"
+required-features = ["cmg", "lsmr"]
+
 [lints]
 workspace = true
