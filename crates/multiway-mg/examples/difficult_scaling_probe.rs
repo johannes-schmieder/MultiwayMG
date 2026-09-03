@@ -127,7 +127,9 @@ fn run_case(
     );
 
     if !hybrid_result.converged() || !lsmr_result.converged() {
-        return Err(format!("hybrid solver did not converge for {groups} weak-chain groups").into());
+        return Err(
+            format!("hybrid solver did not converge for {groups} weak-chain groups").into(),
+        );
     }
     Ok(())
 }
