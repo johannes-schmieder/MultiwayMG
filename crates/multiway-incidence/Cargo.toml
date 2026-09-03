@@ -1,0 +1,15 @@
+[package]
+name = "multiway-incidence"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Deterministic weighted three-way incidence operators"
+
+[dependencies]
+thiserror.workspace = true
+
+[lints]
+workspace = true
