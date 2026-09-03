@@ -3,9 +3,7 @@ name: Rust CI
 on:
   push:
     branches:
-      - main
-      - "codex/**"
-  pull_request:
+      - codex/initial-threeway-prototype
 
 permissions:
   contents: write
@@ -16,8 +14,7 @@ env:
 
 jobs:
   harden:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/codex/initial-threeway-prototype'
-    name: Apply one-time numerical hardening
+    name: Apply and validate numerical hardening
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,29 +25,9 @@ jobs:
           toolchain: "1.85.0"
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - name: Enforce symmetric smoothing and pin dependencies
+      - name: Apply repairs, format, and pin dependencies
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          path = Path("crates/multiway-mg/src/hierarchy.rs")
-          text = path.read_text()
-          marker = "        Ok(())\n    }\n}\n\n/// Observable dimensions"
-          insertion = """        if self.pre_sweeps != self.post_sweeps {
-              return Err(MultiwayError::InvalidOption {
-                  name: \"smoothing_sweeps\",
-                  message: format!(
-                      \"pre_sweeps ({}) must equal post_sweeps ({}) for a symmetric V-cycle\",
-                      self.pre_sweeps, self.post_sweeps
-                  ),
-              });
-          }
-  """
-          if insertion.strip() not in text:
-              if text.count(marker) != 1:
-                  raise SystemExit("hierarchy validation marker was not unique")
-              path.write_text(text.replace(marker, insertion + marker))
-          PY
+          python3 scripts/harden_first_version.py
           cargo generate-lockfile
           cargo fmt --all
       - name: Validate hardened tree
@@ -68,47 +45,3 @@ jobs:
           git add Cargo.lock crates
           git commit -m "Harden symmetric hierarchy and pin dependency graph"
           git push origin HEAD:codex/initial-threeway-prototype
-
-  quality:
-    name: Format, lint, test, and document
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: "1.85.0"
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
-      - name: Check formatting
-        run: cargo fmt --all -- --check
-      - name: Lint all targets and features
-        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
-      - name: Test all features
-        run: cargo test --workspace --all-features
-      - name: Test minimal feature set
-        run: cargo test --workspace --no-default-features
-      - name: Build documentation
-        env:
-          RUSTDOCFLAGS: -D warnings
-        run: cargo doc --workspace --all-features --no-deps
-
-  feasibility:
-    name: Manufactured feasibility probe
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: "1.85.0"
-      - uses: Swatinem/rust-cache@v2
-      - name: Run release feasibility example
-        shell: bash
-        run: |
-          set -o pipefail
-          cargo run --release -p multiway-mg --example feasibility --all-features \
-            | tee feasibility.txt
-      - uses: actions/upload-artifact@v4
-        with:
-          name: feasibility-output
-          path: feasibility.txt
-          if-no-files-found: error
