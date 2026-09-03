@@ -1,10 +1,14 @@
 //! Numerical edge-case tests for the first MultiwayMG research release.
 
 use multiway_mg::{
-    AggregationStrategy, DensePseudoinverse, DiagonalPreconditioner, HierarchyOptions,
-    MultiwayError, Preconditioner, ThreeWayHierarchy, ThreeWayProblem,
+    AggregationStrategy, DensePseudoinverse, HierarchyOptions, MultiwayError, ThreeWayHierarchy,
+    ThreeWayProblem,
 };
 
+#[cfg(feature = "lsmr")]
+use multiway_mg::DiagonalPreconditioner;
+#[cfg(feature = "cmg")]
+use multiway_mg::Preconditioner;
 #[cfg(feature = "lsmr")]
 use multiway_mg::{LeastSquaresOptions, solve_weighted_least_squares};
 #[cfg(feature = "cmg")]
@@ -146,6 +150,7 @@ fn complete_tuples(levels: u32, offset: u32) -> Vec<[u32; 3]> {
     tuples
 }
 
+#[cfg(feature = "cmg")]
 fn dot(left: &[f64], right: &[f64]) -> f64 {
     left.iter().zip(right).map(|(a, b)| a * b).sum()
 }
