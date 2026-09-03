@@ -60,10 +60,8 @@ impl Preconditioner for DiagonalPreconditioner {
                 out.len(),
             ));
         }
-        for ((value, &right), &inverse) in out
-            .iter_mut()
-            .zip(rhs)
-            .zip(&self.scaled_inverse_diagonal)
+        for ((value, &right), &inverse) in
+            out.iter_mut().zip(rhs).zip(&self.scaled_inverse_diagonal)
         {
             *value = inverse * right;
         }

@@ -26,11 +26,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let diagonal = DiagonalPreconditioner::new(&problem, 0.5)?;
 
     println!("MultiwayMG feasibility probe");
-    println!("  finest dimensions: {:?}", problem.topology().level_counts());
+    println!(
+        "  finest dimensions: {:?}",
+        problem.topology().level_counts()
+    );
     println!("  finest unique tuples: {}", problem.tuple_count());
-    println!("  hierarchy dimensions: {:?}", hierarchy.report().dimensions());
-    println!("  hierarchy tuple counts: {:?}", hierarchy.report().tuple_counts());
-    println!("  tuple complexity: {:.3}", hierarchy.report().tuple_complexity());
+    println!(
+        "  hierarchy dimensions: {:?}",
+        hierarchy.report().dimensions()
+    );
+    println!(
+        "  hierarchy tuple counts: {:?}",
+        hierarchy.report().tuple_counts()
+    );
+    println!(
+        "  tuple complexity: {:.3}",
+        hierarchy.report().tuple_complexity()
+    );
 
     run_pcg("diagonal", &problem, &rhs, &diagonal)?;
     run_pcg("three-way-vcycle", &problem, &rhs, &hierarchy)?;
@@ -120,12 +132,12 @@ fn manufactured_problem(
             }
         }
     }
-    Ok(ThreeWayProblem::from_observations(counts, &tuples, &weights)?)
+    Ok(ThreeWayProblem::from_observations(
+        counts, &tuples, &weights,
+    )?)
 }
 
-fn exact_targets(
-    problem: &ThreeWayProblem,
-) -> Result<Vec<f64>, Box<dyn std::error::Error>> {
+fn exact_targets(problem: &ThreeWayProblem) -> Result<Vec<f64>, Box<dyn std::error::Error>> {
     let counts = problem.topology().level_counts();
     let mut coefficients = Vec::with_capacity(problem.dimension());
     for factor in 0..3 {

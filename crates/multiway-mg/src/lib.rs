@@ -25,8 +25,7 @@ pub use hierarchy::{
 pub use jacobi::DiagonalPreconditioner;
 #[cfg(feature = "lsmr")]
 pub use lsmr::{
-    LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason,
-    solve_weighted_least_squares,
+    LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, solve_weighted_least_squares,
 };
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};

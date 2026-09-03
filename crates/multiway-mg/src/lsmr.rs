@@ -265,9 +265,7 @@ fn convert_stop_reason(reason: LsmrStopReason) -> LeastSquaresStopReason {
             LeastSquaresStopReason::InitialNormalEquationResidualZero
         }
         LsmrStopReason::ResidualTolerance => LeastSquaresStopReason::ResidualTolerance,
-        LsmrStopReason::NormalEquationTolerance => {
-            LeastSquaresStopReason::NormalEquationTolerance
-        }
+        LsmrStopReason::NormalEquationTolerance => LeastSquaresStopReason::NormalEquationTolerance,
         LsmrStopReason::WarmStartExact => LeastSquaresStopReason::WarmStartExact,
         LsmrStopReason::FalseConvergence => LeastSquaresStopReason::FalseConvergence,
         LsmrStopReason::MaxIterations => LeastSquaresStopReason::MaximumIterations,
@@ -283,17 +281,14 @@ fn external_error(context: &'static str, error: impl std::fmt::Display) -> Solve
 }
 
 fn norm(values: &[f64]) -> f64 {
-    let scale = values
-        .iter()
-        .copied()
-        .map(f64::abs)
-        .fold(0.0, f64::max);
+    let scale = values.iter().copied().map(f64::abs).fold(0.0, f64::max);
     if scale == 0.0 {
         return 0.0;
     }
-    scale * values
-        .iter()
-        .map(|value| (value / scale) * (value / scale))
-        .sum::<f64>()
-        .sqrt()
+    scale
+        * values
+            .iter()
+            .map(|value| (value / scale) * (value / scale))
+            .sum::<f64>()
+            .sqrt()
 }

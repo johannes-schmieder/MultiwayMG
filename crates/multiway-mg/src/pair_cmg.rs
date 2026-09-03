@@ -4,9 +4,7 @@ use std::collections::BTreeMap;
 
 use cmg::{CmgOptions, CmgPreconditioner, Components, Laplacian};
 
-use crate::{
-    HierarchyOptions, MultiwayError, Preconditioner, ThreeWayHierarchy, ThreeWayProblem,
-};
+use crate::{HierarchyOptions, MultiwayError, Preconditioner, ThreeWayHierarchy, ThreeWayProblem};
 
 /// Options for the three pairwise CMG corrections.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -35,10 +33,7 @@ impl PairCmgOptions {
         if !self.partition_weight.is_finite() || self.partition_weight <= 0.0 {
             return Err(MultiwayError::InvalidOption {
                 name: "partition_weight",
-                message: format!(
-                    "must be finite and positive, got {}",
-                    self.partition_weight
-                ),
+                message: format!("must be finite and positive, got {}", self.partition_weight),
             });
         }
         Ok(self)
@@ -55,10 +50,7 @@ pub struct PairCmgPreconditioner {
 
 impl PairCmgPreconditioner {
     /// Build worker--firm-style graph corrections for all three factor pairs.
-    pub fn build(
-        problem: ThreeWayProblem,
-        options: PairCmgOptions,
-    ) -> Result<Self, MultiwayError> {
+    pub fn build(problem: ThreeWayProblem, options: PairCmgOptions) -> Result<Self, MultiwayError> {
         let options = options.validate()?;
         let pairs = [
             PairSystem::build(&problem, 0, 1, options.cmg)?,
@@ -110,9 +102,7 @@ impl Preconditioner for PairCmgPreconditioner {
         for pair in &self.pairs {
             pair.accumulate(rhs, out, self.partition_weight)?;
         }
-        self.problem
-            .components()
-            .project_structural_range(out)?;
+        self.problem.components().project_structural_range(out)?;
         Ok(())
     }
 }
@@ -199,9 +189,7 @@ impl Preconditioner for HybridPairVcycle {
         let mut post = vec![0.0; dimension];
         self.pair.apply(&residual, &mut post)?;
         add_assign(out, &post);
-        self.problem
-            .components()
-            .project_structural_range(out)?;
+        self.problem.components().project_structural_range(out)?;
         Ok(())
     }
 }
@@ -233,9 +221,9 @@ impl PairSystem {
         for (&tuple, &weight) in problem.topology().tuples().iter().zip(problem.weights()) {
             *marginal.entry((tuple[first], tuple[second])).or_insert(0.0) += weight;
         }
-        let edges = marginal.into_iter().map(|((left, right), weight)| {
-            (left as usize, first_count + right as usize, weight)
-        });
+        let edges = marginal
+            .into_iter()
+            .map(|((left, right), weight)| (left as usize, first_count + right as usize, weight));
         let graph = Laplacian::from_edges(first_count + second_count, edges)
             .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
         let components = Components::from_laplacian(&graph);

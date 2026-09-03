@@ -89,8 +89,7 @@ impl HierarchyOptions {
                 });
             }
         }
-        if !self.terminal_relative_tolerance.is_finite()
-            || self.terminal_relative_tolerance <= 0.0
+        if !self.terminal_relative_tolerance.is_finite() || self.terminal_relative_tolerance <= 0.0
         {
             return Err(MultiwayError::InvalidOption {
                 name: "terminal_relative_tolerance",
@@ -100,9 +99,7 @@ impl HierarchyOptions {
                 ),
             });
         }
-        if !self.jacobi_omega.is_finite()
-            || !(0.0..(2.0 / 3.0)).contains(&self.jacobi_omega)
-        {
+        if !self.jacobi_omega.is_finite() || !(0.0..(2.0 / 3.0)).contains(&self.jacobi_omega) {
             return Err(MultiwayError::InvalidOption {
                 name: "jacobi_omega",
                 message: format!("must lie in (0, 2/3), got {}", self.jacobi_omega),
@@ -215,7 +212,9 @@ impl ThreeWayHierarchy {
                 break;
             }
             let level = aggregations.len();
-            let current = problems.last().expect("hierarchy always has a finest level");
+            let current = problems
+                .last()
+                .expect("hierarchy always has a finest level");
             let aggregation = match &options.aggregation {
                 AggregationStrategy::Affinity(affinity) => {
                     build_affinity_aggregation(current, *affinity)?
@@ -223,33 +222,30 @@ impl ThreeWayHierarchy {
                 AggregationStrategy::Consecutive => {
                     FactorAggregation::consecutive_halving(current.topology().level_counts())?
                 }
-                AggregationStrategy::Supplied(supplied) => supplied
-                    .get(level)
-                    .cloned()
-                    .ok_or(MultiwayError::HierarchyStagnated {
-                        dimension: current.dimension(),
-                        tuples: current.tuple_count(),
-                        limit: options.terminal_dimension,
-                    })?,
+                AggregationStrategy::Supplied(supplied) => {
+                    supplied
+                        .get(level)
+                        .cloned()
+                        .ok_or(MultiwayError::HierarchyStagnated {
+                            dimension: current.dimension(),
+                            tuples: current.tuple_count(),
+                            limit: options.terminal_dimension,
+                        })?
+                }
             };
             if aggregation.fine_counts() != current.topology().level_counts() {
                 return Err(MultiwayError::InvalidSuppliedAggregation { level });
             }
             let coarse = aggregation.coarsen(current)?;
-            let dimension_reduction =
-                1.0 - coarse.dimension() as f64 / current.dimension() as f64;
-            let tuple_reduction =
-                1.0 - coarse.tuple_count() as f64 / current.tuple_count() as f64;
+            let dimension_reduction = 1.0 - coarse.dimension() as f64 / current.dimension() as f64;
+            let tuple_reduction = 1.0 - coarse.tuple_count() as f64 / current.tuple_count() as f64;
             let made_progress = coarse.dimension() < current.dimension()
                 && (dimension_reduction >= options.minimum_dimension_reduction
                     || tuple_reduction >= options.minimum_tuple_reduction);
             if !made_progress {
                 break;
             }
-            smoothers.push(DiagonalPreconditioner::new(
-                current,
-                options.jacobi_omega,
-            )?);
+            smoothers.push(DiagonalPreconditioner::new(current, options.jacobi_omega)?);
             aggregations.push(aggregation);
             problems.push(coarse);
         }
@@ -292,7 +288,7 @@ impl ThreeWayHierarchy {
 
     /// Finest problem represented by the hierarchy.
     #[must_use]
-    pub const fn finest_problem(&self) -> &ThreeWayProblem {
+    pub fn finest_problem(&self) -> &ThreeWayProblem {
         &self.problems[0]
     }
 

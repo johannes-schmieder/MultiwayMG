@@ -159,7 +159,11 @@ impl ThreeWayProblem {
 
     /// Compute `out = B x`.
     pub fn apply_incidence(&self, x: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
-        validate_len("ThreeWayProblem::apply_incidence input", self.dimension(), x.len())?;
+        validate_len(
+            "ThreeWayProblem::apply_incidence input",
+            self.dimension(),
+            x.len(),
+        )?;
         validate_len(
             "ThreeWayProblem::apply_incidence output",
             self.tuple_count(),
@@ -208,11 +212,7 @@ impl ThreeWayProblem {
     }
 
     /// Compute `out = B^T sqrt(W) y`.
-    pub fn apply_weighted_adjoint(
-        &self,
-        y: &[f64],
-        out: &mut [f64],
-    ) -> Result<(), IncidenceError> {
+    pub fn apply_weighted_adjoint(&self, y: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
         validate_len(
             "ThreeWayProblem::apply_weighted_adjoint input",
             self.tuple_count(),
@@ -241,7 +241,11 @@ impl ThreeWayProblem {
 
     /// Compute `out = G x`, where `G = B^T W B`.
     pub fn apply_gramian(&self, x: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
-        validate_len("ThreeWayProblem::apply_gramian input", self.dimension(), x.len())?;
+        validate_len(
+            "ThreeWayProblem::apply_gramian input",
+            self.dimension(),
+            x.len(),
+        )?;
         validate_len(
             "ThreeWayProblem::apply_gramian output",
             self.dimension(),
@@ -345,7 +349,11 @@ impl CompensatedSum {
     }
 }
 
-fn validate_len(context: &'static str, expected: usize, actual: usize) -> Result<(), IncidenceError> {
+fn validate_len(
+    context: &'static str,
+    expected: usize,
+    actual: usize,
+) -> Result<(), IncidenceError> {
     if expected != actual {
         return Err(crate::error::dimension(context, expected, actual));
     }

@@ -174,10 +174,7 @@ fn pair_cmg_and_hybrid_are_symmetric_and_usable() {
     )
     .expect("hybrid construction succeeds");
 
-    for preconditioner in [
-        &pair as &dyn Preconditioner,
-        &hybrid as &dyn Preconditioner,
-    ] {
+    for preconditioner in [&pair as &dyn Preconditioner, &hybrid as &dyn Preconditioner] {
         let mut left: Vec<f64> = (0..problem.dimension())
             .map(|index| (index as f64 * 0.23).sin())
             .collect();

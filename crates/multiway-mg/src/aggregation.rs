@@ -26,9 +26,7 @@ impl Default for AffinityAggregationOptions {
 
 impl AffinityAggregationOptions {
     fn validate(self) -> Result<Self, MultiwayError> {
-        if !self.minimum_affinity.is_finite()
-            || !(0.0..=1.0).contains(&self.minimum_affinity)
-        {
+        if !self.minimum_affinity.is_finite() || !(0.0..=1.0).contains(&self.minimum_affinity) {
             return Err(MultiwayError::InvalidOption {
                 name: "minimum_affinity",
                 message: format!(
@@ -40,10 +38,7 @@ impl AffinityAggregationOptions {
         if self.maximum_context_degree < 2 {
             return Err(MultiwayError::InvalidOption {
                 name: "maximum_context_degree",
-                message: format!(
-                    "must be at least two, got {}",
-                    self.maximum_context_degree
-                ),
+                message: format!("must be at least two, got {}", self.maximum_context_degree),
             });
         }
         Ok(self)

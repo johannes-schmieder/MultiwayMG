@@ -19,10 +19,7 @@ pub struct FactorAggregation {
 
 impl FactorAggregation {
     /// Validate factor-local parent labels and construct an aggregation.
-    pub fn new(
-        fine_counts: [usize; 3],
-        parents: [Vec<u32>; 3],
-    ) -> Result<Self, IncidenceError> {
+    pub fn new(fine_counts: [usize; 3], parents: [Vec<u32>; 3]) -> Result<Self, IncidenceError> {
         let mut coarse_counts = [0; 3];
         for factor in 0..3 {
             if parents[factor].len() != fine_counts[factor] {
@@ -59,9 +56,7 @@ impl FactorAggregation {
     /// Identity aggregation.
     pub fn identity(fine_counts: [usize; 3]) -> Result<Self, IncidenceError> {
         let parents = core::array::from_fn(|factor| {
-            (0..fine_counts[factor])
-                .map(|level| level as u32)
-                .collect()
+            (0..fine_counts[factor]).map(|level| level as u32).collect()
         });
         Self::new(fine_counts, parents)
     }

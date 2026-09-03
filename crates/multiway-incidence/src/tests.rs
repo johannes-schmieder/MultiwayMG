@@ -75,8 +75,7 @@ fn mapped_tuples_equal_dense_galerkin_product() {
         &[1.0; 8],
     )
     .expect("valid fine problem");
-    let aggregation = FactorAggregation::consecutive_halving([4, 4, 4])
-        .expect("valid aggregation");
+    let aggregation = FactorAggregation::consecutive_halving([4, 4, 4]).expect("valid aggregation");
     let coarse = aggregation.coarsen(&fine).expect("coarsening succeeds");
 
     let fine_matrix = fine.dense_gramian();

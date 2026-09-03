@@ -16,7 +16,9 @@ pub enum IncidenceError {
     #[error("tuple count {tuples} does not match weight count {weights}")]
     WeightLengthMismatch { tuples: usize, weights: usize },
     /// A tuple referenced a level outside its factor.
-    #[error("tuple {tuple_index} factor {factor} level {level} is outside level count {level_count}")]
+    #[error(
+        "tuple {tuple_index} factor {factor} level {level} is outside level count {level_count}"
+    )]
     TupleOutOfBounds {
         tuple_index: usize,
         factor: usize,
@@ -60,11 +62,7 @@ pub enum IncidenceError {
     DimensionOverflow { context: &'static str },
 }
 
-pub(crate) fn dimension(
-    context: &'static str,
-    expected: usize,
-    actual: usize,
-) -> IncidenceError {
+pub(crate) fn dimension(context: &'static str, expected: usize, actual: usize) -> IncidenceError {
     IncidenceError::DimensionMismatch {
         context,
         expected,

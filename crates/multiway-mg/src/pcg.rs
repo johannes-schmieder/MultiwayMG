@@ -316,19 +316,16 @@ fn dot(left: &[f64], right: &[f64]) -> f64 {
 }
 
 fn norm(values: &[f64]) -> f64 {
-    let scale = values
-        .iter()
-        .copied()
-        .map(f64::abs)
-        .fold(0.0, f64::max);
+    let scale = values.iter().copied().map(f64::abs).fold(0.0, f64::max);
     if scale == 0.0 {
         return 0.0;
     }
-    scale * values
-        .iter()
-        .map(|value| (value / scale) * (value / scale))
-        .sum::<f64>()
-        .sqrt()
+    scale
+        * values
+            .iter()
+            .map(|value| (value / scale) * (value / scale))
+            .sum::<f64>()
+            .sqrt()
 }
 
 fn ensure_finite(context: &'static str, values: &[f64]) -> Result<(), MultiwayError> {

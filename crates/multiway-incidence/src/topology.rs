@@ -25,16 +25,18 @@ impl ThreeWayTopology {
         }
 
         let offset_1 = level_counts[0];
-        let offset_2 = offset_1
-            .checked_add(level_counts[1])
-            .ok_or(IncidenceError::DimensionOverflow {
-                context: "topology factor offsets",
-            })?;
-        let total = offset_2
-            .checked_add(level_counts[2])
-            .ok_or(IncidenceError::DimensionOverflow {
-                context: "topology total levels",
-            })?;
+        let offset_2 =
+            offset_1
+                .checked_add(level_counts[1])
+                .ok_or(IncidenceError::DimensionOverflow {
+                    context: "topology factor offsets",
+                })?;
+        let total =
+            offset_2
+                .checked_add(level_counts[2])
+                .ok_or(IncidenceError::DimensionOverflow {
+                    context: "topology total levels",
+                })?;
         let offsets = [0, offset_1, offset_2, total];
 
         for (tuple_index, tuple) in tuples.iter().enumerate() {

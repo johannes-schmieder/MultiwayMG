@@ -15,7 +15,9 @@ pub enum MultiwayError {
     #[error("invalid option {name}: {message}")]
     InvalidOption { name: &'static str, message: String },
     /// Automatic coarsening stopped while the dense terminal remained too large.
-    #[error("hierarchy stagnated at dimension {dimension} with {tuples} tuples; dense terminal limit is {limit}")]
+    #[error(
+        "hierarchy stagnated at dimension {dimension} with {tuples} tuples; dense terminal limit is {limit}"
+    )]
     HierarchyStagnated {
         dimension: usize,
         tuples: usize,
@@ -47,11 +49,7 @@ pub enum MultiwayError {
     Lsmr(String),
 }
 
-pub(crate) fn dimension(
-    context: &'static str,
-    expected: usize,
-    actual: usize,
-) -> MultiwayError {
+pub(crate) fn dimension(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
     MultiwayError::DimensionMismatch {
         context,
         expected,
