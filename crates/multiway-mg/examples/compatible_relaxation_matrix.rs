@@ -3,10 +3,9 @@
 use std::collections::BTreeMap;
 
 use multiway_mg::{
-    AffinityAggregationOptions, CompatibleRelaxationOptions, FactorAggregation,
-    PairCmgOptions, PairCmgPreconditioner, PairNeighborhoodAggregationOptions,
-    Preconditioner, SymmetricMapPreconditioner, ThreeWayProblem,
-    DiagonalPreconditioner, analyze_compatible_relaxation,
+    AffinityAggregationOptions, CompatibleRelaxationOptions, DiagonalPreconditioner,
+    FactorAggregation, PairCmgOptions, PairCmgPreconditioner, PairNeighborhoodAggregationOptions,
+    Preconditioner, SymmetricMapPreconditioner, ThreeWayProblem, analyze_compatible_relaxation,
     build_affinity_aggregation, build_pair_neighborhood_aggregation,
 };
 
@@ -70,10 +69,7 @@ fn run_case(case: &Case) -> Result<(), Box<dyn std::error::Error>> {
 
     let diagonal = DiagonalPreconditioner::new(&case.problem, 0.5)?;
     let symmetric_map = SymmetricMapPreconditioner::new(case.problem.clone());
-    let pair_cmg = PairCmgPreconditioner::build(
-        case.problem.clone(),
-        PairCmgOptions::default(),
-    )?;
+    let pair_cmg = PairCmgPreconditioner::build(case.problem.clone(), PairCmgOptions::default())?;
     let smoothers: [(&str, &dyn Preconditioner, f64); 3] = [
         ("weighted-jacobi", &diagonal, 1.0),
         ("symmetric-map", &symmetric_map, 1.0),
@@ -107,12 +103,8 @@ fn run_case(case: &Case) -> Result<(), Box<dyn std::error::Error>> {
                 seed: 0x4d57_4d47_4352_3031,
                 relative_zero_tolerance: 1.0e-13,
             };
-            let report = analyze_compatible_relaxation(
-                &case.problem,
-                &aggregation,
-                smoother,
-                options,
-            )?;
+            let report =
+                analyze_compatible_relaxation(&case.problem, &aggregation, smoother, options)?;
             let max_energy = report.maximum_energy_contraction();
             let mean_energy = report.geometric_mean_energy_contraction();
             println!(
@@ -375,9 +367,8 @@ fn planted_communities(
                 } else {
                     bridge_weight
                 };
-                weights.push(
-                    base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0),
-                );
+                weights
+                    .push(base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0));
             }
         }
     }
@@ -443,11 +434,7 @@ fn nearly_nested(
         for second in 0..levels {
             tuples.push([first as u32, second as u32, first as u32]);
             weights.push(1.0 + ((first + 2 * second) % 7) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((first + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((first + 1) % levels) as u32]);
             weights.push(perturbation_weight);
         }
     }
@@ -472,9 +459,7 @@ fn disconnected_latin(
                     (offset + second) as u32,
                     (offset + (first + second) % levels_per_component) as u32,
                 ]);
-                weights.push(
-                    0.9 + ((component + 3 * first + 5 * second) % 9) as f64 / 10.0,
-                );
+                weights.push(0.9 + ((component + 3 * first + 5 * second) % 9) as f64 / 10.0);
             }
         }
     }
