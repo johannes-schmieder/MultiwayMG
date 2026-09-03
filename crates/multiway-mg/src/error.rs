@@ -45,6 +45,12 @@ pub enum MultiwayError {
         /// Absolute eigenvalue tolerance.
         tolerance: f64,
     },
+    /// Dense research spectral analysis failed.
+    #[error("spectral analysis failed: {message}")]
+    SpectralAnalysis {
+        /// Failure description.
+        message: String,
+    },
     /// A vector had the wrong dimension.
     #[error("{context}: expected length {expected}, got {actual}")]
     DimensionMismatch {
