@@ -1,17 +1,21 @@
 //! Weighted three-way problem construction and matrix-free kernels.
 
-use std::collections::BTreeMap;
+use std::{collections::BTreeMap, sync::Arc};
 
 use crate::{IncidenceComponents, IncidenceError, ThreeWayTopology};
 
 /// A collapsed weighted three-way incidence problem.
+///
+/// Cloning is intentionally cheap: immutable topology, numerical weights,
+/// diagonal state, and component metadata are shared through reference-counted
+/// storage. Distinct hierarchy levels still own distinct problem states.
 #[derive(Debug, Clone, PartialEq)]
 pub struct ThreeWayProblem {
-    topology: ThreeWayTopology,
-    weights: Vec<f64>,
-    square_root_weights: Vec<f64>,
-    diagonal: Vec<f64>,
-    components: IncidenceComponents,
+    topology: Arc<ThreeWayTopology>,
+    weights: Arc<[f64]>,
+    square_root_weights: Arc<[f64]>,
+    diagonal: Arc<[f64]>,
+    components: Arc<IncidenceComponents>,
 }
 
 impl ThreeWayProblem {
@@ -70,7 +74,7 @@ impl ThreeWayProblem {
                 weights: weights.len(),
             });
         }
-        let topology = ThreeWayTopology::new(level_counts, tuples)?;
+        let topology = Arc::new(ThreeWayTopology::new(level_counts, tuples)?);
         let mut square_root_weights = Vec::with_capacity(weights.len());
         for (tuple_index, &weight) in weights.iter().enumerate() {
             if !weight.is_finite() || weight <= 0.0 {
@@ -105,49 +109,49 @@ impl ThreeWayProblem {
             }
         }
 
-        let components = IncidenceComponents::from_topology(&topology);
+        let components = Arc::new(IncidenceComponents::from_topology(&topology));
         Ok(Self {
             topology,
-            weights,
-            square_root_weights,
-            diagonal,
+            weights: Arc::from(weights),
+            square_root_weights: Arc::from(square_root_weights),
+            diagonal: Arc::from(diagonal),
             components,
         })
     }
 
     /// Immutable tuple topology.
     #[must_use]
-    pub const fn topology(&self) -> &ThreeWayTopology {
-        &self.topology
+    pub fn topology(&self) -> &ThreeWayTopology {
+        self.topology.as_ref()
     }
 
     /// Positive collapsed tuple weights.
     #[must_use]
     pub fn weights(&self) -> &[f64] {
-        &self.weights
+        self.weights.as_ref()
     }
 
     /// Square roots of the collapsed tuple weights.
     #[must_use]
     pub fn square_root_weights(&self) -> &[f64] {
-        &self.square_root_weights
+        self.square_root_weights.as_ref()
     }
 
     /// Diagonal of `B^T W B` in global factor-block order.
     #[must_use]
     pub fn diagonal(&self) -> &[f64] {
-        &self.diagonal
+        self.diagonal.as_ref()
     }
 
     /// Connected incidence components.
     #[must_use]
-    pub const fn components(&self) -> &IncidenceComponents {
-        &self.components
+    pub fn components(&self) -> &IncidenceComponents {
+        self.components.as_ref()
     }
 
     /// Number of coefficient coordinates.
     #[must_use]
-    pub const fn dimension(&self) -> usize {
+    pub fn dimension(&self) -> usize {
         self.topology.total_levels()
     }
 
@@ -205,7 +209,7 @@ impl ThreeWayProblem {
         out: &mut [f64],
     ) -> Result<(), IncidenceError> {
         self.apply_incidence(x, out)?;
-        for (value, &sqrt_weight) in out.iter_mut().zip(&self.square_root_weights) {
+        for (value, &sqrt_weight) in out.iter_mut().zip(self.square_root_weights.iter()) {
             *value *= sqrt_weight;
         }
         Ok(())
@@ -229,7 +233,7 @@ impl ThreeWayProblem {
             .tuples()
             .iter()
             .zip(y)
-            .zip(&self.square_root_weights)
+            .zip(self.square_root_weights.iter())
         {
             let contribution = sqrt_weight * value;
             for factor in 0..3 {
@@ -252,7 +256,7 @@ impl ThreeWayProblem {
             out.len(),
         )?;
         out.fill(0.0);
-        for (&tuple, &weight) in self.topology.tuples().iter().zip(&self.weights) {
+        for (&tuple, &weight) in self.topology.tuples().iter().zip(self.weights.iter()) {
             let indices = [
                 self.topology.global_index(0, tuple[0]),
                 self.topology.global_index(1, tuple[1]),
@@ -271,7 +275,7 @@ impl ThreeWayProblem {
         validate_len("ThreeWayProblem::energy", self.dimension(), x.len())?;
         let mut sum = 0.0;
         let mut correction = 0.0;
-        for (&tuple, &weight) in self.topology.tuples().iter().zip(&self.weights) {
+        for (&tuple, &weight) in self.topology.tuples().iter().zip(self.weights.iter()) {
             let value = x[self.topology.global_index(0, tuple[0])]
                 + x[self.topology.global_index(1, tuple[1])]
                 + x[self.topology.global_index(2, tuple[2])];
@@ -292,7 +296,7 @@ impl ThreeWayProblem {
             .topology
             .tuples()
             .iter()
-            .zip(&self.weights)
+            .zip(self.weights.iter())
             .zip(targets)
         {
             let value = weight * target;
@@ -317,7 +321,7 @@ impl ThreeWayProblem {
     /// Materialize the dense Gramian for reference tests and small terminals.
     pub fn dense_gramian(&self) -> Vec<Vec<f64>> {
         let mut matrix = vec![vec![0.0; self.dimension()]; self.dimension()];
-        for (&tuple, &weight) in self.topology.tuples().iter().zip(&self.weights) {
+        for (&tuple, &weight) in self.topology.tuples().iter().zip(self.weights.iter()) {
             let indices = [
                 self.topology.global_index(0, tuple[0]),
                 self.topology.global_index(1, tuple[1]),
