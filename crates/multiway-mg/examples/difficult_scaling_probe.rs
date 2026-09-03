@@ -3,9 +3,9 @@
 use std::time::{Duration, Instant};
 
 use multiway_mg::{
-    DiagonalPreconditioner, HierarchyOptions, HybridPairVcycle, LeastSquaresOptions,
-    LeastSquaresResult, PairCmgOptions, PairCmgPreconditioner, PcgOptions, PcgResult,
-    Preconditioner, ThreeWayHierarchy, ThreeWayProblem, solve_projected_pcg,
+    AggregationStrategy, DiagonalPreconditioner, HierarchyOptions, HybridPairVcycle,
+    LeastSquaresOptions, LeastSquaresResult, PairCmgOptions, PairCmgPreconditioner, PcgOptions,
+    PcgResult, Preconditioner, ThreeWayHierarchy, ThreeWayProblem, solve_projected_pcg,
     solve_weighted_least_squares,
 };
 
@@ -67,9 +67,10 @@ fn run_case(
     );
 
     let hierarchy_options = HierarchyOptions {
-        terminal_dimension: 96,
+        terminal_dimension: 48,
         minimum_dimension_reduction: 0.01,
         minimum_tuple_reduction: 0.0,
+        aggregation: AggregationStrategy::Consecutive,
         ..HierarchyOptions::default()
     };
     let setup_start = Instant::now();
