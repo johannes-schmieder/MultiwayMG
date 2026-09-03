@@ -65,6 +65,12 @@ jobs:
           set -o pipefail
           cargo run --locked --release -p multiway-mg --example scaling_probe --all-features \
             | tee scaling-probe.tsv
+      - name: Run difficult weak-chain scaling probe
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo run --locked --release -p multiway-mg --example difficult_scaling_probe --all-features \
+            | tee difficult-scaling-probe.tsv
       - uses: actions/upload-artifact@v4
         with:
           name: feasibility-output
@@ -72,4 +78,5 @@ jobs:
             feasibility.txt
             feasibility-matrix.tsv
             scaling-probe.tsv
+            difficult-scaling-probe.tsv
           if-no-files-found: error
