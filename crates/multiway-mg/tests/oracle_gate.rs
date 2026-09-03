@@ -28,12 +28,9 @@ fn oracle_coarse_space_closes_the_residual_pairwise_spectral_gap() {
         .expect("pair-CMG build succeeds");
     let jacobi_hierarchy = ThreeWayHierarchy::build(finest.clone(), hierarchy_options.clone())
         .expect("oracle Jacobi hierarchy succeeds");
-    let hybrid = HybridPairVcycle::build(
-        finest.clone(),
-        hierarchy_options,
-        PairCmgOptions::default(),
-    )
-    .expect("oracle hybrid succeeds");
+    let hybrid =
+        HybridPairVcycle::build(finest.clone(), hierarchy_options, PairCmgOptions::default())
+            .expect("oracle hybrid succeeds");
 
     let pair_report = analyze_preconditioner(&finest, &pair, spectral_options)
         .expect("pair spectral analysis succeeds");
@@ -77,9 +74,8 @@ fn planted_communities(levels: usize, bridge_weight: f64) -> ThreeWayProblem {
                 } else {
                     bridge_weight
                 };
-                weights.push(
-                    base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0),
-                );
+                weights
+                    .push(base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0));
             }
         }
     }
