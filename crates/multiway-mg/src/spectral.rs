@@ -228,11 +228,15 @@ impl DenseRangeDecomposition {
         let reconstructed_range = multiply(&self.basis, &quotient);
         let mut leaked = applied_range.clone();
         subtract_assign(&mut leaked, &reconstructed_range);
-        let range_leakage = frobenius_norm(&leaked) / frobenius_norm(&applied_range).max(f64::MIN_POSITIVE);
+        let range_leakage =
+            frobenius_norm(&leaked) / frobenius_norm(&applied_range).max(f64::MIN_POSITIVE);
 
         let preconditioner_energy_decomposition = SymmetricEigen::new(quotient_symmetric.clone());
-        let mut preconditioner_energy_eigenvalues: Vec<f64> =
-            preconditioner_energy_decomposition.eigenvalues.iter().copied().collect();
+        let mut preconditioner_energy_eigenvalues: Vec<f64> = preconditioner_energy_decomposition
+            .eigenvalues
+            .iter()
+            .copied()
+            .collect();
         preconditioner_energy_eigenvalues.sort_by(f64::total_cmp);
         ensure_finite_slice(
             "quotient preconditioner energy eigenvalues",
@@ -266,8 +270,11 @@ impl DenseRangeDecomposition {
         }
         ensure_finite_matrix("energy-preconditioned Gramian", &energy_preconditioned)?;
         let preconditioned_decomposition = SymmetricEigen::new(energy_preconditioned);
-        let mut preconditioned_eigenvalues: Vec<f64> =
-            preconditioned_decomposition.eigenvalues.iter().copied().collect();
+        let mut preconditioned_eigenvalues: Vec<f64> = preconditioned_decomposition
+            .eigenvalues
+            .iter()
+            .copied()
+            .collect();
         preconditioned_eigenvalues.sort_by(f64::total_cmp);
         ensure_finite_slice("preconditioned eigenvalues", &preconditioned_eigenvalues)?;
         let minimum_preconditioned_eigenvalue = preconditioned_eigenvalues[0];
@@ -283,11 +290,9 @@ impl DenseRangeDecomposition {
             .map(|&value| (1.0 - value).abs())
             .fold(0.0, f64::max);
         let (optimal_richardson_damping, optimal_energy_spectral_radius) =
-            if minimum_preconditioned_eigenvalue > 0.0
-                && maximum_preconditioned_eigenvalue > 0.0
-            {
-                let damping = 2.0
-                    / (minimum_preconditioned_eigenvalue + maximum_preconditioned_eigenvalue);
+            if minimum_preconditioned_eigenvalue > 0.0 && maximum_preconditioned_eigenvalue > 0.0 {
+                let damping =
+                    2.0 / (minimum_preconditioned_eigenvalue + maximum_preconditioned_eigenvalue);
                 let radius = preconditioned_eigenvalues
                     .iter()
                     .map(|&value| (1.0 - damping * value).abs())

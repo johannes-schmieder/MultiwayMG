@@ -38,10 +38,7 @@ impl DensePairOptions {
         if !self.partition_weight.is_finite() || self.partition_weight <= 0.0 {
             return Err(MultiwayError::InvalidOption {
                 name: "dense_pair_partition_weight",
-                message: format!(
-                    "must be finite and positive, got {}",
-                    self.partition_weight
-                ),
+                message: format!("must be finite and positive, got {}", self.partition_weight),
             });
         }
         Ok(self)
