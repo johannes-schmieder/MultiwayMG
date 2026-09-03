@@ -1,7 +1,8 @@
 //! Aggregation tests outside the crate-internal manufactured clone family.
 
 use multiway_mg::{
-    AffinityAggregationOptions, PairNeighborhoodAggregationOptions, ThreeWayProblem,
+    AffinityAggregationOptions, AggregationKind, HierarchyOptions,
+    PairNeighborhoodAggregationOptions, ThreeWayHierarchy, ThreeWayProblem,
     build_affinity_aggregation, build_pair_neighborhood_aggregation,
 };
 
@@ -21,6 +22,44 @@ fn pair_neighborhood_fallback_coarsens_a_latin_square() {
     let coarse = neighborhood.coarsen(&problem).expect("coarsening succeeds");
     assert!(coarse.dimension() < problem.dimension());
     assert!(coarse.tuple_count() < problem.tuple_count());
+}
+
+#[test]
+fn adaptive_hierarchy_prefers_exact_context_when_it_makes_progress() {
+    let problem = clone_blocks(2, 2);
+    let hierarchy = ThreeWayHierarchy::build(
+        problem,
+        HierarchyOptions {
+            terminal_dimension: 6,
+            minimum_dimension_reduction: 0.01,
+            minimum_tuple_reduction: 0.0,
+            ..HierarchyOptions::default()
+        },
+    )
+    .expect("adaptive hierarchy succeeds");
+    assert_eq!(
+        hierarchy.report().aggregation_kinds(),
+        &[AggregationKind::ExactContext]
+    );
+}
+
+#[test]
+fn adaptive_hierarchy_uses_pair_neighborhood_when_exact_context_stagnates() {
+    let problem = latin_square(8);
+    let hierarchy = ThreeWayHierarchy::build(
+        problem,
+        HierarchyOptions {
+            terminal_dimension: 12,
+            minimum_dimension_reduction: 0.01,
+            minimum_tuple_reduction: 0.0,
+            ..HierarchyOptions::default()
+        },
+    )
+    .expect("adaptive hierarchy succeeds");
+    assert_eq!(
+        hierarchy.report().aggregation_kinds(),
+        &[AggregationKind::PairNeighborhood]
+    );
 }
 
 #[test]
@@ -50,6 +89,29 @@ fn pair_neighborhood_matching_never_crosses_components() {
             }
         }
     }
+}
+
+fn clone_blocks(groups: usize, clones: usize) -> ThreeWayProblem {
+    let mut tuples = Vec::new();
+    for group in 0..groups {
+        for first_clone in 0..clones {
+            for second_clone in 0..clones {
+                for third_clone in 0..clones {
+                    tuples.push([
+                        (group * clones + first_clone) as u32,
+                        (group * clones + second_clone) as u32,
+                        (group * clones + third_clone) as u32,
+                    ]);
+                }
+            }
+        }
+    }
+    ThreeWayProblem::from_observations(
+        [groups * clones; 3],
+        &tuples,
+        &vec![1.0; tuples.len()],
+    )
+    .expect("clone-block problem is valid")
 }
 
 fn latin_square(levels: u32) -> ThreeWayProblem {
