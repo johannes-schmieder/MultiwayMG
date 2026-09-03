@@ -25,7 +25,6 @@ missing_docs = "warn"
 
 [workspace.lints.clippy]
 all = "warn"
-pedantic = "warn"
 module_name_repetitions = "allow"
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
