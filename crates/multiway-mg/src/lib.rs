@@ -6,6 +6,7 @@
 
 mod aggregation;
 mod compatible;
+mod compatible_gate;
 mod dense;
 mod dense_pair;
 mod error;
@@ -27,6 +28,10 @@ pub use aggregation::{
 pub use compatible::{
     CompatibleRelaxationOptions, CompatibleRelaxationReport, CompatibleRelaxationVectorReport,
     DiagonalAggregationProjector, analyze_compatible_relaxation,
+};
+pub use compatible_gate::{
+    CompatibleRelaxationCriteria, CompatibleRelaxationDecision, CompatibleRelaxationRejection,
+    evaluate_compatible_relaxation,
 };
 pub use dense::DensePseudoinverse;
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
