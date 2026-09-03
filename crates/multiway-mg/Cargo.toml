@@ -32,5 +32,9 @@ required-features = ["cmg", "lsmr"]
 name = "difficult_scaling_probe"
 required-features = ["cmg", "lsmr"]
 
+[[example]]
+name = "oracle_spectral_matrix"
+required-features = ["cmg"]
+
 [lints]
 workspace = true

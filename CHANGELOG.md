@@ -35,3 +35,15 @@
   problem clones constant-time.
 - Retained per-pair CMG RHS, solution, and cycle workspaces reused across
   preconditioner applications.
+- Dense complete-range decomposition for small singular three-way Gramians,
+  including additional numerical nullity beyond structural factor shifts.
+- Materialized-preconditioner diagnostics for full and quotient symmetry,
+  range leakage, positive action, preconditioned eigenvalue intervals,
+  condition numbers, and stationary energy radii.
+- Symmetric MAP/block-Gauss--Seidel and exact dense pair-Schwarz reference
+  preconditioners.
+- Two- through four-level oracle hierarchy generators spanning weak
+  communities, Latin-square patterns, weak chains, nearly nested structure,
+  disconnected components, and complete weighted systems.
+- A release-mode oracle spectral matrix, compact machine-readable summary,
+  detailed interpretation, and an executable oracle acceptance test.

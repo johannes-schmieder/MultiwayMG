@@ -6,21 +6,25 @@
 
 mod aggregation;
 mod dense;
+mod dense_pair;
 mod error;
 mod hierarchy;
 mod jacobi;
 #[cfg(feature = "lsmr")]
 mod lsmr;
+mod map;
 #[cfg(feature = "cmg")]
 mod pair_cmg;
 mod pcg;
 mod preconditioner;
+mod spectral;
 
 pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
     build_pair_neighborhood_aggregation,
 };
 pub use dense::DensePseudoinverse;
+pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
 pub use error::MultiwayError;
 pub use hierarchy::{
     AggregationKind, AggregationStrategy, HierarchyBuildReport, HierarchyOptions, ThreeWayHierarchy,
@@ -30,10 +34,15 @@ pub use jacobi::DiagonalPreconditioner;
 pub use lsmr::{
     LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, solve_weighted_least_squares,
 };
+pub use map::SymmetricMapPreconditioner;
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use preconditioner::Preconditioner;
+pub use spectral::{
+    DenseRangeDecomposition, SpectralAnalysisOptions, SpectralAnalysisReport,
+    analyze_preconditioner,
+};
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,
