@@ -1,0 +1,32 @@
+MultiwayMG difficult weak-chain adaptive-coarsening diagnostic
+Date: 2026-09-03
+Rust: 1.85.0
+
+Configuration:
+- weak-chain groups: 16, 32, 64, ...
+- clones per group: 2
+- bridge weight: 0.02
+- adaptive aggregation: exact-context, then pair-neighborhood fallback
+- dense terminal cap tested: 96 coefficient coordinates
+
+Observed result:
+- 16 groups / 96 coordinates: the finest problem was admitted directly to the
+  96-coordinate dense terminal and all methods certified.
+- 32 groups / 192 coordinates: exact-context aggregation reduced the problem to
+  96 coordinates and all methods certified.
+- 64 groups / 384 coordinates: exact-context aggregation reduced the clone
+  structure to a 192-coordinate chain core. Neither exact-context matching nor
+  the bounded pair-neighborhood fallback met the configured progress gate on
+  that core. Hierarchy construction failed closed with:
+
+  HierarchyStagnated { dimension: 192, tuples: 190, limit: 96 }
+
+Interpretation:
+This is a coarse-space discovery failure, not numerical divergence. Raising the
+dense terminal beyond 192 would conceal the unresolved adaptive-coarsening
+problem and make the scaling experiment increasingly dominated by a dense
+solve. The subsequent difficult-scaling experiment therefore uses an explicitly
+labeled consecutive oracle hierarchy to test the numerical multigrid and
+wall-clock crossover questions separately. The production adaptive method must
+remain fail-closed until relaxed test vectors and compatible relaxation provide
+a justified chain-core hierarchy.
