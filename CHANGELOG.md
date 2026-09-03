@@ -27,6 +27,9 @@
 - Recursive release-mode scaling probe through 768 coefficient coordinates and
   131,072 unique tuples, with repeated median solve timing and hierarchy
   complexity diagnostics.
+- Difficult weak-chain scaling probe through 3,072 coefficient coordinates,
+  designed to excite a slowly varying mode while comparing diagonal PCG,
+  pair-CMG, the three-way V-cycle, the hybrid, and rectangular modified LSMR.
 - Reference-counted immutable three-way problem state, making solver-level
   problem clones constant-time.
 - Retained per-pair CMG RHS, solution, and cycle workspaces reused across
