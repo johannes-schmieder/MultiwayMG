@@ -28,5 +28,9 @@ required-features = ["cmg", "lsmr"]
 name = "scaling_probe"
 required-features = ["cmg", "lsmr"]
 
+[[example]]
+name = "difficult_scaling_probe"
+required-features = ["cmg", "lsmr"]
+
 [lints]
 workspace = true
