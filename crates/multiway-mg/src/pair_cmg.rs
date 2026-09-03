@@ -98,9 +98,13 @@ impl Preconditioner for PairCmgPreconditioner {
                 out.len(),
             ));
         }
+        let mut compatible_rhs = rhs.to_vec();
+        self.problem
+            .components()
+            .project_structural_range(&mut compatible_rhs)?;
         out.fill(0.0);
         for pair in &self.pairs {
-            pair.accumulate(rhs, out, self.partition_weight)?;
+            pair.accumulate(&compatible_rhs, out, self.partition_weight)?;
         }
         self.problem.components().project_structural_range(out)?;
         Ok(())
