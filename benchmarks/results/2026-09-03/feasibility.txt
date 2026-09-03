@@ -1,0 +1,11 @@
+MultiwayMG feasibility probe
+  finest dimensions: [24, 24, 24]
+  finest unique tuples: 1152
+  hierarchy dimensions: [72, 36]
+  hierarchy tuple counts: [1152, 144]
+  tuple complexity: 1.125
+  diagonal                 iterations=8    converged=true relative_residual=4.329e-11
+  three-way-vcycle         iterations=5    converged=true relative_residual=1.641e-11
+  pair-cmg                 iterations=6    converged=true relative_residual=3.641e-10
+  pair-cmg-plus-vcycle     iterations=3    converged=true relative_residual=4.518e-13
+  hybrid-mlsmr             iterations=3    solver_converged=true certified_normal_residual=4.517e-13
