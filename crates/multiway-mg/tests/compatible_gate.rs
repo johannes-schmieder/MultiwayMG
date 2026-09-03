@@ -1,9 +1,9 @@
 //! Acceptance-policy tests for projected compatible relaxation.
 
 use multiway_mg::{
-    CompatibleRelaxationCriteria, CompatibleRelaxationOptions,
-    CompatibleRelaxationRejection, DiagonalPreconditioner, FactorAggregation,
-    ThreeWayProblem, analyze_compatible_relaxation, evaluate_compatible_relaxation,
+    CompatibleRelaxationCriteria, CompatibleRelaxationOptions, CompatibleRelaxationRejection,
+    DiagonalPreconditioner, FactorAggregation, ThreeWayProblem, analyze_compatible_relaxation,
+    evaluate_compatible_relaxation,
 };
 
 #[test]
@@ -13,8 +13,7 @@ fn conservative_gate_accepts_oracle_map_and_rejects_misaligned_weak_chain() {
         core::array::from_fn(|_| vec![0, 1, 0, 1, 2, 3, 2, 3, 4, 5, 4, 5, 6, 7, 6, 7]);
     let bad = FactorAggregation::new([16, 16, 16], bad_parents)
         .expect("misaligned aggregation remains structurally valid");
-    let smoother = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal smoother succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
     let options = CompatibleRelaxationOptions {
         test_vectors: 12,
         sweeps: 10,
@@ -31,10 +30,10 @@ fn conservative_gate_accepts_oracle_map_and_rejects_misaligned_weak_chain() {
         .expect("oracle analysis succeeds");
     let bad_report = analyze_compatible_relaxation(&problem, &bad, &smoother, options)
         .expect("bad-map analysis succeeds");
-    let oracle_decision = evaluate_compatible_relaxation(&oracle_report, criteria)
-        .expect("oracle decision succeeds");
-    let bad_decision = evaluate_compatible_relaxation(&bad_report, criteria)
-        .expect("bad-map decision succeeds");
+    let oracle_decision =
+        evaluate_compatible_relaxation(&oracle_report, criteria).expect("oracle decision succeeds");
+    let bad_decision =
+        evaluate_compatible_relaxation(&bad_report, criteria).expect("bad-map decision succeeds");
 
     assert!(oracle_decision.accepted());
     assert!(!bad_decision.accepted());
@@ -49,8 +48,7 @@ fn conservative_gate_accepts_oracle_map_and_rejects_misaligned_weak_chain() {
 #[test]
 fn criteria_are_explicit_and_invalid_thresholds_fail_closed() {
     let (problem, oracle) = refined_weak_chain(4, 2, 0.02);
-    let smoother = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal smoother succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
     let report = analyze_compatible_relaxation(
         &problem,
         &oracle,
@@ -72,7 +70,11 @@ fn criteria_are_explicit_and_invalid_thresholds_fail_closed() {
         },
     )
     .expect_err("nonfinite criteria must fail");
-    assert!(error.to_string().contains("maximum_diagonal_factor_per_sweep"));
+    assert!(
+        error
+            .to_string()
+            .contains("maximum_diagonal_factor_per_sweep")
+    );
 }
 
 fn refined_weak_chain(

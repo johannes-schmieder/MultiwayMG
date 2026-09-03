@@ -141,10 +141,8 @@ pub fn evaluate_compatible_relaxation(
     if let Some(limit) = criteria.maximum_energy_factor_per_sweep {
         match maximum_energy_factor_per_sweep {
             Some(observed) if observed > limit => {
-                rejections.push(CompatibleRelaxationRejection::EnergyContraction {
-                    observed,
-                    limit,
-                });
+                rejections
+                    .push(CompatibleRelaxationRejection::EnergyContraction { observed, limit });
             }
             None => rejections.push(CompatibleRelaxationRejection::EnergyUnavailable),
             Some(_) => {}

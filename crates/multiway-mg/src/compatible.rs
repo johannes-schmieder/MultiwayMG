@@ -190,18 +190,8 @@ impl DiagonalAggregationProjector {
             "DiagonalAggregationProjector::relative_coarse_defect",
             values,
         )?;
-        let norm = weighted_norm(values, self.problem.diagonal());
-        let moments = self.coarse_moments(values);
-        let maximum = moments
-            .iter()
-            .zip(&self.aggregate_diagonal)
-            .map(|(&moment, &weight)| moment.abs() / weight.sqrt())
-            .fold(0.0, f64::max);
-        Ok(if norm == 0.0 {
-            if maximum == 0.0 { 0.0 } else { f64::INFINITY }
-        } else {
-            maximum / norm
-        })
+        let reference_norm = weighted_norm(values, self.problem.diagonal());
+        self.coarse_defect_with_reference(values, reference_norm)
     }
 
     /// Relative weighted defect against the two structural factor-shift modes
@@ -214,7 +204,51 @@ impl DiagonalAggregationProjector {
             "DiagonalAggregationProjector::relative_structural_defect",
             values,
         )?;
-        let norm = weighted_norm(values, self.problem.diagonal());
+        let reference_norm = weighted_norm(values, self.problem.diagonal());
+        self.structural_defect_with_reference(values, reference_norm)
+    }
+
+    fn coarse_defect_with_reference(
+        &self,
+        values: &[f64],
+        reference_norm: f64,
+    ) -> Result<f64, MultiwayError> {
+        self.validate_values(
+            "DiagonalAggregationProjector::coarse_defect_with_reference",
+            values,
+        )?;
+        if !reference_norm.is_finite() || reference_norm < 0.0 {
+            return Err(MultiwayError::CompatibleRelaxation {
+                message: format!("invalid coarse-defect reference norm {reference_norm}"),
+            });
+        }
+        let moments = self.coarse_moments(values);
+        let maximum = moments
+            .iter()
+            .zip(&self.aggregate_diagonal)
+            .map(|(&moment, &weight)| moment.abs() / weight.sqrt())
+            .fold(0.0, f64::max);
+        Ok(if reference_norm == 0.0 {
+            if maximum == 0.0 { 0.0 } else { f64::INFINITY }
+        } else {
+            maximum / reference_norm
+        })
+    }
+
+    fn structural_defect_with_reference(
+        &self,
+        values: &[f64],
+        reference_norm: f64,
+    ) -> Result<f64, MultiwayError> {
+        self.validate_values(
+            "DiagonalAggregationProjector::structural_defect_with_reference",
+            values,
+        )?;
+        if !reference_norm.is_finite() || reference_norm < 0.0 {
+            return Err(MultiwayError::CompatibleRelaxation {
+                message: format!("invalid structural-defect reference norm {reference_norm}"),
+            });
+        }
         let offsets = self.problem.topology().offsets();
         let counts = self.problem.topology().level_counts();
         let mut sums = vec![[0.0; 3]; self.problem.components().count()];
@@ -231,10 +265,10 @@ impl DiagonalAggregationProjector {
             maximum = maximum.max((first - second).abs() / (masses[0] + masses[1]).sqrt());
             maximum = maximum.max((first - third).abs() / (masses[0] + masses[2]).sqrt());
         }
-        Ok(if norm == 0.0 {
+        Ok(if reference_norm == 0.0 {
             if maximum == 0.0 { 0.0 } else { f64::INFINITY }
         } else {
-            maximum / norm
+            maximum / reference_norm
         })
     }
 
@@ -398,7 +432,7 @@ impl CompatibleRelaxationVectorReport {
         self.initial_coarse_defect
     }
 
-    /// Final relative `P' D e` defect.
+    /// Final `P' D e` defect normalized by the initial compatible `D` norm.
     #[must_use]
     pub const fn final_coarse_defect(&self) -> f64 {
         self.final_coarse_defect
@@ -410,7 +444,7 @@ impl CompatibleRelaxationVectorReport {
         self.initial_structural_defect
     }
 
-    /// Final weighted structural-shift defect.
+    /// Final structural-shift defect normalized by the initial compatible `D` norm.
     #[must_use]
     pub const fn final_structural_defect(&self) -> f64 {
         self.final_structural_defect
@@ -676,9 +710,11 @@ fn analyze_vector<P: Preconditioner + ?Sized>(
         initial_factor_diagonal_norms,
         final_factor_diagonal_norms: projector.factor_diagonal_norms(&error)?,
         initial_coarse_defect,
-        final_coarse_defect: projector.relative_coarse_defect(&error)?,
+        final_coarse_defect: projector
+            .coarse_defect_with_reference(&error, initial_diagonal_norm)?,
         initial_structural_defect,
-        final_structural_defect: projector.relative_structural_defect(&error)?,
+        final_structural_defect: projector
+            .structural_defect_with_reference(&error, initial_diagonal_norm)?,
         diagonal_contraction: final_diagonal_norm / initial_diagonal_norm,
         energy_contraction,
     })
