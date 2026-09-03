@@ -1,0 +1,36 @@
+[package]
+name = "multiway-mg"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "Experimental multilevel solvers for weighted three-way incidence Gramians"
+
+[features]
+default = ["cmg", "lsmr"]
+cmg = ["dep:cmg"]
+lsmr = ["dep:schwarz-precond"]
+
+[dependencies]
+multiway-incidence = { path = "../multiway-incidence" }
+thiserror.workspace = true
+nalgebra.workspace = true
+cmg = { workspace = true, optional = true }
+schwarz-precond = { workspace = true, optional = true }
+
+[[example]]
+name = "feasibility_matrix"
+required-features = ["cmg", "lsmr"]
+
+[[example]]
+name = "scaling_probe"
+required-features = ["cmg", "lsmr"]
+
+[[example]]
+name = "difficult_scaling_probe"
+required-features = ["cmg", "lsmr"]
+
+[lints]
+workspace = true
