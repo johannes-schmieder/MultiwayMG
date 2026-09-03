@@ -94,3 +94,24 @@ jobs:
           name: oracle-spectral-output
           path: oracle-spectral-matrix.tsv
           if-no-files-found: error
+
+  compatible-relaxation:
+    name: Compatible-relaxation map-quality matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Run compatible-relaxation matrix
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo run --locked --release -p multiway-mg --example compatible_relaxation_matrix --all-features \
+            | tee compatible-relaxation-matrix.tsv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: compatible-relaxation-output
+          path: compatible-relaxation-matrix.tsv
+          if-no-files-found: error
