@@ -1,3 +1,5 @@
+//! Deterministic manufactured feasibility probe for the first MultiwayMG prototype.
+
 use multiway_mg::{
     AffinityAggregationOptions, AggregationStrategy, DiagonalPreconditioner, HierarchyOptions,
     PcgOptions, Preconditioner, ThreeWayHierarchy, ThreeWayProblem, solve_projected_pcg,
