@@ -1,0 +1,31 @@
+groups	levels	tuples	method	setup_ms	median_solve_ms	iterations	converged	certified_residual	hierarchy_depth	tuple_complexity	aggregation_kinds
+16	96	172	diagonal-pcg	0.003	0.160	82	true	6.715784e-10	0	0.000	-
+16	96	172	pair-cmg-pcg	0.254	0.072	9	true	6.965929e-10	0	0.000	-
+16	96	172	three-way-vcycle-pcg	1.024	0.016	1	true	3.635581e-14	1	1.279	[Consecutive]
+16	96	172	hybrid-pcg	1.073	0.028	1	true	3.568423e-14	1	1.279	[Consecutive]
+16	96	172	hybrid-mlsmr	1.073	0.082	1	true	2.042280e-14	1	1.279	[Consecutive]
+32	192	364	diagonal-pcg	0.000	0.320	81	true	8.455745e-10	0	0.000	-
+32	192	364	pair-cmg-pcg	0.155	0.185	10	true	3.113350e-10	0	0.000	-
+32	192	364	three-way-vcycle-pcg	1.065	0.031	1	true	3.060743e-13	2	1.379	[Consecutive, Consecutive]
+32	192	364	hybrid-pcg	1.194	0.057	1	true	3.059273e-13	2	1.379	[Consecutive, Consecutive]
+32	192	364	hybrid-mlsmr	1.194	0.128	1	true	1.465847e-13	2	1.379	[Consecutive, Consecutive]
+64	384	748	diagonal-pcg	0.000	1.636	195	true	9.739163e-10	0	0.000	-
+64	384	748	pair-cmg-pcg	0.376	0.668	17	true	2.565815e-10	0	0.000	-
+64	384	748	three-way-vcycle-pcg	1.815	0.223	2	true	3.965677e-13	3	1.426	[Consecutive, Consecutive, Consecutive]
+64	384	748	hybrid-pcg	2.091	0.259	1	true	3.911559e-13	3	1.426	[Consecutive, Consecutive, Consecutive]
+64	384	748	hybrid-mlsmr	2.091	0.353	1	true	1.166102e-13	3	1.426	[Consecutive, Consecutive, Consecutive]
+128	768	1516	diagonal-pcg	0.000	3.678	227	true	9.822714e-10	0	0.000	-
+128	768	1516	pair-cmg-pcg	0.480	1.719	20	true	4.836102e-10	0	0.000	-
+128	768	1516	three-way-vcycle-pcg	3.914	0.499	2	true	9.151728e-14	4	1.449	[Consecutive, Consecutive, Consecutive, Consecutive]
+128	768	1516	hybrid-pcg	4.162	0.580	1	true	8.844800e-14	4	1.449	[Consecutive, Consecutive, Consecutive, Consecutive]
+128	768	1516	hybrid-mlsmr	4.162	0.835	1	true	1.502272e-13	4	1.449	[Consecutive, Consecutive, Consecutive, Consecutive]
+256	1536	3052	diagonal-pcg	0.001	11.425	285	true	9.562027e-10	0	0.000	-
+256	1536	3052	pair-cmg-pcg	0.869	7.761	46	true	6.720516e-10	0	0.000	-
+256	1536	3052	three-way-vcycle-pcg	7.945	1.468	2	true	6.254071e-13	5	1.461	[Consecutive, Consecutive, Consecutive, Consecutive, Consecutive]
+256	1536	3052	hybrid-pcg	8.769	1.857	1	true	6.133050e-13	5	1.461	[Consecutive, Consecutive, Consecutive, Consecutive, Consecutive]
+256	1536	3052	hybrid-mlsmr	8.769	3.293	1	true	9.470373e-13	5	1.461	[Consecutive, Consecutive, Consecutive, Consecutive, Consecutive]
+512	3072	6124	diagonal-pcg	0.001	30.543	366	true	9.671518e-10	0	0.000	-
+512	3072	6124	pair-cmg-pcg	2.130	31.224	99	true	9.875698e-10	0	0.000	-
+512	3072	6124	three-way-vcycle-pcg	17.247	3.099	2	true	3.327975e-13	6	1.467	[Consecutive, Consecutive, Consecutive, Consecutive, Consecutive, Consecutive]
+512	3072	6124	hybrid-pcg	19.103	86.910	2	true	2.066672e-10	6	1.467	[Consecutive, Consecutive, Consecutive, Consecutive, Consecutive, Consecutive]
+512	3072	6124	hybrid-mlsmr	19.103	85.655	2	true	2.066672e-10	6	1.467	[Consecutive, Consecutive, Consecutive, Consecutive, Consecutive, Consecutive]
