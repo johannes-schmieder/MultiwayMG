@@ -25,6 +25,24 @@ A successful planted experiment would establish that:
 It would not establish that the current automatic aggregator is robust on real
 worker--firm--occupation or exporter--importer--product data.
 
+## Numerical hardening requirements
+
+Before broader experiments are interpreted, the first version must also prove:
+
+- dense terminal rank decisions are invariant to a global rescaling of every
+  positive tuple weight;
+- a V-cycle advertised as symmetric rejects unequal pre- and post-smoothing
+  sweep counts;
+- pair-CMG projects both its input and output onto the known three-way
+  structural range, making the exposed operator symmetric even for arbitrary
+  submitted coefficient vectors;
+- disconnected problems retain two structural shift directions per incidence
+  component; and
+- rectangular modified LSMR remains reliable when nesting creates rank
+  deficiency beyond the two generic shifts.
+
+These are correctness properties, not performance heuristics.
+
 ## Central unresolved risk
 
 Automatic coarse-space construction remains the core research problem. The
