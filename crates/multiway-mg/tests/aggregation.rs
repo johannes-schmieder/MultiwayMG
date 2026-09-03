@@ -106,12 +106,8 @@ fn clone_blocks(groups: usize, clones: usize) -> ThreeWayProblem {
             }
         }
     }
-    ThreeWayProblem::from_observations(
-        [groups * clones; 3],
-        &tuples,
-        &vec![1.0; tuples.len()],
-    )
-    .expect("clone-block problem is valid")
+    ThreeWayProblem::from_observations([groups * clones; 3], &tuples, &vec![1.0; tuples.len()])
+        .expect("clone-block problem is valid")
 }
 
 fn latin_square(levels: u32) -> ThreeWayProblem {

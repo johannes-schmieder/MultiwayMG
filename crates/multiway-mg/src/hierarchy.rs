@@ -297,13 +297,15 @@ impl ThreeWayHierarchy {
                     (aggregation, coarse, AggregationKind::Consecutive)
                 }
                 AggregationStrategy::Supplied(supplied) => {
-                    let aggregation = supplied.get(level).cloned().ok_or(
-                        MultiwayError::HierarchyStagnated {
-                            dimension: current.dimension(),
-                            tuples: current.tuple_count(),
-                            limit: options.terminal_dimension,
-                        },
-                    )?;
+                    let aggregation =
+                        supplied
+                            .get(level)
+                            .cloned()
+                            .ok_or(MultiwayError::HierarchyStagnated {
+                                dimension: current.dimension(),
+                                tuples: current.tuple_count(),
+                                limit: options.terminal_dimension,
+                            })?;
                     let coarse = aggregation.coarsen(current)?;
                     (aggregation, coarse, AggregationKind::Supplied)
                 }
