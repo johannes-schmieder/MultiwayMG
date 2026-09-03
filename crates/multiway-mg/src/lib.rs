@@ -16,7 +16,10 @@ mod pair_cmg;
 mod pcg;
 mod preconditioner;
 
-pub use aggregation::{AffinityAggregationOptions, build_affinity_aggregation};
+pub use aggregation::{
+    AffinityAggregationOptions, PairNeighborhoodAggregationOptions,
+    build_affinity_aggregation, build_pair_neighborhood_aggregation,
+};
 pub use dense::DensePseudoinverse;
 pub use error::MultiwayError;
 pub use hierarchy::{

@@ -28,18 +28,18 @@ jobs:
       - name: Check formatting
         run: cargo fmt --all -- --check
       - name: Lint all targets and features
-        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+        run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
       - name: Test all features
-        run: cargo test --workspace --all-features
+        run: cargo test --locked --workspace --all-features
       - name: Test minimal feature set
-        run: cargo test --workspace --no-default-features
+        run: cargo test --locked --workspace --no-default-features
       - name: Build documentation
         env:
           RUSTDOCFLAGS: -D warnings
-        run: cargo doc --workspace --all-features --no-deps
+        run: cargo doc --locked --workspace --all-features --no-deps
 
   feasibility:
-    name: Manufactured feasibility probe
+    name: Manufactured feasibility probes
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -47,14 +47,22 @@ jobs:
         with:
           toolchain: "1.85.0"
       - uses: Swatinem/rust-cache@v2
-      - name: Run release feasibility example
+      - name: Run planted release probe
         shell: bash
         run: |
           set -o pipefail
-          cargo run --release -p multiway-mg --example feasibility --all-features \
+          cargo run --locked --release -p multiway-mg --example feasibility --all-features \
             | tee feasibility.txt
+      - name: Run broader release matrix
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo run --locked --release -p multiway-mg --example feasibility_matrix --all-features \
+            | tee feasibility-matrix.tsv
       - uses: actions/upload-artifact@v4
         with:
           name: feasibility-output
-          path: feasibility.txt
+          path: |
+            feasibility.txt
+            feasibility-matrix.tsv
           if-no-files-found: error
