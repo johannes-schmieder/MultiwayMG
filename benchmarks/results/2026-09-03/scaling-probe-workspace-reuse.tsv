@@ -1,0 +1,13 @@
+groups	levels	tuples	method	setup_ms	median_solve_ms	iterations	converged	certified_residual	hierarchy_depth	tuple_complexity	aggregation_kinds
+16	96	2048	diagonal-pcg	0.002	0.058	10	true	1.107580e-10	0	0.000	-
+16	96	2048	hybrid-pcg	1.329	0.150	4	true	2.203857e-12	1	1.125	[ExactContext]
+16	96	2048	hybrid-mlsmr	1.329	0.264	4	true	2.203494e-12	1	1.125	[ExactContext]
+32	192	8192	diagonal-pcg	0.000	0.180	9	true	8.385528e-10	0	0.000	-
+32	192	8192	hybrid-pcg	7.011	0.392	3	true	6.930183e-10	2	1.210	[ExactContext, PairNeighborhood]
+32	192	8192	hybrid-mlsmr	7.011	0.797	3	true	6.930049e-10	2	1.210	[ExactContext, PairNeighborhood]
+64	384	32768	diagonal-pcg	0.000	0.679	9	true	5.519997e-10	0	0.000	-
+64	384	32768	hybrid-pcg	32.140	1.499	3	true	7.125471e-10	3	1.225	[ExactContext, PairNeighborhood, ExactContext]
+64	384	32768	hybrid-mlsmr	32.140	3.422	3	true	7.125292e-10	3	1.225	[ExactContext, PairNeighborhood, ExactContext]
+128	768	131072	diagonal-pcg	0.001	2.817	9	true	2.883167e-10	0	0.000	-
+128	768	131072	hybrid-pcg	169.320	6.410	3	true	3.002225e-10	4	1.235	[ExactContext, PairNeighborhood, ExactContext, ExactContext]
+128	768	131072	hybrid-mlsmr	169.320	13.981	3	true	3.002125e-10	4	1.235	[ExactContext, PairNeighborhood, ExactContext, ExactContext]
