@@ -288,7 +288,8 @@ impl PairSystem {
             out[self.first_offset + level] += partition_weight * solution[level];
         }
         for level in 0..self.second_count {
-            out[self.second_offset + level] -= partition_weight * solution[self.first_count + level];
+            out[self.second_offset + level] -=
+                partition_weight * solution[self.first_count + level];
         }
         debug_assert!(self.first < self.second);
         Ok(())
