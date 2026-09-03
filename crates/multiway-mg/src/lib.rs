@@ -25,9 +25,8 @@ pub use aggregation::{
     build_pair_neighborhood_aggregation,
 };
 pub use compatible::{
-    CompatibleRelaxationOptions, CompatibleRelaxationReport,
-    CompatibleRelaxationVectorReport, DiagonalAggregationProjector,
-    analyze_compatible_relaxation,
+    CompatibleRelaxationOptions, CompatibleRelaxationReport, CompatibleRelaxationVectorReport,
+    DiagonalAggregationProjector, analyze_compatible_relaxation,
 };
 pub use dense::DensePseudoinverse;
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};

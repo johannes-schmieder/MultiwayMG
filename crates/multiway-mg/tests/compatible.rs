@@ -8,11 +8,8 @@ use multiway_mg::{
 #[test]
 fn diagonal_projector_is_idempotent_and_enforces_weighted_coarse_orthogonality() {
     let problem = heterogeneous_problem();
-    let aggregation = FactorAggregation::new(
-        [4, 2, 2],
-        [vec![0, 0, 1, 1], vec![0, 0], vec![0, 1]],
-    )
-    .expect("aggregation is valid");
+    let aggregation = FactorAggregation::new([4, 2, 2], [vec![0, 0, 1, 1], vec![0, 0], vec![0, 1]])
+        .expect("aggregation is valid");
     let projector = DiagonalAggregationProjector::new(problem.clone(), aggregation)
         .expect("projector construction succeeds");
     let mut values = vec![0.7, -1.3, 2.1, -0.4, 1.2, -0.8, 0.5, -1.7];
@@ -43,9 +40,10 @@ fn diagonal_projector_is_idempotent_and_enforces_weighted_coarse_orthogonality()
             .expect("structural defect succeeds")
             < 1.0e-12
     );
-    let pythagorean_defect =
-        (original_norm * original_norm - removed_norm * removed_norm - retained_norm * retained_norm)
-            .abs();
+    let pythagorean_defect = (original_norm * original_norm
+        - removed_norm * removed_norm
+        - retained_norm * retained_norm)
+        .abs();
     assert!(pythagorean_defect <= 1.0e-11 * original_norm.powi(2).max(1.0));
 }
 
@@ -53,8 +51,7 @@ fn diagonal_projector_is_idempotent_and_enforces_weighted_coarse_orthogonality()
 fn compatible_relaxation_is_bitwise_deterministic_for_fixed_inputs() {
     let problem = refined_weak_chain(6, 2, 0.02).0;
     let aggregation = refined_weak_chain(6, 2, 0.02).1;
-    let smoother = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal smoother succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
     let options = CompatibleRelaxationOptions {
         test_vectors: 6,
         sweeps: 7,
@@ -74,13 +71,11 @@ fn compatible_relaxation_is_bitwise_deterministic_for_fixed_inputs() {
 #[test]
 fn oracle_map_leaves_more_rapidly_damped_error_than_a_misaligned_map() {
     let (problem, oracle) = refined_weak_chain(8, 2, 0.01);
-    let bad_parents = core::array::from_fn(|_| {
-        vec![0, 1, 0, 1, 2, 3, 2, 3, 4, 5, 4, 5, 6, 7, 6, 7]
-    });
+    let bad_parents =
+        core::array::from_fn(|_| vec![0, 1, 0, 1, 2, 3, 2, 3, 4, 5, 4, 5, 6, 7, 6, 7]);
     let bad = FactorAggregation::new([16, 16, 16], bad_parents)
         .expect("misaligned aggregation remains structurally valid");
-    let smoother = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal smoother succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
     let options = CompatibleRelaxationOptions {
         test_vectors: 12,
         sweeps: 10,
@@ -92,8 +87,7 @@ fn oracle_map_leaves_more_rapidly_damped_error_than_a_misaligned_map() {
         .expect("bad-map compatible analysis succeeds");
 
     assert!(
-        oracle_report.maximum_diagonal_contraction()
-            < bad_report.maximum_diagonal_contraction()
+        oracle_report.maximum_diagonal_contraction() < bad_report.maximum_diagonal_contraction()
     );
     assert!(
         oracle_report.geometric_mean_diagonal_contraction()
@@ -103,17 +97,11 @@ fn oracle_map_leaves_more_rapidly_damped_error_than_a_misaligned_map() {
 
 #[test]
 fn aggregation_crossing_incidence_components_is_rejected() {
-    let problem = ThreeWayProblem::from_observations(
-        [2, 2, 2],
-        &[[0, 0, 0], [1, 1, 1]],
-        &[1.0, 2.0],
-    )
-    .expect("disconnected problem is valid");
-    let aggregation = FactorAggregation::new(
-        [2, 2, 2],
-        [vec![0, 0], vec![0, 0], vec![0, 0]],
-    )
-    .expect("parent labels themselves are valid");
+    let problem =
+        ThreeWayProblem::from_observations([2, 2, 2], &[[0, 0, 0], [1, 1, 1]], &[1.0, 2.0])
+            .expect("disconnected problem is valid");
+    let aggregation = FactorAggregation::new([2, 2, 2], [vec![0, 0], vec![0, 0], vec![0, 0]])
+        .expect("parent labels themselves are valid");
     let error = DiagonalAggregationProjector::new(problem, aggregation)
         .expect_err("cross-component aggregation must fail");
     assert!(matches!(error, MultiwayError::InvalidAggregation { .. }));
@@ -154,20 +142,16 @@ fn refined_weak_chain(
             coarse_weights.push(bridge_weight * 0.9);
         }
     }
-    let coarse = ThreeWayProblem::from_observations(
-        [levels; 3],
-        &coarse_tuples,
-        &coarse_weights,
-    )
-    .expect("coarse weak chain is valid");
+    let coarse = ThreeWayProblem::from_observations([levels; 3], &coarse_tuples, &coarse_weights)
+        .expect("coarse weak chain is valid");
     let fine_counts = [levels * clones; 3];
     let parents = core::array::from_fn(|_| {
         (0..levels * clones)
             .map(|level| (level / clones) as u32)
             .collect()
     });
-    let aggregation = FactorAggregation::new(fine_counts, parents)
-        .expect("oracle aggregation is valid");
+    let aggregation =
+        FactorAggregation::new(fine_counts, parents).expect("oracle aggregation is valid");
     let mut fine_tuples = Vec::new();
     let mut fine_weights = Vec::new();
     for (&tuple, &weight) in coarse.topology().tuples().iter().zip(coarse.weights()) {

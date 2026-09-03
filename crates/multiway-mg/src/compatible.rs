@@ -47,16 +47,16 @@ impl DiagonalAggregationProjector {
 
         let coarse_counts = aggregation.coarse_counts();
         let first = coarse_counts[0];
-        let second = first
-            .checked_add(coarse_counts[1])
-            .ok_or_else(|| MultiwayError::InvalidAggregation {
+        let second = first.checked_add(coarse_counts[1]).ok_or_else(|| {
+            MultiwayError::InvalidAggregation {
                 message: "coarse offset arithmetic overflowed".to_owned(),
-            })?;
-        let total = second
-            .checked_add(coarse_counts[2])
-            .ok_or_else(|| MultiwayError::InvalidAggregation {
+            }
+        })?;
+        let total = second.checked_add(coarse_counts[2]).ok_or_else(|| {
+            MultiwayError::InvalidAggregation {
                 message: "coarse dimension arithmetic overflowed".to_owned(),
-            })?;
+            }
+        })?;
         let coarse_offsets = [0, first, second, total];
         let mut global_parents = vec![0; problem.dimension()];
         let mut aggregate_diagonal = vec![0.0; total];
@@ -84,8 +84,7 @@ impl DiagonalAggregationProjector {
             });
         }
 
-        let mut component_factor_diagonal =
-            vec![[0.0; 3]; problem.components().count()];
+        let mut component_factor_diagonal = vec![[0.0; 3]; problem.components().count()];
         for factor in 0..3 {
             for level in 0..fine_counts[factor] {
                 let fine_index = fine_offsets[factor] + level;
@@ -144,10 +143,7 @@ impl DiagonalAggregationProjector {
     ///
     /// Returns the diagonal-energy norm of the removed component. The retained
     /// and removed vectors are orthogonal in the `D` inner product.
-    pub fn project_complement_in_place(
-        &self,
-        values: &mut [f64],
-    ) -> Result<f64, MultiwayError> {
+    pub fn project_complement_in_place(&self, values: &mut [f64]) -> Result<f64, MultiwayError> {
         self.validate_values("DiagonalAggregationProjector::project", values)?;
         let moments = self.coarse_moments(values);
         let mut coarse_values = vec![0.0; self.coarse_dimension()];
@@ -155,10 +151,8 @@ impl DiagonalAggregationProjector {
         for aggregate in 0..self.coarse_dimension() {
             let value = moments[aggregate] / self.aggregate_diagonal[aggregate];
             coarse_values[aggregate] = value;
-            removed_squared = value.mul_add(
-                value * self.aggregate_diagonal[aggregate],
-                removed_squared,
-            );
+            removed_squared =
+                value.mul_add(value * self.aggregate_diagonal[aggregate], removed_squared);
         }
         for (fine_index, value) in values.iter_mut().enumerate() {
             *value -= coarse_values[self.global_parents[fine_index]];
@@ -231,15 +225,11 @@ impl DiagonalAggregationProjector {
                 sums[component][factor] += self.problem.diagonal()[index] * values[index];
             }
         }
-        let mut maximum = 0.0;
+        let mut maximum = 0.0_f64;
         for (component, [first, second, third]) in sums.into_iter().enumerate() {
             let masses = self.component_factor_diagonal[component];
-            maximum = maximum.max(
-                (first - second).abs() / (masses[0] + masses[1]).sqrt(),
-            );
-            maximum = maximum.max(
-                (first - third).abs() / (masses[0] + masses[2]).sqrt(),
-            );
+            maximum = maximum.max((first - second).abs() / (masses[0] + masses[1]).sqrt());
+            maximum = maximum.max((first - third).abs() / (masses[0] + masses[2]).sqrt());
         }
         Ok(if norm == 0.0 {
             if maximum == 0.0 { 0.0 } else { f64::INFINITY }
@@ -248,11 +238,7 @@ impl DiagonalAggregationProjector {
         })
     }
 
-    fn validate_values(
-        &self,
-        context: &'static str,
-        values: &[f64],
-    ) -> Result<(), MultiwayError> {
+    fn validate_values(&self, context: &'static str, values: &[f64]) -> Result<(), MultiwayError> {
         if values.len() != self.fine_dimension() {
             return Err(crate::error::dimension(
                 context,
@@ -558,8 +544,7 @@ pub fn analyze_compatible_relaxation<P: Preconditioner + ?Sized>(
             smoother.dimension(),
         ));
     }
-    let projector =
-        DiagonalAggregationProjector::new(problem.clone(), aggregation.clone())?;
+    let projector = DiagonalAggregationProjector::new(problem.clone(), aggregation.clone())?;
     if projector.compatible_dimension() == 0 {
         return Err(MultiwayError::CompatibleRelaxation {
             message: "aggregation leaves no compatible complement".to_owned(),
@@ -568,12 +553,7 @@ pub fn analyze_compatible_relaxation<P: Preconditioner + ?Sized>(
 
     let mut vectors = Vec::with_capacity(options.test_vectors);
     for vector_index in 0..options.test_vectors {
-        vectors.push(analyze_vector(
-            &projector,
-            smoother,
-            options,
-            vector_index,
-        )?);
+        vectors.push(analyze_vector(&projector, smoother, options, vector_index)?);
     }
 
     let diagonal_contractions: Vec<f64> = vectors
@@ -584,17 +564,10 @@ pub fn analyze_compatible_relaxation<P: Preconditioner + ?Sized>(
         .iter()
         .filter_map(CompatibleRelaxationVectorReport::energy_contraction)
         .collect();
-    let maximum_diagonal_contraction = diagonal_contractions
-        .iter()
-        .copied()
-        .fold(0.0, f64::max);
+    let maximum_diagonal_contraction = diagonal_contractions.iter().copied().fold(0.0, f64::max);
     let geometric_mean_diagonal_contraction = geometric_mean(&diagonal_contractions);
-    let maximum_energy_contraction = (!energy_contractions.is_empty()).then(|| {
-        energy_contractions
-            .iter()
-            .copied()
-            .fold(0.0, f64::max)
-    });
+    let maximum_energy_contraction = (!energy_contractions.is_empty())
+        .then(|| energy_contractions.iter().copied().fold(0.0, f64::max));
     let geometric_mean_energy_contraction =
         (!energy_contractions.is_empty()).then(|| geometric_mean(&energy_contractions));
     let maximum_final_coarse_defect = vectors
@@ -654,9 +627,7 @@ fn analyze_vector<P: Preconditioner + ?Sized>(
     }
     if !found {
         return Err(MultiwayError::CompatibleRelaxation {
-            message: format!(
-                "unable to generate nonzero compatible test vector {vector_index}"
-            ),
+            message: format!("unable to generate nonzero compatible test vector {vector_index}"),
         });
     }
     scale_in_place(&mut error, 1.0 / projected_norm);
