@@ -23,7 +23,8 @@ pub use aggregation::{
 pub use dense::DensePseudoinverse;
 pub use error::MultiwayError;
 pub use hierarchy::{
-    AggregationStrategy, HierarchyBuildReport, HierarchyOptions, ThreeWayHierarchy,
+    AggregationKind, AggregationStrategy, HierarchyBuildReport, HierarchyOptions,
+    ThreeWayHierarchy,
 };
 pub use jacobi::DiagonalPreconditioner;
 #[cfg(feature = "lsmr")]
