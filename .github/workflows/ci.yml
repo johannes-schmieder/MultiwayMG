@@ -59,10 +59,17 @@ jobs:
           set -o pipefail
           cargo run --locked --release -p multiway-mg --example feasibility_matrix --all-features \
             | tee feasibility-matrix.tsv
+      - name: Run recursive scaling probe
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo run --locked --release -p multiway-mg --example scaling_probe --all-features \
+            | tee scaling-probe.tsv
       - uses: actions/upload-artifact@v4
         with:
           name: feasibility-output
           path: |
             feasibility.txt
             feasibility-matrix.tsv
+            scaling-probe.tsv
           if-no-files-found: error
