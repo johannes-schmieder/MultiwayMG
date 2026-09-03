@@ -1,3 +1,5 @@
+#![cfg(feature = "cmg")]
+
 //! Acceptance gate for a known good three-way coarse space.
 
 use multiway_mg::{
