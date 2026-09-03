@@ -6,33 +6,49 @@
 - [x] Matrix-free weighted incidence and Gramian kernels.
 - [x] Incidence components and known structural-kernel projection.
 - [x] Exact factor-respecting Galerkin coarsening.
-- [x] Dense rank-revealing reference terminal.
+- [x] Dense scale-invariant rank-revealing reference terminal.
 
-## Milestone 1 — first solver prototype
+## Milestone 1 — complete first research version
 
 - [x] Stable weighted-Jacobi smoother.
 - [x] Recursive symmetric three-way V-cycle.
-- [x] Shared-context automatic matching.
+- [x] Exact shared-context aggregation.
+- [x] Bounded pair-neighborhood fallback aggregation.
+- [x] Deterministic adaptive hierarchy policy with per-level diagnostics.
 - [x] Pairwise CMG smoother.
 - [x] Symmetric pair-CMG plus coarse hybrid.
 - [x] Projected PCG research driver.
 - [x] Rectangular modified-LSMR driver and independent certificate.
-- [x] GitHub Actions and manufactured feasibility probe.
+- [x] Full-feature and minimal-feature GitHub Actions on Rust 1.85.
+- [x] Planted and six-family release feasibility probes.
+- [x] Raw first-stage evidence and interpretation committed to the repository.
 
-## Milestone 2 — evidence and diagnostics
+## Milestone 2 — broader evidence and diagnostics
 
-- [ ] Freeze a broader synthetic family matrix.
-- [ ] Record setup, apply, and Krylov work separately.
+- [x] Freeze an initial six-family synthetic matrix.
+- [x] Cover planted clones, noisy clones, Latin patterns, a weak chain,
+      additional nesting-induced rank deficiency, and disconnected components.
+- [x] Record setup time, solve time, Krylov iterations, and independently
+      certified residuals.
+- [ ] Add explicit operator, smoother, pair-CMG, and coarse-cycle work counters.
 - [ ] Add two-grid error-propagation spectral diagnostics for small problems.
-- [ ] Compare exact pair solves, current `within` approximate Cholesky, and CMG.
-- [ ] Add adversarial nesting, disconnected, hub, and heterogeneous-weight cases.
-- [ ] Decide whether pair-CMG is independently competitive.
+- [ ] Add hub, power-law degree, weak-community, and extreme-weight families.
+- [ ] Add larger sparse scaling cases where dense-terminal and timer noise are
+      negligible.
+- [ ] Compare exact pair solves, current `within` approximate Cholesky, and CMG
+      on identical pair subdomains.
+- [ ] Decide whether pair-CMG is independently competitive after complete setup
+      and apply costs are charged.
 
 ## Milestone 3 — adaptive coarse spaces
 
+- [x] Build a bounded sparse candidate graph from shared pair-marginal
+      neighborhoods as a structural fallback.
 - [ ] Generate deterministic relaxed test vectors.
-- [ ] Build sparse same-factor candidate graphs from pair marginals and sketches.
-- [ ] Rank candidates by test-vector affinity and predicted tuple contraction.
+- [ ] Build richer sparse same-factor candidate graphs from pair marginals and
+      compact neighborhood sketches.
+- [ ] Rank candidates by test-vector affinity, predicted tuple contraction, and
+      energy inflation.
 - [ ] Add compatible-relaxation quality measurement.
 - [ ] Split or promote bad aggregates.
 - [ ] Add bounded bootstrap slow-mode repair.
