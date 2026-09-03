@@ -27,3 +27,7 @@
 - Recursive release-mode scaling probe through 768 coefficient coordinates and
   131,072 unique tuples, with repeated median solve timing and hierarchy
   complexity diagnostics.
+- Reference-counted immutable three-way problem state, making solver-level
+  problem clones constant-time.
+- Retained per-pair CMG RHS, solution, and cycle workspaces reused across
+  preconditioner applications.
