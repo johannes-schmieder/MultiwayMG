@@ -76,10 +76,8 @@ fn run_case(case: &OracleCase) -> Result<(), Box<dyn std::error::Error>> {
         0.0,
     )?;
 
-    let dense_pair = DensePairSchwarzPreconditioner::build(
-        case.problem.clone(),
-        DensePairOptions::default(),
-    )?;
+    let dense_pair =
+        DensePairSchwarzPreconditioner::build(case.problem.clone(), DensePairOptions::default())?;
     run_method(
         case,
         &range,
@@ -206,7 +204,9 @@ fn oracle_hierarchy_options(case: &OracleCase) -> HierarchyOptions {
     }
 }
 
-fn deterministic_range_rhs(problem: &ThreeWayProblem) -> Result<Vec<f64>, Box<dyn std::error::Error>> {
+fn deterministic_range_rhs(
+    problem: &ThreeWayProblem,
+) -> Result<Vec<f64>, Box<dyn std::error::Error>> {
     let mut coefficients: Vec<f64> = (0..problem.dimension())
         .map(|index| {
             let position = index as f64 + 1.0;
@@ -361,7 +361,8 @@ fn planted_communities(
                 } else {
                     bridge_weight
                 };
-                weights.push(base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0));
+                weights
+                    .push(base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0));
             }
         }
     }
@@ -427,11 +428,7 @@ fn nearly_nested(
         for second in 0..levels {
             tuples.push([first as u32, second as u32, first as u32]);
             weights.push(1.0 + ((first + 2 * second) % 7) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((first + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((first + 1) % levels) as u32]);
             weights.push(perturbation_weight);
         }
     }
