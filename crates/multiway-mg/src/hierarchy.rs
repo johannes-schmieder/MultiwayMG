@@ -105,6 +105,15 @@ impl HierarchyOptions {
                 message: format!("must lie in (0, 2/3), got {}", self.jacobi_omega),
             });
         }
+        if self.pre_sweeps != self.post_sweeps {
+            return Err(MultiwayError::InvalidOption {
+                name: "smoothing_sweeps",
+                message: format!(
+                    "pre_sweeps ({}) must equal post_sweeps ({}) for a symmetric V-cycle",
+                    self.pre_sweeps, self.post_sweeps
+                ),
+            });
+        }
         Ok(())
     }
 }

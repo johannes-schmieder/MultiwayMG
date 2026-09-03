@@ -5,10 +5,10 @@ use multiway_mg::{
     MultiwayError, Preconditioner, ThreeWayHierarchy, ThreeWayProblem,
 };
 
-#[cfg(feature = "cmg")]
-use multiway_mg::{PairCmgOptions, PairCmgPreconditioner};
 #[cfg(feature = "lsmr")]
 use multiway_mg::{LeastSquaresOptions, solve_weighted_least_squares};
+#[cfg(feature = "cmg")]
+use multiway_mg::{PairCmgOptions, PairCmgPreconditioner};
 
 #[test]
 fn dense_terminal_rank_is_invariant_to_global_weight_scale() {
@@ -17,22 +17,18 @@ fn dense_terminal_rank_is_invariant_to_global_weight_scale() {
         .expect("small-scale problem is valid");
     let large = ThreeWayProblem::from_observations([2, 2, 2], &tuples, &[1.0e20; 8])
         .expect("large-scale problem is valid");
-    let small_terminal = DensePseudoinverse::from_problem(&small, 1.0e-12)
-        .expect("small-scale terminal succeeds");
-    let large_terminal = DensePseudoinverse::from_problem(&large, 1.0e-12)
-        .expect("large-scale terminal succeeds");
+    let small_terminal =
+        DensePseudoinverse::from_problem(&small, 1.0e-12).expect("small-scale terminal succeeds");
+    let large_terminal =
+        DensePseudoinverse::from_problem(&large, 1.0e-12).expect("large-scale terminal succeeds");
     assert_eq!(small_terminal.rank(), 4);
     assert_eq!(large_terminal.rank(), 4);
 }
 
 #[test]
 fn asymmetric_jacobi_sweep_counts_are_rejected() {
-    let problem = ThreeWayProblem::from_observations(
-        [2, 2, 2],
-        &complete_tuples(2, 0),
-        &[1.0; 8],
-    )
-    .expect("problem is valid");
+    let problem = ThreeWayProblem::from_observations([2, 2, 2], &complete_tuples(2, 0), &[1.0; 8])
+        .expect("problem is valid");
     let error = ThreeWayHierarchy::build(
         problem,
         HierarchyOptions {
@@ -71,8 +67,8 @@ fn pair_cmg_is_symmetric_on_arbitrary_inputs() {
     let weights: Vec<f64> = (0..tuples.len())
         .map(|index| 0.75 + (index % 7) as f64 / 5.0)
         .collect();
-    let problem = ThreeWayProblem::from_observations([3, 3, 3], &tuples, &weights)
-        .expect("problem is valid");
+    let problem =
+        ThreeWayProblem::from_observations([3, 3, 3], &tuples, &weights).expect("problem is valid");
     let pair = PairCmgPreconditioner::build(problem.clone(), PairCmgOptions::default())
         .expect("pair CMG construction succeeds");
     let left: Vec<f64> = (0..problem.dimension())
@@ -121,8 +117,8 @@ fn rectangular_lsmr_handles_rank_deficiency_beyond_factor_shifts() {
     problem
         .apply_incidence(&coefficients, &mut targets)
         .expect("target construction succeeds");
-    let diagonal = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal preconditioner succeeds");
+    let diagonal =
+        DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal preconditioner succeeds");
     let result = solve_weighted_least_squares(
         &problem,
         &targets,
