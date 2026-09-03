@@ -19,6 +19,18 @@ pub enum MultiwayError {
         /// Explanation of the rejected value.
         message: String,
     },
+    /// A hard aggregation violated a problem or component invariant.
+    #[error("invalid aggregation: {message}")]
+    InvalidAggregation {
+        /// Invariant violation.
+        message: String,
+    },
+    /// Projected compatible relaxation could not produce a valid diagnostic.
+    #[error("compatible relaxation failed: {message}")]
+    CompatibleRelaxation {
+        /// Failure description.
+        message: String,
+    },
     /// Automatic coarsening stopped while the dense terminal remained too large.
     #[error(
         "hierarchy stagnated at dimension {dimension} with {tuples} tuples; dense terminal limit is {limit}"
