@@ -67,7 +67,7 @@ fn run_case(
     );
 
     let hierarchy_options = HierarchyOptions {
-        terminal_dimension: 60,
+        terminal_dimension: 96,
         minimum_dimension_reduction: 0.01,
         minimum_tuple_reduction: 0.0,
         ..HierarchyOptions::default()
