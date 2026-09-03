@@ -5,6 +5,8 @@
 //! by the `cmg` crate.
 
 mod aggregation;
+mod compatible;
+mod compatible_gate;
 mod dense;
 mod dense_pair;
 mod error;
@@ -22,6 +24,14 @@ mod spectral;
 pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
     build_pair_neighborhood_aggregation,
+};
+pub use compatible::{
+    CompatibleRelaxationOptions, CompatibleRelaxationReport, CompatibleRelaxationVectorReport,
+    DiagonalAggregationProjector, analyze_compatible_relaxation,
+};
+pub use compatible_gate::{
+    CompatibleRelaxationCriteria, CompatibleRelaxationDecision, CompatibleRelaxationRejection,
+    evaluate_compatible_relaxation,
 };
 pub use dense::DensePseudoinverse;
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
