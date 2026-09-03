@@ -59,12 +59,8 @@ fn latin_square(levels: u32) -> ThreeWayProblem {
         .enumerate()
         .map(|(index, _)| 0.75 + (index % 11) as f64 / 10.0)
         .collect();
-    ThreeWayProblem::from_observations(
-        [levels as usize; 3],
-        &tuples,
-        &weights,
-    )
-    .expect("Latin-square problem is valid")
+    ThreeWayProblem::from_observations([levels as usize; 3], &tuples, &weights)
+        .expect("Latin-square problem is valid")
 }
 
 fn latin_square_tuples(levels: u32, offset: u32) -> Vec<[u32; 3]> {

@@ -3,11 +3,11 @@
 use std::time::Instant;
 
 use multiway_mg::{
-    AffinityAggregationOptions, AggregationStrategy, DiagonalPreconditioner,
-    FactorAggregation, HierarchyOptions, HybridPairVcycle, LeastSquaresOptions,
-    PairCmgOptions, PairCmgPreconditioner, PairNeighborhoodAggregationOptions, PcgOptions,
-    Preconditioner, ThreeWayHierarchy, ThreeWayProblem, build_affinity_aggregation,
-    build_pair_neighborhood_aggregation, solve_projected_pcg, solve_weighted_least_squares,
+    AffinityAggregationOptions, AggregationStrategy, DiagonalPreconditioner, FactorAggregation,
+    HierarchyOptions, HybridPairVcycle, LeastSquaresOptions, PairCmgOptions, PairCmgPreconditioner,
+    PairNeighborhoodAggregationOptions, PcgOptions, Preconditioner, ThreeWayHierarchy,
+    ThreeWayProblem, build_affinity_aggregation, build_pair_neighborhood_aggregation,
+    solve_projected_pcg, solve_weighted_least_squares,
 };
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -29,11 +29,7 @@ struct Case {
 fn run_case(case: &Case) -> Result<(), Box<dyn std::error::Error>> {
     let problem = &case.problem;
     let rhs = problem.rhs_from_targets(&case.targets)?;
-    let levels = problem
-        .topology()
-        .level_counts()
-        .iter()
-        .sum::<usize>();
+    let levels = problem.topology().level_counts().iter().sum::<usize>();
 
     let exact = build_affinity_aggregation(problem, AffinityAggregationOptions::default())?;
     let exact_coarse = exact.coarsen(problem)?;
@@ -352,11 +348,7 @@ fn noisy_clones(
             for first_clone in 0..clones {
                 for second_clone in 0..clones {
                     for third_clone in 0..clones {
-                        if (first_clone
-                            + 2 * second_clone
-                            + 3 * third_clone
-                            + first
-                            + 2 * second)
+                        if (first_clone + 2 * second_clone + 3 * third_clone + first + 2 * second)
                             % 4
                             == 0
                         {
@@ -388,10 +380,7 @@ fn noisy_clones(
     )?)
 }
 
-fn latin_square(
-    levels: usize,
-    offset: u32,
-) -> Result<ThreeWayProblem, Box<dyn std::error::Error>> {
+fn latin_square(levels: usize, offset: u32) -> Result<ThreeWayProblem, Box<dyn std::error::Error>> {
     let tuples = latin_square_tuples(levels as u32, offset);
     let weights: Vec<f64> = (0..tuples.len())
         .map(|index| 0.8 + (index % 11) as f64 / 10.0)
@@ -403,10 +392,7 @@ fn latin_square(
     )?)
 }
 
-fn weak_chain(
-    groups: usize,
-    clones: usize,
-) -> Result<ThreeWayProblem, Box<dyn std::error::Error>> {
+fn weak_chain(groups: usize, clones: usize) -> Result<ThreeWayProblem, Box<dyn std::error::Error>> {
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     for group in 0..groups {
@@ -419,8 +405,7 @@ fn weak_chain(
                         (group * clones + third_clone) as u32,
                     ]);
                     weights.push(
-                        1.0 + ((group + first_clone + 2 * second_clone + third_clone) % 7)
-                            as f64
+                        1.0 + ((group + first_clone + 2 * second_clone + third_clone) % 7) as f64
                             / 10.0,
                     );
                 }
@@ -450,9 +435,7 @@ fn weak_chain(
     )?)
 }
 
-fn nested_third_factor(
-    levels: usize,
-) -> Result<ThreeWayProblem, Box<dyn std::error::Error>> {
+fn nested_third_factor(levels: usize) -> Result<ThreeWayProblem, Box<dyn std::error::Error>> {
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     for first in 0..levels {

@@ -99,7 +99,8 @@ pub fn build_pair_neighborhood_aggregation(
 ) -> Result<FactorAggregation, MultiwayError> {
     let options = options.validate()?;
     let counts = problem.topology().level_counts();
-    let parents = core::array::from_fn(|factor| build_neighborhood_factor(problem, factor, options));
+    let parents =
+        core::array::from_fn(|factor| build_neighborhood_factor(problem, factor, options));
     FactorAggregation::new(counts, parents).map_err(Into::into)
 }
 
@@ -146,8 +147,9 @@ fn build_neighborhood_factor(
         if neighbor_factor == factor {
             continue;
         }
-        let mut neighborhoods: Vec<BTreeMap<u32, f64>> =
-            (0..counts[neighbor_factor]).map(|_| BTreeMap::new()).collect();
+        let mut neighborhoods: Vec<BTreeMap<u32, f64>> = (0..counts[neighbor_factor])
+            .map(|_| BTreeMap::new())
+            .collect();
         for (&tuple, &weight) in problem.topology().tuples().iter().zip(problem.weights()) {
             *neighborhoods[tuple[neighbor_factor] as usize]
                 .entry(tuple[factor])
