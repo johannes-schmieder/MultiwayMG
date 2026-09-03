@@ -43,8 +43,21 @@ fn diagonal_map_and_exact_pair_actions_are_symmetric_positive_on_the_range() {
         DensePairSchwarzPreconditioner::build(problem.clone(), DensePairOptions::default())
             .expect("dense pair preconditioner succeeds");
 
+    let diagonal_report = range
+        .analyze(&diagonal, options)
+        .expect("diagonal spectral analysis succeeds");
+    assert!(diagonal_report.numerically_symmetric());
+    assert!(diagonal_report.positive_definite_on_range());
+    assert_eq!(diagonal_report.negative_preconditioner_directions(), 0);
+    assert_eq!(diagonal_report.near_zero_preconditioner_directions(), 0);
+    assert!(diagonal_report.minimum_preconditioned_eigenvalue() > 0.0);
+    assert!(
+        diagonal_report
+            .preconditioned_condition_number()
+            .is_finite()
+    );
+
     for preconditioner in [
-        &diagonal as &dyn Preconditioner,
         &map as &dyn Preconditioner,
         &dense_pair as &dyn Preconditioner,
     ] {

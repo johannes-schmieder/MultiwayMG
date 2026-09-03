@@ -109,7 +109,7 @@ impl DenseRangeDecomposition {
             });
         }
         let threshold = options.relative_rank_tolerance * spectral_scale;
-        let mut positive_indices = Vec::new();
+        let mut positive_modes = Vec::new();
         for (index, &eigenvalue) in decomposition.eigenvalues.iter().enumerate() {
             if eigenvalue < -threshold {
                 return Err(MultiwayError::NegativeEigenvalue {
@@ -118,25 +118,25 @@ impl DenseRangeDecomposition {
                 });
             }
             if eigenvalue > threshold {
-                positive_indices.push(index);
+                positive_modes.push((eigenvalue, index));
             }
         }
-        if positive_indices.is_empty() {
+        if positive_modes.is_empty() {
             return Err(MultiwayError::SpectralAnalysis {
                 message: "Gramian has no positive numerical range".to_owned(),
             });
         }
+        positive_modes.sort_by(|left, right| left.0.total_cmp(&right.0));
 
-        let rank = positive_indices.len();
+        let rank = positive_modes.len();
         let mut basis = DMatrix::zeros(dimension, rank);
         let mut positive_eigenvalues = Vec::with_capacity(rank);
-        for (column, &source_column) in positive_indices.iter().enumerate() {
-            positive_eigenvalues.push(decomposition.eigenvalues[source_column]);
+        for (column, &(eigenvalue, source_column)) in positive_modes.iter().enumerate() {
+            positive_eigenvalues.push(eigenvalue);
             for row in 0..dimension {
                 basis[(row, column)] = decomposition.eigenvectors[(row, source_column)];
             }
         }
-        positive_eigenvalues.sort_by(f64::total_cmp);
         let minimum_positive_eigenvalue = positive_eigenvalues[0];
         let maximum_eigenvalue = positive_eigenvalues[rank - 1];
         Ok(Self {
