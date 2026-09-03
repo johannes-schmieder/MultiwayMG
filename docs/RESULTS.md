@@ -3,19 +3,24 @@
 ## Evidence snapshot
 
 The first broad deterministic experiment was run in GitHub Actions on
-September 3, 2026, using Rust 1.85.0 and release builds at commit
-`c9d3ded1e888d72b78c7564b2c34cadad4073af5`. The authoritative command was:
+September 3, 2026, using Rust 1.85.0 and release builds. The authoritative
+commands are:
 
 ```bash
 cargo run --locked --release -p multiway-mg \
   --example feasibility_matrix --all-features
+
+cargo run --locked --release -p multiway-mg \
+  --example scaling_probe --all-features
 ```
 
-The raw output is committed at
-`benchmarks/results/2026-09-03/feasibility-matrix.tsv`. The smaller planted
-probe is preserved beside it as `feasibility.txt`.
+The raw outputs are committed at:
 
-Every target vector in this experiment was generated exactly from a known
+- `benchmarks/results/2026-09-03/feasibility-matrix.tsv`;
+- `benchmarks/results/2026-09-03/scaling-probe.tsv`; and
+- `benchmarks/results/2026-09-03/feasibility.txt`.
+
+Every target vector in these experiments was generated exactly from a known
 three-way coefficient vector. Projected PCG reports a residual recomputed with
 the submitted Gramian. Modified LSMR reports an independently recomputed
 normal-equation residual
@@ -24,7 +29,7 @@ normal-equation residual
 ||B' W (y - Bx)|| / ||B' W y||.
 ```
 
-## Iteration summary
+## Six-family iteration summary
 
 | Synthetic family | Aggregation used | Diagonal PCG | Pair-CMG PCG | Three-way V-cycle PCG | Hybrid PCG | Hybrid LSMR |
 |---|---|---:|---:|---:|---:|---:|
@@ -39,7 +44,63 @@ All 30 solver/case combinations converged. The largest recorded certified
 residual was below `9e-10`; the hybrid residuals ranged from approximately
 `3e-16` to `2e-10`.
 
-## What the experiment establishes
+## Recursive scaling result
+
+The recursive probe expands the planted family from 96 to 768 coefficient
+coordinates and from 2,048 to 131,072 unique tuples. It uses the hierarchy's
+first-class adaptive policy rather than supplying an oracle map.
+
+| Coefficient coordinates | Unique tuples | Hierarchy depth | Tuple complexity | Diagonal PCG | Hybrid PCG | Hybrid LSMR |
+|---:|---:|---:|---:|---:|---:|---:|
+| 96 | 2,048 | 1 | 1.125 | 10 | **4** | **4** |
+| 192 | 8,192 | 2 | 1.210 | 9 | **3** | **3** |
+| 384 | 32,768 | 3 | 1.225 | 9 | **3** | **3** |
+| 768 | 131,072 | 4 | 1.235 | 9 | **3** | **3** |
+
+The adaptive hierarchy selected a mixture of exact-context and
+pair-neighborhood levels. Iteration counts did not grow with hierarchy depth,
+and cumulative tuple work remained tightly bounded: the sum of tuple counts
+across all levels was at most 1.235 times the finest tuple count.
+
+This is strong evidence that the recursive representation and adaptive fallback
+remain numerically effective beyond one coarse level. It is not yet evidence of
+production speed superiority.
+
+### Current cost gap
+
+On this easy planted family, the unoptimized hybrid was slower in wall-clock
+solve time despite its lower iteration count. At the largest point:
+
+```text
+diagonal PCG setup       approximately   0.001 ms
+diagonal PCG solve       approximately   6.425 ms
+hybrid setup             approximately 224.755 ms
+hybrid PCG solve         approximately  13.395 ms
+hybrid modified LSMR     approximately  27.035 ms
+```
+
+The gap is expected from the current research implementation:
+
+- three pair graph hierarchies are constructed;
+- the three-way hierarchy uses allocation-heavy maps and dense terminal setup;
+- `ThreeWayProblem` clones still duplicate substantial immutable state;
+- V-cycle recursion allocates temporary vectors;
+- pair-CMG allocates a workspace on every application;
+- kernels are serial and solve one right-hand side at a time.
+
+The scaling result therefore separates two conclusions that should not be
+conflated:
+
+1. **Numerically**, the hybrid has excellent recursive iteration behavior on
+   this family.
+2. **As currently engineered**, it is not competitive with diagonal PCG on an
+   already easy problem.
+
+The next performance experiments should include difficult scaling families,
+such as weakly coupled chains, where the baseline iteration count grows and the
+more expensive hybrid cycle has a plausible solve-time crossover.
+
+## What the experiments establish
 
 ### The operator and hierarchy are viable
 
@@ -78,24 +139,21 @@ certified. Separate tests also verify two structural shift directions per
 incidence component and scale-invariant rank decisions in the dense spectral
 terminal.
 
-## What the experiment does not establish
+## What the experiments do not establish
 
-The sub-millisecond timings in the raw file are **not performance evidence**.
-The problems are intentionally tiny, terminal solves are dense, temporary
-vectors are allocated during every V-cycle and pair application, and GitHub
-host timing noise is large relative to the measured intervals. Iteration counts
-and certified residuals are the meaningful outputs of this stage.
+The first matrix's sub-millisecond timings are not performance evidence. The
+recursive probe is large enough to expose real setup and cycle costs, but it is
+still one manufactured, highly coarsenable family on a hosted runner.
 
-The experiment does not yet show that MultiwayMG is faster than:
+The experiments do not yet show that MultiwayMG is faster than:
 
 - the current approximate-Cholesky Schwarz implementation in `within`;
 - optimized MAP or CG absorption;
 - two-way CMG plus a small dense nuisance Schur complement; or
 - a future production implementation on real three-large-FE designs.
 
-It also does not prove mesh-independent or problem-size-independent convergence.
-The six families were chosen to expose several different structures, but they
-remain manufactured.
+They also do not prove mesh-independent or problem-size-independent convergence
+outside the tested families.
 
 ## Feasibility verdict
 
@@ -105,16 +163,21 @@ symmetric, CMG can serve as a pairwise graph smoother, and the combined
 preconditioner can reduce difficult manufactured systems to a handful of
 Krylov iterations while preserving original-operator residual accuracy.
 
+Recursive scaling strengthens that conclusion: automatic coarsening produced
+four useful levels, bounded tuple complexity, and stable three-iteration hybrid
+convergence at 131,072 unique tuples.
+
 The remaining uncertainty is primarily **automatic coarse-space quality and
 production cost**, not whether the mathematical composition is implementable.
 The next decisive evidence should come from:
 
-1. large sparse families where dense terminals are a negligible fraction of
-   total work;
+1. difficult large sparse families where the hybrid's iteration reduction can
+   offset its more expensive cycle;
 2. worker--firm--occupation and exporter--importer--product shaped generators;
 3. direct comparison with `within` approximate Cholesky on identical pair
    subdomains;
-4. caller-owned reusable workspaces and fused multiple-RHS tuple kernels;
+4. shared immutable topology, caller-owned reusable workspaces, and fused
+   multiple-RHS tuple kernels;
 5. relaxed test vectors and compatible relaxation for cases where structural
    matching gives a poor coarse space; and
 6. an eventual private `fereg` OLS integration retaining fereg's independent
