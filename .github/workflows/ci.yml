@@ -73,3 +73,24 @@ jobs:
             feasibility-matrix.tsv
             scaling-probe.tsv
           if-no-files-found: error
+
+  oracle-spectral:
+    name: Oracle quotient-space spectral matrix
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Run oracle spectral matrix
+        shell: bash
+        run: |
+          set -o pipefail
+          cargo run --locked --release -p multiway-mg --example oracle_spectral_matrix --all-features \
+            | tee oracle-spectral-matrix.tsv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: oracle-spectral-output
+          path: oracle-spectral-matrix.tsv
+          if-no-files-found: error
