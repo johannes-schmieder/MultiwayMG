@@ -1,8 +1,11 @@
 //! Pairwise graph-Laplacian corrections powered by CMG.
 
-use std::collections::BTreeMap;
+use std::{
+    collections::BTreeMap,
+    sync::{Arc, Mutex},
+};
 
-use cmg::{CmgOptions, CmgPreconditioner, Components, Laplacian};
+use cmg::{CmgOptions, CmgPreconditioner, CmgWorkspace, Components, Laplacian};
 
 use crate::{HierarchyOptions, MultiwayError, Preconditioner, ThreeWayHierarchy, ThreeWayProblem};
 
@@ -208,6 +211,7 @@ struct PairSystem {
     second_offset: usize,
     components: Components,
     preconditioner: CmgPreconditioner,
+    workspace: Arc<Mutex<PairWorkspace>>,
 }
 
 impl PairSystem {
@@ -233,6 +237,12 @@ impl PairSystem {
         let components = Components::from_laplacian(&graph);
         let preconditioner = CmgPreconditioner::build(&graph, options)
             .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
+        let local_dimension = first_count + second_count;
+        let workspace = PairWorkspace {
+            rhs: vec![0.0; local_dimension],
+            solution: vec![0.0; local_dimension],
+            cmg: preconditioner.workspace(),
+        };
         Ok(Self {
             first,
             second,
@@ -242,6 +252,7 @@ impl PairSystem {
             second_offset: offsets[second],
             components,
             preconditioner,
+            workspace: Arc::new(Mutex::new(workspace)),
         })
     }
 
@@ -251,35 +262,44 @@ impl PairSystem {
         out: &mut [f64],
         partition_weight: f64,
     ) -> Result<(), MultiwayError> {
-        let local_dimension = self.first_count + self.second_count;
-        let mut local_rhs = vec![0.0; local_dimension];
+        let mut workspace = self
+            .workspace
+            .lock()
+            .map_err(|_| MultiwayError::Cmg("pair-CMG workspace lock was poisoned".to_owned()))?;
+        workspace.rhs.fill(0.0);
+        workspace.solution.fill(0.0);
         for level in 0..self.first_count {
-            local_rhs[level] = partition_weight * rhs[self.first_offset + level];
+            workspace.rhs[level] = partition_weight * rhs[self.first_offset + level];
         }
         for level in 0..self.second_count {
-            local_rhs[self.first_count + level] =
+            workspace.rhs[self.first_count + level] =
                 -partition_weight * rhs[self.second_offset + level];
         }
         self.components
-            .center_in_place(&mut local_rhs)
+            .center_in_place(&mut workspace.rhs)
             .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
 
-        let mut local_solution = vec![0.0; local_dimension];
-        let mut workspace = self.preconditioner.workspace();
+        let PairWorkspace { rhs, solution, cmg } = &mut *workspace;
         self.preconditioner
-            .apply_compatible_into(&local_rhs, &mut local_solution, &mut workspace)
+            .apply_compatible_into(rhs, solution, cmg)
             .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
 
         for level in 0..self.first_count {
-            out[self.first_offset + level] += partition_weight * local_solution[level];
+            out[self.first_offset + level] += partition_weight * solution[level];
         }
         for level in 0..self.second_count {
-            out[self.second_offset + level] -=
-                partition_weight * local_solution[self.first_count + level];
+            out[self.second_offset + level] -= partition_weight * solution[self.first_count + level];
         }
         debug_assert!(self.first < self.second);
         Ok(())
     }
+}
+
+#[derive(Debug, Clone)]
+struct PairWorkspace {
+    rhs: Vec<f64>,
+    solution: Vec<f64>,
+    cmg: CmgWorkspace,
 }
 
 fn add_assign(destination: &mut [f64], source: &[f64]) {
