@@ -48,7 +48,9 @@ jobs:
           toolchain: "1.85.0"
       - uses: Swatinem/rust-cache@v2
       - name: Run release feasibility example
+        shell: bash
         run: |
+          set -o pipefail
           cargo run --release -p multiway-mg --example feasibility --all-features \
             | tee feasibility.txt
       - uses: actions/upload-artifact@v4
