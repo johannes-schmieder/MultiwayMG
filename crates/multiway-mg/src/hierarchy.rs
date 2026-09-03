@@ -2,14 +2,39 @@
 
 use crate::{
     AffinityAggregationOptions, DensePseudoinverse, DiagonalPreconditioner, FactorAggregation,
-    MultiwayError, Preconditioner, ThreeWayProblem, build_affinity_aggregation,
+    MultiwayError, PairNeighborhoodAggregationOptions, Preconditioner, ThreeWayProblem,
+    build_affinity_aggregation, build_pair_neighborhood_aggregation,
 };
+
+/// Concrete aggregation method selected at one hierarchy level.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AggregationKind {
+    /// Exact shared-context affinity matching.
+    ExactContext,
+    /// Shared-neighbor matching in the two pair marginals.
+    PairNeighborhood,
+    /// Consecutive factor-local halving.
+    Consecutive,
+    /// Caller-supplied aggregation map.
+    Supplied,
+}
 
 /// Method used to construct one hard factor-respecting aggregation per level.
 #[derive(Debug, Clone, PartialEq)]
 pub enum AggregationStrategy {
-    /// Shared-context affinity matching.
+    /// Try exact-context affinity first and use bounded pair-neighborhood
+    /// matching only when the first candidate fails the configured progress
+    /// thresholds.
+    Adaptive {
+        /// Exact shared-context matcher options.
+        exact_context: AffinityAggregationOptions,
+        /// Pair-neighborhood fallback options.
+        pair_neighborhood: PairNeighborhoodAggregationOptions,
+    },
+    /// Shared-context affinity matching only.
     Affinity(AffinityAggregationOptions),
+    /// Pair-neighborhood matching only.
+    PairNeighborhood(PairNeighborhoodAggregationOptions),
     /// Merge consecutive level pairs. Mainly useful for manufactured oracle tests.
     Consecutive,
     /// Use caller-supplied maps in level order.
@@ -18,7 +43,10 @@ pub enum AggregationStrategy {
 
 impl Default for AggregationStrategy {
     fn default() -> Self {
-        Self::Affinity(AffinityAggregationOptions::default())
+        Self::Adaptive {
+            exact_context: AffinityAggregationOptions::default(),
+            pair_neighborhood: PairNeighborhoodAggregationOptions::default(),
+        }
     }
 }
 
@@ -124,6 +152,7 @@ pub struct HierarchyBuildReport {
     dimensions: Vec<usize>,
     tuple_counts: Vec<usize>,
     component_counts: Vec<usize>,
+    aggregation_kinds: Vec<AggregationKind>,
     aggregation_bytes: usize,
     terminal_rank: usize,
     terminal_threshold: f64,
@@ -146,6 +175,12 @@ impl HierarchyBuildReport {
     #[must_use]
     pub fn component_counts(&self) -> &[usize] {
         &self.component_counts
+    }
+
+    /// Concrete aggregation selected for every nonterminal level.
+    #[must_use]
+    pub fn aggregation_kinds(&self) -> &[AggregationKind] {
+        &self.aggregation_kinds
     }
 
     /// Retained bytes in hard parent maps.
@@ -211,6 +246,7 @@ impl ThreeWayHierarchy {
         options.validate()?;
         let mut problems = vec![finest];
         let mut aggregations = Vec::new();
+        let mut aggregation_kinds = Vec::new();
         let mut smoothers = Vec::new();
 
         while problems
@@ -224,38 +260,63 @@ impl ThreeWayHierarchy {
             let current = problems
                 .last()
                 .expect("hierarchy always has a finest level");
-            let aggregation = match &options.aggregation {
+            let (aggregation, coarse, aggregation_kind) = match &options.aggregation {
+                AggregationStrategy::Adaptive {
+                    exact_context,
+                    pair_neighborhood,
+                } => {
+                    let exact = build_affinity_aggregation(current, *exact_context)?;
+                    let exact_coarse = exact.coarsen(current)?;
+                    if candidate_makes_progress(current, &exact_coarse, &options) {
+                        (exact, exact_coarse, AggregationKind::ExactContext)
+                    } else {
+                        let neighborhood =
+                            build_pair_neighborhood_aggregation(current, *pair_neighborhood)?;
+                        let neighborhood_coarse = neighborhood.coarsen(current)?;
+                        (
+                            neighborhood,
+                            neighborhood_coarse,
+                            AggregationKind::PairNeighborhood,
+                        )
+                    }
+                }
                 AggregationStrategy::Affinity(affinity) => {
-                    build_affinity_aggregation(current, *affinity)?
+                    let aggregation = build_affinity_aggregation(current, *affinity)?;
+                    let coarse = aggregation.coarsen(current)?;
+                    (aggregation, coarse, AggregationKind::ExactContext)
+                }
+                AggregationStrategy::PairNeighborhood(neighborhood) => {
+                    let aggregation = build_pair_neighborhood_aggregation(current, *neighborhood)?;
+                    let coarse = aggregation.coarsen(current)?;
+                    (aggregation, coarse, AggregationKind::PairNeighborhood)
                 }
                 AggregationStrategy::Consecutive => {
-                    FactorAggregation::consecutive_halving(current.topology().level_counts())?
+                    let aggregation =
+                        FactorAggregation::consecutive_halving(current.topology().level_counts())?;
+                    let coarse = aggregation.coarsen(current)?;
+                    (aggregation, coarse, AggregationKind::Consecutive)
                 }
                 AggregationStrategy::Supplied(supplied) => {
-                    supplied
-                        .get(level)
-                        .cloned()
-                        .ok_or(MultiwayError::HierarchyStagnated {
+                    let aggregation = supplied.get(level).cloned().ok_or(
+                        MultiwayError::HierarchyStagnated {
                             dimension: current.dimension(),
                             tuples: current.tuple_count(),
                             limit: options.terminal_dimension,
-                        })?
+                        },
+                    )?;
+                    let coarse = aggregation.coarsen(current)?;
+                    (aggregation, coarse, AggregationKind::Supplied)
                 }
             };
             if aggregation.fine_counts() != current.topology().level_counts() {
                 return Err(MultiwayError::InvalidSuppliedAggregation { level });
             }
-            let coarse = aggregation.coarsen(current)?;
-            let dimension_reduction = 1.0 - coarse.dimension() as f64 / current.dimension() as f64;
-            let tuple_reduction = 1.0 - coarse.tuple_count() as f64 / current.tuple_count() as f64;
-            let made_progress = coarse.dimension() < current.dimension()
-                && (dimension_reduction >= options.minimum_dimension_reduction
-                    || tuple_reduction >= options.minimum_tuple_reduction);
-            if !made_progress {
+            if !candidate_makes_progress(current, &coarse, &options) {
                 break;
             }
             smoothers.push(DiagonalPreconditioner::new(current, options.jacobi_omega)?);
             aggregations.push(aggregation);
+            aggregation_kinds.push(aggregation_kind);
             problems.push(coarse);
         }
 
@@ -278,6 +339,7 @@ impl ThreeWayHierarchy {
                 .iter()
                 .map(|problem| problem.components().count())
                 .collect(),
+            aggregation_kinds,
             aggregation_bytes: aggregations
                 .iter()
                 .map(FactorAggregation::retained_bytes)
@@ -424,6 +486,18 @@ impl Preconditioner for ThreeWayHierarchy {
         out.copy_from_slice(&solution);
         Ok(())
     }
+}
+
+fn candidate_makes_progress(
+    fine: &ThreeWayProblem,
+    coarse: &ThreeWayProblem,
+    options: &HierarchyOptions,
+) -> bool {
+    let dimension_reduction = 1.0 - coarse.dimension() as f64 / fine.dimension() as f64;
+    let tuple_reduction = 1.0 - coarse.tuple_count() as f64 / fine.tuple_count() as f64;
+    coarse.dimension() < fine.dimension()
+        && (dimension_reduction >= options.minimum_dimension_reduction
+            || tuple_reduction >= options.minimum_tuple_reduction)
 }
 
 fn smoothing_sweep(
