@@ -25,24 +25,35 @@ jobs:
           toolchain: "1.85.0"
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - name: Raise the experimental terminal cap and apply rustfmt
+      - name: Configure the explicitly labeled oracle hierarchy and apply rustfmt
         run: |
           python3 - <<'PY'
           from pathlib import Path
 
           path = Path("crates/multiway-mg/examples/difficult_scaling_probe.rs")
           text = path.read_text(encoding="utf-8")
-          old = "terminal_dimension: 60,"
-          new = "terminal_dimension: 96,"
-          if old in text:
-              path.write_text(text.replace(old, new, 1), encoding="utf-8")
-          elif new not in text:
-              raise SystemExit("difficult-probe terminal setting was not found")
+          text = text.replace(
+              "DiagonalPreconditioner, HierarchyOptions, HybridPairVcycle,",
+              "AggregationStrategy, DiagonalPreconditioner, HierarchyOptions, HybridPairVcycle,",
+              1,
+          )
+          text = text.replace("terminal_dimension: 96,", "terminal_dimension: 48,", 1)
+          marker = "        minimum_tuple_reduction: 0.0,\n        ..HierarchyOptions::default()"
+          replacement = (
+              "        minimum_tuple_reduction: 0.0,\n"
+              "        aggregation: AggregationStrategy::Consecutive,\n"
+              "        ..HierarchyOptions::default()"
+          )
+          if marker in text:
+              text = text.replace(marker, replacement, 1)
+          elif "aggregation: AggregationStrategy::Consecutive," not in text:
+              raise SystemExit("difficult-probe hierarchy option marker was not found")
+          path.write_text(text, encoding="utf-8")
           PY
           cargo fmt --all
       - name: Compile and lint formatted source
         run: cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
-      - name: Run difficult probe without masking partial output
+      - name: Run difficult oracle probe without masking partial output
         shell: bash
         run: |
           set +e
@@ -56,13 +67,13 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: difficult-scaling-diagnostic
+          name: difficult-scaling-oracle-diagnostic
           path: |
             difficult-scaling-probe.tsv
             difficult-scaling-probe.stderr
             difficult-scaling-probe.status
           if-no-files-found: error
-      - name: Commit formatted source and terminal setting
+      - name: Commit formatted oracle-probe source
         run: |
           if git diff --quiet; then
             exit 0
@@ -70,5 +81,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add crates
-          git commit -m "Raise difficult-probe terminal cap and apply rustfmt"
+          git commit -m "Use an explicit oracle hierarchy for difficult scaling"
           git push origin HEAD:codex/initial-threeway-prototype
