@@ -24,3 +24,6 @@
   rustdoc, and release-mode feasibility probes.
 - Planted and six-family feasibility executables plus committed raw evidence and
   interpretation.
+- Recursive release-mode scaling probe through 768 coefficient coordinates and
+  131,072 unique tuples, with repeated median solve timing and hierarchy
+  complexity diagnostics.
