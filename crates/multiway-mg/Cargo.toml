@@ -36,5 +36,9 @@ required-features = ["cmg", "lsmr"]
 name = "oracle_spectral_matrix"
 required-features = ["cmg"]
 
+[[example]]
+name = "compatible_relaxation_matrix"
+required-features = ["cmg"]
+
 [lints]
 workspace = true
