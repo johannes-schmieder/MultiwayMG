@@ -24,5 +24,9 @@ schwarz-precond = { workspace = true, optional = true }
 name = "feasibility_matrix"
 required-features = ["cmg", "lsmr"]
 
+[[example]]
+name = "scaling_probe"
+required-features = ["cmg", "lsmr"]
+
 [lints]
 workspace = true
