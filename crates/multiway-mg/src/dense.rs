@@ -36,7 +36,8 @@ impl DensePseudoinverse {
             .copied()
             .map(f64::abs)
             .fold(0.0, f64::max);
-        let threshold = relative_tolerance * spectral_scale.max(1.0);
+        debug_assert!(spectral_scale.is_finite() && spectral_scale > 0.0);
+        let threshold = relative_tolerance * spectral_scale;
         let mut inverse_eigenvalues = Vec::with_capacity(dimension);
         let mut rank = 0;
         for &value in decomposition.eigenvalues.iter() {
