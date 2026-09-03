@@ -1,0 +1,64 @@
+name: Validate and merge initial MultiwayMG version
+
+on:
+  push:
+    branches:
+      - codex/initial-threeway-prototype
+
+permissions:
+  contents: write
+  pull-requests: write
+  actions: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  validate-and-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/initial-threeway-prototype
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Verify requested README content
+        run: |
+          grep -q '^## The problem$' README.md
+          grep -q '^## Goal$' README.md
+          grep -q '^## Relationship to CMG$' README.md
+          grep -q '^## Relationship to fereg$' README.md
+          grep -q '^## Current stage$' README.md
+          test ! -e README.next.md
+      - name: Validate workspace
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          RUSTDOCFLAGS='-D warnings' cargo doc --locked --workspace --all-features --no-deps
+      - name: Run release feasibility probes
+        run: |
+          cargo run --locked --release -p multiway-mg --example feasibility --all-features
+          cargo run --locked --release -p multiway-mg --example feasibility_matrix --all-features
+          cargo run --locked --release -p multiway-mg --example scaling_probe --all-features
+      - name: Remove one-time workflow and commit
+        run: |
+          rm .github/workflows/one-time-validate-and-merge.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Remove one-time merge workflow"
+          git push origin HEAD:codex/initial-threeway-prototype
+      - name: Mark the initial-version pull request ready and merge it
+        run: |
+          pr_number="$(gh pr list --repo "$GITHUB_REPOSITORY" --head codex/initial-threeway-prototype --base main --state open --json number --jq '.[0].number')"
+          test -n "$pr_number"
+          gh pr ready "$pr_number" --repo "$GITHUB_REPOSITORY" || true
+          gh pr merge "$pr_number" --repo "$GITHUB_REPOSITORY" --merge --subject "Merge initial MultiwayMG research version" --body "Validated first research version with an explicit project README and reproducible feasibility evidence."
