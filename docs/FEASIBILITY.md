@@ -1,33 +1,30 @@
 # Feasibility assessment
 
-## Questions the first version can answer
+## Questions answered by the first version
 
-1. Does exact factor-respecting coarsening preserve the matrix class in code?
-2. Can a planted hierarchy be recovered from tuple contexts?
-3. Is the resulting V-cycle numerically symmetric?
-4. Does it serve as a usable preconditioner for projected PCG and rectangular
-   modified LSMR on manufactured three-way systems?
-5. Does pair-CMG add value beyond diagonal smoothing?
-6. Does one three-way coarse correction add value beyond pair-CMG alone?
+The first implementation and its locked GitHub Actions matrix establish that:
 
-The GitHub Actions feasibility example prints iteration counts and independently
-certified residuals for these alternatives.
+1. exact factor-respecting coarsening preserves the matrix class in executable
+   code;
+2. the hierarchy preserves and projects the two structural factor-shift modes
+   per incidence component;
+3. the V-cycle and pair-CMG hybrid are numerically symmetric under their
+   documented configuration;
+4. the hierarchy is usable by projected PCG and by modified LSMR on the
+   original rectangular weighted incidence operator;
+5. pair-CMG removes difficult pairwise modes that diagonal smoothing leaves;
+6. a three-way coarse correction supplies additional value beyond pair-CMG;
+7. a deterministic pair-neighborhood fallback coarsens Latin-square structures
+   on which exact shared-context aggregation stagnates; and
+8. disconnected components and nesting-induced additional rank deficiency can
+   be handled without weakening original-operator residual checks.
 
-## What positive manufactured results would establish
+The exact results and raw evidence are in `docs/RESULTS.md` and
+`benchmarks/results/2026-09-03/`.
 
-A successful planted experiment would establish that:
+## Numerical hardening completed
 
-- the algebraic representation and Galerkin recursion are correct;
-- the pair-CMG adapter is operational;
-- an appropriate hard coarse space can remove slow global error;
-- the hybrid can be used by a rank-robust rectangular Krylov method.
-
-It would not establish that the current automatic aggregator is robust on real
-worker--firm--occupation or exporter--importer--product data.
-
-## Numerical hardening requirements
-
-Before broader experiments are interpreted, the first version must also prove:
+The first version includes tests proving:
 
 - dense terminal rank decisions are invariant to a global rescaling of every
   positive tuple weight;
@@ -37,52 +34,76 @@ Before broader experiments are interpreted, the first version must also prove:
   structural range, making the exposed operator symmetric even for arbitrary
   submitted coefficient vectors;
 - disconnected problems retain two structural shift directions per incidence
-  component; and
+  component;
+- mapped coarse tuples equal the dense Galerkin product;
+- matrix-free Gramian applications equal dense references; and
 - rectangular modified LSMR remains reliable when nesting creates rank
   deficiency beyond the two generic shifts.
 
 These are correctness properties, not performance heuristics.
 
+## First-stage verdict
+
+The direction is **mathematically and algorithmically feasible**. The
+structure-preserving hierarchy is not merely a conceptual analogy to graph
+multigrid: it constructs valid recursive weighted three-way incidence problems,
+combines with fixed CMG pair corrections, and produces certified solutions on a
+varied manufactured matrix.
+
+The strongest diagnostic is the weak-chain family. Diagonal PCG required 85
+iterations, pair-CMG required 9, the three-way V-cycle required 6, and their
+symmetric hybrid required 3. Across all six families, hybrid PCG and hybrid
+modified LSMR required 1–4 iterations.
+
+This is enough to justify the next research phase. It is not enough to claim a
+production speed advantage.
+
 ## Central unresolved risk
 
 Automatic coarse-space construction remains the core research problem. The
-first matcher only pairs same-factor levels sharing exact contexts in the other
-two factors. That is effective for planted clone models but can be too strict
-for sparse real data, where two levels may represent the same slow mode without
-sharing an exact pair context.
+first adaptive policy combines two deterministic structural rules:
 
-The next setup methods should use relaxed test vectors, sparse candidate
-neighborhoods, compatible relaxation, and bounded bootstrap repair. The
-hierarchy must also reject levels that reduce coefficient dimension without
-reducing unique tuple count.
+1. exact shared contexts in the other two factors; and
+2. bounded shared neighbors in the two pair marginals when the first rule fails
+   declared dimension/tuple progress gates.
 
-## Other risks
+This is substantially broader than the original clone matcher, but it still
+does not inspect the slow error modes of the actual weighted operator. Two
+levels may represent the same smooth mode even when their local neighborhoods
+do not look similar enough to either structural rule.
 
-- A hard piecewise-constant interpolation may have unacceptable energy
-  inflation even with good aggregates.
-- Three pair CMG hierarchies can cost more to build and apply than the current
-  approximate-Cholesky Schwarz subdomains.
-- Pairwise corrections may capture nearly all useful structure, leaving little
-  benefit for a full hierarchy.
-- Extra exact rank deficiency can make projected PCG unsuitable even when LSMR
-  remains reliable.
-- Weight changes in PPML may invalidate an aggregation learned in an earlier
-  frame.
-- Temporary allocation and serial tuple kernels currently obscure realistic
-  performance.
+The next setup method should use relaxed test vectors, sparse candidate
+neighborhoods, compatible relaxation, and bounded bootstrap repair. It should
+retain hard factor-respecting interpolation initially so exact tuple closure is
+preserved.
 
-## Go/no-go gates for the next research phase
+## Remaining performance uncertainties
 
-Proceed to adaptive coarsening when CI demonstrates:
+- The current problems are intentionally small; their wall times are dominated
+  by setup, dense terminals, allocation, and runner noise.
+- V-cycle and pair applications allocate temporary vectors and CMG workspaces.
+- Tuple kernels are serial and solve one RHS at a time.
+- Three pair CMG hierarchies may cost more to build and apply than the current
+  approximate-Cholesky Schwarz subdomains in `within`.
+- Pairwise corrections may capture most useful structure in some regimes,
+  leaving too little gain to justify a full hierarchy.
+- Hard piecewise-constant interpolation may have unacceptable energy inflation
+  on real sparse designs even when it reduces tuple count.
+- A symbolic aggregation learned under one PPML weight frame may become poor
+  after weights change substantially.
 
-- exact dense Galerkin identity tests;
-- structural-kernel preservation;
-- numerical symmetry of V-cycle and hybrid;
-- certified convergence on the manufactured hierarchy;
-- an oracle or recovered coarse correction materially reducing Krylov work on
-  at least one difficult planted family;
-- bounded tuple and dimension complexity.
+## Gates before a private fereg integration
 
-Do not integrate into fereg automatic routing until real-data-shaped holdouts
-show an end-to-end advantage after setup, workspace, scatter/gather, and final
-certification are charged.
+A private OLS experiment is justified after the package adds:
+
+- larger sparse cases where dense-terminal and timer noise are negligible;
+- explicit operator and preconditioner work counters;
+- reusable caller-owned workspaces;
+- worker--firm--occupation and exporter--importer--product shaped generators;
+- direct comparison with the pinned `within` Schwarz/approximate-Cholesky route;
+- memory accounting for retained pair hierarchies and V-cycle workspaces; and
+- a fail-closed route that rejects poor hierarchy construction before solving.
+
+Any fereg experiment must retain fereg's independent observation-space FE
+certificate, normalization, memory admission, fallback behavior, and public
+solver semantics.
