@@ -170,29 +170,43 @@ rank-robust production candidate.
 
 ## Current step
 
-**The first research MVP is complete and is being merged.** It establishes that
-the operator, exact factor-preserving hierarchy, pair-CMG smoother, hybrid
-cycle, rank-revealing terminal, projected PCG, rectangular modified LSMR, and
-independent residual checks can all be implemented coherently.
+The first research MVP and the primary oracle-hierarchy feasibility gate are
+complete.
 
-The next milestone is [issue #2](https://github.com/johannes-schmieder/MultiwayMG/issues/2):
-**build an oracle two-grid and V-cycle spectral feasibility matrix**. That work
-will separate the fundamental quality of the smoother and coarse correction
-from the harder problem of discovering good aggregates automatically. Small
-problems will be analyzed on the quotient space with dense spectral references;
-manufactured multilevel families will test whether iteration counts remain
-stable as resolution grows.
+The oracle study materializes the complete numerical range of small singular
+three-way Gramians, including extra rank deficiency, and measures the spectrum
+of each fixed preconditioner. Across six manufactured families:
 
-Subsequent work is tracked in GitHub issues:
+- an oracle Jacobi V-cycle kept the preconditioned condition number below about
+  `1.46`;
+- an oracle pair-CMG/coarse hybrid kept it below about `1.006`;
+- the oracle hybrid converged in three or four projected-PCG iterations; and
+- every reported preconditioner remained positive and symmetric on the
+  numerical range and passed a recomputed original-Gramian residual check.
 
-- [#3 — compatible-relaxation and bootstrap aggregation](https://github.com/johannes-schmieder/MultiwayMG/issues/3)
+These results establish that a good factor-preserving coarse space can add
+substantial information beyond exact pairwise corrections. They are an
+idealized ceiling, not evidence that automatic aggregation can yet discover the
+same space or that the current implementation wins in wall-clock time. See
+[`docs/ORACLE_RESULTS.md`](docs/ORACLE_RESULTS.md) and
+[`docs/SPECTRAL_ANALYSIS.md`](docs/SPECTRAL_ANALYSIS.md).
+
+The current milestone is
+[issue #3](https://github.com/johannes-schmieder/MultiwayMG/issues/3):
+**compatible-relaxation and bootstrap aggregation**. It will measure the gap
+between automatic and oracle hierarchies, identify slow errors missed by a
+proposed map, repair bad aggregates deterministically, and reject inadequate
+hierarchies before solving.
+
+Further work is tracked in GitHub issues:
+
 - [#4 — pair-CMG versus approximate-Cholesky pair solvers](https://github.com/johannes-schmieder/MultiwayMG/issues/4)
 - [#5 — prepared topology, reusable workspaces, and changing-weight replay](https://github.com/johannes-schmieder/MultiwayMG/issues/5)
 - [#6 — certified experimental integration into fereg](https://github.com/johannes-schmieder/MultiwayMG/issues/6)
 
 ## Current implementation and evidence
 
-The MVP currently includes:
+The package currently includes:
 
 - deterministic validation and collapse of repeated three-way tuples;
 - matrix-free `B`, `B'`, `sqrt(W)B`, and `B'WB` kernels;
@@ -201,27 +215,30 @@ The MVP currently includes:
 - exact hard factor-respecting Galerkin coarsening;
 - deterministic exact-context and bounded pair-neighborhood aggregation;
 - stable weighted-Jacobi smoothing from the three-way bound `G <= 3D`;
+- symmetric MAP and exact pair-Schwarz small-problem references;
 - recursive symmetric V-cycles with a scale-invariant rank-revealing terminal;
 - pairwise CMG corrections for all three factor pairs;
 - a symmetric hybrid of pair-CMG smoothing and three-way coarse correction;
 - projected PCG and modified LSMR drivers;
-- independent normal-equation residual certification; and
+- independent normal-equation residual certification;
+- dense quotient-space spectral diagnostics; and
 - tests covering disconnected components, nesting-induced extra rank
-  deficiency, numerical symmetry, weight-scale invariance, and exact Galerkin
-  identities.
+  deficiency, numerical symmetry, positive action, weight-scale invariance,
+  exact Galerkin identities, and an executable oracle spectral acceptance gate.
 
-In the first six-family manufactured matrix, all tested methods reached their
-original-operator residual criteria. The hybrid required 1–4 iterations. In a
-weak-chain case, diagonal PCG required 85 iterations, pair-CMG required 9, the
-three-way V-cycle required 6, and the hybrid required 3.
+The earlier non-oracle matrix also showed strong iteration reductions on a
+small weak-chain case: diagonal PCG required 85 iterations, pair-CMG required
+9, the three-way V-cycle required 6, and the hybrid required 3. These results
+establish mathematical and software feasibility, not a production speed
+advantage.
 
-These results establish **mathematical and software feasibility**, not a
-production speed advantage. The present implementation still allocates
-temporary vectors in important paths, builds several solver structures, uses
-simple structural aggregation rules, and has not yet been compared fairly with
-`within`'s mature approximate-Cholesky Schwarz solver on large identical
-problems. See [`docs/RESULTS.md`](docs/RESULTS.md) and
-[`docs/FEASIBILITY.md`](docs/FEASIBILITY.md).
+The present implementation still allocates temporary vectors in important
+paths, builds several solver structures, uses simple structural aggregation
+rules, and has not yet been compared fairly with `within`'s mature
+approximate-Cholesky Schwarz solver on large identical problems. See
+[`docs/RESULTS.md`](docs/RESULTS.md),
+[`docs/FEASIBILITY.md`](docs/FEASIBILITY.md), and
+[`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Workspace
 
@@ -232,7 +249,7 @@ crates/multiway-incidence
 
 crates/multiway-mg
     Aggregation, rank-revealing terminals, V-cycles, pair-CMG, projected PCG,
-    and modified LSMR.
+    modified LSMR, and dense research spectral analysis.
 ```
 
 ## Development and validation
@@ -249,11 +266,12 @@ cargo doc --locked --workspace --all-features --no-deps
 cargo run --locked --release -p multiway-mg --example feasibility --all-features
 cargo run --locked --release -p multiway-mg --example feasibility_matrix --all-features
 cargo run --locked --release -p multiway-mg --example scaling_probe --all-features
+cargo run --locked --release -p multiway-mg --example oracle_spectral_matrix --all-features
 ```
 
-The feasibility programs are research diagnostics. Their iteration counts and
-certified residuals are meaningful; very small hosted-runner wall times should
-not be interpreted as production benchmarks.
+The feasibility programs are research diagnostics. Their iteration counts,
+spectra, and certified residuals are meaningful; very small hosted-runner wall
+times should not be interpreted as production benchmarks.
 
 The minimum supported Rust version is 1.85. MultiwayMG is licensed under GNU
 GPL version 3 only.
