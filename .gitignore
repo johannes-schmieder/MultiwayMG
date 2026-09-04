@@ -1,4 +1,7 @@
 /target
+/issue2-a
+/issue2-b
+/issue2-output
 **/*.rs.bk
 .DS_Store
 *.profraw
