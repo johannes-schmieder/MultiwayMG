@@ -1,9 +1,41 @@
 //! Exact coarse corrections and symmetric research two-grid cycles.
 
+use std::time::{Duration, Instant};
+
 use crate::{
     DensePseudoinverse, FactorAggregation, MultiwayError, Preconditioner, ThreeWayProblem,
     memory_estimate::estimate_three_way_problem_bytes,
 };
+
+/// Build-phase timing for an exact hard coarse correction.
+///
+/// Timings are diagnostics only and are not deterministic routing inputs.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ExactCoarseBuildTiming {
+    coarsening_setup: Duration,
+    terminal_setup: Duration,
+    total: Duration,
+}
+
+impl ExactCoarseBuildTiming {
+    /// Fine-to-coarse tuple mapping and exact duplicate collapse.
+    #[must_use]
+    pub const fn coarsening_setup(self) -> Duration {
+        self.coarsening_setup
+    }
+
+    /// Dense rank-revealing terminal construction.
+    #[must_use]
+    pub const fn terminal_setup(self) -> Duration {
+        self.terminal_setup
+    }
+
+    /// Complete constructor time, including validation and bookkeeping.
+    #[must_use]
+    pub const fn total(self) -> Duration {
+        self.total
+    }
+}
 
 /// Exact pseudoinverse correction in one hard factor-preserving coarse space.
 #[derive(Debug, Clone)]
@@ -12,6 +44,7 @@ pub struct ExactCoarseCorrection {
     aggregation: FactorAggregation,
     coarse_problem: ThreeWayProblem,
     coarse_inverse: DensePseudoinverse,
+    build_timing: ExactCoarseBuildTiming,
 }
 
 impl ExactCoarseCorrection {
@@ -21,6 +54,7 @@ impl ExactCoarseCorrection {
         aggregation: FactorAggregation,
         relative_tolerance: f64,
     ) -> Result<Self, MultiwayError> {
+        let total_start = Instant::now();
         if aggregation.fine_counts() != fine_problem.topology().level_counts() {
             return Err(MultiwayError::InvalidAggregation {
                 message: format!(
@@ -30,13 +64,23 @@ impl ExactCoarseCorrection {
                 ),
             });
         }
+        let coarsening_start = Instant::now();
         let coarse_problem = aggregation.coarsen(&fine_problem)?;
+        let coarsening_setup = coarsening_start.elapsed();
+        let terminal_start = Instant::now();
         let coarse_inverse = DensePseudoinverse::from_problem(&coarse_problem, relative_tolerance)?;
+        let terminal_setup = terminal_start.elapsed();
+        let build_timing = ExactCoarseBuildTiming {
+            coarsening_setup,
+            terminal_setup,
+            total: total_start.elapsed(),
+        };
         Ok(Self {
             fine_problem,
             aggregation,
             coarse_problem,
             coarse_inverse,
+            build_timing,
         })
     }
 
@@ -62,6 +106,12 @@ impl ExactCoarseCorrection {
     #[must_use]
     pub const fn coarse_rank(&self) -> usize {
         self.coarse_inverse.rank()
+    }
+
+    /// Build-phase timing from construction.
+    #[must_use]
+    pub const fn build_timing(&self) -> ExactCoarseBuildTiming {
+        self.build_timing
     }
 
     /// Principal retained-memory estimate.
