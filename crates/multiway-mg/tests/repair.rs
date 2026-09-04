@@ -9,15 +9,10 @@ use multiway_mg::{
 #[test]
 fn oracle_weak_chain_map_is_accepted_without_repair() {
     let (problem, oracle) = refined_weak_chain(8, 2, 0.01);
-    let smoother =
-        DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
-    let result = repair_aggregation_by_splitting(
-        &problem,
-        &oracle,
-        &smoother,
-        repair_options(12, 0.75),
-    )
-    .expect("repair evaluation succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
+    let result =
+        repair_aggregation_by_splitting(&problem, &oracle, &smoother, repair_options(12, 0.75))
+            .expect("repair evaluation succeeds");
 
     assert!(result.accepted());
     assert_eq!(result.accepted_splits(), 0);
@@ -34,22 +29,13 @@ fn oracle_weak_chain_map_is_accepted_without_repair() {
 fn overmerged_weak_chain_is_repaired_under_explicit_budgets() {
     let (problem, oracle) = refined_weak_chain(8, 2, 0.01);
     let overmerged = overmerged_pairs(&oracle);
-    let smoother =
-        DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
-    let first = repair_aggregation_by_splitting(
-        &problem,
-        &overmerged,
-        &smoother,
-        repair_options(12, 0.75),
-    )
-    .expect("first repair succeeds");
-    let second = repair_aggregation_by_splitting(
-        &problem,
-        &overmerged,
-        &smoother,
-        repair_options(12, 0.75),
-    )
-    .expect("second repair succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
+    let first =
+        repair_aggregation_by_splitting(&problem, &overmerged, &smoother, repair_options(12, 0.75))
+            .expect("first repair succeeds");
+    let second =
+        repair_aggregation_by_splitting(&problem, &overmerged, &smoother, repair_options(12, 0.75))
+            .expect("second repair succeeds");
 
     assert_eq!(first, second);
     assert!(first.accepted());
@@ -74,11 +60,13 @@ fn overmerged_weak_chain_is_repaired_under_explicit_budgets() {
         .maximum_diagonal_factor_per_sweep();
     assert!(first_factor > 0.75);
     assert!(final_factor <= 0.75);
-    assert!(first
-        .rounds()
-        .iter()
-        .take(first.rounds().len() - 1)
-        .all(|round| round.proposed_split().is_some()));
+    assert!(
+        first
+            .rounds()
+            .iter()
+            .take(first.rounds().len() - 1)
+            .all(|round| round.proposed_split().is_some())
+    );
 }
 
 #[test]
@@ -87,8 +75,7 @@ fn coarse_dimension_budget_rejects_a_split_before_mutation() {
     let overmerged = overmerged_pairs(&oracle);
     let initial_dimension: usize = overmerged.coarse_counts().iter().sum();
     let exact_ratio = initial_dimension as f64 / problem.dimension() as f64;
-    let smoother =
-        DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
     let result = repair_aggregation_by_splitting(
         &problem,
         &overmerged,
@@ -111,7 +98,10 @@ fn coarse_dimension_budget_rejects_a_split_before_mutation() {
     assert!(result.rounds()[0].proposed_split().is_some());
 }
 
-fn repair_options(maximum_rounds: usize, maximum_coarse_dimension_ratio: f64) -> AggregationRepairOptions {
+fn repair_options(
+    maximum_rounds: usize,
+    maximum_coarse_dimension_ratio: f64,
+) -> AggregationRepairOptions {
     AggregationRepairOptions {
         relaxation: CompatibleRelaxationOptions {
             test_vectors: 12,

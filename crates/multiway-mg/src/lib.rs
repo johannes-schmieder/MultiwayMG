@@ -24,9 +24,9 @@ mod pair_cmg;
 mod pcg;
 mod pcg_trace;
 mod preconditioner;
+mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
-mod repair;
 mod spectral;
 mod stationary;
 mod two_grid;
@@ -66,14 +66,14 @@ pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced};
 pub use preconditioner::Preconditioner;
+pub use repair::{
+    AggregateSplit, AggregationRepairOptions, AggregationRepairResult, AggregationRepairRound,
+    AggregationRepairStopReason, repair_aggregation_by_splitting,
+};
 #[cfg(feature = "cmg")]
 pub use research_pair::{
     FactorPair, PairCmgBuildTiming, PairCmgMemoryReport, PairSubsetCmgPreconditioner,
     estimate_problem_bytes,
-};
-pub use repair::{
-    AggregateSplit, AggregationRepairOptions, AggregationRepairResult, AggregationRepairRound,
-    AggregationRepairStopReason, repair_aggregation_by_splitting,
 };
 pub use spectral::{
     DenseRangeDecomposition, SpectralAnalysisOptions, SpectralAnalysisReport,

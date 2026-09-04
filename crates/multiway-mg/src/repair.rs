@@ -8,10 +8,9 @@
 //! budgets.
 
 use crate::{
-    CompatibleRelaxationCriteria, CompatibleRelaxationDecision,
-    CompatibleRelaxationOptions, CompatibleRelaxationReport,
-    DiagonalAggregationProjector, FactorAggregation, MultiwayError, Preconditioner,
-    ThreeWayProblem, analyze_compatible_relaxation, evaluate_compatible_relaxation,
+    CompatibleRelaxationCriteria, CompatibleRelaxationDecision, CompatibleRelaxationOptions,
+    CompatibleRelaxationReport, DiagonalAggregationProjector, FactorAggregation, MultiwayError,
+    Preconditioner, ThreeWayProblem, analyze_compatible_relaxation, evaluate_compatible_relaxation,
 };
 
 /// Explicit budgets and compatible-relaxation policy for aggregate repair.
@@ -394,12 +393,7 @@ pub fn repair_aggregation_by_splitting<P: Preconditioner + ?Sized>(
             });
         }
 
-        let witness = slowest_compatible_witness(
-            problem,
-            &current,
-            smoother,
-            options.relaxation,
-        )?;
+        let witness = slowest_compatible_witness(problem, &current, smoother, options.relaxation)?;
         let Some(split) = choose_split(
             problem,
             &current,
@@ -474,8 +468,7 @@ pub fn repair_aggregation_by_splitting<P: Preconditioner + ?Sized>(
                 rounds,
             });
         }
-        if candidate_metrics.two_level_tuple_complexity
-            > options.maximum_two_level_tuple_complexity
+        if candidate_metrics.two_level_tuple_complexity > options.maximum_two_level_tuple_complexity
         {
             return Ok(AggregationRepairResult {
                 initial_aggregation: initial,
@@ -507,8 +500,7 @@ fn slowest_compatible_witness<P: Preconditioner + ?Sized>(
     smoother: &P,
     options: CompatibleRelaxationOptions,
 ) -> Result<SlowWitness, MultiwayError> {
-    let projector =
-        DiagonalAggregationProjector::new(problem.clone(), aggregation.clone())?;
+    let projector = DiagonalAggregationProjector::new(problem.clone(), aggregation.clone())?;
     let mut slowest: Option<SlowWitness> = None;
     for vector_index in 0..options.test_vectors {
         let mut error = deterministic_compatible_error(&projector, options, vector_index)?;
@@ -563,17 +555,13 @@ fn deterministic_compatible_error(
         let raw_norm = projector.diagonal_norm(&error)?;
         projector.project_complement_in_place(&mut error)?;
         let projected_norm = projector.diagonal_norm(&error)?;
-        if projected_norm
-            > options.relative_zero_tolerance * raw_norm.max(f64::MIN_POSITIVE)
-        {
+        if projected_norm > options.relative_zero_tolerance * raw_norm.max(f64::MIN_POSITIVE) {
             scale_in_place(&mut error, 1.0 / projected_norm);
             return Ok(error);
         }
     }
     Err(MultiwayError::CompatibleRelaxation {
-        message: format!(
-            "unable to generate compatible repair witness {vector_index}"
-        ),
+        message: format!("unable to generate compatible repair witness {vector_index}"),
     })
 }
 
