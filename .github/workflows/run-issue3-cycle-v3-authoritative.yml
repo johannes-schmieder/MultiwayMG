@@ -1,0 +1,110 @@
+name: Frozen issue 3 v3 selective-cycle holdout
+
+on:
+  push:
+    branches:
+      - codex/issue-3-completion-clean
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-completion-clean
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Verify frozen policy and source set
+        run: |
+          test -f benchmarks/policies/issue3-cycle-portfolio-v3.tsv
+          test -f docs/ISSUE3_CYCLE_PORTFOLIO_V3_POLICY.md
+          test -f scripts/summarize_issue3_cycle_holdout_v3.py
+          grep -q $'metadata\tpolicy_version\tissue3-cycle-portfolio-v3' \
+            benchmarks/policies/issue3-cycle-portfolio-v3.tsv
+          grep -q $'fixture\tcover-latin-a\t900' \
+            benchmarks/policies/issue3-cycle-portfolio-v3.tsv
+          grep -q $'fixture\tcover-communities-b\t909' \
+            benchmarks/policies/issue3-cycle-portfolio-v3.tsv
+          grep -q $'cycle_portfolio\tfirst_smoother\tsymmetric-map-two-grid' \
+            benchmarks/policies/issue3-cycle-portfolio-v3.tsv
+          grep -q $'cycle_portfolio\tfallback_smoother\tall-pairs-fixed-cmg-two-grid' \
+            benchmarks/policies/issue3-cycle-portfolio-v3.tsv
+      - name: Validate frozen implementation
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --test bootstrap --all-features
+          cargo test --locked -p multiway-mg --test cycle_smoother_portfolio --all-features
+          cargo test --locked --workspace --no-default-features
+      - name: Run frozen unseen holdout twice
+        run: |
+          rm -rf /tmp/issue3-v3-a /tmp/issue3-v3-b
+          mkdir -p /tmp/issue3-v3-a /tmp/issue3-v3-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_holdout_v3 --all-features -- /tmp/issue3-v3-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_holdout_v3 --all-features -- /tmp/issue3-v3-b
+          cmp /tmp/issue3-v3-a/issue3-cycle-v3-holdout.tsv \
+              /tmp/issue3-v3-b/issue3-cycle-v3-holdout.tsv
+          cmp /tmp/issue3-v3-a/issue3-cycle-v3-traces.tsv \
+              /tmp/issue3-v3-b/issue3-cycle-v3-traces.tsv
+      - name: Evaluate the frozen scientific gates
+        shell: bash
+        run: |
+          set +e
+          python3 scripts/summarize_issue3_cycle_holdout_v3.py \
+            /tmp/issue3-v3-a \
+            /tmp/issue3-v3-a/ISSUE3_CYCLE_V3_HOLDOUT_RESULTS.md
+          status=$?
+          set -e
+          printf '%s\n' "$status" > /tmp/issue3-v3-a/issue3-cycle-v3-gate-status.txt
+      - name: Preserve immutable evidence and remove one-time workflow
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp /tmp/issue3-v3-a/issue3-cycle-v3-holdout.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-v3-holdout.tsv
+          cp /tmp/issue3-v3-a/issue3-cycle-v3-traces.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-v3-traces.tsv
+          cp /tmp/issue3-v3-a/issue3-cycle-v3-timing.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-v3-timing.tsv
+          cp /tmp/issue3-v3-a/issue3-cycle-v3-gate-status.txt \
+            benchmarks/results/2026-09-04/issue3-cycle-v3-gate-status.txt
+          cp /tmp/issue3-v3-a/ISSUE3_CYCLE_V3_HOLDOUT_RESULTS.md \
+            docs/ISSUE3_CYCLE_V3_HOLDOUT_RESULTS.md
+          (
+            cd benchmarks/results/2026-09-04
+            sha256sum \
+              issue3-cycle-v3-holdout.tsv \
+              issue3-cycle-v3-traces.tsv \
+              issue3-cycle-v3-timing.tsv \
+              > issue3-cycle-v3.sha256
+          )
+          rm .github/workflows/run-issue3-cycle-v3-authoritative.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Record frozen issue 3 v3 selective-cycle holdout"
+          git push origin HEAD:codex/issue-3-completion-clean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue3-cycle-v3-authoritative
+          path: /tmp/issue3-v3-a
+          if-no-files-found: error
+      - name: Enforce frozen gate result
+        shell: bash
+        run: |
+          status="$(cat /tmp/issue3-v3-a/issue3-cycle-v3-gate-status.txt)"
+          exit "$status"
