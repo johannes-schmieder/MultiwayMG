@@ -6,6 +6,7 @@
 
 mod aggregation;
 mod bootstrap;
+mod bootstrap_hierarchy;
 mod combine;
 mod compatible;
 mod compatible_gate;
@@ -40,6 +41,10 @@ pub use bootstrap::{
     BootstrapAggregationOptions, BootstrapAggregationResult, BootstrapAggregationRound,
     BootstrapAggregationStopReason, BootstrapAggregationWorkReport, BootstrapStructuralMetrics,
     build_bootstrap_aggregation,
+};
+pub use bootstrap_hierarchy::{
+    BootstrapHierarchyLevelReport, BootstrapHierarchyOptions, BootstrapHierarchyPlan,
+    BootstrapHierarchyStopReason,
 };
 pub use combine::WeightedSumPreconditioner;
 pub use compatible::{
