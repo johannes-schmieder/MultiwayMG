@@ -440,10 +440,29 @@ impl Preconditioner for PairExactPseudoinverse {
 
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
         validate_pair_vectors("PairExactPseudoinverse::apply", self.dimension(), rhs, out)?;
+        // Apply the exact Euclidean pair-range projector on both sides.  The
+        // right projection is evaluated without allocating a temporary vector;
+        // this keeps the materialized full-space action symmetric even when the
+        // spectral inverse is very ill-conditioned and its computed null action
+        // is only approximately zero.
+        let mut null_dot = 0.0;
+        let mut correction = 0.0;
+        for &value in &rhs[..self.domain.left_count()] {
+            neumaier_add(&mut null_dot, &mut correction, value);
+        }
+        for &value in &rhs[self.domain.left_count()..] {
+            neumaier_add(&mut null_dot, &mut correction, -value);
+        }
+        let shift = (null_dot + correction) / self.dimension() as f64;
         for row in 0..self.dimension() {
             let mut value = 0.0;
             for (column, &right) in rhs.iter().enumerate() {
-                value = self.inverse[(row, column)].mul_add(right, value);
+                let projected = if column < self.domain.left_count() {
+                    right - shift
+                } else {
+                    right + shift
+                };
+                value = self.inverse[(row, column)].mul_add(projected, value);
             }
             out[row] = value;
         }

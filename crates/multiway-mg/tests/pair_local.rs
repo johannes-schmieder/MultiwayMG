@@ -50,14 +50,19 @@ fn disconnected_or_uncovered_domains_fail_closed() {
 
 #[test]
 fn exact_pair_pseudoinverse_has_unit_preconditioned_spectrum() {
-    let domain = path_domain(5, true);
+    let domain = path_domain(18, true);
     let exact = PairExactPseudoinverse::build(domain.clone(), PairExactOptions::default()).unwrap();
     let report = analyze_pair_local(&domain, &exact, PairLocalAnalysisOptions::default()).unwrap();
     assert_eq!(report.numerical_nullity(), 1);
     assert_eq!(report.numerical_rank(), domain.dimension() - 1);
     assert!(report.relative_inverse_frobenius_error() < 2.0e-10);
-    assert!(report.preconditioned_condition_number() - 1.0 < 2.0e-9);
-    assert!(report.unit_inverse_energy_error() < 2.0e-9);
+    let spectral_roundoff = 128.0 * f64::EPSILON * report.gramian_condition_number().max(1.0);
+    assert!(
+        report.preconditioned_condition_number() - 1.0 < spectral_roundoff,
+        "condition={}, scale-aware tolerance={spectral_roundoff}",
+        report.preconditioned_condition_number()
+    );
+    assert!(report.unit_inverse_energy_error() < spectral_roundoff);
     assert!(report.numerically_linear());
     assert!(report.numerically_symmetric());
     assert!(report.preserves_range());
