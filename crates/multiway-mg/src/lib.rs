@@ -57,8 +57,8 @@ pub use lsmr::{
 pub use map::SymmetricMapPreconditioner;
 #[cfg(feature = "cmg")]
 pub use oracle_schedule::{
-    OracleLevelSmootherSpec, ScheduledOracleHierarchy, ScheduledOracleHierarchyOptions,
-    ScheduledOracleMemoryReport,
+    OracleLevelSmootherSpec, ScheduledOracleBuildTiming, ScheduledOracleHierarchy,
+    ScheduledOracleHierarchyOptions, ScheduledOracleMemoryReport,
 };
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
@@ -67,14 +67,17 @@ pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_proje
 pub use preconditioner::Preconditioner;
 #[cfg(feature = "cmg")]
 pub use research_pair::{
-    FactorPair, PairCmgMemoryReport, PairSubsetCmgPreconditioner, estimate_problem_bytes,
+    FactorPair, PairCmgBuildTiming, PairCmgMemoryReport, PairSubsetCmgPreconditioner,
+    estimate_problem_bytes,
 };
 pub use spectral::{
     DenseRangeDecomposition, SpectralAnalysisOptions, SpectralAnalysisReport,
     analyze_preconditioner,
 };
 pub use stationary::{StationaryErrorReport, analyze_stationary_error};
-pub use two_grid::{ExactCoarseCorrection, SymmetricTwoGridPreconditioner};
+pub use two_grid::{
+    ExactCoarseBuildTiming, ExactCoarseCorrection, SymmetricTwoGridPreconditioner,
+};
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,
