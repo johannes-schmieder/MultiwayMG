@@ -263,6 +263,9 @@ fn bootstrap_options() -> BootstrapAggregationOptions {
         structural_affinity_weight: 0.10,
         degree_affinity_weight: 0.10,
         signature_hit_weight: 0.10,
+        structural_baseline_required_factor_ratio: 0.97,
+        structural_baseline_maximum_dimension_overhead_ratio: 0.05,
+        structural_baseline_maximum_tuple_overhead_ratio: 0.10,
         compatible_relaxation: CompatibleRelaxationOptions {
             test_vectors: 12,
             sweeps: 10,

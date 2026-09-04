@@ -46,6 +46,16 @@ pub struct BootstrapAggregationOptions {
     pub degree_affinity_weight: f64,
     /// Weight on repeated adjacency in test-vector orderings.
     pub signature_hit_weight: f64,
+    /// Required multiplicative improvement in the conservative compatible-
+    /// relaxation factor before a structurally larger baseline may replace an
+    /// accepted bootstrap map. A value below one requires a real quality gain.
+    pub structural_baseline_required_factor_ratio: f64,
+    /// Largest extra coarse coefficient dimension, divided by fine dimension,
+    /// admitted for a materially better structural baseline.
+    pub structural_baseline_maximum_dimension_overhead_ratio: f64,
+    /// Largest extra coarse tuple count, divided by fine tuple count, admitted
+    /// for a materially better structural baseline.
+    pub structural_baseline_maximum_tuple_overhead_ratio: f64,
     /// Compatible-relaxation experiment used to screen each proposed map.
     pub compatible_relaxation: CompatibleRelaxationOptions,
     /// Explicit compatible-relaxation acceptance policy.
@@ -78,6 +88,9 @@ impl Default for BootstrapAggregationOptions {
             structural_affinity_weight: 0.25,
             degree_affinity_weight: 0.10,
             signature_hit_weight: 0.10,
+            structural_baseline_required_factor_ratio: 0.97,
+            structural_baseline_maximum_dimension_overhead_ratio: 0.05,
+            structural_baseline_maximum_tuple_overhead_ratio: 0.10,
             compatible_relaxation: CompatibleRelaxationOptions::default(),
             compatible_criteria: CompatibleRelaxationCriteria {
                 maximum_diagonal_factor_per_sweep: 0.80,
@@ -144,6 +157,21 @@ impl BootstrapAggregationOptions {
                 "must be finite, nonnegative, and have positive sum",
             ));
         }
+        validate_unit_interval(
+            "structural_baseline_required_factor_ratio",
+            self.structural_baseline_required_factor_ratio,
+            false,
+        )?;
+        validate_unit_interval(
+            "structural_baseline_maximum_dimension_overhead_ratio",
+            self.structural_baseline_maximum_dimension_overhead_ratio,
+            true,
+        )?;
+        validate_unit_interval(
+            "structural_baseline_maximum_tuple_overhead_ratio",
+            self.structural_baseline_maximum_tuple_overhead_ratio,
+            true,
+        )?;
         validate_unit_interval(
             "maximum_coarse_dimension_ratio",
             self.maximum_coarse_dimension_ratio,
@@ -665,8 +693,23 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
             < current_metrics.coarse_tuple_count
             || structural_baseline_metrics.coarse_dimension < current_metrics.coarse_dimension
             || baseline_factor < current_factor;
-        let prefer_baseline =
-            baseline_accepted && (!accepted || (baseline_no_worse && baseline_strictly_better));
+        let dimension_overhead = structural_baseline_metrics
+            .coarse_dimension
+            .saturating_sub(current_metrics.coarse_dimension)
+            as f64
+            / problem.dimension() as f64;
+        let tuple_overhead = structural_baseline_metrics
+            .coarse_tuple_count
+            .saturating_sub(current_metrics.coarse_tuple_count) as f64
+            / problem.tuple_count() as f64;
+        let quality_for_size_tradeoff = baseline_factor
+            <= current_factor * options.structural_baseline_required_factor_ratio
+            && dimension_overhead <= options.structural_baseline_maximum_dimension_overhead_ratio
+            && tuple_overhead <= options.structural_baseline_maximum_tuple_overhead_ratio;
+        let prefer_baseline = baseline_accepted
+            && (!accepted
+                || (baseline_no_worse && baseline_strictly_better)
+                || quality_for_size_tradeoff);
         if prefer_baseline {
             final_aggregation = structural_baseline.clone();
             accepted = true;

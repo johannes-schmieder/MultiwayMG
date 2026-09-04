@@ -107,6 +107,24 @@ fn write_headers(
             options.maximum_bootstrap_witnesses.to_string(),
         ),
         (
+            "structural_baseline_required_factor_ratio",
+            options
+                .structural_baseline_required_factor_ratio
+                .to_string(),
+        ),
+        (
+            "structural_baseline_maximum_dimension_overhead_ratio",
+            options
+                .structural_baseline_maximum_dimension_overhead_ratio
+                .to_string(),
+        ),
+        (
+            "structural_baseline_maximum_tuple_overhead_ratio",
+            options
+                .structural_baseline_maximum_tuple_overhead_ratio
+                .to_string(),
+        ),
+        (
             "maximum_coarse_dimension_ratio",
             MAXIMUM_COARSE_DIMENSION_RATIO.to_string(),
         ),
@@ -512,6 +530,9 @@ fn bootstrap_options() -> BootstrapAggregationOptions {
         structural_affinity_weight: 0.05,
         degree_affinity_weight: 0.10,
         signature_hit_weight: 0.10,
+        structural_baseline_required_factor_ratio: 0.97,
+        structural_baseline_maximum_dimension_overhead_ratio: 0.05,
+        structural_baseline_maximum_tuple_overhead_ratio: 0.10,
         compatible_relaxation: compatible_options(),
         compatible_criteria: compatible_criteria(),
         maximum_bootstrap_witnesses: 6,
