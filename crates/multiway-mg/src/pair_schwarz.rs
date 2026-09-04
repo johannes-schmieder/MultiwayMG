@@ -25,6 +25,7 @@ use schwarz_precond::{
 use crate::{
     FactorPair, MultiwayError, Preconditioner, ThreeWayProblem,
     memory_estimate::estimate_three_way_problem_bytes,
+    structural_projection::StructuralRangeProjector,
 };
 
 /// Configuration for the component-local CMG Schwarz adapter.
@@ -255,8 +256,7 @@ pub struct PairCmgSchwarzPreconditioner {
     component_reports: Vec<PairComponentReport>,
     build_timing: PairCmgSchwarzBuildTiming,
     memory_report: PairCmgSchwarzMemoryReport,
-    projection_pool: Mutex<Vec<StructuralProjectionWorkspace>>,
-    projection_fallback_allocations: AtomicUsize,
+    projection: StructuralRangeProjector,
 }
 
 impl core::fmt::Debug for PairCmgSchwarzPreconditioner {
@@ -385,8 +385,8 @@ impl PairCmgSchwarzPreconditioner {
             SchwarzPreconditioner::with_n_dofs(entries, problem.dimension(), options.reduction);
         let schwarz_setup = schwarz_start.elapsed();
 
-        let projection_workspace = StructuralProjectionWorkspace::new(problem.components().count());
-        let projection_workspace_bytes = projection_workspace.byte_len();
+        let projection = StructuralRangeProjector::new(&problem);
+        let projection_workspace_bytes = projection.workspace_bytes();
         let problem_state_bytes_estimate = estimate_three_way_problem_bytes(&problem);
         let total_retained_bytes_estimate = problem_state_bytes_estimate
             .saturating_add(cmg_preconditioner_bytes)
@@ -419,8 +419,7 @@ impl PairCmgSchwarzPreconditioner {
             component_reports,
             build_timing,
             memory_report,
-            projection_pool: Mutex::new(vec![projection_workspace]),
-            projection_fallback_allocations: AtomicUsize::new(0),
+            projection,
         })
     }
 
@@ -479,34 +478,11 @@ impl PairCmgSchwarzPreconditioner {
                     .load(Ordering::Relaxed)
             })
             .sum::<usize>()
-            .saturating_add(self.projection_fallback_allocations.load(Ordering::Relaxed))
+            .saturating_add(self.projection.fallback_allocations())
     }
 
     fn project_output(&self, values: &mut [f64]) -> Result<(), MultiwayError> {
-        let mut workspace = {
-            let mut pool = self.projection_pool.lock().map_err(|_| {
-                MultiwayError::Lsmr("structural projection workspace lock was poisoned".to_owned())
-            })?;
-            pool.pop()
-        }
-        .unwrap_or_else(|| {
-            self.projection_fallback_allocations
-                .fetch_add(1, Ordering::Relaxed);
-            StructuralProjectionWorkspace::new(self.problem.components().count())
-        });
-
-        let result = project_structural_range_in_place(&self.problem, values, &mut workspace);
-        if result.is_ok() {
-            self.projection_pool
-                .lock()
-                .map_err(|_| {
-                    MultiwayError::Lsmr(
-                        "structural projection workspace return lock was poisoned".to_owned(),
-                    )
-                })?
-                .push(workspace);
-        }
-        result
+        self.projection.project(&self.problem, values)
     }
 }
 
@@ -796,103 +772,4 @@ fn build_pair_components(
         });
     }
     Ok(result)
-}
-
-#[derive(Debug)]
-struct StructuralProjectionWorkspace {
-    sums: Vec<[f64; 3]>,
-    corrections: Vec<[f64; 3]>,
-    projections: Vec<[f64; 3]>,
-}
-
-impl StructuralProjectionWorkspace {
-    fn new(component_count: usize) -> Self {
-        Self {
-            sums: vec![[0.0; 3]; component_count],
-            corrections: vec![[0.0; 3]; component_count],
-            projections: vec![[0.0; 3]; component_count],
-        }
-    }
-
-    fn byte_len(&self) -> usize {
-        self.sums
-            .len()
-            .saturating_add(self.corrections.len())
-            .saturating_add(self.projections.len())
-            .saturating_mul(core::mem::size_of::<[f64; 3]>())
-    }
-}
-
-fn project_structural_range_in_place(
-    problem: &ThreeWayProblem,
-    values: &mut [f64],
-    workspace: &mut StructuralProjectionWorkspace,
-) -> Result<(), MultiwayError> {
-    if values.len() != problem.dimension() {
-        return Err(crate::error::dimension(
-            "pair Schwarz structural projection",
-            problem.dimension(),
-            values.len(),
-        ));
-    }
-    let components = problem.components();
-    if workspace.sums.len() != components.count()
-        || workspace.corrections.len() != components.count()
-        || workspace.projections.len() != components.count()
-    {
-        return Err(MultiwayError::Lsmr(
-            "structural projection workspace has the wrong component count".to_owned(),
-        ));
-    }
-    workspace.sums.fill([0.0; 3]);
-    workspace.corrections.fill([0.0; 3]);
-    workspace.projections.fill([0.0; 3]);
-    let offsets = problem.topology().offsets();
-    for factor in 0..3 {
-        for vertex in offsets[factor]..offsets[factor + 1] {
-            let component = components.labels()[vertex];
-            neumaier_add(
-                &mut workspace.sums[component][factor],
-                &mut workspace.corrections[component][factor],
-                values[vertex],
-            );
-        }
-    }
-    for component in 0..components.count() {
-        for factor in 0..3 {
-            workspace.sums[component][factor] += workspace.corrections[component][factor];
-        }
-        let [n1, n2, n3] = components.factor_sizes()[component];
-        let [s1, s2, s3] = workspace.sums[component];
-        let g1 = s1 - s2;
-        let g2 = s1 - s3;
-        let a11 = (n1 + n2) as f64;
-        let a12 = n1 as f64;
-        let a22 = (n1 + n3) as f64;
-        let determinant = a11.mul_add(a22, -(a12 * a12));
-        if !(determinant.is_finite() && determinant > 0.0) {
-            return Err(MultiwayError::Lsmr(format!(
-                "invalid structural projection determinant {determinant} in component {component}"
-            )));
-        }
-        let alpha = a22.mul_add(g1, -(a12 * g2)) / determinant;
-        let beta = a11.mul_add(g2, -(a12 * g1)) / determinant;
-        workspace.projections[component] = [alpha + beta, -alpha, -beta];
-    }
-    for factor in 0..3 {
-        for vertex in offsets[factor]..offsets[factor + 1] {
-            values[vertex] -= workspace.projections[components.labels()[vertex]][factor];
-        }
-    }
-    Ok(())
-}
-
-fn neumaier_add(sum: &mut f64, correction: &mut f64, value: f64) {
-    let updated = *sum + value;
-    if sum.abs() >= value.abs() {
-        *correction += (*sum - updated) + value;
-    } else {
-        *correction += (value - updated) + *sum;
-    }
-    *sum = updated;
 }

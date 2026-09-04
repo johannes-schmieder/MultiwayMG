@@ -40,7 +40,11 @@ mod repair;
 mod research_pair;
 mod spectral;
 mod stationary;
+#[cfg(feature = "lsmr")]
+mod structural_projection;
 mod two_grid;
+#[cfg(feature = "within-comparator")]
+mod within_comparator;
 
 pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
@@ -138,6 +142,11 @@ pub use spectral::{
 };
 pub use stationary::{StationaryErrorReport, analyze_stationary_error};
 pub use two_grid::{ExactCoarseBuildTiming, ExactCoarseCorrection, SymmetricTwoGridPreconditioner};
+#[cfg(feature = "within-comparator")]
+pub use within_comparator::{
+    WithinApproxCholBuildTiming, WithinApproxCholMemoryReport, WithinApproxCholOptions,
+    WithinApproxCholPreconditioner,
+};
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,
