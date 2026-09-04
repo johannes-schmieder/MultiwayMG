@@ -5,6 +5,7 @@
 //! by the `cmg` crate.
 
 mod aggregation;
+mod bootstrap;
 mod combine;
 mod compatible;
 mod compatible_gate;
@@ -34,6 +35,11 @@ mod two_grid;
 pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
     build_pair_neighborhood_aggregation,
+};
+pub use bootstrap::{
+    BootstrapAggregationOptions, BootstrapAggregationResult, BootstrapAggregationRound,
+    BootstrapAggregationStopReason, BootstrapAggregationWorkReport, BootstrapStructuralMetrics,
+    build_bootstrap_aggregation,
 };
 pub use combine::WeightedSumPreconditioner;
 pub use compatible::{
