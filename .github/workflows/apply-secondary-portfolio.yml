@@ -24,8 +24,27 @@ jobs:
           toolchain: "1.85.0"
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - name: Apply frozen portfolio and holdout patch
+      - name: Repair the exact-source patch and apply it
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("scripts/apply_issue3_secondary_portfolio.py")
+          text = path.read_text()
+          text = text.replace(
+              '        "retained_report_bytes_estimate: work.retained_report_bytes_estimate(),",',
+              '        "retained_report_bytes_estimate: work.retained_round_report_bytes_estimate(),",',
+          )
+          text = text.replace(
+              '''retained_report_bytes_estimate: work
+                  .retained_report_bytes_estimate()
+                  .saturating_add(''',
+              '''retained_report_bytes_estimate: work
+                  .retained_round_report_bytes_estimate()
+                  .saturating_add(''',
+          )
+          path.write_text(text)
+          PY
           python3 scripts/apply_issue3_secondary_portfolio.py
           cargo fmt --all
       - name: Validate all targets and focused portfolio tests
