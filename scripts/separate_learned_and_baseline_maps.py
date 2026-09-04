@@ -80,7 +80,7 @@ def patch_portfolio() -> None:
     }
 '''
     new = '''    let learned_aggregation = primary.learned_aggregation().clone();
-    let mut candidates = if learned_aggregation == structural_baseline {
+    let candidates = if learned_aggregation == structural_baseline {
         vec![(
             CyclePortfolioCandidateSource::StructuralBaseline,
             structural_baseline,
