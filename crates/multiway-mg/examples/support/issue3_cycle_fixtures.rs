@@ -77,10 +77,7 @@ fn build_fixture(
             Ok(_) | Err(_) => {}
         }
     }
-    Err(format!(
-        "no structurally valid {family} cover found from seed {requested_seed}"
-    )
-    .into())
+    Err(format!("no structurally valid {family} cover found from seed {requested_seed}").into())
 }
 
 fn base_problem(family: &str) -> Result<ThreeWayProblem, DynError> {
@@ -117,12 +114,11 @@ fn lift_cover(
         .zip(coarse.weights())
         .enumerate()
     {
-        let tuple_seed = mix(
-            seed ^ (tuple_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15)
-                ^ (tuple[0] as u64).wrapping_mul(0xbf58_476d_1ce4_e5b9)
-                ^ (tuple[1] as u64).wrapping_mul(0x94d0_49bb_1331_11eb)
-                ^ (tuple[2] as u64).wrapping_mul(0xd6e8_feb8_6659_fd93),
-        );
+        let tuple_seed = mix(seed
+            ^ (tuple_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15)
+            ^ (tuple[0] as u64).wrapping_mul(0xbf58_476d_1ce4_e5b9)
+            ^ (tuple[1] as u64).wrapping_mul(0x94d0_49bb_1331_11eb)
+            ^ (tuple[2] as u64).wrapping_mul(0xd6e8_feb8_6659_fd93));
         let multiplier_second = if tuple_seed & 1 == 0 { 1 } else { 3 };
         let multiplier_third = if tuple_seed & 2 == 0 { 1 } else { 3 };
         let shift_second = ((tuple_seed >> 8) as usize) % sheets;
@@ -153,10 +149,7 @@ fn lift_cover(
     Ok((fine, oracle))
 }
 
-fn oracle_preserves_components(
-    problem: &ThreeWayProblem,
-    oracle: &FactorAggregation,
-) -> bool {
+fn oracle_preserves_components(problem: &ThreeWayProblem, oracle: &FactorAggregation) -> bool {
     let counts = problem.topology().level_counts();
     for factor in 0..3 {
         let mut parent_components = vec![None; oracle.coarse_counts()[factor]];
@@ -244,11 +237,7 @@ fn nearly_nested_base(levels: usize, perturbation: f64) -> Result<ThreeWayProble
         for second in 0..levels {
             tuples.push([first as u32, second as u32, first as u32]);
             weights.push(1.0 + ((first + 2 * second) % 7) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((first + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((first + 1) % levels) as u32]);
             weights.push(perturbation);
         }
     }
@@ -267,11 +256,7 @@ fn dominant_pair_base(levels: usize, weak: f64) -> Result<ThreeWayProblem, DynEr
             let third = (first + 3 * second) % levels;
             tuples.push([first as u32, second as u32, third as u32]);
             weights.push(1.0 + ((5 * first + 7 * second) % 11) as f64 / 20.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((third + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((third + 1) % levels) as u32]);
             weights.push(weak);
         }
     }

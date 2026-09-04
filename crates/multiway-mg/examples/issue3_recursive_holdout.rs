@@ -109,11 +109,8 @@ fn run_fixture(
     let one_shot_accepted = one_shot_depth == fixture.depth;
     let one_shot_complexity = complexity(problem, &one_shot_maps)?;
     let (one_shot_condition, one_shot_solve) = if one_shot_accepted {
-        let hierarchy = CycleScreenedMapHierarchy::from_maps(
-            problem.clone(),
-            one_shot_maps.clone(),
-            1.0e-12,
-        )?;
+        let hierarchy =
+            CycleScreenedMapHierarchy::from_maps(problem.clone(), one_shot_maps.clone(), 1.0e-12)?;
         let condition = range
             .analyze(&hierarchy, spectral_options)?
             .preconditioned_condition_number();
@@ -136,9 +133,8 @@ fn run_fixture(
         baseline_condition,
         oracle_condition,
         one_shot_condition,
-        one_shot_condition.and_then(|value| {
-            recovery_fraction(baseline_condition, oracle_condition, value)
-        }),
+        one_shot_condition
+            .and_then(|value| recovery_fraction(baseline_condition, oracle_condition, value)),
         one_shot_solve.as_ref(),
         LevelFields::structural(&one_shot_maps, problem)?,
         matrix,
@@ -169,9 +165,8 @@ fn run_fixture(
         baseline_condition,
         oracle_condition,
         automatic_condition,
-        automatic_condition.and_then(|value| {
-            recovery_fraction(baseline_condition, oracle_condition, value)
-        }),
+        automatic_condition
+            .and_then(|value| recovery_fraction(baseline_condition, oracle_condition, value)),
         automatic_solve.as_ref(),
         LevelFields::automatic(&plan),
         matrix,
@@ -245,10 +240,7 @@ struct LevelFields {
 }
 
 impl LevelFields {
-    fn oracle(
-        maps: &[FactorAggregation],
-        problem: &ThreeWayProblem,
-    ) -> Result<Self, DynError> {
+    fn oracle(maps: &[FactorAggregation], problem: &ThreeWayProblem) -> Result<Self, DynError> {
         let mut current = problem.clone();
         let mut dimensions = Vec::new();
         let mut tuples = Vec::new();
@@ -270,10 +262,7 @@ impl LevelFields {
         })
     }
 
-    fn structural(
-        maps: &[FactorAggregation],
-        problem: &ThreeWayProblem,
-    ) -> Result<Self, DynError> {
+    fn structural(maps: &[FactorAggregation], problem: &ThreeWayProblem) -> Result<Self, DynError> {
         let mut current = problem.clone();
         let mut dimensions = Vec::new();
         let mut tuples = Vec::new();
@@ -342,7 +331,14 @@ impl LevelFields {
                 .join(";"),
             bootstrap_rounds: reports
                 .iter()
-                .map(|level| level.portfolio().primary_result().rounds().len().to_string())
+                .map(|level| {
+                    level
+                        .portfolio()
+                        .primary_result()
+                        .rounds()
+                        .len()
+                        .to_string()
+                })
                 .collect::<Vec<_>>()
                 .join(";"),
             bootstrap_witnesses: reports

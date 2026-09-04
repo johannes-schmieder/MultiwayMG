@@ -92,10 +92,9 @@ fn recursively_lift(
     let mut current = base.clone();
     let mut coarse_to_fine = Vec::with_capacity(depth);
     for level in 0..depth {
-        let level_seed = mix(
-            seed ^ (level as u64).wrapping_mul(0xd6e8_feb8_6659_fd93)
-                ^ (current.tuple_count() as u64).wrapping_mul(0xa076_1d64_78bd_642f),
-        );
+        let level_seed = mix(seed
+            ^ (level as u64).wrapping_mul(0xd6e8_feb8_6659_fd93)
+            ^ (current.tuple_count() as u64).wrapping_mul(0xa076_1d64_78bd_642f));
         let (fine, map) = lift_cover(&current, 2, level_seed)?;
         if !map_preserves_components(&fine, &map) {
             return Err("oracle map crosses a fine incidence component".into());
@@ -131,12 +130,11 @@ fn lift_cover(
         .zip(coarse.weights())
         .enumerate()
     {
-        let tuple_seed = mix(
-            seed ^ (tuple_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15)
-                ^ (tuple[0] as u64).wrapping_mul(0xbf58_476d_1ce4_e5b9)
-                ^ (tuple[1] as u64).wrapping_mul(0x94d0_49bb_1331_11eb)
-                ^ (tuple[2] as u64).wrapping_mul(0xd6e8_feb8_6659_fd93),
-        );
+        let tuple_seed = mix(seed
+            ^ (tuple_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15)
+            ^ (tuple[0] as u64).wrapping_mul(0xbf58_476d_1ce4_e5b9)
+            ^ (tuple[1] as u64).wrapping_mul(0x94d0_49bb_1331_11eb)
+            ^ (tuple[2] as u64).wrapping_mul(0xd6e8_feb8_6659_fd93));
         let shift_second = ((tuple_seed >> 8) as usize) % sheets;
         let shift_third = ((tuple_seed >> 16) as usize) % sheets;
         let mut scores = Vec::with_capacity(sheets);
@@ -175,10 +173,7 @@ fn verify_hierarchy(
     verify_same_problem(base, &current)
 }
 
-fn hierarchy_preserves_components(
-    fine: &ThreeWayProblem,
-    maps: &[FactorAggregation],
-) -> bool {
+fn hierarchy_preserves_components(fine: &ThreeWayProblem, maps: &[FactorAggregation]) -> bool {
     let mut current = fine.clone();
     for map in maps {
         if !map_preserves_components(&current, map) {
@@ -192,10 +187,7 @@ fn hierarchy_preserves_components(
     true
 }
 
-fn map_preserves_components(
-    problem: &ThreeWayProblem,
-    map: &FactorAggregation,
-) -> bool {
+fn map_preserves_components(problem: &ThreeWayProblem, map: &FactorAggregation) -> bool {
     let counts = problem.topology().level_counts();
     for factor in 0..3 {
         let mut parent_components = vec![None; map.coarse_counts()[factor]];
@@ -294,11 +286,7 @@ fn nearly_nested_base(levels: usize, perturbation: f64) -> Result<ThreeWayProble
         for second in 0..levels {
             tuples.push([first as u32, second as u32, first as u32]);
             weights.push(1.0 + ((first + 2 * second) % 7) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((first + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((first + 1) % levels) as u32]);
             weights.push(perturbation);
         }
     }
@@ -317,11 +305,7 @@ fn dominant_pair_base(levels: usize, weak: f64) -> Result<ThreeWayProblem, DynEr
             let third = (first + 3 * second) % levels;
             tuples.push([first as u32, second as u32, third as u32]);
             weights.push(1.0 + ((5 * first + 7 * second) % 11) as f64 / 20.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((third + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((third + 1) % levels) as u32]);
             weights.push(weak);
         }
     }

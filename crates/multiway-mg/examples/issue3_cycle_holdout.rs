@@ -147,8 +147,7 @@ fn run_fixture(
         candidate_pairs_generated: primary_work.candidate_pairs_generated(),
         candidate_pairs_retained: primary_work.candidate_pairs_retained(),
         retained_test_vector_bytes: primary_work.retained_test_vector_bytes(),
-        retained_primary_report_bytes_estimate: primary_work
-            .retained_round_report_bytes_estimate(),
+        retained_primary_report_bytes_estimate: primary_work.retained_round_report_bytes_estimate(),
         stop_reason: format!("{:?}", primary.stop_reason()),
         ..WorkFields::default()
     };
@@ -186,8 +185,7 @@ fn run_fixture(
             portfolio_probe_preconditioner_applications: portfolio_work
                 .probe_preconditioner_applications(),
             portfolio_probe_energy_evaluations: portfolio_work.probe_energy_evaluations(),
-            retained_portfolio_probe_bytes_estimate: portfolio_work
-                .retained_probe_bytes_estimate(),
+            retained_portfolio_probe_bytes_estimate: portfolio_work.retained_probe_bytes_estimate(),
             stop_reason: format!(
                 "selected={:?}; primary={:?}",
                 portfolio.selected_source(),
@@ -207,9 +205,10 @@ fn run_fixture(
         )
         .into());
     }
-    if let (Some(one_shot_condition), Some(portfolio_condition)) =
-        (one_shot_evaluation.condition, portfolio_evaluation.condition)
-    {
+    if let (Some(one_shot_condition), Some(portfolio_condition)) = (
+        one_shot_evaluation.condition,
+        portfolio_evaluation.condition,
+    ) {
         if portfolio.accepted()
             && portfolio_condition > one_shot_condition * 1.10
             && one_shot_evaluation.accepted
@@ -314,7 +313,9 @@ fn evaluate_map(
     } else {
         (None, None, None, None, None)
     };
-    let cycle_accepted = decision.as_ref().is_some_and(CycleQualityDecision::accepted);
+    let cycle_accepted = decision
+        .as_ref()
+        .is_some_and(CycleQualityDecision::accepted);
     let accepted = requested_acceptance && structural_admissible && cycle_accepted;
     let recovery = oracle_condition.and_then(|oracle| {
         condition.and_then(|candidate| recovery_fraction(baseline_condition, oracle, candidate))
@@ -322,7 +323,9 @@ fn evaluate_map(
     let probe_estimate = probe
         .as_ref()
         .map(CycleQualityReport::maximum_estimated_energy_factor);
-    let probe_underestimate = exact_radius.zip(probe_estimate).map(|(exact, estimate)| exact - estimate);
+    let probe_underestimate = exact_radius
+        .zip(probe_estimate)
+        .map(|(exact, estimate)| exact - estimate);
 
     let row = vec![
         fixture.set.to_owned(),
@@ -395,7 +398,10 @@ fn evaluate_map(
         work.stop_reason.replace(['\t', '\n'], " "),
     ];
     writeln!(matrix, "{}", row.join("\t"))?;
-    Ok(MapEvaluation { accepted, condition })
+    Ok(MapEvaluation {
+        accepted,
+        condition,
+    })
 }
 
 #[derive(Debug, Clone, Copy)]

@@ -10,9 +10,8 @@
 use crate::{
     BootstrapAggregationOptions, CyclePortfolioCandidateSource, CycleQualityCriteria,
     CycleQualityOptions, CycleScreenedBootstrapResult, DensePseudoinverse, FactorAggregation,
-    MultiwayError, Preconditioner, SymmetricMapPreconditioner,
-    SymmetricTwoGridPreconditioner, ThreeWayProblem,
-    build_cycle_screened_bootstrap_aggregation,
+    MultiwayError, Preconditioner, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
+    ThreeWayProblem, build_cycle_screened_bootstrap_aggregation,
 };
 
 /// Options for recursive complete-cycle-screened hierarchy construction.
@@ -39,7 +38,10 @@ pub struct CycleScreenedHierarchyOptions {
 impl CycleScreenedHierarchyOptions {
     fn validate(self) -> Result<Self, MultiwayError> {
         if self.maximum_levels == 0 {
-            return Err(invalid("cycle_hierarchy_maximum_levels", "must be positive"));
+            return Err(invalid(
+                "cycle_hierarchy_maximum_levels",
+                "must be positive",
+            ));
         }
         if self.terminal_dimension == 0 {
             return Err(invalid(
@@ -47,8 +49,7 @@ impl CycleScreenedHierarchyOptions {
                 "must be positive",
             ));
         }
-        if !self.maximum_dimension_complexity.is_finite()
-            || self.maximum_dimension_complexity < 1.0
+        if !self.maximum_dimension_complexity.is_finite() || self.maximum_dimension_complexity < 1.0
         {
             return Err(invalid(
                 "cycle_hierarchy_maximum_dimension_complexity",
@@ -67,8 +68,7 @@ impl CycleScreenedHierarchyOptions {
                 ),
             ));
         }
-        if !self.terminal_relative_tolerance.is_finite()
-            || self.terminal_relative_tolerance <= 0.0
+        if !self.terminal_relative_tolerance.is_finite() || self.terminal_relative_tolerance <= 0.0
         {
             return Err(invalid(
                 "cycle_hierarchy_terminal_relative_tolerance",

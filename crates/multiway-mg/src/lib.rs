@@ -67,9 +67,8 @@ pub use compatible_gate::{
     evaluate_compatible_relaxation,
 };
 pub use cycle_hierarchy::{
-    CycleScreenedHierarchyLevelReport, CycleScreenedHierarchyOptions,
-    CycleScreenedHierarchyPlan, CycleScreenedHierarchyStopReason,
-    CycleScreenedMapHierarchy,
+    CycleScreenedHierarchyLevelReport, CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan,
+    CycleScreenedHierarchyStopReason, CycleScreenedMapHierarchy,
 };
 pub use cycle_portfolio::{
     CyclePortfolioBuildTiming, CyclePortfolioCandidateSource, CyclePortfolioEvaluation,

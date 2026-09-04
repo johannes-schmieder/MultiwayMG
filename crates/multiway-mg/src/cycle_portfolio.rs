@@ -388,8 +388,8 @@ where
                 Ok(cycle) => {
                     let report = analyze_cycle_quality(problem, &cycle, probe_options)?;
                     let decision = evaluate_cycle_quality(&report, probe_criteria)?;
-                    probe_gramian_applications = probe_gramian_applications
-                        .saturating_add(report.gramian_applications());
+                    probe_gramian_applications =
+                        probe_gramian_applications.saturating_add(report.gramian_applications());
                     probe_preconditioner_applications = probe_preconditioner_applications
                         .saturating_add(report.preconditioner_applications());
                     probe_energy_evaluations =

@@ -411,8 +411,7 @@ pub fn analyze_cycle_quality<P: Preconditioner + ?Sized>(
     for vector_index in 0..options.test_vectors {
         let (mut error, start_gramian_applications, start_energy_evaluations) =
             deterministic_range_start(problem, options, vector_index)?;
-        gramian_applications =
-            gramian_applications.saturating_add(start_gramian_applications);
+        gramian_applications = gramian_applications.saturating_add(start_gramian_applications);
         energy_evaluations = energy_evaluations.saturating_add(start_energy_evaluations);
         let mut energy_factor_history = Vec::with_capacity(options.power_iterations);
         let mut rayleigh_history = Vec::with_capacity(options.power_iterations);
@@ -433,16 +432,12 @@ pub fn analyze_cycle_quality<P: Preconditioner + ?Sized>(
             for ((next_value, &error_value), &correction_value) in
                 next.iter_mut().zip(&error).zip(&correction)
             {
-                *next_value = (-options.correction_damping)
-                    .mul_add(correction_value, error_value);
+                *next_value = (-options.correction_damping).mul_add(correction_value, error_value);
             }
             problem.components().project_structural_range(&mut next)?;
             ensure_finite("cycle error", &next)?;
-            maximum_structural_defect = maximum_structural_defect.max(
-                problem
-                    .components()
-                    .maximum_structural_defect(&next)?,
-            );
+            maximum_structural_defect = maximum_structural_defect
+                .max(problem.components().maximum_structural_defect(&next)?);
             let rayleigh = dot(&gradient, &next);
             let next_energy = energy_norm(problem, &next)?;
             energy_evaluations = energy_evaluations.saturating_add(1);
@@ -462,10 +457,8 @@ pub fn analyze_cycle_quality<P: Preconditioner + ?Sized>(
         } else {
             tail_geometric_mean(&energy_factor_history, options.tail_iterations)
         };
-        let maximum_observed_energy_factor = energy_factor_history
-            .iter()
-            .copied()
-            .fold(0.0, f64::max);
+        let maximum_observed_energy_factor =
+            energy_factor_history.iter().copied().fold(0.0, f64::max);
         let final_rayleigh = rayleigh_history.last().copied().unwrap_or(0.0);
         vectors.push(CycleQualityVectorReport {
             energy_factor_history,
@@ -565,9 +558,7 @@ fn deterministic_range_start(
         }
     }
     Err(MultiwayError::CycleQuality {
-        message: format!(
-            "unable to generate nonzero range start for test vector {vector_index}"
-        ),
+        message: format!("unable to generate nonzero range start for test vector {vector_index}"),
     })
 }
 

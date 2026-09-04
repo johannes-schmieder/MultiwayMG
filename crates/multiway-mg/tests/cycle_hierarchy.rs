@@ -3,9 +3,9 @@
 use multiway_mg::{
     AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
     CompatibleRelaxationOptions, CycleQualityCriteria, CycleQualityOptions,
-    CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan,
-    CycleScreenedHierarchyStopReason, DenseRangeDecomposition, FactorAggregation,
-    PcgTraceOptions, SpectralAnalysisOptions, ThreeWayProblem, solve_projected_pcg_traced,
+    CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan, CycleScreenedHierarchyStopReason,
+    DenseRangeDecomposition, FactorAggregation, PcgTraceOptions, SpectralAnalysisOptions,
+    ThreeWayProblem, solve_projected_pcg_traced,
 };
 
 #[test]
@@ -55,16 +55,12 @@ fn automatic_recursive_plan_recovers_two_levels_and_builds_a_strong_cycle() {
 
 #[test]
 fn recursive_planning_is_observation_order_invariant() {
-    let (problem, _oracle_maps, mut tuples, mut weights) =
-        two_level_refined_weak_chain(6, 0.01);
+    let (problem, _oracle_maps, mut tuples, mut weights) = two_level_refined_weak_chain(6, 0.01);
     tuples.reverse();
     weights.reverse();
-    let reversed = ThreeWayProblem::from_observations(
-        problem.topology().level_counts(),
-        &tuples,
-        &weights,
-    )
-    .expect("reversed problem is valid");
+    let reversed =
+        ThreeWayProblem::from_observations(problem.topology().level_counts(), &tuples, &weights)
+            .expect("reversed problem is valid");
     assert_eq!(problem, reversed);
 
     let first = CycleScreenedHierarchyPlan::build(problem, hierarchy_options(18, 3.0))
@@ -234,12 +230,7 @@ fn weak_chain_base(levels: usize, bridge_weight: f64) -> ThreeWayProblem {
 fn refine_once(
     coarse: &ThreeWayProblem,
     clones: usize,
-) -> (
-    ThreeWayProblem,
-    FactorAggregation,
-    Vec<[u32; 3]>,
-    Vec<f64>,
-) {
+) -> (ThreeWayProblem, FactorAggregation, Vec<[u32; 3]>, Vec<f64>) {
     let coarse_counts = coarse.topology().level_counts();
     let fine_counts = coarse_counts.map(|count| count * clones);
     let parents = core::array::from_fn(|factor| {
@@ -247,8 +238,8 @@ fn refine_once(
             .map(|level| (level / clones) as u32)
             .collect()
     });
-    let aggregation = FactorAggregation::new(fine_counts, parents)
-        .expect("refinement aggregation is valid");
+    let aggregation =
+        FactorAggregation::new(fine_counts, parents).expect("refinement aggregation is valid");
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     for (&tuple, &weight) in coarse.topology().tuples().iter().zip(coarse.weights()) {
