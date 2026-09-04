@@ -1,0 +1,85 @@
+name: Record completed issue 2 evidence
+
+on:
+  push:
+    branches:
+      - codex/issue-2-completion
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-2-completion
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Validate source before recording evidence
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          RUSTDOCFLAGS='-D warnings' cargo doc --locked --workspace --all-features --no-deps
+      - name: Reproduce deterministic matrices twice
+        run: |
+          rm -rf issue2-a issue2-b
+          mkdir -p issue2-a issue2-b
+          for output in issue2-a issue2-b; do
+            cargo run --locked --release -p multiway-mg \
+              --example issue2_two_grid_matrix --all-features -- "$output"
+            cargo run --locked --release -p multiway-mg \
+              --example issue2_resolution_matrix --all-features -- "$output"
+          done
+          for file in \
+            issue2-two-grid-matrix.tsv \
+            issue2-pcg-traces.tsv \
+            issue2-resolution-matrix.tsv \
+            issue2-resolution-traces.tsv; do
+            cmp "issue2-a/$file" "issue2-b/$file"
+          done
+      - name: Record setup costs and evaluate acceptance gates
+        run: |
+          cargo run --locked --release -p multiway-mg \
+            --example issue2_setup_cost_matrix --all-features -- issue2-a
+          python3 scripts/summarize_issue2_completion.py \
+            issue2-a issue2-a/ISSUE2_FINAL_RESULTS.md
+      - name: Install evidence in the repository
+        run: |
+          destination=benchmarks/results/2026-09-03
+          mkdir -p "$destination"
+          cp issue2-a/issue2-two-grid-matrix.tsv "$destination/"
+          cp issue2-a/issue2-pcg-traces.tsv "$destination/"
+          cp issue2-a/issue2-resolution-matrix.tsv "$destination/"
+          cp issue2-a/issue2-resolution-traces.tsv "$destination/"
+          cp issue2-a/issue2-setup-cost-matrix.tsv "$destination/"
+          cp issue2-a/ISSUE2_FINAL_RESULTS.md docs/ISSUE2_FINAL_RESULTS.md
+          (
+            cd "$destination"
+            sha256sum \
+              issue2-two-grid-matrix.tsv \
+              issue2-pcg-traces.tsv \
+              issue2-resolution-matrix.tsv \
+              issue2-resolution-traces.tsv \
+              issue2-setup-cost-matrix.tsv \
+              > issue2-completion.sha256
+          )
+          rm .github/workflows/one-time-record-issue2-completion.yml
+      - name: Commit the evidence bundle
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Record the completed issue 2 evidence bundle"
+          git push origin HEAD:codex/issue-2-completion
