@@ -31,6 +31,12 @@ pub enum MultiwayError {
         /// Failure description.
         message: String,
     },
+    /// Complete-cycle matrix-free quality probing failed.
+    #[error("cycle quality analysis failed: {message}")]
+    CycleQuality {
+        /// Failure description.
+        message: String,
+    },
     /// Automatic coarsening stopped while the dense terminal remained too large.
     #[error(
         "hierarchy stagnated at dimension {dimension} with {tuples} tuples; dense terminal limit is {limit}"
