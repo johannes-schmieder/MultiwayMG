@@ -2,89 +2,84 @@
 
 MultiwayMG is an experimental Rust package for solving the linear-algebra
 problem created by **three or more high-dimensional categorical fixed effects**.
-Its first target is the case of exactly three large intercept fixed-effect
-dimensions, where every observation selects one level from each factor.
+Its first target is exactly three large categorical intercept effects, where
+each observation selects one level from each factor.
 
-The project is motivated by high-dimensional regression, but the numerical
+The project is motivated by high-dimensional regression, but its numerical
 object is more general: a weighted multipartite incidence Gramian.
 
-## The problem this package is trying to solve
+## The problem
 
-Consider a weighted additive three-way model
+Consider the weighted additive model
 
 ```text
 y_i = alpha[a_i] + gamma[b_i] + delta[c_i] + error_i.
 ```
 
-Let `B` be the sparse incidence matrix whose row for observation `i` contains
-one `1` in each of the three factor blocks, and let `W` contain positive
-weights. Absorbing the fixed effects requires repeated solutions of
+After collapsing observations with the same factor tuple, let `B` be the
+sparse tuple-by-level incidence matrix. Every row of `B` contains one active
+entry in each of the three factor blocks. With positive tuple weights `W`,
+fixed-effect absorption requires repeated solutions of
 
 ```text
 min_x ||sqrt(W) (y - Bx)||_2
 ```
 
-or, equivalently, compatible solutions of the singular normal equations
+or compatible solutions of the singular normal equations
 
 ```text
-Gx = B'Wy,            G = B'WB.
+Gx = B'Wy,             G = B'WB.
 ```
 
-This is often the dominant numerical task in a regression with several large
-fixed-effect dimensions. A regression command must usually solve the same
-operator for an outcome and many regressors, and a PPML estimator must solve a
-sequence of related weighted systems.
+This solve may be repeated for an outcome, many regressors, randomized right-
+hand sides, or a sequence of PPML weight frames.
 
-### Why ordinary graph CMG is not enough
+### Why ordinary CMG cannot solve the full three-way system
 
-With two categorical fixed effects, a sign change in one factor turns the
-normal matrix into a weighted bipartite graph Laplacian. That special identity
-makes the existing [`CMG`](https://github.com/johannes-schmieder/CMG) package a
-natural fast solver.
+For two categorical fixed effects, changing the sign of one factor converts
+the normal matrix into a weighted bipartite graph Laplacian. That is why the
+existing [`CMG`](https://github.com/johannes-schmieder/CMG) package is a natural
+fast solver for the two-way case.
 
-For three factors, the full matrix has three positive pairwise cross-blocks.
-No assignment of factor signs can make all three cross-blocks nonpositive at
-once, so the complete three-way Gramian is generally neither a graph Laplacian
-nor an SDDM matrix. It therefore cannot simply be submitted to ordinary CMG.
+For three factors, the full Gramian contains three positive pairwise
+cross-blocks. No assignment of factor signs makes all three simultaneously
+Laplacian. The complete operator is generally neither a graph Laplacian nor an
+SDDM matrix, so submitting it directly to ordinary CMG would be mathematically
+incorrect.
 
-Existing general approaches—alternating projections, generic Krylov methods,
-and one-level pairwise Schwarz preconditioning—remain valid, but difficult
-three-large-FE systems can still require substantial iteration and data
-movement. MultiwayMG asks whether the multiway incidence structure supports a
+General alternating-projection and Krylov methods remain valid, but difficult
+weakly coupled designs can require substantial iteration and data movement.
+MultiwayMG asks whether the special multiway incidence structure supports a
 stronger multilevel method.
 
 ## Goal outcome
 
-The intended outcome is a reusable numerical library that can make absorption
-of three genuinely large categorical fixed effects competitive with the best
-existing general methods while preserving deterministic, certified behavior.
-A successful production version should provide:
+The intended production outcome is a reusable, deterministic numerical library
+that can solve or strongly precondition weighted three-way incidence systems
+with:
 
-- setup and operator work close to linear in the number of unique weighted
-  tuples;
-- a bounded-complexity hierarchy whose iteration count grows slowly with
-  problem size on difficult structured systems;
+- operator and cycle work close to linear in the number of unique tuples;
+- a bounded-complexity hierarchy and slowly growing outer iteration counts;
 - reusable state and fused kernels for many right-hand sides;
-- exact symbolic replay with fresh numerical state for changing weight frames;
-- robust handling of disconnected components and rank deficiency;
-- true residual diagnostics against the submitted incidence operator; and
-- a clean API that downstream regression packages can use without importing
-  estimator-specific behavior.
+- exact symbolic replay with fresh numerical state for changing weights;
+- explicit handling of disconnected components and rank deficiency;
+- bounded, reported memory use; and
+- true residual checks against the submitted incidence operator.
 
-The research project is deliberately allowed to produce a narrower result. If
-a full automatic three-way hierarchy is not broadly competitive, a useful
-outcome may still be a selective pair-CMG solver, a global coarse correction
-for Schwarz-LSMR, or a well-tested incidence-operator package that identifies
-where each method pays.
+A narrower result is also useful. If a universal automatic three-way hierarchy
+is not competitive, the package can still provide a selective coarse
+correction, a stronger pairwise preconditioner, and a tested rule for when to
+reject multigrid and use another solver.
+
+MultiwayMG is not a regression estimator. It does not define samples, estimate
+finite regressors, compute covariance matrices, or decide whether a candidate
+solve is scientifically acceptable.
 
 ## Relationship to CMG
 
-CMG remains the specialized solver for weighted graph Laplacians and SDDM
-matrices. MultiwayMG **uses CMG; it does not redefine CMG's matrix class**.
-
-For each factor pair, MultiwayMG marginalizes over the third factor. After a
-sign change, that pair system is a genuine weighted bipartite graph Laplacian.
-CMG can therefore apply a fixed linear correction to the three pair systems:
+MultiwayMG uses CMG for exactly the matrix class CMG is designed to solve.
+Marginalizing over the third factor produces three weighted factor-pair
+systems:
 
 ```text
 factor 1 -- factor 2
@@ -92,12 +87,10 @@ factor 1 -- factor 3
 factor 2 -- factor 3
 ```
 
-Those pairwise graph corrections act as a strong smoother or Schwarz
-preconditioner. MultiwayMG adds the missing global layer: a hierarchy that
-coarsens all three factor spaces together and captures error modes that cannot
-be represented adequately by any single pair problem.
-
-The intended dependency direction is:
+After a sign switch, each is a bipartite graph Laplacian. Fixed CMG cycles can
+therefore act as symmetric pair corrections or smoothers. MultiwayMG adds the
+missing global layer: factor-respecting coarsening and a hierarchy that captures
+modes involving all three factors jointly.
 
 ```text
 CMG
@@ -107,18 +100,13 @@ MultiwayMG
 ```
 
 Generic graph improvements belong in CMG. Multiway incidence topology,
-three-way aggregation, global coarse correction, and the hybrid cycle belong
-in MultiwayMG.
+three-way aggregation, global coarse correction, and cycle admission belong in
+MultiwayMG.
 
 ## Relationship to fereg
 
 [`fereg`](https://github.com/johannes-schmieder/fereg) is the intended first
-downstream estimator. It already uses CMG for two-way graph solves and
-Schwarz-LSMR for more general fixed-effect designs.
-
-MultiwayMG is being developed separately so that the numerical research has a
-clear matrix contract and can be tested independently of Stata and regression
-semantics. A future integration will follow this direction:
+downstream estimator.
 
 ```text
 CMG
@@ -130,148 +118,147 @@ MultiwayMG
 fereg
 ```
 
-MultiwayMG will own tuple topology, pair graph corrections, the three-way
-hierarchy, workspaces, and algebraic solve diagnostics. fereg will continue to
-own sample construction, regression right-hand sides, finite-regressor algebra,
-fixed-effect normalization, memory admission, fallback behavior, covariance
-estimation, Stata results, and the final original-observation-space
-certificate.
+MultiwayMG will own tuple topology, pair corrections, hierarchy construction,
+workspaces, and algebraic diagnostics. fereg will continue to own sample
+construction, regression right-hand sides, finite-regressor algebra,
+normalization, covariance estimation, memory admission, solver fallback, Stata
+results, and final certification in the original observation-space fixed-effect
+operator.
 
-The initial fereg route will be private, OLS-only, and restricted to exactly
-three categorical intercept effects. It will not replace fereg's current
-automatic solver until controlled calibration and fresh holdout evidence show a
-real end-to-end advantage.
+The current two-way-CMG-plus-small-nuisance route should remain preferred when
+the third factor is small. MultiwayMG targets the harder regime in which all
+three dimensions are genuinely high-dimensional.
 
 ## Numerical approach
 
-For every unique tuple `e = (a_e, b_e, c_e)` with positive weight `w_e`,
+For a unique tuple `e = (a_e, b_e, c_e)` with weight `w_e`,
 
 ```text
 (Bx)_e = x1[a_e] + x2[b_e] + x3[c_e].
 ```
 
-MultiwayMG combines two complementary ideas:
+MultiwayMG combines:
 
-1. **Pair-CMG corrections.** Each of the three factor-pair marginals is solved
-   approximately by a fixed CMG cycle and combined symmetrically.
-2. **A true three-way hierarchy.** Levels are aggregated only within their own
-   factor. Mapping every fine tuple through the three parent maps produces
-   another weighted three-way tuple problem, so the operator class is preserved
-   exactly under hard Galerkin coarsening:
+1. **Pairwise graph corrections.** The three pair marginals are solved or
+   preconditioned by fixed graph methods such as CMG.
+2. **A true three-way coarse hierarchy.** With hard factor-respecting
+   interpolation
 
    ```text
-   G_c = P'GP = (BP)'W(BP),       P = diag(P1, P2, P3).
+   P = diag(P1, P2, P3),
    ```
 
-A symmetric V-cycle uses weighted-Jacobi, symmetric MAP, or pair-CMG smoothing,
-exact tuple restriction/prolongation, and a rank-revealing terminal. Projected
-PCG is used for controlled Gramian experiments; modified LSMR on `sqrt(W)B` is
-the more rank-robust production candidate.
+   exact Galerkin coarsening remains in the same matrix class:
 
-## Current step
+   ```text
+   G_c = P'GP = (BP)'W(BP).
+   ```
 
-The first research MVP and the complete oracle two-grid/multilevel feasibility
-milestone are finished.
+   Fine tuples mapping to the same coarse tuple are merged by summing weights.
+3. **Fail-closed cycle screening.** A proposed map is accepted only after hard
+   component, dimension, and tuple-complexity gates and a matrix-free probe of
+   the complete two-grid cycle. Rejection is a normal result, not a silent
+   identity preconditioner.
 
-The final oracle study now includes explicit energy-coordinate error operators,
-coarse-only and complete two-grid actions, true PCG residual traces, selected
-factor-pair experiments, level-specific smoother schedules, phase-separated
-setup diagnostics, and principal memory reports. It covers nine one-level
-families and exact two- through five-level resolution sequences.
+Projected PCG is used for controlled Gramian experiments. Modified LSMR on
+`sqrt(W)B` is the more rank-robust production candidate.
 
-The central result is positive:
+## Research status
 
-- adding the exact factor-preserving coarse correction improved Jacobi,
-  symmetric MAP, exact pair Schwarz, and pair-CMG in **all nine** one-level
-  families;
-- every admitted action was symmetric and positive on the complete numerical
-  range;
-- every returned solve passed a recomputed original-Gramian residual, with
-  full per-iteration traces retained;
-- hierarchy tuple complexity remained at most about `1.333` through five
-  supplied levels, and iteration spreads within every family/schedule sequence
-  were at most two;
-- in the twelve-order-of-magnitude weight case, the condition number fell from
-  about `1.59 million` under diagonal scaling and `1,367` under pair-CMG to
-  about `1.021` for the pair-CMG two-grid cycle; and
-- pair-CMG on only the finest level captured nearly all the benefit of retaining
-  pair-CMG on every level, while all-level symmetric MAP was usually the
-  strongest and much lighter retained-state oracle schedule.
+### Issue #2: oracle feasibility — completed
 
-This resolves the question posed by issue #2: **a good hard
-factor-respecting coarse space can supply the missing global three-way
-correction.** The unresolved problem is discovering a comparably effective
-space automatically and cheaply on realistic sparse systems.
+Known-good factor maps were tested through dense quotient-space spectra,
+explicit two-grid operators, and multilevel resolution sequences. A valid
+three-way coarse space adds important global information beyond exact pairwise
+solves, stays symmetric and positive, and can keep iteration counts stable with
+hierarchy depth.
 
-See [`docs/ISSUE2_FINAL_RESULTS.md`](docs/ISSUE2_FINAL_RESULTS.md) for the
-complete findings, [`docs/ISSUE2_METHODS.md`](docs/ISSUE2_METHODS.md) for the
-protocol, and `benchmarks/results/2026-09-03/issue2-*.tsv` for the raw matrices,
-residual histories, setup diagnostics, and checksums.
+### Issue #3: automatic coarse-space construction — completed with a mixed result
 
-The current milestone is
-[issue #3](https://github.com/johannes-schmieder/MultiwayMG/issues/3):
-**compatible-relaxation and bootstrap aggregation**. Its diagnostic foundation
-is already present. The next step is bounded witness-driven aggregate repair,
-followed by a direct automatic-to-oracle gap analysis.
+Issue #3 developed compatible relaxation, relaxed-signature bootstrap matching,
+witness-driven repair, matrix-free complete-cycle screening, selective MAP/CMG
+smoothing, and recursive hierarchy construction.
 
-Further work is tracked in GitHub issues:
+The useful automatic method found so far is the **bounded pair-neighborhood
+structural matcher plus fail-closed complete-cycle screening**. On the frozen v3
+one-level holdout it accepted every reference-admissible case and rejected every
+reference-inadmissible case. Accepted solves had true residuals below `7e-11`.
 
-- [#4 — pair-CMG versus approximate-Cholesky pair solvers](https://github.com/johannes-schmieder/MultiwayMG/issues/4)
-- [#5 — prepared topology, reusable workspaces, and changing-weight replay](https://github.com/johannes-schmieder/MultiwayMG/issues/5)
-- [#6 — certified experimental integration into fereg](https://github.com/johannes-schmieder/MultiwayMG/issues/6)
+The extra witness/bootstrap machinery did not materially improve the protected
+structural baseline. Complete-cycle witness splitting also missed its value-add
+target: no tested row improved dense condition number by ten percent, and the
+best gain was about 5.5 percent.
 
-## Current implementation and evidence
+On the frozen recursive matrix, the bootstrap planner accepted only one of
+eight fixtures. The simpler recursive pair-neighborhood route constructed
+accurate hierarchies on all eight and often matched or exceeded the generating-
+map reference, although cumulative tuple complexity reached about `3.44`.
 
-The package currently includes:
+The resulting decision is:
 
-- deterministic validation and collapse of repeated three-way tuples;
+- pair-neighborhood maps are the default structural candidate;
+- the exact intended cycle is the final admission authority;
+- symmetric MAP is tried first, with all-pair fixed CMG only after MAP
+  rejection;
+- no accepted cycle means an explicit no-hierarchy result;
+- compatible relaxation, bootstrap, and repair remain research diagnostics,
+  not automatic defaults.
+
+See `docs/ISSUE3_FINAL_RESULTS.md` and
+`docs/ADR_0001_ISSUE3_AUTOMATIC_COARSENING.md`.
+
+## Current implementation
+
+The workspace includes:
+
+- deterministic validation and collapse of repeated weighted triples;
 - matrix-free `B`, `B'`, `sqrt(W)B`, and `B'WB` kernels;
-- incidence-component discovery and projection of structural shift directions;
-- exact hard factor-respecting Galerkin coarsening;
-- deterministic exact-context and bounded pair-neighborhood aggregation;
-- stable weighted-Jacobi smoothing from the three-way bound `G <= 3D`;
-- symmetric MAP and exact pair-Schwarz small-problem references;
-- recursive symmetric V-cycles with a scale-invariant rank-revealing terminal;
-- pairwise CMG corrections for all three factor pairs and selected-pair research
-  portfolios;
-- explicit exact coarse corrections and symmetric two-grid cycles;
-- fixed level-specific oracle smoother schedules;
-- projected PCG, traced true-residual PCG, and modified LSMR drivers;
-- independent normal-equation residual certification;
-- dense quotient-space spectral and stationary-error diagnostics;
-- phase-separated pair/coarse/hierarchy setup timing and memory reports;
-- deterministic byte-comparison gates for research matrices; and
-- tests covering disconnected components, nesting-induced extra rank
-  deficiency, numerical symmetry, positive action, weight-scale invariance,
-  exact Galerkin identities, and multilevel schedule behavior.
+- incidence components and structural-null-space projection;
+- exact factor-respecting Galerkin coarsening;
+- weighted Jacobi, symmetric MAP, exact pair-Schwarz, and pair-CMG references;
+- rank-revealing dense terminals;
+- symmetric two-grid and recursive hierarchy operators;
+- projected PCG, traced true residuals, and modified LSMR;
+- dense quotient-space spectral diagnostics;
+- compatible-relaxation, bootstrap, repair, and complete-cycle probes;
+- fail-closed structural and cycle-screened portfolios;
+- deterministic evidence matrices, frozen policies, checksums, and preserved
+  negative results.
 
-These results establish mathematical and software feasibility, not a production
-speed advantage. The present implementation still allocates temporary vectors
-in important paths, builds several solver structures, and has not yet been
-compared fairly with `within`'s mature approximate-Cholesky Schwarz solver on
-large identical pair domains.
+This remains a research package. It has not yet demonstrated an end-to-end
+production speed advantage over mature alternatives on large real-data-shaped
+systems.
 
-See [`docs/RESULTS.md`](docs/RESULTS.md),
-[`docs/FEASIBILITY.md`](docs/FEASIBILITY.md),
-[`docs/COMPATIBLE_RESULTS.md`](docs/COMPATIBLE_RESULTS.md), and
-[`docs/ROADMAP.md`](docs/ROADMAP.md).
+## Next steps
+
+The next primary milestone is
+[#4 — compare pair-CMG with the existing approximate-Cholesky pair solver](https://github.com/johannes-schmieder/MultiwayMG/issues/4).
+This determines whether CMG belongs broadly, selectively, or not at all in the
+production smoother portfolio.
+
+Then
+[#5 — prepared topology, reusable workspaces, and changing-weight replay](https://github.com/johannes-schmieder/MultiwayMG/issues/5)
+will address allocation-free cycles, repeated right-hand sides, cumulative
+hierarchy cost, and PPML-style reweighting.
+
+A private, certified fereg integration remains tracked by
+[#6](https://github.com/johannes-schmieder/MultiwayMG/issues/6).
 
 ## Workspace
 
 ```text
 crates/multiway-incidence
-    Matrix class, tuple topology, components, kernels, and exact hard
-    factor-respecting coarsening. It does not depend on CMG or within.
+    Tuple topology, components, matrix-free operators, structural kernel,
+    and exact hard coarsening. No CMG or fereg dependency.
 
 crates/multiway-mg
-    Aggregation, rank-revealing terminals, two-grid and V-cycle research
-    operators, pair-CMG, projected PCG, modified LSMR, and diagnostics.
+    Aggregation, diagnostics, pair solvers, terminals, two-grid and recursive
+    cycles, Krylov drivers, and research evidence executables.
 ```
 
-## Development and validation
+## Validation
 
-The repository pins Git dependencies and validates both the complete and
-minimal feature sets with Rust 1.85:
+The repository pins its Git dependencies and validates Rust 1.85 with:
 
 ```bash
 cargo fmt --all -- --check
@@ -279,19 +266,10 @@ cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
 cargo test --locked --workspace --all-features
 cargo test --locked --workspace --no-default-features
 cargo doc --locked --workspace --all-features --no-deps
-cargo run --locked --release -p multiway-mg --example feasibility --all-features
-cargo run --locked --release -p multiway-mg --example feasibility_matrix --all-features
-cargo run --locked --release -p multiway-mg --example scaling_probe --all-features
-cargo run --locked --release -p multiway-mg --example oracle_spectral_matrix --all-features
-cargo run --locked --release -p multiway-mg --example issue2_two_grid_matrix --all-features -- output
-cargo run --locked --release -p multiway-mg --example issue2_resolution_matrix --all-features -- output
-cargo run --locked --release -p multiway-mg --example issue2_setup_cost_matrix --all-features -- output
-python3 scripts/summarize_issue2_completion.py output output/ISSUE2_FINAL_RESULTS.md
 ```
 
-The feasibility programs are research diagnostics. Their iteration counts,
-spectra, and certified residuals are meaningful; very small hosted-runner wall
-times should not be interpreted as production benchmarks.
+The programs under `crates/multiway-mg/examples/` are research diagnostics.
+Their spectra, iteration counts, structural work, and certified residuals are
+meaningful; small hosted-runner timings are not production benchmarks.
 
-The minimum supported Rust version is 1.85. MultiwayMG is licensed under GNU
-GPL version 3 only.
+MultiwayMG is licensed under GNU GPL version 3 only.

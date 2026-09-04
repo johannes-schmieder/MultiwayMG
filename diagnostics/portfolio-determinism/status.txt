@@ -1,2 +1,0 @@
-matrix_diff_status=0
-trace_diff_status=0

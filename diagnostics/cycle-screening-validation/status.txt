@@ -1,7 +1,0 @@
-cycle_probe_status=101
-cycle_probe_calibration_status=101
-cycle_portfolio_status=101
-bootstrap_portfolio_status=0
-bootstrap_status=0
-repair_status=0
-clippy_status=101

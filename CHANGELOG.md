@@ -7,66 +7,60 @@
 - Initial `multiway-incidence` matrix class and exact hard coarsening.
 - Matrix-free incidence, adjoint, weighted incidence, Gramian, energy, and dense
   reference kernels.
-- Incidence components and projection of the two structural factor-shift modes
-  per component.
-- First symmetric three-way V-cycle with weighted-Jacobi smoothing.
-- Scale-invariant rank-revealing dense spectral terminal.
-- Exact shared-context and bounded pair-neighborhood aggregation.
-- Deterministic adaptive hierarchy policy with per-level aggregation
-  diagnostics.
-- Pairwise CMG preconditioner and symmetric pair-CMG/coarse hybrid cycle.
-- Projected PCG and rectangular modified-LSMR research drivers.
+- Incidence components and projection of structural factor-shift modes.
+- Symmetric three-way V-cycles with weighted-Jacobi smoothing.
+- Scale-invariant rank-revealing dense terminals.
+- Exact-context and bounded pair-neighborhood aggregation.
+- Pairwise CMG preconditioning and symmetric pair/coarse hybrid cycles.
+- Projected PCG, traced true residuals, and rectangular modified LSMR.
 - Independent original-operator normal-equation residual certification.
-- Numerical hardening tests for weight-scale invariance, disconnected kernels,
-  arbitrary-input pair symmetry, exact Galerkin closure, and additional nested
-  rank deficiency.
-- Locked Rust 1.85 CI covering formatting, Clippy, full/minimal features,
-  rustdoc, and release-mode feasibility probes.
-- Planted and six-family feasibility executables plus committed raw evidence and
-  interpretation.
-- Recursive release-mode scaling probe through 768 coefficient coordinates and
-  131,072 unique tuples, with repeated median solve timing and hierarchy
-  complexity diagnostics.
-- Difficult weak-chain scaling probe through 3,072 coefficient coordinates,
-  using a 96-coordinate spectral terminal and designed to excite a slowly
-  varying mode while comparing diagonal PCG, pair-CMG, the three-way V-cycle,
-  the hybrid, and rectangular modified LSMR.
-- Reference-counted immutable three-way problem state, making solver-level
-  problem clones constant-time.
-- Retained per-pair CMG RHS, solution, and cycle workspaces reused across
-  preconditioner applications.
-- Dense complete-range decomposition for small singular three-way Gramians,
-  including additional numerical nullity beyond structural factor shifts.
-- Materialized-preconditioner diagnostics for full and quotient symmetry,
-  range leakage, positive action, preconditioned eigenvalue intervals,
-  condition numbers, and stationary energy radii.
-- Symmetric MAP/block-Gauss--Seidel and exact dense pair-Schwarz reference
-  preconditioners.
-- Two- through four-level first-stage oracle hierarchy generators spanning weak
-  communities, Latin-square patterns, weak chains, nearly nested structure,
-  disconnected components, and complete weighted systems.
-- Projected compatible-relaxation diagnostics, diagonal-energy coarse
-  projection, deterministic map-quality matrices, and explicit acceptance
-  criteria.
-- Explicit energy-coordinate stationary error operators with spectral-radius
-  and induced-energy-norm diagnostics.
-- Exact hard-space coarse correction and complete symmetric two-grid cycles for
-  Jacobi, MAP, exact-pair, and pair-CMG smoothers.
-- Canonical selected-pair CMG research portfolios with positive background
-  smoothers.
-- Scheduled supplied-map hierarchies supporting Jacobi, symmetric MAP, and
-  pair-CMG on selected levels.
-- True PCG residual traces recomputed against the submitted Gramian after every
-  iteration, with Gramian and preconditioner application counts.
-- Pair graph, CMG, workspace, coarsening, smoother, terminal, and complete setup
-  timing diagnostics.
-- Principal retained-state and serial apply-scratch memory reports, using exact
-  CMG byte reports where available.
-- A nine-family one-level matrix covering weak communities, a dominant pair,
-  weak chains, near nesting, Latin and tensor patterns, hubs, disconnected
-  ragged hierarchies, and twelve orders of magnitude in positive weights.
-- Exact two- through five-level resolution sequences comparing all-level
-  Jacobi/MAP with pair-CMG on the finest, first two, or every hierarchy level.
-- Deterministic CI byte-comparison gates, machine-readable raw matrices, full
-  residual histories, generated final findings, and SHA-256 evidence checksums
-  resolving the oracle feasibility milestone in issue #2.
+- Dense complete-range decomposition and quotient-space spectral diagnostics.
+- Symmetric MAP, exact dense pair-Schwarz, selected-pair, and scheduled oracle
+  reference methods.
+- Exact stationary-error and symmetric two-grid analysis.
+- Two- through five-level oracle hierarchy generators and frozen issue #2
+  feasibility matrices.
+- Setup, apply, retained-memory, scratch-memory, and deterministic evidence
+  diagnostics.
+- Exact diagonal-energy compatible projection and deterministic compatible-
+  relaxation histories.
+- Explicit compatible-relaxation acceptance criteria and rejection reasons.
+- Relaxed-signature bootstrap matching with bounded candidate neighborhoods.
+- Protected pair-neighborhood structural-baseline arbitration.
+- Monotone compatible-witness aggregate split/promotion repair.
+- Matrix-free complete-cycle power probing and fail-closed cycle criteria.
+- Cycle-screened map portfolios and recursive hierarchy planning.
+- Selective symmetric-MAP-first, all-pair-CMG-fallback cycle screening.
+- Distinct retention of learned and protected structural maps for fair cycle
+  comparison.
+- Complete-cycle witness-driven split repair with exact structural and
+  improvement budgets.
+- Validated supplied-map recursive cycle construction.
+- Frozen issue #3 one-level and recursive policies, matrices, true-residual
+  traces, gate status files, checksums, and preserved negative results.
+- Final issue #3 decision record selecting the structural pair-neighborhood
+  baseline plus complete-cycle screening while retaining bootstrap and repair as
+  experimental diagnostics.
+
+### Research conclusions
+
+- Oracle factor-preserving coarse spaces can provide excellent multilevel
+  conditioning beyond exact pairwise corrections.
+- Complete-cycle quality, not smoother-compatible quality alone, must be the
+  final hierarchy admission authority.
+- A universal one-sweep symmetric-MAP cycle is insufficient on some weak-chain
+  and weak-community graph-cover modes.
+- The bounded pair-neighborhood matcher is a strong automatic baseline and
+  composes recursively on the frozen matrices.
+- Relaxed-signature bootstrap and both witness-repair schemes did not materially
+  improve that baseline under the declared issue #3 gates.
+- Recursive structural hierarchies are numerically promising but can exceed
+  provisional cumulative tuple and dimension complexity budgets.
+
+### Validation
+
+- Rust 1.85 formatting, strict Clippy, all-feature and minimal-feature tests,
+  and warning-free rustdoc.
+- Dense Galerkin, kernel, component, rank, symmetry, positivity, permutation,
+  and deterministic-repeatability checks.
+- True original-Gramian residual checks for every accepted research solve.

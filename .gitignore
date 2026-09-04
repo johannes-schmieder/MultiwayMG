@@ -2,6 +2,15 @@
 /issue2-a
 /issue2-b
 /issue2-output
+/issue3-a
+/issue3-b
+/issue3-completion-a
+/issue3-completion-b
+/challenge-a
+/challenge-b
+/diagnostics
+/issue3-cover-search.tsv
+/issue3-fixture-search.tsv
 **/*.rs.bk
 .DS_Store
 *.profraw

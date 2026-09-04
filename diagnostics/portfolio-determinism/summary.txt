@@ -1,4 +1,0 @@
-issue3-portfolio-holdout.tsv: rows_a=41 rows_b=41
-  byte/row content identical
-issue3-portfolio-traces.tsv: rows_a=667 rows_b=667
-  byte/row content identical
