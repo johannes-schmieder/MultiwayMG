@@ -13,10 +13,10 @@ use std::{
 use fixtures::{DynError, OracleCase, deterministic_rhs, one_level_cases};
 use multiway_mg::{
     DensePairOptions, DensePairSchwarzPreconditioner, DenseRangeDecomposition,
-    DiagonalPreconditioner, ExactCoarseCorrection, FactorPair, PairCmgOptions,
-    PairSubsetCmgPreconditioner, PcgTraceOptions, Preconditioner, SpectralAnalysisOptions,
-    SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, WeightedSumPreconditioner,
-    analyze_stationary_error, estimate_problem_bytes, solve_projected_pcg_traced,
+    DiagonalPreconditioner, ExactCoarseCorrection, PairCmgOptions, PairSubsetCmgPreconditioner,
+    PcgTraceOptions, Preconditioner, SpectralAnalysisOptions, SymmetricMapPreconditioner,
+    SymmetricTwoGridPreconditioner, WeightedSumPreconditioner, analyze_stationary_error,
+    estimate_problem_bytes, solve_projected_pcg_traced,
 };
 
 fn main() -> Result<(), DynError> {
