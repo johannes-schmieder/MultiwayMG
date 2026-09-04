@@ -31,18 +31,22 @@ fn portfolio_selects_map_then_pair_fallback_and_rejects_inadmissible_cycles() {
         CycleSmootherPortfolioStopReason::AcceptedSymmetricMap
     );
     assert!(latin_result.pair_pass().is_none());
-    assert!(latin_result
-        .build_selected_cycle(&latin.problem)
-        .expect("selected MAP cycle builds")
-        .is_some());
+    assert!(
+        latin_result
+            .build_selected_cycle(&latin.problem)
+            .expect("selected MAP cycle builds")
+            .is_some()
+    );
 
     let nested_result = build(nearly_nested);
     assert!(nested_result.accepted());
     assert!(!nested_result.map_pass().accepted());
-    assert!(nested_result
-        .pair_pass()
-        .expect("pair fallback was evaluated")
-        .accepted());
+    assert!(
+        nested_result
+            .pair_pass()
+            .expect("pair fallback was evaluated")
+            .accepted()
+    );
     assert_eq!(
         nested_result.selected_smoother(),
         Some(CycleSmootherKind::AllPairsCmg)
@@ -60,19 +64,23 @@ fn portfolio_selects_map_then_pair_fallback_and_rejects_inadmissible_cycles() {
     let weak_result = build(weak_chain);
     assert!(!weak_result.accepted());
     assert!(!weak_result.map_pass().accepted());
-    assert!(!weak_result
-        .pair_pass()
-        .expect("pair fallback was evaluated")
-        .accepted());
+    assert!(
+        !weak_result
+            .pair_pass()
+            .expect("pair fallback was evaluated")
+            .accepted()
+    );
     assert_eq!(weak_result.selected_smoother(), None);
     assert_eq!(
         weak_result.stop_reason(),
         CycleSmootherPortfolioStopReason::NoAcceptedCycle
     );
-    assert!(weak_result
-        .build_selected_cycle(&weak_chain.problem)
-        .expect("rejected portfolio is a valid result")
-        .is_none());
+    assert!(
+        weak_result
+            .build_selected_cycle(&weak_chain.problem)
+            .expect("rejected portfolio is a valid result")
+            .is_none()
+    );
 }
 
 fn fixture<'a>(fixtures: &'a [CycleHoldoutFixture], name: &str) -> &'a CycleHoldoutFixture {
@@ -82,18 +90,12 @@ fn fixture<'a>(fixtures: &'a [CycleHoldoutFixture], name: &str) -> &'a CycleHold
         .expect("requested frozen fixture exists")
 }
 
-fn build(
-    fixture: &CycleHoldoutFixture,
-) -> multiway_mg::CycleSmootherPortfolioResult {
-    let primary_smoother = DiagonalPreconditioner::new(&fixture.problem, 0.5)
-        .expect("primary Jacobi smoother builds");
-    build_cycle_smoother_portfolio(
-        &fixture.problem,
-        &primary_smoother,
-        portfolio_options(),
-    )
-    .expect("selective cycle portfolio builds")
-    .0
+fn build(fixture: &CycleHoldoutFixture) -> multiway_mg::CycleSmootherPortfolioResult {
+    let primary_smoother =
+        DiagonalPreconditioner::new(&fixture.problem, 0.5).expect("primary Jacobi smoother builds");
+    build_cycle_smoother_portfolio(&fixture.problem, &primary_smoother, portfolio_options())
+        .expect("selective cycle portfolio builds")
+        .0
 }
 
 fn portfolio_options() -> CycleSmootherPortfolioOptions {

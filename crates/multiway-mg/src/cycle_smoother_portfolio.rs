@@ -55,14 +55,10 @@ impl CycleSmootherPortfolioOptions {
         if !self.smoother_damping.is_finite() || self.smoother_damping <= 0.0 {
             return Err(MultiwayError::InvalidOption {
                 name: "cycle_smoother_portfolio_smoother_damping",
-                message: format!(
-                    "must be finite and positive, got {}",
-                    self.smoother_damping
-                ),
+                message: format!("must be finite and positive, got {}", self.smoother_damping),
             });
         }
-        if !self.terminal_relative_tolerance.is_finite()
-            || self.terminal_relative_tolerance <= 0.0
+        if !self.terminal_relative_tolerance.is_finite() || self.terminal_relative_tolerance <= 0.0
         {
             return Err(MultiwayError::InvalidOption {
                 name: "cycle_smoother_portfolio_terminal_relative_tolerance",
@@ -219,24 +215,20 @@ impl CycleSmootherPortfolioResult {
         problem: &ThreeWayProblem,
     ) -> Result<Option<SelectedTwoGridCycle>, MultiwayError> {
         match self.selected_smoother {
-            Some(CycleSmootherKind::SymmetricMap) => {
-                SymmetricTwoGridPreconditioner::build(
-                    problem.clone(),
-                    self.final_aggregation().clone(),
-                    SymmetricMapPreconditioner::new(problem.clone()),
-                    self.options.smoothing_steps,
-                    self.options.smoother_damping,
-                    self.options.terminal_relative_tolerance,
-                )
-                .map(Box::new)
-                .map(SelectedTwoGridCycle::SymmetricMap)
-                .map(Some)
-            }
+            Some(CycleSmootherKind::SymmetricMap) => SymmetricTwoGridPreconditioner::build(
+                problem.clone(),
+                self.final_aggregation().clone(),
+                SymmetricMapPreconditioner::new(problem.clone()),
+                self.options.smoothing_steps,
+                self.options.smoother_damping,
+                self.options.terminal_relative_tolerance,
+            )
+            .map(Box::new)
+            .map(SelectedTwoGridCycle::SymmetricMap)
+            .map(Some),
             Some(CycleSmootherKind::AllPairsCmg) => {
-                let smoother = PairCmgPreconditioner::build(
-                    problem.clone(),
-                    self.options.pair_cmg,
-                )?;
+                let smoother =
+                    PairCmgPreconditioner::build(problem.clone(), self.options.pair_cmg)?;
                 SymmetricTwoGridPreconditioner::build(
                     problem.clone(),
                     self.final_aggregation().clone(),
@@ -284,7 +276,13 @@ pub fn build_cycle_smoother_portfolio(
     problem: &ThreeWayProblem,
     primary_smoother: &dyn Preconditioner,
     options: CycleSmootherPortfolioOptions,
-) -> Result<(CycleSmootherPortfolioResult, CycleSmootherPortfolioBuildTiming), MultiwayError> {
+) -> Result<
+    (
+        CycleSmootherPortfolioResult,
+        CycleSmootherPortfolioBuildTiming,
+    ),
+    MultiwayError,
+> {
     let options = options.validate()?;
     let total_start = Instant::now();
     let map_smoother = SymmetricMapPreconditioner::new(problem.clone());
