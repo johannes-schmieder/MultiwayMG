@@ -503,6 +503,7 @@ impl BootstrapAggregationBuildTiming {
 #[derive(Debug, Clone, PartialEq)]
 pub struct BootstrapAggregationResult {
     initial_aggregation: FactorAggregation,
+    learned_aggregation: FactorAggregation,
     final_aggregation: FactorAggregation,
     accepted: bool,
     stop_reason: BootstrapAggregationStopReason,
@@ -521,7 +522,14 @@ impl BootstrapAggregationResult {
         &self.initial_aggregation
     }
 
-    /// Final aggregation returned by bootstrap and optional split repair.
+    /// Witness-learned map after bootstrap and optional split repair, before
+    /// protected structural-baseline arbitration.
+    #[must_use]
+    pub const fn learned_aggregation(&self) -> &FactorAggregation {
+        &self.learned_aggregation
+    }
+
+    /// Final aggregation returned after protected structural-baseline arbitration.
     #[must_use]
     pub const fn final_aggregation(&self) -> &FactorAggregation {
         &self.final_aggregation
@@ -746,6 +754,8 @@ pub fn build_bootstrap_aggregation_with_timing<P: Preconditioner + ?Sized>(
         }
     }
 
+    let learned_aggregation = final_aggregation.clone();
+
     let structural_baseline_start = Instant::now();
     let structural_baseline = build_pair_neighborhood_aggregation(
         problem,
@@ -906,6 +916,7 @@ pub fn build_bootstrap_aggregation_with_timing<P: Preconditioner + ?Sized>(
 
     let result = BootstrapAggregationResult {
         initial_aggregation: initial_aggregation.expect("first matching is always retained"),
+        learned_aggregation,
         final_aggregation,
         accepted,
         stop_reason,

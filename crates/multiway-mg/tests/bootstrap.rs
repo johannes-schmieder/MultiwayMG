@@ -85,6 +85,27 @@ fn accepted_structural_baseline_is_not_replaced_by_a_more_expensive_map() {
 }
 
 #[test]
+fn learned_map_is_retained_before_structural_baseline_arbitration() {
+    let (problem, _) = refined_weak_chain(8, 2, 0.01, true);
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("smoother succeeds");
+    let mut options = bootstrap_options();
+    options.minimum_combined_affinity = 1.0;
+    options.maximum_bootstrap_witnesses = 0;
+    options.split_repair = None;
+    options.minimum_tuple_reduction = 0.0;
+    let result = build_bootstrap_aggregation(&problem, &smoother, options)
+        .expect("baseline arbitration succeeds");
+
+    assert!(result.structural_baseline_selected());
+    assert_ne!(result.learned_aggregation(), result.final_aggregation());
+    assert_eq!(
+        result.learned_aggregation(),
+        result.initial_aggregation(),
+        "zero witness budget retains the initial learned matching",
+    );
+}
+
+#[test]
 fn structural_dimension_budget_rejects_before_compatible_acceptance() {
     let (problem, _) = refined_weak_chain(8, 2, 0.01, false);
     let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("smoother succeeds");

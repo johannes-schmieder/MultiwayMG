@@ -21,7 +21,7 @@ use crate::{
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 #[non_exhaustive]
 pub enum CyclePortfolioCandidateSource {
-    /// Final map returned by bootstrap and optional monotone repair.
+    /// Witness-learned map before protected structural-baseline arbitration.
     BootstrapFinal,
     /// Protected bounded pair-neighborhood structural baseline.
     StructuralBaseline,
@@ -356,16 +356,24 @@ where
             maximum_neighbor_degree: bootstrap_options.maximum_neighbor_degree,
         },
     )?;
-    let mut candidates = vec![(
-        CyclePortfolioCandidateSource::BootstrapFinal,
-        primary.final_aggregation().clone(),
-    )];
-    if structural_baseline != candidates[0].1 {
-        candidates.push((
+    let learned_aggregation = primary.learned_aggregation().clone();
+    let candidates = if learned_aggregation == structural_baseline {
+        vec![(
             CyclePortfolioCandidateSource::StructuralBaseline,
             structural_baseline,
-        ));
-    }
+        )]
+    } else {
+        vec![
+            (
+                CyclePortfolioCandidateSource::BootstrapFinal,
+                learned_aggregation,
+            ),
+            (
+                CyclePortfolioCandidateSource::StructuralBaseline,
+                structural_baseline,
+            ),
+        ]
+    };
 
     let cycle_start = Instant::now();
     let mut evaluations = Vec::with_capacity(candidates.len());
