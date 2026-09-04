@@ -158,3 +158,53 @@ jobs:
             issue2-a/*.tsv
             issue2-a/ISSUE2_FINAL_RESULTS.md
           if-no-files-found: error
+
+  issue-4-pair-local:
+    name: Issue 4 certified pair-local economics
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RAYON_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Record reproducibility metadata
+        run: |
+          mkdir -p issue4-output
+          {
+            git rev-parse HEAD
+            echo "event=$GITHUB_EVENT_NAME sha=$GITHUB_SHA run=$GITHUB_RUN_ID"
+            rustc --version --verbose
+            uname -a
+            lscpu
+            echo "RAYON_NUM_THREADS=$RAYON_NUM_THREADS"
+            echo "OMP_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS"
+            grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
+          } > issue4-output/metadata.txt
+      - name: Test pair-local algebra and accounting
+        run: |
+          cargo test --locked -p multiway-mg --all-features --example issue4_pair_local
+          python3 -m unittest discover -s scripts -p test_issue4_pair_local_summary.py
+      - name: Build release benchmark
+        run: cargo build --locked --release -p multiway-mg --all-features --example issue4_pair_local
+      - name: Run frozen smoke matrix
+        run: |
+          /usr/bin/time -v -o issue4-output/process-resources.txt \
+            target/release/examples/issue4_pair_local issue4-output smoke \
+            2> issue4-output/warnings.txt
+      - name: Validate evidence and report conditional crossovers
+        run: |
+          python3 scripts/summarize_issue4_pair_local.py \
+            issue4-output/pair-local.tsv issue4-output/SUMMARY.md
+          (cd issue4-output && sha256sum pair-local.tsv metadata.txt > checksums.sha256)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-4-pair-local-output
+          path: issue4-output/
+          if-no-files-found: error

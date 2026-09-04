@@ -30,6 +30,8 @@ mod memory_estimate;
 mod oracle_schedule;
 #[cfg(feature = "cmg")]
 mod pair_cmg;
+#[cfg(all(feature = "cmg", feature = "lsmr"))]
+mod pair_schwarz;
 mod pcg;
 mod pcg_trace;
 mod preconditioner;
@@ -38,7 +40,11 @@ mod repair;
 mod research_pair;
 mod spectral;
 mod stationary;
+#[cfg(feature = "lsmr")]
+mod structural_projection;
 mod two_grid;
+#[cfg(feature = "within-comparator")]
+mod within_comparator;
 
 pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
@@ -102,7 +108,8 @@ pub use hierarchy::{
 pub use jacobi::DiagonalPreconditioner;
 #[cfg(feature = "lsmr")]
 pub use lsmr::{
-    LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, solve_weighted_least_squares,
+    LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, LeastSquaresWorkReport,
+    solve_weighted_least_squares,
 };
 pub use map::SymmetricMapPreconditioner;
 #[cfg(feature = "cmg")]
@@ -112,6 +119,11 @@ pub use oracle_schedule::{
 };
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
+#[cfg(all(feature = "cmg", feature = "lsmr"))]
+pub use pair_schwarz::{
+    PairCmgSchwarzBuildTiming, PairCmgSchwarzMemoryReport, PairCmgSchwarzOptions,
+    PairCmgSchwarzPreconditioner, PairComponentReport,
+};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced};
 pub use preconditioner::Preconditioner;
@@ -130,6 +142,11 @@ pub use spectral::{
 };
 pub use stationary::{StationaryErrorReport, analyze_stationary_error};
 pub use two_grid::{ExactCoarseBuildTiming, ExactCoarseCorrection, SymmetricTwoGridPreconditioner};
+#[cfg(feature = "within-comparator")]
+pub use within_comparator::{
+    WithinApproxCholBuildTiming, WithinApproxCholMemoryReport, WithinApproxCholOptions,
+    WithinApproxCholPreconditioner,
+};
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,

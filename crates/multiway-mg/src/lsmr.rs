@@ -1,5 +1,7 @@
 //! Rectangular weighted least-squares driver using modified LSMR.
 
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use schwarz_precond::{LsmrStopReason, MlsmrOptions, Operator, SolveError, mlsmr};
 
 use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
@@ -64,6 +66,63 @@ pub enum LeastSquaresStopReason {
     Escalated,
 }
 
+/// Exact matrix-free work counts for one modified-LSMR solve and its certificate.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct LeastSquaresWorkReport {
+    solver_weighted_incidence_applications: usize,
+    solver_weighted_adjoint_applications: usize,
+    preconditioner_applications: usize,
+    certification_incidence_applications: usize,
+    certification_adjoint_applications: usize,
+}
+
+impl LeastSquaresWorkReport {
+    /// `sqrt(W) B` applications performed inside modified LSMR.
+    #[must_use]
+    pub const fn solver_weighted_incidence_applications(self) -> usize {
+        self.solver_weighted_incidence_applications
+    }
+
+    /// `B' sqrt(W)` applications performed inside modified LSMR.
+    #[must_use]
+    pub const fn solver_weighted_adjoint_applications(self) -> usize {
+        self.solver_weighted_adjoint_applications
+    }
+
+    /// Fixed Gram-preconditioner applications performed inside modified LSMR.
+    #[must_use]
+    pub const fn preconditioner_applications(self) -> usize {
+        self.preconditioner_applications
+    }
+
+    /// Unweighted `B` applications used by the independent final certificate.
+    #[must_use]
+    pub const fn certification_incidence_applications(self) -> usize {
+        self.certification_incidence_applications
+    }
+
+    /// Weighted `B'` applications used by the independent final certificate.
+    #[must_use]
+    pub const fn certification_adjoint_applications(self) -> usize {
+        self.certification_adjoint_applications
+    }
+
+    /// Total rectangular outer-operator applications inside modified LSMR.
+    #[must_use]
+    pub const fn solver_outer_operator_applications(self) -> usize {
+        self.solver_weighted_incidence_applications
+            .saturating_add(self.solver_weighted_adjoint_applications)
+    }
+
+    /// Total incidence/adjoint applications including final certification.
+    #[must_use]
+    pub const fn complete_incidence_applications(self) -> usize {
+        self.solver_outer_operator_applications()
+            .saturating_add(self.certification_incidence_applications)
+            .saturating_add(self.certification_adjoint_applications)
+    }
+}
+
 /// Result plus an independent normal-equation residual in the original problem.
 #[derive(Debug, Clone, PartialEq)]
 pub struct LeastSquaresResult {
@@ -74,6 +133,7 @@ pub struct LeastSquaresResult {
     solver_normal_equation_residual: f64,
     certified_normal_equation_residual: f64,
     stop_reason: LeastSquaresStopReason,
+    work: LeastSquaresWorkReport,
 }
 
 impl LeastSquaresResult {
@@ -124,6 +184,12 @@ impl LeastSquaresResult {
     pub const fn stop_reason(&self) -> LeastSquaresStopReason {
         self.stop_reason
     }
+
+    /// Exact matrix-free work counts for the solve and independent certificate.
+    #[must_use]
+    pub const fn work(&self) -> LeastSquaresWorkReport {
+        self.work
+    }
 }
 
 /// Solve `min_x ||sqrt(W) (targets - Bx)||_2` using a Gramian preconditioner.
@@ -149,8 +215,18 @@ pub fn solve_weighted_least_squares<P: Preconditioner + ?Sized>(
         ));
     }
 
-    let operator = WeightedIncidenceOperator { problem };
-    let preconditioner = PreconditionerOperator { preconditioner };
+    let weighted_incidence_applications = AtomicUsize::new(0);
+    let weighted_adjoint_applications = AtomicUsize::new(0);
+    let preconditioner_applications = AtomicUsize::new(0);
+    let operator = WeightedIncidenceOperator {
+        problem,
+        incidence_applications: &weighted_incidence_applications,
+        adjoint_applications: &weighted_adjoint_applications,
+    };
+    let preconditioner = PreconditionerOperator {
+        preconditioner,
+        applications: &preconditioner_applications,
+    };
     let weighted_targets: Vec<f64> = targets
         .iter()
         .zip(problem.square_root_weights())
@@ -184,11 +260,22 @@ pub fn solve_weighted_least_squares<P: Preconditioner + ?Sized>(
         solver_normal_equation_residual: result.normal_eq_residual,
         certified_normal_equation_residual,
         stop_reason: convert_stop_reason(result.stop_reason),
+        work: LeastSquaresWorkReport {
+            solver_weighted_incidence_applications: weighted_incidence_applications
+                .load(Ordering::Relaxed),
+            solver_weighted_adjoint_applications: weighted_adjoint_applications
+                .load(Ordering::Relaxed),
+            preconditioner_applications: preconditioner_applications.load(Ordering::Relaxed),
+            certification_incidence_applications: 1,
+            certification_adjoint_applications: 2,
+        },
     })
 }
 
 struct WeightedIncidenceOperator<'a> {
     problem: &'a ThreeWayProblem,
+    incidence_applications: &'a AtomicUsize,
+    adjoint_applications: &'a AtomicUsize,
 }
 
 impl Operator for WeightedIncidenceOperator<'_> {
@@ -201,12 +288,14 @@ impl Operator for WeightedIncidenceOperator<'_> {
     }
 
     fn apply(&self, x: &[f64], y: &mut [f64]) -> Result<(), SolveError> {
+        self.incidence_applications.fetch_add(1, Ordering::Relaxed);
         self.problem
             .apply_weighted_incidence(x, y)
             .map_err(|error| external_error("weighted incidence apply", error))
     }
 
     fn apply_adjoint(&self, x: &[f64], y: &mut [f64]) -> Result<(), SolveError> {
+        self.adjoint_applications.fetch_add(1, Ordering::Relaxed);
         self.problem
             .apply_weighted_adjoint(x, y)
             .map_err(|error| external_error("weighted incidence adjoint", error))
@@ -215,6 +304,7 @@ impl Operator for WeightedIncidenceOperator<'_> {
 
 struct PreconditionerOperator<'a, P: Preconditioner + ?Sized> {
     preconditioner: &'a P,
+    applications: &'a AtomicUsize,
 }
 
 impl<P: Preconditioner + ?Sized> Operator for PreconditionerOperator<'_, P> {
@@ -227,6 +317,7 @@ impl<P: Preconditioner + ?Sized> Operator for PreconditionerOperator<'_, P> {
     }
 
     fn apply(&self, x: &[f64], y: &mut [f64]) -> Result<(), SolveError> {
+        self.applications.fetch_add(1, Ordering::Relaxed);
         self.preconditioner
             .apply(x, y)
             .map_err(|error| external_error("multiway preconditioner apply", error))

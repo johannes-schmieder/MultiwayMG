@@ -241,6 +241,16 @@ fn rectangular_lsmr_has_an_independent_certificate() {
     .expect("modified LSMR succeeds");
     assert!(result.converged());
     assert!(result.certified_normal_equation_residual() < 1.0e-8);
+    let work = result.work();
+    assert!(work.solver_weighted_incidence_applications() > 0);
+    assert!(work.solver_weighted_adjoint_applications() > 0);
+    assert!(work.preconditioner_applications() > 0);
+    assert_eq!(work.certification_incidence_applications(), 1);
+    assert_eq!(work.certification_adjoint_applications(), 2);
+    assert_eq!(
+        work.complete_incidence_applications(),
+        work.solver_outer_operator_applications() + 3
+    );
 }
 
 fn dot(left: &[f64], right: &[f64]) -> f64 {

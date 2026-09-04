@@ -95,6 +95,10 @@ pub enum MultiwayError {
     #[cfg(feature = "lsmr")]
     #[error("modified LSMR failed: {0}")]
     Lsmr(String),
+    /// The frozen `within` approximate-Cholesky comparator failed.
+    #[cfg(feature = "within-comparator")]
+    #[error("within comparator failed: {0}")]
+    Within(String),
 }
 
 pub(crate) fn dimension(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
