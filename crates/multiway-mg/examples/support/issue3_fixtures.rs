@@ -224,10 +224,7 @@ fn graph_cover_lift(
     Ok(Some((problem, oracle)))
 }
 
-fn oracle_respects_components(
-    problem: &ThreeWayProblem,
-    oracle: &FactorAggregation,
-) -> bool {
+fn oracle_respects_components(problem: &ThreeWayProblem, oracle: &FactorAggregation) -> bool {
     let counts = problem.topology().level_counts();
     (0..3).all(|factor| {
         (0..counts[factor]).all(|level| {

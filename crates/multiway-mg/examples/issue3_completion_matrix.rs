@@ -17,11 +17,11 @@ use issue3_fixtures::{Issue3Fixture, calibration_fixtures, holdout_fixtures};
 use multiway_mg::{
     AggregationRepairOptions, BootstrapAggregationOptions, BootstrapAggregationResult,
     CompatibleRelaxationCriteria, CompatibleRelaxationOptions, DenseRangeDecomposition,
-    DiagonalPreconditioner, FactorAggregation, PairNeighborhoodAggregationOptions,
-    PcgTraceOptions, SpectralAnalysisOptions, SymmetricMapPreconditioner,
-    SymmetricTwoGridPreconditioner, ThreeWayProblem, analyze_compatible_relaxation,
-    build_bootstrap_aggregation, build_pair_neighborhood_aggregation,
-    evaluate_compatible_relaxation, solve_projected_pcg_traced,
+    DiagonalPreconditioner, FactorAggregation, PairNeighborhoodAggregationOptions, PcgTraceOptions,
+    SpectralAnalysisOptions, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
+    ThreeWayProblem, analyze_compatible_relaxation, build_bootstrap_aggregation,
+    build_pair_neighborhood_aggregation, evaluate_compatible_relaxation,
+    solve_projected_pcg_traced,
 };
 
 const MAXIMUM_COARSE_DIMENSION_RATIO: f64 = 0.80;
@@ -45,7 +45,9 @@ fn main() -> Result<(), DynError> {
     }
     println!(
         "wrote {}, {}, and {}",
-        output_directory.join("issue3-completion-matrix.tsv").display(),
+        output_directory
+            .join("issue3-completion-matrix.tsv")
+            .display(),
         output_directory.join("issue3-pcg-traces.tsv").display(),
         output_directory.join("issue3-policy.tsv").display(),
     );
@@ -176,7 +178,10 @@ fn run_fixture(
         traces,
     )?;
     let oracle_condition = oracle_metrics.condition.ok_or_else(|| {
-        format!("oracle map for {} was not structurally admissible", fixture.name)
+        format!(
+            "oracle map for {} was not structurally admissible",
+            fixture.name
+        )
     })?;
 
     record_baseline(
@@ -345,12 +350,7 @@ fn evaluate_map(
             .analyze(&cycle, range_options)?
             .preconditioned_condition_number();
         let rhs = deterministic_rhs(problem)?;
-        let pcg = solve_projected_pcg_traced(
-            problem,
-            &rhs,
-            &cycle,
-            PcgTraceOptions::default(),
-        )?;
+        let pcg = solve_projected_pcg_traced(problem, &rhs, &cycle, PcgTraceOptions::default())?;
         for sample in pcg.samples() {
             writeln!(
                 traces,
@@ -405,7 +405,10 @@ fn evaluate_map(
         optional_bool(pcg.as_ref().map(|result| result.converged())),
         optional(pcg.as_ref().map(|result| result.final_relative_residual())),
         optional_usize(pcg.as_ref().map(|result| result.gramian_applications())),
-        optional_usize(pcg.as_ref().map(|result| result.preconditioner_applications())),
+        optional_usize(
+            pcg.as_ref()
+                .map(|result| result.preconditioner_applications())
+        ),
         work.bootstrap_rounds,
         work.bootstrap_witnesses,
         work.repair_splits,
@@ -486,12 +489,7 @@ fn map_acceptance(
             compatible_energy_factor: None,
         });
     }
-    let report = analyze_compatible_relaxation(
-        problem,
-        aggregation,
-        screen,
-        compatible_options(),
-    )?;
+    let report = analyze_compatible_relaxation(problem, aggregation, screen, compatible_options())?;
     let decision = evaluate_compatible_relaxation(&report, compatible_criteria())?;
     Ok(MapAcceptance {
         structural_admissible,
