@@ -43,7 +43,9 @@ fn main() -> Result<(), DynError> {
     }
     println!(
         "wrote {}",
-        output_directory.join("issue2-setup-cost-matrix.tsv").display()
+        output_directory
+            .join("issue2-setup-cost-matrix.tsv")
+            .display()
     );
     Ok(())
 }
@@ -88,18 +90,9 @@ fn run_case(case: &OracleCase, writer: &mut BufWriter<File>) -> Result<(), DynEr
         writer,
     )?;
 
-    let pair_all = PairSubsetCmgPreconditioner::build_all(
-        case.problem.clone(),
-        PairCmgOptions::default(),
-    )?;
-    record_pair(
-        case,
-        "pair-cmg-all",
-        1,
-        &pair_all,
-        &rhs,
-        writer,
-    )?;
+    let pair_all =
+        PairSubsetCmgPreconditioner::build_all(case.problem.clone(), PairCmgOptions::default())?;
+    record_pair(case, "pair-cmg-all", 1, &pair_all, &rhs, writer)?;
 
     let pair_selected = PairSubsetCmgPreconditioner::build(
         case.problem.clone(),
@@ -116,11 +109,8 @@ fn run_case(case: &OracleCase, writer: &mut BufWriter<File>) -> Result<(), DynEr
     )?;
 
     if let Some(first_map) = case.maps.first() {
-        let coarse = ExactCoarseCorrection::build(
-            case.problem.clone(),
-            first_map.clone(),
-            1.0e-12,
-        )?;
+        let coarse =
+            ExactCoarseCorrection::build(case.problem.clone(), first_map.clone(), 1.0e-12)?;
         let timing = coarse.build_timing();
         record(
             case,
@@ -251,10 +241,7 @@ fn record(
     Ok(())
 }
 
-fn median_apply_ns(
-    preconditioner: &dyn Preconditioner,
-    rhs: &[f64],
-) -> Result<u128, DynError> {
+fn median_apply_ns(preconditioner: &dyn Preconditioner, rhs: &[f64]) -> Result<u128, DynError> {
     let mut output = vec![0.0; preconditioner.dimension()];
     preconditioner.apply(rhs, &mut output)?;
     black_box(output.iter().sum::<f64>());
