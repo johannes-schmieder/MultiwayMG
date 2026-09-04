@@ -393,7 +393,18 @@ pub fn repair_aggregation_by_splitting<P: Preconditioner + ?Sized>(
             });
         }
 
-        let witness = slowest_compatible_witness(problem, &current, smoother, options.relaxation)?;
+        let witness_index =
+            report
+                .slowest_vector_index()
+                .ok_or_else(|| MultiwayError::CompatibleRelaxation {
+                    message: "compatible-relaxation report contained no witnesses".to_owned(),
+                })?;
+        let witness_report = &report.vectors()[witness_index];
+        let witness = SlowWitness {
+            index: witness_index,
+            values: witness_report.final_error().to_vec(),
+            diagonal_contraction: witness_report.diagonal_contraction(),
+        };
         let Some(split) = choose_split(
             problem,
             &current,
@@ -492,77 +503,6 @@ struct SlowWitness {
     index: usize,
     values: Vec<f64>,
     diagonal_contraction: f64,
-}
-
-fn slowest_compatible_witness<P: Preconditioner + ?Sized>(
-    problem: &ThreeWayProblem,
-    aggregation: &FactorAggregation,
-    smoother: &P,
-    options: CompatibleRelaxationOptions,
-) -> Result<SlowWitness, MultiwayError> {
-    let projector = DiagonalAggregationProjector::new(problem.clone(), aggregation.clone())?;
-    let mut slowest: Option<SlowWitness> = None;
-    for vector_index in 0..options.test_vectors {
-        let mut error = deterministic_compatible_error(&projector, options, vector_index)?;
-        let initial_norm = projector.diagonal_norm(&error)?;
-        let mut gradient = vec![0.0; problem.dimension()];
-        let mut correction = vec![0.0; problem.dimension()];
-        for _ in 0..options.sweeps {
-            problem.apply_gramian(&error, &mut gradient)?;
-            smoother.apply(&gradient, &mut correction)?;
-            ensure_finite("repair smoother correction", &correction)?;
-            for (value, &step) in error.iter_mut().zip(&correction) {
-                *value = (-options.relaxation_damping).mul_add(step, *value);
-            }
-            projector.project_complement_in_place(&mut error)?;
-        }
-        let diagonal_contraction = projector.diagonal_norm(&error)? / initial_norm;
-        let candidate = SlowWitness {
-            index: vector_index,
-            values: error,
-            diagonal_contraction,
-        };
-        if slowest.as_ref().is_none_or(|current| {
-            candidate
-                .diagonal_contraction
-                .total_cmp(&current.diagonal_contraction)
-                .is_gt()
-                || (candidate.diagonal_contraction.to_bits()
-                    == current.diagonal_contraction.to_bits()
-                    && candidate.index < current.index)
-        }) {
-            slowest = Some(candidate);
-        }
-    }
-    slowest.ok_or_else(|| MultiwayError::CompatibleRelaxation {
-        message: "repair witness set was empty".to_owned(),
-    })
-}
-
-fn deterministic_compatible_error(
-    projector: &DiagonalAggregationProjector,
-    options: CompatibleRelaxationOptions,
-    vector_index: usize,
-) -> Result<Vec<f64>, MultiwayError> {
-    let mut error = vec![0.0; projector.fine_dimension()];
-    for attempt in 0..16_u64 {
-        fill_deterministic(
-            &mut error,
-            options.seed
-                ^ (vector_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15)
-                ^ attempt.wrapping_mul(0xbf58_476d_1ce4_e5b9),
-        );
-        let raw_norm = projector.diagonal_norm(&error)?;
-        projector.project_complement_in_place(&mut error)?;
-        let projected_norm = projector.diagonal_norm(&error)?;
-        if projected_norm > options.relative_zero_tolerance * raw_norm.max(f64::MIN_POSITIVE) {
-            scale_in_place(&mut error, 1.0 / projected_norm);
-            return Ok(error);
-        }
-    }
-    Err(MultiwayError::CompatibleRelaxation {
-        message: format!("unable to generate compatible repair witness {vector_index}"),
-    })
 }
 
 fn choose_split(
@@ -729,41 +669,6 @@ fn validate_unit_interval(
         return Err(MultiwayError::InvalidOption {
             name,
             message: format!("must be finite and lie in the admitted unit interval, got {value}"),
-        });
-    }
-    Ok(())
-}
-
-fn fill_deterministic(values: &mut [f64], mut state: u64) {
-    for value in values {
-        state = splitmix64(state);
-        let unit = (state >> 11) as f64 * (1.0 / ((1_u64 << 53) as f64));
-        *value = 2.0 * unit - 1.0;
-    }
-}
-
-fn splitmix64(mut value: u64) -> u64 {
-    value = value.wrapping_add(0x9e37_79b9_7f4a_7c15);
-    value = (value ^ (value >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
-    value = (value ^ (value >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
-    value ^ (value >> 31)
-}
-
-fn scale_in_place(values: &mut [f64], scale: f64) {
-    for value in values {
-        *value *= scale;
-    }
-}
-
-fn ensure_finite(context: &'static str, values: &[f64]) -> Result<(), MultiwayError> {
-    if let Some((index, value)) = values
-        .iter()
-        .copied()
-        .enumerate()
-        .find(|(_, value)| !value.is_finite())
-    {
-        return Err(MultiwayError::CompatibleRelaxation {
-            message: format!("{context} entry {index} is nonfinite: {value}"),
         });
     }
     Ok(())
