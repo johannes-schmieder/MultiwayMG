@@ -48,5 +48,9 @@ required-features = ["cmg"]
 name = "issue2_resolution_matrix"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue2_setup_cost_matrix"
+required-features = ["cmg"]
+
 [lints]
 workspace = true
