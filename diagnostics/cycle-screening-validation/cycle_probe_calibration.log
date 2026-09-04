@@ -1,0 +1,12 @@
+   Compiling multiway-mg v0.1.0 (/home/runner/work/MultiwayMG/MultiwayMG/crates/multiway-mg)
+error[E0432]: unresolved imports `multiway_mg::CycleQualityOptions`, `multiway_mg::analyze_cycle_quality`
+ --> crates/multiway-mg/tests/cycle_probe_calibration.rs:4:5
+  |
+4 |     CycleQualityOptions, DenseRangeDecomposition, FactorAggregation, SpectralAnalysisOptions,
+  |     ^^^^^^^^^^^^^^^^^^^ no `CycleQualityOptions` in the root
+5 |     SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, ThreeWayProblem,
+6 |     analyze_cycle_quality,
+  |     ^^^^^^^^^^^^^^^^^^^^^ no `analyze_cycle_quality` in the root
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `multiway-mg` (test "cycle_probe_calibration") due to 1 previous error
