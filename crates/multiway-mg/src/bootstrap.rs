@@ -13,8 +13,7 @@ use crate::{
     AggregationRepairOptions, AggregationRepairResult, CompatibleRelaxationCriteria,
     CompatibleRelaxationDecision, CompatibleRelaxationOptions, CompatibleRelaxationReport,
     DiagonalPreconditioner, FactorAggregation, MultiwayError, Preconditioner, ThreeWayProblem,
-    analyze_compatible_relaxation, evaluate_compatible_relaxation,
-    repair_aggregation_by_splitting,
+    analyze_compatible_relaxation, evaluate_compatible_relaxation, repair_aggregation_by_splitting,
 };
 
 /// Controls sparse test-vector aggregation and bounded witness enrichment.
@@ -114,19 +113,13 @@ impl BootstrapAggregationOptions {
             ));
         }
         if self.maximum_neighbor_degree < 2 {
-            return Err(invalid(
-                "maximum_neighbor_degree",
-                "must be at least two",
-            ));
+            return Err(invalid("maximum_neighbor_degree", "must be at least two"));
         }
         if self.signature_window == 0 {
             return Err(invalid("signature_window", "must be positive"));
         }
         if self.maximum_candidate_degree == 0 {
-            return Err(invalid(
-                "maximum_candidate_degree",
-                "must be positive",
-            ));
+            return Err(invalid("maximum_candidate_degree", "must be positive"));
         }
         validate_unit_interval(
             "minimum_combined_affinity",
@@ -559,11 +552,12 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
             .last()
             .expect("current compatible-relaxation round was just appended")
             .compatible_report;
-        let slowest_index = report.slowest_vector_index().ok_or_else(|| {
-            MultiwayError::CompatibleRelaxation {
-                message: "bootstrap compatible report contained no witness".to_owned(),
-            }
-        })?;
+        let slowest_index =
+            report
+                .slowest_vector_index()
+                .ok_or_else(|| MultiwayError::CompatibleRelaxation {
+                    message: "bootstrap compatible report contained no witness".to_owned(),
+                })?;
         let mut witness = report.vectors()[slowest_index].final_error().to_vec();
         range_filter_and_normalize(problem, &mut witness)?;
         orient_deterministically(&mut witness);
@@ -571,11 +565,10 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         previous = Some(matching.aggregation);
     }
 
-    let mut final_aggregation = final_aggregation.ok_or_else(|| {
-        MultiwayError::CompatibleRelaxation {
+    let mut final_aggregation =
+        final_aggregation.ok_or_else(|| MultiwayError::CompatibleRelaxation {
             message: "bootstrap builder produced no aggregation".to_owned(),
-        }
-    })?;
+        })?;
     let mut split_repair = None;
     if !accepted {
         if let Some(repair_options) = options.split_repair {
@@ -601,7 +594,11 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
 
     let retained_test_vector_bytes = test_vectors
         .iter()
-        .map(|vector| vector.capacity().saturating_mul(core::mem::size_of::<f64>()))
+        .map(|vector| {
+            vector
+                .capacity()
+                .saturating_mul(core::mem::size_of::<f64>())
+        })
         .sum();
     let retained_round_report_bytes_estimate = rounds
         .iter()
@@ -668,7 +665,12 @@ fn build_matching(
 ) -> Result<MatchingResult, MultiwayError> {
     let mut candidates: BTreeMap<(usize, u32, u32), CandidateAccumulator> = BTreeMap::new();
     add_structural_candidates(problem, options.maximum_neighbor_degree, &mut candidates);
-    add_signature_candidates(problem, test_vectors, options.signature_window, &mut candidates)?;
+    add_signature_candidates(
+        problem,
+        test_vectors,
+        options.signature_window,
+        &mut candidates,
+    )?;
     let generated = candidates.len();
     let weight_sum = options.algebraic_affinity_weight
         + options.structural_affinity_weight
@@ -684,7 +686,7 @@ fn build_matching(
         let algebraic = algebraic_affinity(test_vectors, left_index, right_index);
         let structural = (candidate.structural_overlap
             / (left_degree.sqrt() * right_degree.sqrt()))
-            .clamp(0.0, 1.0);
+        .clamp(0.0, 1.0);
         let degree = left_degree.min(right_degree) / left_degree.max(right_degree);
         let signature = candidate.signature_hits as f64 / test_vectors.len() as f64;
         let score = (options.algebraic_affinity_weight * algebraic
@@ -762,8 +764,9 @@ fn add_structural_candidates(
             if neighbor_factor == factor {
                 continue;
             }
-            let mut neighborhoods: Vec<BTreeMap<u32, f64>> =
-                (0..counts[neighbor_factor]).map(|_| BTreeMap::new()).collect();
+            let mut neighborhoods: Vec<BTreeMap<u32, f64>> = (0..counts[neighbor_factor])
+                .map(|_| BTreeMap::new())
+                .collect();
             for (&tuple, &weight) in problem.topology().tuples().iter().zip(problem.weights()) {
                 *neighborhoods[tuple[neighbor_factor] as usize]
                     .entry(tuple[factor])
@@ -853,10 +856,7 @@ fn algebraic_affinity(test_vectors: &[Vec<f64>], left: usize, right: usize) -> f
         let left_value = vector[left];
         let right_value = vector[right];
         difference = (left_value - right_value).mul_add(left_value - right_value, difference);
-        scale = left_value.mul_add(
-            left_value,
-            right_value.mul_add(right_value, scale),
-        );
+        scale = left_value.mul_add(left_value, right_value.mul_add(right_value, scale));
     }
     if scale <= f64::MIN_POSITIVE {
         0.0
@@ -891,8 +891,7 @@ fn relaxed_range_test_vectors(
         let mut random = vec![0.0; problem.dimension()];
         fill_deterministic(
             &mut random,
-            options.seed
-                ^ (vector_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15),
+            options.seed ^ (vector_index as u64).wrapping_mul(0x9e37_79b9_7f4a_7c15),
         );
         let mut vector = vec![0.0; problem.dimension()];
         problem.apply_gramian(&random, &mut vector)?;

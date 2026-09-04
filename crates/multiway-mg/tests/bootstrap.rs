@@ -116,7 +116,12 @@ fn additional_nesting_nullity_does_not_create_nonfinite_bootstrap_diagnostics() 
                 .maximum_energy_factor_per_sweep()
                 .is_none_or(f64::is_finite)
         );
-        assert!(round.compatible_report().maximum_final_coarse_defect().is_finite());
+        assert!(
+            round
+                .compatible_report()
+                .maximum_final_coarse_defect()
+                .is_finite()
+        );
         assert!(
             round
                 .compatible_report()
@@ -219,9 +224,7 @@ fn refined_weak_chain(
         for first_child in 0..clones {
             for second_child in 0..clones {
                 for third_child in 0..clones {
-                    if parity_sparse
-                        && (first_child + second_child + third_child) % 2 != parity
-                    {
+                    if parity_sparse && (first_child + second_child + third_child) % 2 != parity {
                         continue;
                     }
                     fine_tuples.push([
@@ -237,7 +240,10 @@ fn refined_weak_chain(
     let fine = ThreeWayProblem::from_observations(fine_counts, &fine_tuples, &fine_weights)
         .expect("refined weak chain is valid");
     let reconstructed = oracle.coarsen(&fine).expect("oracle coarsening succeeds");
-    assert_eq!(reconstructed.topology().tuples(), coarse.topology().tuples());
+    assert_eq!(
+        reconstructed.topology().tuples(),
+        coarse.topology().tuples()
+    );
     for (&expected, &actual) in coarse.weights().iter().zip(reconstructed.weights()) {
         assert!((expected - actual).abs() <= 1.0e-12 * expected.abs().max(1.0));
     }
