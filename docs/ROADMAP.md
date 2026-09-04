@@ -23,45 +23,95 @@
 - [x] Planted and six-family release feasibility probes.
 - [x] Raw first-stage evidence and interpretation committed to the repository.
 
-## Milestone 2 — oracle hierarchy and quotient-space spectral gate
+## Milestone 2 — complete oracle two-grid and multilevel feasibility gate
+
+Tracked by issue #2. **Completed.**
+
+### Quotient-space and stationary analysis
 
 - [x] Materialize the complete numerical range of small singular Gramians.
 - [x] Detect additional nullity beyond the two generic factor shifts.
 - [x] Materialize fixed preconditioner actions and report full/quotient symmetry,
       range leakage, positive-action defects, and preconditioned spectra.
-- [x] Add symmetric MAP and exact dense pair-Schwarz reference ceilings.
-- [x] Construct two- through four-level manufactured oracle hierarchies.
-- [x] Cover planted weak communities, Latin patterns, a weak chain, nearly
-      nested structure, disconnected components, and a complete hierarchy.
-- [x] Validate spectral predictions against projected-PCG iterations and true
-      original-Gramian residuals.
-- [x] Preserve a compact machine-readable matrix and detailed interpretation.
-- [x] Establish that an oracle Jacobi hierarchy keeps condition numbers below
-      about `1.46` in the first matrix.
-- [x] Establish that the oracle pair-CMG/coarse hybrid keeps condition numbers
-      below about `1.006` and converges in three or four PCG iterations.
+- [x] Form the explicit energy-coordinate stationary error operator.
+- [x] Report spectral radius and induced energy norm separately.
+- [x] Add one- and repeated-sweep stationary diagnostics.
+- [x] Validate the exact pseudoinverse as the zero-error reference.
 
-The primary issue #2 go/no-go gate is passed. The near-unit oracle hybrid
-spectra are deliberately treated as an idealized ceiling because the current
-refinement expands every parent tuple into a complete child tensor.
+### Smoother and two-grid matrix
+
+- [x] Compare three safe Jacobi damping values.
+- [x] Add symmetric MAP/block-Gauss--Seidel.
+- [x] Add exact dense pair Schwarz as a small-system quality ceiling.
+- [x] Compare all-three-pair CMG.
+- [x] Compare a selected pair with positive Jacobi and MAP backgrounds.
+- [x] Add exact coarse-only correction and expose its semidefinite nature.
+- [x] Add complete symmetric Jacobi, MAP, exact-pair, and pair-CMG two-grid
+      cycles.
+- [x] Show material coarse-correction improvement in all nine one-level
+      families for every corresponding baseline.
+
+### Multilevel and adversarial coverage
+
+- [x] Add supplied-map smoother schedules using pair-CMG only on the finest
+      level, on the first two levels, or on every level.
+- [x] Add all-level Jacobi and all-level symmetric-MAP schedules.
+- [x] Run exact two- through five-level resolution sequences.
+- [x] Cover planted weak communities.
+- [x] Cover one dominant factor pair with weak third-factor coupling.
+- [x] Cover weak chains and nearly nested systems.
+- [x] Cover Latin-square and rectangular tensor-grid patterns.
+- [x] Cover hub/power-law degree structure.
+- [x] Cover disconnected components with different local oracle depths.
+- [x] Cover positive tuple weights spanning twelve orders of magnitude.
+- [x] Keep tuple complexity below three and iteration spreads within two over
+      every resolution sequence.
+
+### Certification, cost, and reproducibility
+
+- [x] Record a recomputed original-Gramian residual after every PCG iteration.
+- [x] Record Gramian and preconditioner application counts.
+- [x] Record exact coarse, pair graph, CMG, workspace, smoother, and terminal
+      setup phases.
+- [x] Report principal retained-memory and serial apply-scratch estimates.
+- [x] Use exact CMG retained/workspace byte reports where available.
+- [x] Execute deterministic matrices twice in CI and byte-compare the outputs.
+- [x] Preserve raw matrices, residual traces, setup diagnostics, generated
+      findings, and SHA-256 checksums in the repository.
+- [x] Fail CI unless every predeclared scientific acceptance gate passes.
+
+The final result is positive: a good hard factor-preserving coarse space supplies
+the missing global three-way correction. Pair-CMG on only the finest level
+captured almost all the benefit of pair-CMG on every level in the oracle
+sequences, while all-level symmetric MAP was usually stronger and retained far
+less state. These are hypotheses for production design, not routing rules.
+
+See `docs/ISSUE2_METHODS.md`, `docs/ISSUE2_FINAL_RESULTS.md`, and
+`benchmarks/results/2026-09-03/issue2-*`.
 
 ## Milestone 3 — adaptive coarse spaces
 
-Tracked by issue #3.
+Tracked by issue #3. The diagnostic foundation is implemented; automatic repair
+and oracle-gap closure remain active research.
 
 - [x] Build a bounded sparse candidate graph from shared pair-marginal
       neighborhoods as a structural fallback.
-- [ ] Generate deterministic relaxed test vectors suitable for hierarchy setup.
-- [ ] Define and validate compatible projection in a weighted norm.
-- [ ] Measure compatible-relaxation contraction for proposed hard maps.
-- [ ] Build richer sparse same-factor candidate graphs from pair marginals and
-      compact neighborhood sketches.
-- [ ] Rank candidates by test-vector affinity, predicted tuple contraction, and
-      energy inflation.
-- [ ] Split or promote bad aggregates.
-- [ ] Add bounded bootstrap slow-mode repair.
-- [ ] Add sparse and adversarial oracle refinements and deliberately imperfect
-      maps to quantify the automatic-to-oracle gap.
+- [x] Generate deterministic compatible test errors.
+- [x] Define and validate the diagonal-energy compatible projection.
+- [x] Measure compatible-relaxation contraction for proposed hard maps.
+- [x] Record factor-block, energy, coarse-drift, and structural-defect histories.
+- [x] Add explicit caller-supplied acceptance criteria with stable rejection
+      reasons.
+- [x] Compare oracle, current automatic, and deliberately misaligned maps on
+      complete and parity-sparse refinements.
+- [ ] Retain and expose the slowest compatible witnesses for repair.
+- [ ] Score within-aggregate disagreement and candidate promotions.
+- [ ] Split or promote bad aggregates under dimension and tuple budgets.
+- [ ] Add bounded bootstrap slow-mode enrichment.
+- [ ] Quantify the automatic-to-oracle gap in compatible contraction,
+      two-grid spectra, Krylov work, setup, and hierarchy complexity.
+- [ ] Add realistic sparse worker--firm--occupation and
+      exporter--importer--product shaped holdouts.
 - [ ] Evaluate energy correction before allowing richer interpolation.
 
 ## Milestone 4 — pair solver and production engineering
@@ -70,23 +120,25 @@ Pair-solver comparison is tracked by issue #4; reusable numerical state is
 tracked by issue #5.
 
 - [ ] Compare exact pair solves, the current `within` approximate-Cholesky
-      local solver, and CMG on identical pair subdomains.
-- [ ] Decide whether pair-CMG is broadly useful, selectively useful, or only an
-      oracle-quality reference after complete setup/application costs are
+      local solver, and CMG on identical large pair subdomains.
+- [ ] Determine whether pair-CMG is broadly useful, selectively useful, or only
+      an oracle-quality reference after complete setup/application costs are
       charged.
-- [ ] Caller-owned reusable V-cycle and CMG workspaces.
-- [ ] Fused tuple kernels for multiple RHS vectors.
-- [ ] Deterministic parallel setup and application.
-- [ ] Exact retained and peak memory reports.
-- [ ] Component-local hierarchy depths and terminals.
-- [ ] Prepared topology with changing numerical weights.
-- [ ] Failure injection and allocation-bound tests.
+- [ ] Use the issue #2 schedule findings to compare all-level MAP against
+      finest-level-only pair-CMG on large systems.
+- [ ] Add caller-owned allocation-free V-cycle and CMG workspaces.
+- [ ] Add fused tuple kernels for multiple right-hand sides.
+- [ ] Add deterministic parallel setup and application.
+- [ ] Add exact production retained and peak memory reports.
+- [ ] Add component-local hierarchy depths and terminals.
+- [ ] Add prepared topology with changing numerical weights.
+- [ ] Add failure injection and allocation-bound tests.
 
 ## Milestone 5 — fereg experiment
 
 Tracked by issue #6.
 
-- [ ] Private route for exactly three categorical intercept FEs in OLS.
+- [ ] Add a private route for exactly three categorical intercept FEs in OLS.
 - [ ] Collapse weighted RHS values by tuple.
 - [ ] Preserve fereg's original observation-space certificate and fallback.
 - [ ] Benchmark against MAP, CG, Schwarz-LSMR, and two-way CMG plus nuisance.
