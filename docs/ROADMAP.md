@@ -59,15 +59,30 @@ admission.
 
 ## Milestone 4 — pair-solver economics
 
-Tracked by issue #4.
+Tracked by issue #4. **In progress; not a production-routing decision.**
 
-- [ ] Compare exact pair solves, the existing `within` approximate-Cholesky
-      local solver, and CMG on identical pair domains.
-- [ ] Measure setup, apply, retained state, outer work, and repeated-RHS
-      break-even points.
+- [x] Component-local fixed-CMG adapter hosted by the generic Schwarz executor.
+- [x] Public pinned `within` comparator without copied elimination/Cholesky code.
+- [x] Exact rectangular operator, preconditioner, and certificate work counters.
+- [x] Identical connected pair-domain harness for Jacobi, exact, CMG, and within.
+- [x] Small five-family, three-repeat matrix with RHS prefixes 1, 4, 16, and 32.
+- [x] Charged setup/workspace/failed-solve time and conditional crossover report.
+- [x] True-residual, algebra, coverage, and accounting gates in GitHub Actions.
+- [x] Explicit Jacobi controls, CMG terminal metadata, and opaque-memory limits.
+- [x] Nonfinite/overflow/failure recovery and compensated pair-mass regressions.
+- [ ] Broad large/mixed/disconnected-domain calibration and a fresh holdout.
+- [ ] Whole-system three-way Schwarz comparisons under MLSMR and projected PCG.
+- [ ] Integration with the unchanged issue #3 coarse maps and cycle policy.
+- [ ] Complete retained/peak memory and single-/multi-thread lifetime accounting.
+- [ ] Selected-pair/component portfolios and fixed repeated-cycle alternatives.
+- [ ] Changing-weight build/replay economics without premature symbolic reuse.
 - [ ] Determine whether CMG is broadly useful, selective by component, finest-
       level only, or merely a quality reference.
-- [ ] Freeze a calibration matrix and fresh holdout before routing decisions.
+
+See `ISSUE4_PAIR_LOCAL_PROTOCOL.md` for the exact small-matrix protocol and
+measurement boundaries. A local timing win does not establish a three-way
+solver advantage; a one-level diagonal terminal is not a multilevel gain.
+The GitHub issue is the planning authority for the remaining acceptance gates.
 
 ## Milestone 5 — production engineering and changing weights
 

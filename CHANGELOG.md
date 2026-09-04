@@ -41,6 +41,25 @@
 - Final issue #3 decision record selecting the structural pair-neighborhood
   baseline plus complete-cycle screening while retaining bootstrap and repair as
   experimental diagnostics.
+- Component-local fixed-CMG Schwarz adapter and a public pinned `within`
+  comparator with setup phases, warnings, and explicit known-memory boundaries.
+- Exact MLSMR incidence, adjoint, preconditioner, and certification work counts.
+- Identical-domain pair-local economics harness with Jacobi/exact/CMG/within,
+  repeated RHS prefixes, true residual certification, CMG terminal metadata,
+  and conditional setup-amortization reporting.
+- Permanent issue #4 GitHub Actions numerical/accounting smoke gate; timing
+  results are descriptive, never preferred-winner pass criteria.
+
+### Fixed
+
+- Pair-adapter structural projection now uses component-local scaling to avoid
+  intermediate overflow without erasing unrelated tiny disconnected components.
+- Invalid and nonfinite pair-adapter calls clear output; reusable projection
+  workspaces survive ordinary numerical/input failures.
+- Compensated pair-marginal accumulation preserves representable small positive
+  tuple masses alongside large weights.
+- The pair-local dynamic-weight generator explicitly spans all prescribed
+  powers from 1e-3 to 1e3 and has a coverage regression test.
 
 ### Research conclusions
 
@@ -56,6 +75,9 @@
   improve that baseline under the declared issue #3 gates.
 - Recursive structural hierarchies are numerically promising but can exceed
   provisional cumulative tuple and dimension complexity budgets.
+- Issue #4 remains open: small pair-local economics are not broad three-way
+  production evidence. Jacobi controls and direct/iterative terminal metadata
+  must accompany any apparent CMG timing advantage.
 
 ### Validation
 
@@ -64,3 +86,5 @@
 - Dense Galerkin, kernel, component, rank, symmetry, positivity, permutation,
   and deterministic-repeatability checks.
 - True original-Gramian residual checks for every accepted research solve.
+- Issue #4 algebra, true-residual, complete-matrix, failed-attempt accounting,
+  crossover arithmetic, extreme-scale projection, and invalid-input regressions.

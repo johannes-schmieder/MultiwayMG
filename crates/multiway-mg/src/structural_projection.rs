@@ -109,7 +109,11 @@ impl StructuralProjectionWorkspace {
             .saturating_add(self.corrections.len())
             .saturating_add(self.projections.len())
             .saturating_mul(core::mem::size_of::<[f64; 3]>())
-            .saturating_add(self.scales.len().saturating_mul(core::mem::size_of::<f64>()))
+            .saturating_add(
+                self.scales
+                    .len()
+                    .saturating_mul(core::mem::size_of::<f64>()),
+            )
     }
 }
 
