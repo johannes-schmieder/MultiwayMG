@@ -15,8 +15,8 @@ use multiway_mg::{
 #[test]
 fn exact_pseudoinverse_has_zero_stationary_error_on_the_numerical_range() {
     let problem = complete_problem(2);
-    let exact = DensePseudoinverse::from_problem(&problem, 1.0e-12)
-        .expect("exact pseudoinverse succeeds");
+    let exact =
+        DensePseudoinverse::from_problem(&problem, 1.0e-12).expect("exact pseudoinverse succeeds");
     let options = SpectralAnalysisOptions::default();
     let range = DenseRangeDecomposition::from_problem(&problem, options)
         .expect("range decomposition succeeds");
@@ -33,8 +33,8 @@ fn exact_pseudoinverse_has_zero_stationary_error_on_the_numerical_range() {
 #[test]
 fn explicit_two_grid_cycle_is_symmetric_positive_and_improves_a_weak_chain() {
     let (problem, aggregation) = refined_weak_chain(6, 2, 0.02);
-    let diagonal = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal preconditioner succeeds");
+    let diagonal =
+        DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal preconditioner succeeds");
     let two_grid = SymmetricTwoGridPreconditioner::build(
         problem.clone(),
         aggregation,
@@ -77,16 +77,14 @@ fn traced_pcg_records_every_true_residual_and_operator_count() {
         .iter()
         .enumerate()
         .map(|(index, tuple)| {
-            (0.13 * index as f64).sin()
-                + 0.2 * f64::from(tuple[0])
-                - 0.1 * f64::from(tuple[2])
+            (0.13 * index as f64).sin() + 0.2 * f64::from(tuple[0]) - 0.1 * f64::from(tuple[2])
         })
         .collect();
     let rhs = problem
         .rhs_from_targets(&targets)
         .expect("normal right-hand side succeeds");
-    let diagonal = DiagonalPreconditioner::new(&problem, 0.5)
-        .expect("diagonal preconditioner succeeds");
+    let diagonal =
+        DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal preconditioner succeeds");
     let result = solve_projected_pcg_traced(
         &problem,
         &rhs,
@@ -204,18 +202,24 @@ fn scheduled_oracle_hierarchy_supports_finest_two_and_all_pair_levels() {
         assert_eq!(hierarchy.depth(), 3);
         assert!(hierarchy.tuple_complexity() < 2.0);
         assert!(hierarchy.memory_report().total_retained_bytes_estimate() > 0);
-        assert!(hierarchy.memory_report().maximum_apply_scratch_bytes_estimate() > 0);
+        assert!(
+            hierarchy
+                .memory_report()
+                .maximum_apply_scratch_bytes_estimate()
+                > 0
+        );
     }
-    assert_eq!(
-        jacobi.memory_report().pair_cmg_preconditioner_bytes(),
-        0
-    );
+    assert_eq!(jacobi.memory_report().pair_cmg_preconditioner_bytes(), 0);
     assert!(
         finest_pair.memory_report().pair_cmg_preconditioner_bytes()
-            < first_two_pair.memory_report().pair_cmg_preconditioner_bytes()
+            < first_two_pair
+                .memory_report()
+                .pair_cmg_preconditioner_bytes()
     );
     assert!(
-        first_two_pair.memory_report().pair_cmg_preconditioner_bytes()
+        first_two_pair
+            .memory_report()
+            .pair_cmg_preconditioner_bytes()
             < all_pair.memory_report().pair_cmg_preconditioner_bytes()
     );
 }
@@ -247,12 +251,8 @@ fn complete_problem(levels: u32) -> ThreeWayProblem {
             }
         }
     }
-    ThreeWayProblem::from_observations(
-        [levels as usize; 3],
-        &tuples,
-        &vec![1.0; tuples.len()],
-    )
-    .expect("complete problem is valid")
+    ThreeWayProblem::from_observations([levels as usize; 3], &tuples, &vec![1.0; tuples.len()])
+        .expect("complete problem is valid")
 }
 
 fn weighted_latin_square(levels: u32) -> ThreeWayProblem {
