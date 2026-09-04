@@ -222,22 +222,18 @@ fn refine_once(
 fn ragged_disconnected_case() -> Result<OracleCase, DynError> {
     let component_sizes = [2_usize, 3_usize];
     let component_clones = [4_usize, 2_usize];
-    let fine_levels_per_factor = component_sizes[0] * component_clones[0]
-        + component_sizes[1] * component_clones[1];
+    let fine_levels_per_factor =
+        component_sizes[0] * component_clones[0] + component_sizes[1] * component_clones[1];
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     let mut fine_offset = 0_usize;
-    for (component, (&levels, &clones)) in component_sizes
-        .iter()
-        .zip(&component_clones)
-        .enumerate()
+    for (component, (&levels, &clones)) in component_sizes.iter().zip(&component_clones).enumerate()
     {
         for first in 0..levels {
             for second in 0..levels {
                 let third = (first + second) % levels;
-                let base_weight = 0.8
-                    + component as f64 * 0.4
-                    + ((3 * first + 5 * second) % 7) as f64 / 10.0;
+                let base_weight =
+                    0.8 + component as f64 * 0.4 + ((3 * first + 5 * second) % 7) as f64 / 10.0;
                 let child_count = clones * clones * clones;
                 for first_child in 0..clones {
                     for second_child in 0..clones {
@@ -255,11 +251,8 @@ fn ragged_disconnected_case() -> Result<OracleCase, DynError> {
         }
         fine_offset += levels * clones;
     }
-    let problem = ThreeWayProblem::from_observations(
-        [fine_levels_per_factor; 3],
-        &tuples,
-        &weights,
-    )?;
+    let problem =
+        ThreeWayProblem::from_observations([fine_levels_per_factor; 3], &tuples, &weights)?;
 
     let first_map_parents = core::array::from_fn(|_| {
         let mut parents = Vec::with_capacity(fine_levels_per_factor);
@@ -272,10 +265,7 @@ fn ragged_disconnected_case() -> Result<OracleCase, DynError> {
         }
         parents
     });
-    let first_map = FactorAggregation::new(
-        [fine_levels_per_factor; 3],
-        first_map_parents,
-    )?;
+    let first_map = FactorAggregation::new([fine_levels_per_factor; 3], first_map_parents)?;
     let mid = first_map.coarsen(&problem)?;
     let mid_counts = mid.topology().level_counts();
     let second_map_parents = core::array::from_fn(|_| {
@@ -321,10 +311,7 @@ fn verify_same_problem(
     Ok(())
 }
 
-fn planted_communities(
-    levels: usize,
-    bridge_weight: f64,
-) -> Result<ThreeWayProblem, DynError> {
+fn planted_communities(levels: usize, bridge_weight: f64) -> Result<ThreeWayProblem, DynError> {
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     for first in 0..levels {
@@ -339,9 +326,8 @@ fn planted_communities(
                 } else {
                     bridge_weight
                 };
-                weights.push(
-                    base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0),
-                );
+                weights
+                    .push(base * (1.0 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 20.0));
             }
         }
     }
@@ -352,10 +338,7 @@ fn planted_communities(
     )?)
 }
 
-fn dominant_pair_weak_third(
-    levels: usize,
-    weak_weight: f64,
-) -> Result<ThreeWayProblem, DynError> {
+fn dominant_pair_weak_third(levels: usize, weak_weight: f64) -> Result<ThreeWayProblem, DynError> {
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     for first in 0..levels {
@@ -363,11 +346,7 @@ fn dominant_pair_weak_third(
             let third = (first + 2 * second) % levels;
             tuples.push([first as u32, second as u32, third as u32]);
             weights.push(1.0 + ((7 * first + 3 * second) % 13) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((third + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((third + 1) % levels) as u32]);
             weights.push(weak_weight);
         }
     }
@@ -400,21 +379,14 @@ fn weak_chain(levels: usize, bridge_weight: f64) -> Result<ThreeWayProblem, DynE
     )?)
 }
 
-fn nearly_nested(
-    levels: usize,
-    perturbation_weight: f64,
-) -> Result<ThreeWayProblem, DynError> {
+fn nearly_nested(levels: usize, perturbation_weight: f64) -> Result<ThreeWayProblem, DynError> {
     let mut tuples = Vec::new();
     let mut weights = Vec::new();
     for first in 0..levels {
         for second in 0..levels {
             tuples.push([first as u32, second as u32, first as u32]);
             weights.push(1.0 + ((first + 2 * second) % 7) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((first + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((first + 1) % levels) as u32]);
             weights.push(perturbation_weight);
         }
     }
@@ -458,16 +430,12 @@ fn tensor_grid(counts: [usize; 3]) -> Result<ThreeWayProblem, DynError> {
         for second in 0..counts[1] {
             for third in 0..counts[2] {
                 tuples.push([first as u32, second as u32, third as u32]);
-                weights.push(
-                    0.5 + ((5 * first + 7 * second + 11 * third) % 17) as f64 / 10.0,
-                );
+                weights.push(0.5 + ((5 * first + 7 * second + 11 * third) % 17) as f64 / 10.0);
             }
         }
     }
     Ok(ThreeWayProblem::from_observations(
-        counts,
-        &tuples,
-        &weights,
+        counts, &tuples, &weights,
     )?)
 }
 

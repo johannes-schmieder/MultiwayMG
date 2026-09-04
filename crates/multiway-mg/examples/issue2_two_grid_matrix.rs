@@ -12,12 +12,11 @@ use std::{
 
 use fixtures::{DynError, OracleCase, deterministic_rhs, one_level_cases};
 use multiway_mg::{
-    DensePairOptions, DensePairSchwarzPreconditioner, DensePseudoinverse,
-    DenseRangeDecomposition, DiagonalPreconditioner, ExactCoarseCorrection, FactorPair,
-    PairCmgOptions, PairSubsetCmgPreconditioner, PcgTraceOptions, Preconditioner,
-    SpectralAnalysisOptions, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
-    WeightedSumPreconditioner, analyze_stationary_error, estimate_problem_bytes,
-    solve_projected_pcg_traced,
+    DensePairOptions, DensePairSchwarzPreconditioner, DensePseudoinverse, DenseRangeDecomposition,
+    DiagonalPreconditioner, ExactCoarseCorrection, FactorPair, PairCmgOptions,
+    PairSubsetCmgPreconditioner, PcgTraceOptions, Preconditioner, SpectralAnalysisOptions,
+    SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, WeightedSumPreconditioner,
+    analyze_stationary_error, estimate_problem_bytes, solve_projected_pcg_traced,
 };
 
 fn main() -> Result<(), DynError> {
@@ -38,7 +37,9 @@ fn main() -> Result<(), DynError> {
     }
     println!(
         "wrote {} and {}",
-        output_directory.join("issue2-two-grid-matrix.tsv").display(),
+        output_directory
+            .join("issue2-two-grid-matrix.tsv")
+            .display(),
         output_directory.join("issue2-pcg-traces.tsv").display()
     );
     Ok(())
@@ -93,10 +94,8 @@ fn run_case(
         traces,
     )?;
 
-    let exact_pair = DensePairSchwarzPreconditioner::build(
-        case.problem.clone(),
-        DensePairOptions::default(),
-    )?;
+    let exact_pair =
+        DensePairSchwarzPreconditioner::build(case.problem.clone(), DensePairOptions::default())?;
     record_method(
         case,
         &coarse,
@@ -110,10 +109,8 @@ fn run_case(
         traces,
     )?;
 
-    let pair_cmg = PairSubsetCmgPreconditioner::build_all(
-        case.problem.clone(),
-        PairCmgOptions::default(),
-    )?;
+    let pair_cmg =
+        PairSubsetCmgPreconditioner::build_all(case.problem.clone(), PairCmgOptions::default())?;
     let pair_memory = pair_cmg.memory_report().total_retained_bytes_estimate();
     record_method(
         case,
@@ -170,11 +167,8 @@ fn run_case(
         traces,
     )?;
 
-    let coarse_only = ExactCoarseCorrection::build(
-        case.problem.clone(),
-        aggregation.clone(),
-        1.0e-12,
-    )?;
+    let coarse_only =
+        ExactCoarseCorrection::build(case.problem.clone(), aggregation.clone(), 1.0e-12)?;
     record_method_without_pcg(
         case,
         &coarse,
@@ -226,9 +220,7 @@ fn run_case(
         "two-grid-symmetric-map",
         "two-grid",
         &two_grid_map,
-        two_grid_map
-            .coarse_correction()
-            .retained_bytes_estimate(),
+        two_grid_map.coarse_correction().retained_bytes_estimate(),
         summary,
         traces,
     )?;
@@ -236,10 +228,7 @@ fn run_case(
     let two_grid_exact_pair = SymmetricTwoGridPreconditioner::build(
         case.problem.clone(),
         aggregation.clone(),
-        DensePairSchwarzPreconditioner::build(
-            case.problem.clone(),
-            DensePairOptions::default(),
-        )?,
+        DensePairSchwarzPreconditioner::build(case.problem.clone(), DensePairOptions::default())?,
         1,
         1.0,
         1.0e-12,
@@ -263,10 +252,7 @@ fn run_case(
     let two_grid_pair_cmg = SymmetricTwoGridPreconditioner::build(
         case.problem.clone(),
         aggregation,
-        PairSubsetCmgPreconditioner::build_all(
-            case.problem.clone(),
-            PairCmgOptions::default(),
-        )?,
+        PairSubsetCmgPreconditioner::build_all(case.problem.clone(), PairCmgOptions::default())?,
         1,
         1.0,
         1.0e-12,
@@ -313,8 +299,10 @@ fn selected_pair_with_diagonal(
 
 fn selected_pair_with_map(
     case: &OracleCase,
-) -> Result<WeightedSumPreconditioner<SymmetricMapPreconditioner, PairSubsetCmgPreconditioner>, DynError>
-{
+) -> Result<
+    WeightedSumPreconditioner<SymmetricMapPreconditioner, PairSubsetCmgPreconditioner>,
+    DynError,
+> {
     Ok(WeightedSumPreconditioner::new(
         SymmetricMapPreconditioner::new(case.problem.clone()),
         1.0,
