@@ -1,0 +1,109 @@
+name: Archive verified issue 4 evidence
+
+on:
+  push:
+    branches: [codex/issue-4-evidence]
+    paths: [.github/workflows/issue4-evidence-archive.yml]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-4-evidence
+      - name: Retrieve fixed original evidence artifact
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl --fail --location --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/9954398642/zip \
+            -o "$RUNNER_TEMP/issue4-evidence.zip"
+      - name: Verify and preserve exact source bytes
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import sys
+          import zipfile
+
+          archive = Path(os.environ['RUNNER_TEMP']) / 'issue4-evidence.zip'
+          digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+          assert digest == '0cd28a983a0cd20966fdd79481256e1c843344641d6ebf0339a4ee3928fa756b', digest
+          names = {'SUMMARY.md', 'checksums.sha256', 'metadata.txt', 'pair-local.tsv', 'process-resources.txt', 'warnings.txt'}
+          destination = Path('benchmarks/results/2026-09-04/issue4-pair-local-smoke')
+          assert not destination.exists(), 'Refusing to overwrite an existing evidence archive'
+          with zipfile.ZipFile(archive) as bundle:
+              assert len(bundle.namelist()) == len(names) and set(bundle.namelist()) == names
+              assert bundle.testzip() is None
+              content = {name: bundle.read(name) for name in sorted(names)}
+          assert hashlib.sha256(content['pair-local.tsv']).hexdigest() == 'db3d0aded48fffe2158431a7bfea0ff08bdd081141fd54f7c3dc2e071567a70e'
+          assert hashlib.sha256(content['metadata.txt']).hexdigest() == 'dd38cbefffd724abfa29f226e365e047e801aabefdfcecbb9f4e7ff54b0d666c'
+          assert content['metadata.txt'].decode().splitlines()[0] == '236c6c65c8ee70a6c294b5e7f992dc160e64db1e'
+          destination.mkdir(parents=True)
+          for name, data in content.items():
+              (destination / name).write_bytes(data)
+          sys.path.insert(0, 'scripts')
+          from summarize_issue4_pair_local import load, validate, render
+          rows = load(destination / 'pair-local.tsv')
+          errors = validate(rows, 'smoke')
+          assert len(rows) == 240 and not errors, errors
+          assert render(rows, 'smoke', errors).encode() == content['SUMMARY.md'], 'Summary differs from frozen evidence'
+          manifest = {
+              'source_head': 'ad608f856ac5e61f94b80d74550597a8fae02c11',
+              'tested_merge': '236c6c65c8ee70a6c294b5e7f992dc160e64db1e',
+              'source_tree': 'e013333ede421b667a775c658eb091dd0a18938c',
+              'merged_as': '2ff28724b65c031070a0e04a97c790c81cd4a590',
+              'workflow_run': 33919335599,
+              'artifact_id': 9954398642,
+              'artifact_name': 'issue-4-pair-local-output',
+              'artifact_zip_sha256': digest,
+              'files_sha256': {name: hashlib.sha256(data).hexdigest() for name, data in content.items()},
+              'note': 'Byte-preserved original smoke evidence; not a rerun, holdout, or production qualification.'
+          }
+          (destination / 'SOURCE.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          readme = Path('README.md')
+          text = readme.read_text()
+          anchor = '## Current implementation\n'
+          assert text.count(anchor) == 1
+          section = '''## Issue 4 checkpoint: pair-solver economics
+
+          PR #12 adds component-local CMG Schwarz, the public pinned `within`
+          comparator, exact operator-work accounting and an identical-domain
+          repeated-RHS benchmark with independent residual certification.
+          The permanent GitHub Actions smoke gate checks correctness and accounting,
+          not a preferred timing winner.
+
+          The first five-family small-domain matrix is mixed: weak communities are a
+          promising CMG candidate, but paths and six-order weight variation favor
+          `within` at 32 RHS. Jacobi is cheaper than CMG on the dense and hub fixtures;
+          the hub CMG route is a one-level diagonal terminal, not a multilevel gain.
+          These are research diagnostics, not a production routing rule or a
+          demonstrated three-way end-to-end advantage.
+
+          See the [results and remaining gates](docs/ISSUE4_PAIR_LOCAL_RESULTS.md)
+          and [measurement protocol](docs/ISSUE4_PAIR_LOCAL_PROTOCOL.md).
+          [Issue #4](https://github.com/johannes-schmieder/MultiwayMG/issues/4)
+          remains open for broad calibration, actual three-way comparisons, complete
+          memory/thread accounting and a fresh holdout.
+
+          '''
+          readme.write_text(text.replace(anchor, section + anchor, 1))
+          PY
+      - name: Commit archival evidence on development branch
+        run: |
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add benchmarks/results/2026-09-04/issue4-pair-local-smoke README.md
+          git commit -m 'Archive verified issue 4 smoke evidence and expose research status'
+          git push origin HEAD:codex/issue-4-evidence
