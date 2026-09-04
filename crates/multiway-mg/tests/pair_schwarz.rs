@@ -1,4 +1,5 @@
 #![cfg(all(feature = "cmg", feature = "lsmr"))]
+//! Integration tests for the production-shaped pair-CMG Schwarz adapter.
 
 use multiway_mg::{
     FactorPair, PairCmgOptions, PairCmgPreconditioner, PairCmgSchwarzOptions,
