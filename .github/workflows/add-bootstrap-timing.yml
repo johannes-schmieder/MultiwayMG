@@ -1,0 +1,36 @@
+name: One-time bootstrap timing and formatting
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - name: Apply timing instrumentation and validate
+        run: |
+          python3 scripts/add_bootstrap_timing.py
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test bootstrap
+          cargo test --locked -p multiway-mg --all-features --test bootstrap_hierarchy
+          cargo test --locked -p multiway-mg --all-features --test repair
+      - name: Commit timing and exact formatting
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates
+          git commit -m "Add phase-separated bootstrap timing and recursive planning"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
