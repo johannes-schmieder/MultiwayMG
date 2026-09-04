@@ -21,11 +21,11 @@ use issue3_cycle_fixtures::{CycleHoldoutFixture, cycle_holdout_v3_fixtures};
 use multiway_mg::{
     AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
     CompatibleRelaxationOptions, CyclePortfolioCandidateSource, CycleQualityCriteria,
-    CycleQualityDecision, CycleQualityOptions, CycleQualityReport, CycleSmootherKind,
+    CycleQualityOptions, CycleSmootherKind,
     CycleSmootherPortfolioOptions, CycleSmootherPortfolioResult, DenseRangeDecomposition,
     DiagonalAggregationProjector, DiagonalPreconditioner, FactorAggregation, PairCmgOptions,
     PairCmgPreconditioner, PairNeighborhoodAggregationOptions, PcgTraceOptions, Preconditioner,
-    SelectedTwoGridCycle, SpectralAnalysisOptions, SymmetricMapPreconditioner,
+    SpectralAnalysisOptions, SymmetricMapPreconditioner,
     SymmetricTwoGridPreconditioner, ThreeWayProblem, analyze_cycle_quality,
     build_cycle_smoother_portfolio, build_pair_neighborhood_aggregation, evaluate_cycle_quality,
     solve_projected_pcg_traced,
