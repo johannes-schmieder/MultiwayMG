@@ -1,0 +1,17 @@
+warning: function `calibration_fixtures` is never used
+  --> crates/multiway-mg/examples/support/issue3_fixtures.rs:35:8
+   |
+35 | pub fn calibration_fixtures() -> Result<Vec<Issue3Fixture>, DynError> {
+   |        ^^^^^^^^^^^^^^^^^^^^
+   |
+   = note: `#[warn(dead_code)]` on by default
+
+warning: function `holdout_fixtures` is never used
+  --> crates/multiway-mg/examples/support/issue3_fixtures.rs:72:8
+   |
+72 | pub fn holdout_fixtures() -> Result<Vec<Issue3Fixture>, DynError> {
+   |        ^^^^^^^^^^^^^^^^
+
+warning: `multiway-mg` (example "issue3_portfolio_holdout") generated 2 warnings
+    Finished `release` profile [optimized] target(s) in 0.02s
+     Running `target/release/examples/issue3_portfolio_holdout diagnostics/portfolio-determinism/b`
