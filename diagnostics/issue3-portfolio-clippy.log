@@ -1,0 +1,23 @@
+    Checking multiway-incidence v0.1.0 (/home/runner/work/MultiwayMG/MultiwayMG/crates/multiway-incidence)
+    Checking multiway-mg v0.1.0 (/home/runner/work/MultiwayMG/MultiwayMG/crates/multiway-mg)
+error[E0004]: non-exhaustive patterns: `_` not covered
+   --> crates/multiway-mg/examples/issue3_portfolio_holdout.rs:607:11
+    |
+607 |     match portfolio.acceptance_screen() {
+    |           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ pattern `_` not covered
+    |
+note: `multiway_mg::BootstrapAcceptanceScreen` defined here
+   --> /home/runner/work/MultiwayMG/MultiwayMG/crates/multiway-mg/src/bootstrap_portfolio.rs:34:1
+    |
+34  | pub enum BootstrapAcceptanceScreen {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: the matched value is of type `multiway_mg::BootstrapAcceptanceScreen`
+    = note: `multiway_mg::BootstrapAcceptanceScreen` is marked as non-exhaustive, so a wildcard `_` is necessary to match exhaustively
+help: ensure that all possible cases are being handled by adding a match arm with a wildcard pattern or an explicit pattern as shown
+    |
+613 ~         BootstrapAcceptanceScreen::Rejected => "rejected-primary-final",
+614 ~         _ => todo!(),
+    |
+
+For more information about this error, try `rustc --explain E0004`.
+error: could not compile `multiway-mg` (example "issue3_portfolio_holdout") due to 1 previous error
