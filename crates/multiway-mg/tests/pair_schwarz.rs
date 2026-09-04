@@ -86,7 +86,9 @@ fn component_adapter_matches_original_pair_cmg_reference() {
     let rhs = projected_vector(&problem, 0.3);
     let mut expected = vec![0.0; problem.dimension()];
     let mut actual = vec![0.0; problem.dimension()];
-    reference.apply(&rhs, &mut expected).expect("reference apply");
+    reference
+        .apply(&rhs, &mut expected)
+        .expect("reference apply");
     adapter.apply(&rhs, &mut actual).expect("adapter apply");
     assert!(
         relative_difference(&expected, &actual) < 5.0e-12,

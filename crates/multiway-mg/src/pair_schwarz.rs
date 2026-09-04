@@ -65,10 +65,7 @@ impl PairCmgSchwarzOptions {
         if !self.partition_weight.is_finite() || self.partition_weight <= 0.0 {
             return Err(MultiwayError::InvalidOption {
                 name: "pair_cmg_partition_weight",
-                message: format!(
-                    "must be finite and positive, got {}",
-                    self.partition_weight
-                ),
+                message: format!("must be finite and positive, got {}", self.partition_weight),
             });
         }
         Ok(self)
@@ -325,20 +322,20 @@ impl PairCmgSchwarzPreconditioner {
                 let local_scratch_values = if options.fixed_cycles == 1 {
                     component.graph.vertex_count()
                 } else {
-                    component.graph.vertex_count().checked_mul(2).ok_or_else(|| {
-                        MultiwayError::InvalidOption {
+                    component
+                        .graph
+                        .vertex_count()
+                        .checked_mul(2)
+                        .ok_or_else(|| MultiwayError::InvalidOption {
                             name: "pair_cmg_fixed_cycles",
                             message: "local scratch dimension overflow".to_owned(),
-                        }
-                    })?
+                        })?
                 };
                 maximum_local_scratch_values =
                     maximum_local_scratch_values.max(local_scratch_values);
                 let retained_bytes = preconditioner.retained_bytes();
-                cmg_preconditioner_bytes =
-                    cmg_preconditioner_bytes.saturating_add(retained_bytes);
-                cmg_workspace_pool_bytes =
-                    cmg_workspace_pool_bytes.saturating_add(workspace_bytes);
+                cmg_preconditioner_bytes = cmg_preconditioner_bytes.saturating_add(retained_bytes);
+                cmg_workspace_pool_bytes = cmg_workspace_pool_bytes.saturating_add(workspace_bytes);
                 subdomain_metadata_bytes_estimate = subdomain_metadata_bytes_estimate
                     .saturating_add(component.global_indices.len().saturating_mul(12));
 
@@ -384,11 +381,8 @@ impl PairCmgSchwarzPreconditioner {
         }
 
         let schwarz_start = Instant::now();
-        let inner = SchwarzPreconditioner::with_n_dofs(
-            entries,
-            problem.dimension(),
-            options.reduction,
-        );
+        let inner =
+            SchwarzPreconditioner::with_n_dofs(entries, problem.dimension(), options.reduction);
         let schwarz_setup = schwarz_start.elapsed();
 
         let projection_workspace = StructuralProjectionWorkspace::new(problem.components().count());
@@ -485,10 +479,7 @@ impl PairCmgSchwarzPreconditioner {
                     .load(Ordering::Relaxed)
             })
             .sum::<usize>()
-            .saturating_add(
-                self.projection_fallback_allocations
-                    .load(Ordering::Relaxed),
-            )
+            .saturating_add(self.projection_fallback_allocations.load(Ordering::Relaxed))
     }
 
     fn project_output(&self, values: &mut [f64]) -> Result<(), MultiwayError> {
@@ -578,12 +569,12 @@ impl CmgPairLocalSolver {
             None => {
                 self.fallback_workspace_allocations
                     .fetch_add(1, Ordering::Relaxed);
-                self.preconditioner
-                    .try_workspace()
-                    .map_err(|error| LocalSolveError::BackendFailed {
+                self.preconditioner.try_workspace().map_err(|error| {
+                    LocalSolveError::BackendFailed {
                         context: "pair-cmg workspace fallback allocation",
                         message: error.to_string(),
-                    })
+                    }
+                })
             }
         }
     }
@@ -741,9 +732,7 @@ fn build_pair_components(
         first_count + second_count,
         marginal
             .into_iter()
-            .map(|((left, right), weight)| {
-                (left as usize, first_count + right as usize, weight)
-            }),
+            .map(|((left, right), weight)| (left as usize, first_count + right as usize, weight)),
     )
     .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
     let labels = Components::from_laplacian(&full_graph);
