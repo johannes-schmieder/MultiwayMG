@@ -22,18 +22,25 @@ jobs:
         run: |
           set -euo pipefail
           shopt -s nullglob
-          patches=(.issue4/*.patch.gz)
-          if (( ${#patches[@]} == 0 )); then
-            echo "No pending issue-4 checkpoint patch."
+          ready=(.issue4/*.ready)
+          if (( ${#ready[@]} == 0 )); then
+            echo "No complete issue-4 checkpoint is pending."
             exit 0
           fi
-          if (( ${#patches[@]} != 1 )); then
-            echo "Expected exactly one pending patch, found ${#patches[@]}." >&2
+          if (( ${#ready[@]} != 1 )); then
+            echo "Expected exactly one ready marker, found ${#ready[@]}." >&2
             exit 1
           fi
-          gzip -dc "${patches[0]}" | git apply --index
-          git rm "${patches[0]}"
+          prefix="${ready[0]%.ready}"
+          parts=("${prefix}".b64.part-*)
+          if (( ${#parts[@]} == 0 )); then
+            echo "No checkpoint parts found for ${prefix}." >&2
+            exit 1
+          fi
+          cat "${parts[@]}" | base64 --decode | gzip -dc | git apply --index
+          message="$(cat "${ready[0]}")"
+          git rm "${ready[0]}" "${parts[@]}"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Apply issue 4 development checkpoint"
+          git commit -m "${message:-Apply issue 4 development checkpoint}"
           git push
