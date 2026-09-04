@@ -1,0 +1,57 @@
+name: One-time issue 2 completion formatting
+
+on:
+  push:
+    branches:
+      - codex/issue-2-completion
+
+permissions:
+  contents: write
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-2-completion
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt
+      - name: Apply known type repair and rustfmt
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path("crates/multiway-mg/src/oracle_schedule.rs")
+          text = path.read_text()
+          text = text.replace(
+              ".map(estimate_three_way_problem_bytes)\n        .sum();",
+              ".map(estimate_three_way_problem_bytes)\n        .sum::<usize>();",
+          )
+          text = text.replace(
+              ".map(FactorAggregation::retained_bytes)\n        .sum();",
+              ".map(FactorAggregation::retained_bytes)\n        .sum::<usize>();",
+          )
+          text = text.replace(
+              ".map(PairCmgMemoryReport::cmg_preconditioner_bytes)\n        .sum();",
+              ".map(PairCmgMemoryReport::cmg_preconditioner_bytes)\n        .sum::<usize>();",
+          )
+          text = text.replace(
+              ".map(PairCmgMemoryReport::pair_workspace_bytes)\n        .sum();",
+              ".map(PairCmgMemoryReport::pair_workspace_bytes)\n        .sum::<usize>();",
+          )
+          path.write_text(text)
+          PY
+          cargo fmt --all
+      - name: Commit exact formatter output
+        run: |
+          if git diff --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates
+          git commit -m "Apply Rust 1.85 formatting to issue 2 research tools"
+          git push origin HEAD:codex/issue-2-completion
