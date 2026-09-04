@@ -30,6 +30,8 @@ mod memory_estimate;
 mod oracle_schedule;
 #[cfg(feature = "cmg")]
 mod pair_cmg;
+#[cfg(all(feature = "cmg", feature = "within-comparator"))]
+mod pair_local;
 #[cfg(all(feature = "cmg", feature = "lsmr"))]
 mod pair_schwarz;
 mod pcg;
@@ -119,6 +121,13 @@ pub use oracle_schedule::{
 };
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
+#[cfg(all(feature = "cmg", feature = "within-comparator"))]
+pub use pair_local::{
+    PairDomain, PairEdge, PairExactOptions, PairExactPseudoinverse, PairLocalAnalysisOptions,
+    PairLocalAnalysisReport, PairLocalCmgBuildTiming, PairLocalCmgMemoryReport,
+    PairLocalCmgOptions, PairLocalCmgPreconditioner, PairLocalWithinBuildTiming,
+    PairLocalWithinMemoryReport, PairLocalWithinPreconditioner, analyze_pair_local,
+};
 #[cfg(all(feature = "cmg", feature = "lsmr"))]
 pub use pair_schwarz::{
     PairCmgSchwarzBuildTiming, PairCmgSchwarzMemoryReport, PairCmgSchwarzOptions,
