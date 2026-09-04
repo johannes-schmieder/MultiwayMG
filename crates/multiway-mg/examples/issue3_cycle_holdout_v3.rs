@@ -27,8 +27,8 @@ use multiway_mg::{
     PairCmgPreconditioner, PairNeighborhoodAggregationOptions, PcgTraceOptions, Preconditioner,
     SelectedTwoGridCycle, SpectralAnalysisOptions, SymmetricMapPreconditioner,
     SymmetricTwoGridPreconditioner, ThreeWayProblem, analyze_cycle_quality,
-    build_cycle_smoother_portfolio, build_pair_neighborhood_aggregation,
-    evaluate_cycle_quality, solve_projected_pcg_traced,
+    build_cycle_smoother_portfolio, build_pair_neighborhood_aggregation, evaluate_cycle_quality,
+    solve_projected_pcg_traced,
 };
 
 const MAXIMUM_COARSE_DIMENSION_RATIO: f64 = 0.80;
@@ -101,20 +101,18 @@ fn run_fixture(
     };
 
     let primary_smoother = DiagonalPreconditioner::new(problem, 0.5)?;
-    let (portfolio, timing) = build_cycle_smoother_portfolio(
-        problem,
-        &primary_smoother,
-        portfolio_options(),
-    )?;
+    let (portfolio, timing) =
+        build_cycle_smoother_portfolio(problem, &primary_smoother, portfolio_options())?;
     writeln!(
         timings,
         "{}\t{:.6}\t{:.6}\t{}\t{:.6}",
         fixture.name,
         duration_ms(timing.map_pass().total()),
         duration_ms(timing.pair_smoother_setup()),
-        timing
-            .pair_pass()
-            .map_or_else(|| "NA".to_owned(), |pass| format!("{:.6}", duration_ms(pass.total()))),
+        timing.pair_pass().map_or_else(
+            || "NA".to_owned(),
+            |pass| format!("{:.6}", duration_ms(pass.total()))
+        ),
         duration_ms(timing.total()),
     )?;
 
@@ -157,20 +155,18 @@ fn run_fixture(
     let probe_underestimate = exact_radius - probe_factor;
 
     let (baseline_condition, reference_same_smoother_condition) = match selected_smoother {
-        CycleSmootherKind::SymmetricMap => {
-            (map_baseline_condition, reference_map.condition)
-        }
-        CycleSmootherKind::AllPairsCmg => {
-            (pair_baseline_condition, reference_pair.condition)
-        }
+        CycleSmootherKind::SymmetricMap => (map_baseline_condition, reference_map.condition),
+        CycleSmootherKind::AllPairsCmg => (pair_baseline_condition, reference_pair.condition),
     };
-    let recovery = reference_admissible.then(|| {
-        recovery_fraction(
-            baseline_condition,
-            reference_same_smoother_condition,
-            candidate_condition,
-        )
-    }).flatten();
+    let recovery = reference_admissible
+        .then(|| {
+            recovery_fraction(
+                baseline_condition,
+                reference_same_smoother_condition,
+                candidate_condition,
+            )
+        })
+        .flatten();
 
     let one_shot = build_pair_neighborhood_aggregation(
         problem,
@@ -371,12 +367,8 @@ fn one_shot_condition(
         return Ok(None);
     }
     let cycle = match smoother {
-        CycleSmootherKind::SymmetricMap => {
-            ResearchCycle::map(problem, aggregation, map_smoother)?
-        }
-        CycleSmootherKind::AllPairsCmg => {
-            ResearchCycle::pair(problem, aggregation, pair_smoother)?
-        }
+        CycleSmootherKind::SymmetricMap => ResearchCycle::map(problem, aggregation, map_smoother)?,
+        CycleSmootherKind::AllPairsCmg => ResearchCycle::pair(problem, aggregation, pair_smoother)?,
     };
     Ok(Some(
         range
@@ -451,7 +443,9 @@ fn write_rejected(
     Ok(())
 }
 
-fn selected_pass(portfolio: &CycleSmootherPortfolioResult) -> &multiway_mg::CycleScreenedBootstrapResult {
+fn selected_pass(
+    portfolio: &CycleSmootherPortfolioResult,
+) -> &multiway_mg::CycleScreenedBootstrapResult {
     match portfolio.selected_smoother() {
         Some(CycleSmootherKind::SymmetricMap) | None => portfolio.map_pass(),
         Some(CycleSmootherKind::AllPairsCmg) => portfolio
@@ -460,7 +454,9 @@ fn selected_pass(portfolio: &CycleSmootherPortfolioResult) -> &multiway_mg::Cycl
     }
 }
 
-fn selected_primary(portfolio: &CycleSmootherPortfolioResult) -> &multiway_mg::BootstrapAggregationResult {
+fn selected_primary(
+    portfolio: &CycleSmootherPortfolioResult,
+) -> &multiway_mg::BootstrapAggregationResult {
     selected_pass(portfolio).primary_result()
 }
 
@@ -493,9 +489,7 @@ fn stop_reason_label(reason: multiway_mg::CycleSmootherPortfolioStopReason) -> &
         multiway_mg::CycleSmootherPortfolioStopReason::AcceptedAllPairsCmg => {
             "accepted-all-pairs-cmg"
         }
-        multiway_mg::CycleSmootherPortfolioStopReason::NoAcceptedCycle => {
-            "no-accepted-cycle"
-        }
+        multiway_mg::CycleSmootherPortfolioStopReason::NoAcceptedCycle => "no-accepted-cycle",
     }
 }
 
