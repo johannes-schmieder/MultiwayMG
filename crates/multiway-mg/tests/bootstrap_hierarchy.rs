@@ -94,14 +94,16 @@ fn hierarchy_options(
     maximum_dimension_complexity: f64,
     maximum_tuple_complexity: f64,
 ) -> BootstrapHierarchyOptions {
-    let mut aggregation = BootstrapAggregationOptions::default();
-    aggregation.setup_test_vectors = 6;
-    aggregation.setup_sweeps = 6;
-    aggregation.maximum_bootstrap_witnesses = 2;
-    aggregation.maximum_coarse_dimension_ratio = 0.80;
-    aggregation.minimum_tuple_reduction = 0.02;
-    aggregation.maximum_two_level_tuple_complexity = 1.98;
-    aggregation.split_repair = None;
+    let aggregation = BootstrapAggregationOptions {
+        setup_test_vectors: 6,
+        setup_sweeps: 6,
+        maximum_bootstrap_witnesses: 2,
+        maximum_coarse_dimension_ratio: 0.80,
+        minimum_tuple_reduction: 0.02,
+        maximum_two_level_tuple_complexity: 1.98,
+        split_repair: None,
+        ..BootstrapAggregationOptions::default()
+    };
     BootstrapHierarchyOptions {
         maximum_levels: 2,
         terminal_dimension: 6,
