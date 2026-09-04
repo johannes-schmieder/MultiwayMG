@@ -126,7 +126,7 @@ fn overmerged_pairs(oracle: &FactorAggregation) -> FactorAggregation {
     let fine_counts = oracle.fine_counts();
     let parents = core::array::from_fn(|factor| {
         (0..fine_counts[factor])
-            .map(|level| (oracle.parents(factor)[level] / 2) as u32)
+            .map(|level| oracle.parents(factor)[level] / 2)
             .collect()
     });
     FactorAggregation::new(fine_counts, parents).expect("overmerged map is valid")
