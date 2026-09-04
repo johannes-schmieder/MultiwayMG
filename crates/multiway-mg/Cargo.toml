@@ -98,5 +98,9 @@ required-features = ["cmg"]
 name = "issue3_cycle_split_development"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue4_pair_local"
+required-features = ["cmg", "within-comparator"]
+
 [lints]
 workspace = true
