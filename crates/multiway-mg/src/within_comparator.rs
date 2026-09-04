@@ -243,6 +243,7 @@ impl Preconditioner for WithinApproxCholPreconditioner {
     }
 
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+        out.fill(0.0);
         if rhs.len() != self.dimension() {
             return Err(crate::error::dimension(
                 "WithinApproxCholPreconditioner::apply rhs",
@@ -257,7 +258,11 @@ impl Preconditioner for WithinApproxCholPreconditioner {
                 out.len(),
             ));
         }
-        out.fill(0.0);
+        if rhs.iter().any(|value| !value.is_finite()) {
+            return Err(MultiwayError::Within(
+                "within comparator received a nonfinite RHS".to_owned(),
+            ));
+        }
         if let Err(error) = self.inner.apply(rhs, out) {
             out.fill(0.0);
             return Err(MultiwayError::Within(error.to_string()));

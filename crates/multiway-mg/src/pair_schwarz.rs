@@ -492,6 +492,7 @@ impl Preconditioner for PairCmgSchwarzPreconditioner {
     }
 
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+        out.fill(0.0);
         if rhs.len() != self.dimension() {
             return Err(crate::error::dimension(
                 "PairCmgSchwarzPreconditioner::apply rhs",
@@ -506,7 +507,11 @@ impl Preconditioner for PairCmgSchwarzPreconditioner {
                 out.len(),
             ));
         }
-        out.fill(0.0);
+        if rhs.iter().any(|value| !value.is_finite()) {
+            return Err(MultiwayError::Cmg(
+                "pair Schwarz received a nonfinite RHS".to_owned(),
+            ));
+        }
         if let Err(error) = self.inner.apply(rhs, out) {
             out.fill(0.0);
             return Err(MultiwayError::Lsmr(error.to_string()));
@@ -700,15 +705,31 @@ fn build_pair_components(
     let offsets = problem.topology().offsets();
     let first_count = counts[first];
     let second_count = counts[second];
-    let mut marginal: BTreeMap<(u32, u32), f64> = BTreeMap::new();
+    // Compensate each deterministic marginal sum without collecting another
+    // O(tuple_count) edge copy. Small positive masses must not disappear merely
+    // because a larger tuple with the same pair was encountered first.
+    let mut marginal: BTreeMap<(u32, u32), (f64, f64)> = BTreeMap::new();
     for (&tuple, &weight) in problem.topology().tuples().iter().zip(problem.weights()) {
-        *marginal.entry((tuple[first], tuple[second])).or_insert(0.0) += weight;
+        let (sum, correction) = marginal.entry((tuple[first], tuple[second])).or_default();
+        let updated = *sum + weight;
+        *correction += if sum.abs() >= weight.abs() {
+            (*sum - updated) + weight
+        } else {
+            (weight - updated) + *sum
+        };
+        *sum = updated;
     }
     let full_graph = Laplacian::from_edges(
         first_count + second_count,
         marginal
             .into_iter()
-            .map(|((left, right), weight)| (left as usize, first_count + right as usize, weight)),
+            .map(|((left, right), (sum, correction))| {
+                (
+                    left as usize,
+                    first_count + right as usize,
+                    sum + correction,
+                )
+            }),
     )
     .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
     let labels = Components::from_laplacian(&full_graph);
@@ -772,4 +793,23 @@ fn build_pair_components(
         });
     }
     Ok(result)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn pair_marginal_compensates_small_positive_tuple_masses() {
+        let problem = ThreeWayProblem::from_observations(
+            [1, 1, 3],
+            &[[0, 0, 0], [0, 0, 1], [0, 0, 2]],
+            &[1e16, 1.0, 1.0],
+        )
+        .unwrap();
+        let components = build_pair_components(&problem, FactorPair::OneTwo).unwrap();
+        assert_eq!(components.len(), 1);
+        assert_eq!(components[0].graph.edge_count(), 1);
+        assert_eq!(components[0].graph.edges()[0].weight(), 1e16 + 2.0);
+    }
 }
