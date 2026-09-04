@@ -41,7 +41,7 @@ fn main() -> Result<(), DynError> {
             };
             let range = DenseRangeDecomposition::from_problem(&problem, spectral_options)?;
             let oracle_condition = condition(&problem, &oracle, &range, spectral_options)?;
-            if oracle_condition > 2.5 {
+            if oracle_condition > 5.0 {
                 continue;
             }
             let one_shot = build_pair_neighborhood_aggregation(
@@ -53,7 +53,7 @@ fn main() -> Result<(), DynError> {
                 continue;
             }
             let one_shot_condition = condition(&problem, &one_shot, &range, spectral_options)?;
-            if one_shot_condition < 1.35 * oracle_condition {
+            if one_shot_condition < 1.10 * oracle_condition {
                 continue;
             }
             let screen = DiagonalPreconditioner::new(&problem, 0.5)?;
