@@ -88,5 +88,9 @@ required-features = ["cmg"]
 name = "issue3_smoother_fallback_development"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue3_cycle_holdout_v3"
+required-features = ["cmg"]
+
 [lints]
 workspace = true
