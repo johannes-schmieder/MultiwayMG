@@ -11,6 +11,9 @@ mod bootstrap_portfolio;
 mod combine;
 mod compatible;
 mod compatible_gate;
+mod cycle_hierarchy;
+mod cycle_portfolio;
+mod cycle_probe;
 mod dense;
 mod dense_pair;
 mod error;
@@ -62,6 +65,21 @@ pub use compatible::{
 pub use compatible_gate::{
     CompatibleRelaxationCriteria, CompatibleRelaxationDecision, CompatibleRelaxationRejection,
     evaluate_compatible_relaxation,
+};
+pub use cycle_hierarchy::{
+    CycleScreenedHierarchyLevelReport, CycleScreenedHierarchyOptions,
+    CycleScreenedHierarchyPlan, CycleScreenedHierarchyStopReason,
+    CycleScreenedMapHierarchy,
+};
+pub use cycle_portfolio::{
+    CyclePortfolioBuildTiming, CyclePortfolioCandidateSource, CyclePortfolioEvaluation,
+    CyclePortfolioStructuralMetrics, CyclePortfolioStructuralRejection, CyclePortfolioWorkReport,
+    CycleScreenedBootstrapResult, build_cycle_screened_bootstrap_aggregation,
+    build_cycle_screened_bootstrap_aggregation_with_timing,
+};
+pub use cycle_probe::{
+    CycleQualityCriteria, CycleQualityDecision, CycleQualityOptions, CycleQualityRejection,
+    CycleQualityReport, CycleQualityVectorReport, analyze_cycle_quality, evaluate_cycle_quality,
 };
 pub use dense::DensePseudoinverse;
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
