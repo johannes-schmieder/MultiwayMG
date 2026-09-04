@@ -11,19 +11,27 @@ permissions:
 
 jobs:
   export:
-    name: Export tracked workspace
+    name: Export tracked workspace and pinned dependencies
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
       - name: Record source revision
         run: git rev-parse HEAD > issue4-source-revision.txt
       - name: Archive tracked source
         run: git archive --format=tar.gz --output=multiwaymg-source.tar.gz HEAD
+      - name: Vendor locked dependency sources
+        run: |
+          cargo vendor --locked issue4-vendor >/tmp/issue4-vendor-config.toml
+          tar -czf issue4-vendor.tar.gz issue4-vendor
       - uses: actions/upload-artifact@v4
         with:
           name: issue4-workspace-source
           path: |
             multiwaymg-source.tar.gz
             issue4-source-revision.txt
+            issue4-vendor.tar.gz
           if-no-files-found: error
           retention-days: 3
