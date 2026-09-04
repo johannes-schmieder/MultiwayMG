@@ -328,7 +328,7 @@ impl PairInverse {
         let workspace_start = Instant::now();
         let rhs = vec![0.0; n];
         workspace_seconds += workspace_start.elapsed().as_secs_f64();
-        Ok(Self {
+        let mut built = Self {
             n,
             left: domain.left,
             state: Mutex::new(LocalState { rhs, action }),
@@ -339,7 +339,17 @@ impl PairInverse {
             workspace_bytes,
             cmg_levels,
             warnings,
-        })
+        };
+        // Charge the first action (including opaque lazy within scratch) as
+        // workspace initialization before any spectral/microbenchmark probes.
+        // This intentionally overcharges one action, equally for every method.
+        let initialization = Instant::now();
+        let probe: Vec<_> = (0..n).map(|i| (i as f64 * 0.31).sin()).collect();
+        let mut output = vec![0.0; n];
+        built.apply(&probe, &mut output)?;
+        built.workspace_seconds += initialization.elapsed().as_secs_f64();
+        built.setup_seconds = start.elapsed().as_secs_f64();
+        Ok(built)
     }
 }
 
@@ -520,17 +530,20 @@ struct Batch {
     b: usize,
     bt: usize,
     preconditioner: usize,
+    certificate_b: usize,
+    certificate_bt: usize,
     max_residual: f64,
     recurrence_converged: bool,
     certified: bool,
     error: String,
 }
-fn solve_one(domain: &Domain, inverse: &PairInverse, targets: &[f64]) -> Result<Batch> {
+
+fn solve_one(domain: &Domain, inverse: &PairInverse, targets: &[f64]) -> Batch {
     let before_b = domain.b_calls.load(Ordering::Relaxed);
     let before_bt = domain.bt_calls.load(Ordering::Relaxed);
     let before_p = inverse.calls.load(Ordering::Relaxed);
     let start = Instant::now();
-    let result = mlsmr(
+    let solved = mlsmr(
         domain,
         targets,
         inverse,
@@ -541,38 +554,59 @@ fn solve_one(domain: &Domain, inverse: &PairInverse, targets: &[f64]) -> Result<
             escalation: None,
             local_size: Some(8),
         },
-    )?;
-    let b = domain.b_calls.load(Ordering::Relaxed) - before_b;
-    let bt = domain.bt_calls.load(Ordering::Relaxed) - before_bt;
-    let preconditioner = inverse.calls.load(Ordering::Relaxed) - before_p;
-    // Independent original-operator certificate; included in solve wall time.
-    let mut residual = vec![0.0; domain.nrows()];
-    domain.apply(&result.x, &mut residual)?;
-    for (r, &y) in residual.iter_mut().zip(targets) {
-        *r = y - *r;
-    }
-    let mut gradient = vec![0.0; domain.ncols()];
-    let mut reference = vec![0.0; domain.ncols()];
-    domain.apply_adjoint(&residual, &mut gradient)?;
-    domain.apply_adjoint(targets, &mut reference)?;
-    let denominator = norm(&reference);
-    let max_residual = if denominator > 0.0 {
-        norm(&gradient) / denominator
-    } else if norm(&gradient) == 0.0 {
-        0.0
-    } else {
-        f64::INFINITY
+    );
+    let mut batch = Batch {
+        b: domain.b_calls.load(Ordering::Relaxed) - before_b,
+        bt: domain.bt_calls.load(Ordering::Relaxed) - before_bt,
+        preconditioner: inverse.calls.load(Ordering::Relaxed) - before_p,
+        max_residual: f64::INFINITY,
+        ..Batch::default()
     };
-    Ok(Batch {
-        seconds: start.elapsed().as_secs_f64(),
-        b,
-        bt,
-        preconditioner,
-        max_residual,
-        recurrence_converged: result.converged,
-        certified: max_residual.is_finite() && max_residual <= CERTIFICATE_TOLERANCE,
-        error: String::new(),
-    })
+    match solved {
+        Err(error) => batch.error = error.to_string(),
+        Ok(result) => {
+            batch.recurrence_converged = result.converged;
+            let before_certificate_b = domain.b_calls.load(Ordering::Relaxed);
+            let before_certificate_bt = domain.bt_calls.load(Ordering::Relaxed);
+            let certificate = (|| -> Result<f64> {
+                // Original-operator certificate; its allocations and work are timed.
+                let mut residual = vec![0.0; domain.nrows()];
+                domain.apply(&result.x, &mut residual)?;
+                for (r, &y) in residual.iter_mut().zip(targets) {
+                    *r = y - *r;
+                }
+                let mut gradient = vec![0.0; domain.ncols()];
+                let mut reference = vec![0.0; domain.ncols()];
+                domain.apply_adjoint(&residual, &mut gradient)?;
+                domain.apply_adjoint(targets, &mut reference)?;
+                let numerator = norm(&gradient);
+                let denominator = norm(&reference);
+                if !numerator.is_finite() || !denominator.is_finite() {
+                    return Err("nonfinite certificate norm".into());
+                }
+                Ok(if denominator > 0.0 {
+                    numerator / denominator
+                } else if numerator == 0.0 {
+                    0.0
+                } else {
+                    f64::INFINITY
+                })
+            })();
+            batch.certificate_b = domain.b_calls.load(Ordering::Relaxed) - before_certificate_b;
+            batch.certificate_bt = domain.bt_calls.load(Ordering::Relaxed) - before_certificate_bt;
+            match certificate {
+                Ok(value) => {
+                    batch.max_residual = value;
+                    batch.certified = value.is_finite() && value <= CERTIFICATE_TOLERANCE;
+                }
+                Err(error) => batch.error = error.to_string(),
+            }
+        }
+    }
+    // Even failed attempts retain their elapsed time and actual operation counts.
+    batch.seconds = start.elapsed().as_secs_f64();
+    batch.error = batch.error.replace(['\t', '\n', '\r'], " ");
+    batch
 }
 
 fn main() -> Result<()> {
@@ -620,7 +654,7 @@ fn main() -> Result<()> {
         // Dedicated discarded warm-up builds; no hidden warm-up setup reuse.
         for &method in &methods {
             let warm = PairInverse::build(&domain, method)?;
-            let _ = solve_one(&domain, &warm, &targets[0])?;
+            let _ = solve_one(&domain, &warm, &targets[0]);
         }
         for repeat in 0..3 {
             for index in 0..methods.len() {
@@ -648,21 +682,20 @@ fn main() -> Result<()> {
                     ..Batch::default()
                 };
                 for (rhs_index, target) in targets.iter().enumerate() {
-                    match solve_one(&domain, &inverse, target) {
-                        Ok(one) => {
-                            batch.seconds += one.seconds;
-                            batch.b += one.b;
-                            batch.bt += one.bt;
-                            batch.preconditioner += one.preconditioner;
-                            batch.max_residual = batch.max_residual.max(one.max_residual);
-                            batch.recurrence_converged &= one.recurrence_converged;
-                            batch.certified &= one.certified;
-                        }
-                        Err(error) => {
-                            batch.certified = false;
-                            batch.recurrence_converged = false;
-                            batch.error = error.to_string().replace(['\t', '\n', '\r'], " ");
-                        }
+                    let one = solve_one(&domain, &inverse, target);
+                    batch.seconds += one.seconds;
+                    batch.b += one.b;
+                    batch.bt += one.bt;
+                    batch.preconditioner += one.preconditioner;
+                    batch.certificate_b += one.certificate_b;
+                    batch.certificate_bt += one.certificate_bt;
+                    batch.max_residual = batch.max_residual.max(one.max_residual);
+                    batch.recurrence_converged &= one.recurrence_converged;
+                    batch.certified &= one.certified;
+                    if !one.error.is_empty() {
+                        batch
+                            .error
+                            .push_str(&format!("rhs {}: {}; ", rhs_index + 1, one.error));
                     }
                     let count = rhs_index + 1;
                     if !RHS_COUNTS.contains(&count) {
@@ -697,8 +730,8 @@ fn main() -> Result<()> {
                         batch.b,
                         batch.bt,
                         batch.preconditioner,
-                        count,
-                        2 * count,
+                        batch.certificate_b,
+                        batch.certificate_bt,
                         batch.max_residual,
                         batch.recurrence_converged,
                         batch.certified,
@@ -776,7 +809,7 @@ mod tests {
                 let mut output = vec![7.0; 32];
                 inverse.apply(&kernel, &mut output).unwrap();
                 assert!(norm(&output) < 1.0e-12);
-                let batch = solve_one(&domain, &inverse, &domain.targets(3)).unwrap();
+                let batch = solve_one(&domain, &inverse, &domain.targets(3));
                 assert!(
                     batch.certified,
                     "{family} {method:?}: {}",
@@ -784,6 +817,17 @@ mod tests {
                 );
             }
         }
+    }
+    #[test]
+    fn failed_solver_attempt_retains_time_and_rejects_certificate() {
+        let domain = Domain::new(4, 4, &fixture("path", 4)).unwrap();
+        let inverse = PairInverse::build(&domain, Method::Jacobi).unwrap();
+        let batch = solve_one(&domain, &inverse, &[1.0]);
+        assert!(!batch.certified && !batch.error.is_empty());
+        assert!(batch.seconds > 0.0);
+        assert_eq!(batch.certificate_b, 0);
+        assert_eq!(batch.certificate_bt, 0);
+        assert!(batch.max_residual.is_infinite());
     }
     #[test]
     fn nonfinite_and_bad_dimensions_do_not_leave_partial_output() {
