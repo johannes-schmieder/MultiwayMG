@@ -12,7 +12,7 @@ use std::{
 
 use fixtures::{DynError, OracleCase, deterministic_rhs, one_level_cases};
 use multiway_mg::{
-    DensePairOptions, DensePairSchwarzPreconditioner, DensePseudoinverse, DenseRangeDecomposition,
+    DensePairOptions, DensePairSchwarzPreconditioner, DenseRangeDecomposition,
     DiagonalPreconditioner, ExactCoarseCorrection, FactorPair, PairCmgOptions,
     PairSubsetCmgPreconditioner, PcgTraceOptions, Preconditioner, SpectralAnalysisOptions,
     SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, WeightedSumPreconditioner,

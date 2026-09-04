@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 //! Deterministic oracle fixtures shared by the issue #2 research matrices.
 
 use multiway_mg::{FactorAggregation, FactorPair, ThreeWayProblem};
