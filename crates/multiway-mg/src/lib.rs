@@ -18,6 +18,8 @@ mod lsmr;
 mod map;
 mod memory_estimate;
 #[cfg(feature = "cmg")]
+mod oracle_schedule;
+#[cfg(feature = "cmg")]
 mod pair_cmg;
 mod pcg;
 mod pcg_trace;
@@ -53,6 +55,11 @@ pub use lsmr::{
     LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, solve_weighted_least_squares,
 };
 pub use map::SymmetricMapPreconditioner;
+#[cfg(feature = "cmg")]
+pub use oracle_schedule::{
+    OracleLevelSmootherSpec, ScheduledOracleHierarchy, ScheduledOracleHierarchyOptions,
+    ScheduledOracleMemoryReport,
+};
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
