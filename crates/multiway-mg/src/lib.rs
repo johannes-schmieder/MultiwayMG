@@ -30,6 +30,8 @@ mod memory_estimate;
 mod oracle_schedule;
 #[cfg(feature = "cmg")]
 mod pair_cmg;
+#[cfg(all(feature = "cmg", feature = "lsmr"))]
+mod pair_schwarz;
 mod pcg;
 mod pcg_trace;
 mod preconditioner;
@@ -112,6 +114,11 @@ pub use oracle_schedule::{
 };
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
+#[cfg(all(feature = "cmg", feature = "lsmr"))]
+pub use pair_schwarz::{
+    PairCmgSchwarzBuildTiming, PairCmgSchwarzMemoryReport, PairCmgSchwarzOptions,
+    PairCmgSchwarzPreconditioner, PairComponentReport,
+};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced};
 pub use preconditioner::Preconditioner;
