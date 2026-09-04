@@ -60,5 +60,9 @@ required-features = ["cmg"]
 name = "issue3_bootstrap_challenge"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue3_fixture_search"
+required-features = ["cmg"]
+
 [lints]
 workspace = true
