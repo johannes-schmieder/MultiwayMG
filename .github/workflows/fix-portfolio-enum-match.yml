@@ -25,23 +25,7 @@ jobs:
           components: rustfmt
       - name: Add the required wildcard arm
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('crates/multiway-mg/examples/issue3_portfolio_holdout.rs')
-          text = path.read_text()
-          old = '''        BootstrapAcceptanceScreen::Rejected => "rejected-primary-final",
-    }
-}
-'''
-          new = '''        BootstrapAcceptanceScreen::Rejected => "rejected-primary-final",
-        _ => "rejected-unknown-screen",
-    }
-}
-'''
-          if text.count(old) != 1:
-              raise SystemExit(f'expected one enum match tail, found {text.count(old)}')
-          path.write_text(text.replace(old, new))
-          PY
+          python3 -c 'from pathlib import Path; p=Path("crates/multiway-mg/examples/issue3_portfolio_holdout.rs"); t=p.read_text(); old="        BootstrapAcceptanceScreen::Rejected => \"rejected-primary-final\",\n    }\n}\n"; new="        BootstrapAcceptanceScreen::Rejected => \"rejected-primary-final\",\n        _ => \"rejected-unknown-screen\",\n    }\n}\n"; assert t.count(old) == 1, t.count(old); p.write_text(t.replace(old, new))'
           cargo fmt --all
           cargo check --locked -p multiway-mg --example issue3_portfolio_holdout --all-features
       - name: Remove diagnostics and one-time workflow, then commit
