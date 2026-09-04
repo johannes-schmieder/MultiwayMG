@@ -36,8 +36,12 @@ fn main() -> Result<(), DynError> {
     }
     println!(
         "wrote {} and {}",
-        output_directory.join("issue2-resolution-matrix.tsv").display(),
-        output_directory.join("issue2-resolution-traces.tsv").display()
+        output_directory
+            .join("issue2-resolution-matrix.tsv")
+            .display(),
+        output_directory
+            .join("issue2-resolution-traces.tsv")
+            .display()
     );
     Ok(())
 }
@@ -79,20 +83,11 @@ fn run_case(
         traces,
     )?;
 
-    let pair = PairSubsetCmgPreconditioner::build_all(
-        case.problem.clone(),
-        PairCmgOptions::default(),
-    )?;
+    let pair =
+        PairSubsetCmgPreconditioner::build_all(case.problem.clone(), PairCmgOptions::default())?;
     let pair_bytes = pair.memory_report().total_retained_bytes_estimate();
     record_plain_method(
-        case,
-        &range,
-        &rhs,
-        "pair-cmg",
-        &pair,
-        pair_bytes,
-        summary,
-        traces,
+        case, &range, &rhs, "pair-cmg", &pair, pair_bytes, summary, traces,
     )?;
 
     for schedule in [
