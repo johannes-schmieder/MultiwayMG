@@ -3,9 +3,8 @@
 use multiway_mg::{
     AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
     CompatibleRelaxationOptions, CyclePortfolioStructuralRejection, CycleQualityCriteria,
-    CycleQualityOptions, DiagonalPreconditioner, FactorAggregation,
-    SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, ThreeWayProblem,
-    build_cycle_screened_bootstrap_aggregation,
+    CycleQualityOptions, DiagonalPreconditioner, FactorAggregation, SymmetricMapPreconditioner,
+    SymmetricTwoGridPreconditioner, ThreeWayProblem, build_cycle_screened_bootstrap_aggregation,
 };
 
 #[test]
@@ -73,16 +72,12 @@ fn complete_cycle_screen_does_not_bypass_structural_budgets() {
 
 #[test]
 fn cycle_screened_selection_is_observation_order_invariant() {
-    let (problem, oracle, mut tuples, mut weights) =
-        refined_weak_chain_parts(8, 2, 0.01);
+    let (problem, oracle, mut tuples, mut weights) = refined_weak_chain_parts(8, 2, 0.01);
     tuples.reverse();
     weights.reverse();
-    let reversed = ThreeWayProblem::from_observations(
-        problem.topology().level_counts(),
-        &tuples,
-        &weights,
-    )
-    .expect("reversed problem is valid");
+    let reversed =
+        ThreeWayProblem::from_observations(problem.topology().level_counts(), &tuples, &weights)
+            .expect("reversed problem is valid");
     assert_eq!(problem, reversed);
 
     let first = build_cycle_screened_bootstrap_aggregation(
@@ -207,12 +202,7 @@ fn refined_weak_chain_parts(
     levels: usize,
     clones: usize,
     bridge_weight: f64,
-) -> (
-    ThreeWayProblem,
-    FactorAggregation,
-    Vec<[u32; 3]>,
-    Vec<f64>,
-) {
+) -> (ThreeWayProblem, FactorAggregation, Vec<[u32; 3]>, Vec<f64>) {
     let mut coarse_tuples = Vec::new();
     let mut coarse_weights = Vec::new();
     for level in 0..levels {

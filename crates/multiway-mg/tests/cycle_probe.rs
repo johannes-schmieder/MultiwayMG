@@ -9,8 +9,8 @@ use multiway_mg::{
 #[test]
 fn exact_pseudoinverse_annihilates_range_error() {
     let problem = complete_problem(3);
-    let inverse = DensePseudoinverse::from_problem(&problem, 1.0e-12)
-        .expect("exact pseudoinverse succeeds");
+    let inverse =
+        DensePseudoinverse::from_problem(&problem, 1.0e-12).expect("exact pseudoinverse succeeds");
     let report = analyze_cycle_quality(
         &problem,
         &inverse,
@@ -56,16 +56,12 @@ fn oracle_two_grid_has_a_better_complete_cycle_than_an_overmerged_map() {
 
 #[test]
 fn report_and_selected_witness_are_observation_order_invariant() {
-    let (problem, oracle, mut tuples, mut weights) =
-        refined_weak_chain_parts(8, 2, 0.01);
+    let (problem, oracle, mut tuples, mut weights) = refined_weak_chain_parts(8, 2, 0.01);
     tuples.reverse();
     weights.reverse();
-    let reversed = ThreeWayProblem::from_observations(
-        problem.topology().level_counts(),
-        &tuples,
-        &weights,
-    )
-    .expect("reversed problem succeeds");
+    let reversed =
+        ThreeWayProblem::from_observations(problem.topology().level_counts(), &tuples, &weights)
+            .expect("reversed problem succeeds");
     assert_eq!(problem, reversed);
 
     let options = CycleQualityOptions {
@@ -137,9 +133,7 @@ fn complete_problem(levels: u32) -> ThreeWayProblem {
         for second in 0..levels {
             for third in 0..levels {
                 tuples.push([first, second, third]);
-                weights.push(
-                    0.75 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 10.0,
-                );
+                weights.push(0.75 + ((3 * first + 5 * second + 7 * third) % 11) as f64 / 10.0);
             }
         }
     }
@@ -171,12 +165,7 @@ fn refined_weak_chain_parts(
     levels: usize,
     clones: usize,
     bridge_weight: f64,
-) -> (
-    ThreeWayProblem,
-    FactorAggregation,
-    Vec<[u32; 3]>,
-    Vec<f64>,
-) {
+) -> (ThreeWayProblem, FactorAggregation, Vec<[u32; 3]>, Vec<f64>) {
     let mut coarse_tuples = Vec::new();
     let mut coarse_weights = Vec::new();
     for level in 0..levels {

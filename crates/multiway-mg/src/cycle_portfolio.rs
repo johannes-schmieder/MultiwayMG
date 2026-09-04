@@ -433,6 +433,7 @@ where
         },
     );
     let cycle_screen = cycle_start.elapsed();
+    let candidate_maps_considered = evaluations.len();
     let result = CycleScreenedBootstrapResult {
         primary,
         final_aggregation,
@@ -441,12 +442,7 @@ where
         selected_evaluation_index,
         evaluations,
         work: CyclePortfolioWorkReport {
-            candidate_maps_considered: cycle_builds_attempted.saturating_add(
-                evaluations
-                    .iter()
-                    .filter(|evaluation| evaluation.structural_rejection.is_some())
-                    .count(),
-            ),
+            candidate_maps_considered,
             cycle_builds_attempted,
             cycle_build_failures,
             probe_gramian_applications,
