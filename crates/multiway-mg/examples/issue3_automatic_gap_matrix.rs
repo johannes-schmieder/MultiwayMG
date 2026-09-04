@@ -14,11 +14,11 @@ use fixtures::{DynError, OracleCase, deterministic_rhs, one_level_cases};
 use multiway_mg::{
     AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
     CompatibleRelaxationOptions, DenseRangeDecomposition, DiagonalPreconditioner,
-    FactorAggregation, PcgTraceOptions, SpectralAnalysisOptions, SymmetricMapPreconditioner,
-    SymmetricTwoGridPreconditioner, ThreeWayProblem, analyze_compatible_relaxation,
-    build_bootstrap_aggregation, build_pair_neighborhood_aggregation,
-    evaluate_compatible_relaxation, repair_aggregation_by_splitting,
-    solve_projected_pcg_traced, PairNeighborhoodAggregationOptions,
+    FactorAggregation, PairNeighborhoodAggregationOptions, PcgTraceOptions,
+    SpectralAnalysisOptions, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
+    ThreeWayProblem, analyze_compatible_relaxation, build_bootstrap_aggregation,
+    build_pair_neighborhood_aggregation, evaluate_compatible_relaxation,
+    repair_aggregation_by_splitting, solve_projected_pcg_traced,
 };
 
 fn main() -> Result<(), DynError> {
@@ -164,12 +164,8 @@ fn run_case(case: &OracleCase, summary: &mut BufWriter<File>) -> Result<(), DynE
     )?;
 
     if overmerged.coarse_counts() != oracle.coarse_counts() {
-        let repair = repair_aggregation_by_splitting(
-            problem,
-            &overmerged,
-            &screen,
-            repair_options(),
-        )?;
+        let repair =
+            repair_aggregation_by_splitting(problem, &overmerged, &screen, repair_options())?;
         record_map(
             case,
             "repaired-overmerged-control",
@@ -294,12 +290,7 @@ fn compatible_accepts(
     if aggregation.coarse_counts().iter().sum::<usize>() >= problem.dimension() {
         return Ok(false);
     }
-    let report = analyze_compatible_relaxation(
-        problem,
-        aggregation,
-        screen,
-        compatible_options(),
-    )?;
+    let report = analyze_compatible_relaxation(problem, aggregation, screen, compatible_options())?;
     Ok(evaluate_compatible_relaxation(&report, compatible_criteria())?.accepted())
 }
 
@@ -311,12 +302,7 @@ fn compatible_factor(
     if aggregation.coarse_counts().iter().sum::<usize>() >= problem.dimension() {
         return Ok(None);
     }
-    let report = analyze_compatible_relaxation(
-        problem,
-        aggregation,
-        screen,
-        compatible_options(),
-    )?;
+    let report = analyze_compatible_relaxation(problem, aggregation, screen, compatible_options())?;
     Ok(Some(
         report
             .maximum_diagonal_contraction()
@@ -406,8 +392,7 @@ fn partition_metrics(
     for factor in 0..3 {
         for left in 0..counts[factor] {
             for right in (left + 1)..counts[factor] {
-                let oracle_same =
-                    oracle.parents(factor)[left] == oracle.parents(factor)[right];
+                let oracle_same = oracle.parents(factor)[left] == oracle.parents(factor)[right];
                 let candidate_same =
                     candidate.parents(factor)[left] == candidate.parents(factor)[right];
                 if oracle_same {
