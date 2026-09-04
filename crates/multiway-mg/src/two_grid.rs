@@ -85,12 +85,7 @@ impl Preconditioner for ExactCoarseCorrection {
     }
 
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
-        validate_dimensions(
-            "ExactCoarseCorrection::apply",
-            self.dimension(),
-            rhs,
-            out,
-        )?;
+        validate_dimensions("ExactCoarseCorrection::apply", self.dimension(), rhs, out)?;
         let mut compatible_rhs = rhs.to_vec();
         self.fine_problem
             .components()

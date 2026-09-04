@@ -9,8 +9,7 @@
 use crate::{
     DensePseudoinverse, DiagonalPreconditioner, FactorAggregation, MultiwayError,
     PairCmgMemoryReport, PairCmgOptions, PairSubsetCmgPreconditioner, Preconditioner,
-    SymmetricMapPreconditioner, ThreeWayProblem,
-    memory_estimate::estimate_three_way_problem_bytes,
+    SymmetricMapPreconditioner, ThreeWayProblem, memory_estimate::estimate_three_way_problem_bytes,
 };
 
 /// Fixed smoother selected for one nonterminal oracle level.
@@ -64,8 +63,7 @@ impl ScheduledOracleHierarchyOptions {
                 message: "must be positive".to_owned(),
             });
         }
-        if !self.terminal_relative_tolerance.is_finite()
-            || self.terminal_relative_tolerance <= 0.0
+        if !self.terminal_relative_tolerance.is_finite() || self.terminal_relative_tolerance <= 0.0
         {
             return Err(MultiwayError::InvalidOption {
                 name: "oracle_terminal_relative_tolerance",
@@ -214,7 +212,10 @@ impl ScheduledOracleHierarchy {
     /// Coefficient dimension at every level, including the terminal.
     #[must_use]
     pub fn dimensions(&self) -> Vec<usize> {
-        self.problems.iter().map(ThreeWayProblem::dimension).collect()
+        self.problems
+            .iter()
+            .map(ThreeWayProblem::dimension)
+            .collect()
     }
 
     /// Unique tuple count at every level, including the terminal.
@@ -354,9 +355,9 @@ impl LevelSmoother {
         spec: OracleLevelSmootherSpec,
     ) -> Result<Self, MultiwayError> {
         match spec {
-            OracleLevelSmootherSpec::Jacobi { omega } => Ok(Self::Jacobi(
-                DiagonalPreconditioner::new(problem, omega)?,
-            )),
+            OracleLevelSmootherSpec::Jacobi { omega } => {
+                Ok(Self::Jacobi(DiagonalPreconditioner::new(problem, omega)?))
+            }
             OracleLevelSmootherSpec::SymmetricMap => Ok(Self::SymmetricMap(
                 SymmetricMapPreconditioner::new(problem.clone()),
             )),
@@ -416,11 +417,11 @@ fn memory_report(
     let problem_state_bytes_estimate = problems
         .iter()
         .map(estimate_three_way_problem_bytes)
-        .sum();
+        .sum::<usize>();
     let aggregation_bytes = aggregations
         .iter()
         .map(FactorAggregation::retained_bytes)
-        .sum();
+        .sum::<usize>();
     let smoother_bytes_estimate = smoothers
         .iter()
         .enumerate()
@@ -433,15 +434,13 @@ fn memory_report(
         .iter()
         .filter_map(LevelSmoother::pair_memory)
         .map(PairCmgMemoryReport::cmg_preconditioner_bytes)
-        .sum();
+        .sum::<usize>();
     let pair_cmg_workspace_bytes = smoothers
         .iter()
         .filter_map(LevelSmoother::pair_memory)
         .map(PairCmgMemoryReport::pair_workspace_bytes)
-        .sum();
-    let terminal_dimension = problems
-        .last()
-        .map_or(0, ThreeWayProblem::dimension);
+        .sum::<usize>();
+    let terminal_dimension = problems.last().map_or(0, ThreeWayProblem::dimension);
     let terminal_bytes_estimate = terminal_dimension
         .saturating_mul(terminal_dimension.saturating_add(1))
         .saturating_mul(8);

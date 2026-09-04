@@ -1,6 +1,9 @@
 //! Explicit energy-coordinate stationary error operators.
 
-use nalgebra::{DMatrix, linalg::{SVD, SymmetricEigen}};
+use nalgebra::{
+    DMatrix,
+    linalg::{SVD, SymmetricEigen},
+};
 
 use crate::{DenseRangeDecomposition, MultiwayError, Preconditioner, SpectralAnalysisOptions};
 
@@ -121,8 +124,8 @@ pub fn analyze_stationary_error<P: Preconditioner + ?Sized>(
     let applied_range = &action * basis;
     let quotient = basis.transpose() * &applied_range;
     let reconstructed = basis * &quotient;
-    let range_leakage = (&applied_range - reconstructed).norm()
-        / applied_range.norm().max(f64::MIN_POSITIVE);
+    let range_leakage =
+        (&applied_range - reconstructed).norm() / applied_range.norm().max(f64::MIN_POSITIVE);
     let quotient_symmetric = (&quotient + quotient.transpose()) * 0.5;
     let rank = range.rank();
     let mut energy_preconditioner = DMatrix::zeros(rank, rank);

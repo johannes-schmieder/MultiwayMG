@@ -63,9 +63,7 @@ pub use oracle_schedule::{
 #[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
-pub use pcg_trace::{
-    PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced,
-};
+pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced};
 pub use preconditioner::Preconditioner;
 #[cfg(feature = "cmg")]
 pub use research_pair::{
