@@ -9,8 +9,8 @@
 
 use crate::{
     CompatibleRelaxationCriteria, CompatibleRelaxationDecision, CompatibleRelaxationOptions,
-    CompatibleRelaxationReport, DiagonalAggregationProjector, FactorAggregation, MultiwayError,
-    Preconditioner, ThreeWayProblem, analyze_compatible_relaxation, evaluate_compatible_relaxation,
+    CompatibleRelaxationReport, FactorAggregation, MultiwayError, Preconditioner, ThreeWayProblem,
+    analyze_compatible_relaxation, evaluate_compatible_relaxation,
 };
 
 /// Explicit budgets and compatible-relaxation policy for aggregate repair.
