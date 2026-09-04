@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 //! Frozen calibration and holdout graph-cover fixtures for issue #3.
 
 use super::issue2_fixtures::{DynError, OracleCase, one_level_cases};
