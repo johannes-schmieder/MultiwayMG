@@ -115,8 +115,8 @@ fn fixed_two_cycle_adapter_is_linear_symmetric_positive_and_range_preserving() {
     .expect("two-cycle adapter");
     let x = projected_vector(&problem, 0.2);
     let y = projected_vector(&problem, 1.7);
-    let a = -0.41;
-    let b = 1.23;
+    let a: f64 = -0.41;
+    let b: f64 = 1.23;
     let combination: Vec<f64> = x
         .iter()
         .zip(&y)
