@@ -26,6 +26,16 @@ jobs:
         run: |
           cargo vendor --locked issue4-vendor >/tmp/issue4-vendor-config.toml
           tar -czf issue4-vendor.tar.gz issue4-vendor
+      - name: Export full pinned comparator repositories
+        run: |
+          git clone --quiet https://github.com/py-econometrics/within.git issue4-within
+          git -C issue4-within checkout --quiet b7779cbab7a3116be56aae4389fde1f6e6a99a9f
+          rm -rf issue4-within/.git
+          tar -czf issue4-within-source.tar.gz issue4-within
+          git clone --quiet https://github.com/johannes-schmieder/CMG.git issue4-cmg
+          git -C issue4-cmg checkout --quiet 90e1fe0b0c14065155532711246ede6678bb4935
+          rm -rf issue4-cmg/.git
+          tar -czf issue4-cmg-source.tar.gz issue4-cmg
       - uses: actions/upload-artifact@v4
         with:
           name: issue4-workspace-source
@@ -33,5 +43,7 @@ jobs:
             multiwaymg-source.tar.gz
             issue4-source-revision.txt
             issue4-vendor.tar.gz
+            issue4-within-source.tar.gz
+            issue4-cmg-source.tar.gz
           if-no-files-found: error
           retention-days: 3
