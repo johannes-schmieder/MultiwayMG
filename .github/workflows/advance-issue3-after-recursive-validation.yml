@@ -1,0 +1,135 @@
+name: Advance issue 3 after recursive validation
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+  issues: write
+
+env:
+  CARGO_TERM_COLOR: never
+  RUST_BACKTRACE: full
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  advance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Wait for recursive validation verdict
+        run: |
+          for attempt in $(seq 1 60); do
+            git fetch origin codex/issue-3-repair-bootstrap
+            git reset --hard origin/codex/issue-3-repair-bootstrap
+            if [ -f diagnostics/recursive-cycle-validation/verdict.txt ]; then
+              break
+            fi
+            sleep 10
+          done
+          test -f diagnostics/recursive-cycle-validation/verdict.txt
+          verdict="$(tr -d '[:space:]' < diagnostics/recursive-cycle-validation/verdict.txt)"
+          printf 'validation_verdict=%s\n' "$verdict" >> "$GITHUB_ENV"
+      - name: Preserve and report a failed implementation validation
+        if: env.validation_verdict != 'passed'
+        run: |
+          {
+            echo '## Complete-cycle and recursive validation failed'
+            echo
+            echo 'The frozen scientific holdout was not rerun. Exact validation status:'
+            echo '```text'
+            cat diagnostics/recursive-cycle-validation/status.txt
+            echo '```'
+            for log in diagnostics/recursive-cycle-validation/*.log; do
+              echo
+              echo "### $(basename "$log")"
+              echo '```text'
+              tail -n 120 "$log"
+              echo '```'
+            done
+          } > /tmp/issue3-validation-failure.md
+          gh issue comment 3 --repo "$GITHUB_REPOSITORY" \
+            --body-file /tmp/issue3-validation-failure.md
+          exit 1
+      - name: Re-run strict validation before scientific evidence
+        if: env.validation_verdict == 'passed'
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          RUSTDOCFLAGS='-D warnings' cargo doc --locked --workspace --all-features --no-deps
+      - name: Execute the frozen v2 holdout twice
+        if: env.validation_verdict == 'passed'
+        run: |
+          test -f benchmarks/policies/issue3-cycle-portfolio-v2.tsv
+          rm -rf issue3-cycle-a issue3-cycle-b
+          mkdir issue3-cycle-a issue3-cycle-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_holdout --all-features -- issue3-cycle-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_holdout --all-features -- issue3-cycle-b
+          cmp issue3-cycle-a/issue3-cycle-holdout.tsv \
+              issue3-cycle-b/issue3-cycle-holdout.tsv
+          cmp issue3-cycle-a/issue3-cycle-traces.tsv \
+              issue3-cycle-b/issue3-cycle-traces.tsv
+      - name: Evaluate and preserve the frozen v2 gate
+        if: env.validation_verdict == 'passed'
+        id: gate
+        shell: bash
+        run: |
+          set +e
+          python3 scripts/summarize_issue3_cycle_holdout.py \
+            issue3-cycle-a issue3-cycle-a/ISSUE3_CYCLE_HOLDOUT_RESULTS.md
+          status=$?
+          printf 'gate_status=%s\n' "$status" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$status" > issue3-cycle-a/gate-status.txt
+          mkdir -p benchmarks/results/2026-09-04
+          cp issue3-cycle-a/issue3-cycle-holdout.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-holdout.tsv
+          cp issue3-cycle-a/issue3-cycle-traces.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-traces.tsv
+          cp issue3-cycle-a/ISSUE3_CYCLE_HOLDOUT_RESULTS.md \
+            docs/ISSUE3_CYCLE_HOLDOUT_RESULTS.md
+          cp issue3-cycle-a/gate-status.txt \
+            benchmarks/results/2026-09-04/issue3-cycle-gate-status.txt
+          (
+            cd benchmarks/results/2026-09-04
+            sha256sum issue3-cycle-holdout.tsv issue3-cycle-traces.tsv \
+              > issue3-cycle-holdout.sha256
+          )
+          cat issue3-cycle-a/ISSUE3_CYCLE_HOLDOUT_RESULTS.md
+          exit 0
+      - name: Commit immutable result and clean temporary state
+        if: env.validation_verdict == 'passed'
+        run: |
+          rm -rf diagnostics issue3-cycle-a issue3-cycle-b portfolio-a portfolio-b
+          find .github/workflows -maxdepth 1 -type f ! -name ci.yml -delete
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Validate recursive cycle screening and record v2 holdout"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
+      - name: Comment on the frozen v2 result
+        if: env.validation_verdict == 'passed'
+        run: |
+          {
+            echo '## Frozen complete-cycle graph-cover holdout'
+            echo
+            cat docs/ISSUE3_CYCLE_HOLDOUT_RESULTS.md
+          } > /tmp/issue3-cycle-result.md
+          gh issue comment 3 --repo "$GITHUB_REPOSITORY" \
+            --body-file /tmp/issue3-cycle-result.md
+      - name: Enforce the frozen scientific gate
+        if: env.validation_verdict == 'passed' && steps.gate.outputs.gate_status != '0'
+        run: exit 1

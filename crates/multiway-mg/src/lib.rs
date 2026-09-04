@@ -5,9 +5,18 @@
 //! by the `cmg` crate.
 
 mod aggregation;
+mod bootstrap;
+mod bootstrap_hierarchy;
+mod bootstrap_portfolio;
 mod combine;
 mod compatible;
 mod compatible_gate;
+mod cycle_hierarchy;
+mod cycle_portfolio;
+mod cycle_probe;
+mod cycle_repair;
+#[cfg(feature = "cmg")]
+mod cycle_smoother_portfolio;
 mod dense;
 mod dense_pair;
 mod error;
@@ -24,6 +33,7 @@ mod pair_cmg;
 mod pcg;
 mod pcg_trace;
 mod preconditioner;
+mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
 mod spectral;
@@ -34,6 +44,22 @@ pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
     build_pair_neighborhood_aggregation,
 };
+pub use bootstrap::{
+    BootstrapAggregationBuildTiming, BootstrapAggregationOptions, BootstrapAggregationResult,
+    BootstrapAggregationRound, BootstrapAggregationStopReason, BootstrapAggregationWorkReport,
+    BootstrapStructuralMetrics, build_bootstrap_aggregation,
+    build_bootstrap_aggregation_with_timing,
+};
+pub use bootstrap_hierarchy::{
+    BootstrapHierarchyLevelReport, BootstrapHierarchyOptions, BootstrapHierarchyPlan,
+    BootstrapHierarchyStopReason,
+};
+pub use bootstrap_portfolio::{
+    BootstrapAcceptanceScreen, ScreenedBootstrapAggregationResult, ScreenedBootstrapBuildTiming,
+    SecondaryScreenCandidateSource, SecondaryScreenEvaluation, SecondaryScreenStructuralMetrics,
+    SecondaryScreenStructuralRejection, SecondaryScreenWorkReport,
+    build_screened_bootstrap_aggregation, build_screened_bootstrap_aggregation_with_timing,
+};
 pub use combine::WeightedSumPreconditioner;
 pub use compatible::{
     CompatibleRelaxationOptions, CompatibleRelaxationReport, CompatibleRelaxationVectorReport,
@@ -42,6 +68,30 @@ pub use compatible::{
 pub use compatible_gate::{
     CompatibleRelaxationCriteria, CompatibleRelaxationDecision, CompatibleRelaxationRejection,
     evaluate_compatible_relaxation,
+};
+pub use cycle_hierarchy::{
+    CycleScreenedHierarchyLevelReport, CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan,
+    CycleScreenedHierarchyStopReason, CycleScreenedMapHierarchy,
+};
+pub use cycle_portfolio::{
+    CyclePortfolioBuildTiming, CyclePortfolioCandidateSource, CyclePortfolioEvaluation,
+    CyclePortfolioStructuralMetrics, CyclePortfolioStructuralRejection, CyclePortfolioWorkReport,
+    CycleScreenedBootstrapResult, build_cycle_screened_bootstrap_aggregation,
+    build_cycle_screened_bootstrap_aggregation_with_timing,
+};
+pub use cycle_probe::{
+    CycleQualityCriteria, CycleQualityDecision, CycleQualityOptions, CycleQualityRejection,
+    CycleQualityReport, CycleQualityVectorReport, analyze_cycle_quality, evaluate_cycle_quality,
+};
+pub use cycle_repair::{
+    CycleAggregateSplit, CycleSplitRepairOptions, CycleSplitRepairResult, CycleSplitRepairRound,
+    CycleSplitRepairStopReason, CycleSplitStructuralMetrics, repair_cycle_aggregation_by_splitting,
+};
+#[cfg(feature = "cmg")]
+pub use cycle_smoother_portfolio::{
+    CycleSmootherKind, CycleSmootherPortfolioBuildTiming, CycleSmootherPortfolioOptions,
+    CycleSmootherPortfolioResult, CycleSmootherPortfolioStopReason, SelectedTwoGridCycle,
+    build_cycle_smoother_portfolio,
 };
 pub use dense::DensePseudoinverse;
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
@@ -65,6 +115,10 @@ pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced};
 pub use preconditioner::Preconditioner;
+pub use repair::{
+    AggregateSplit, AggregationRepairOptions, AggregationRepairResult, AggregationRepairRound,
+    AggregationRepairStopReason, repair_aggregation_by_splitting,
+};
 #[cfg(feature = "cmg")]
 pub use research_pair::{
     FactorPair, PairCmgBuildTiming, PairCmgMemoryReport, PairSubsetCmgPreconditioner,

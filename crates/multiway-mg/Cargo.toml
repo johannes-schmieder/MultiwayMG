@@ -52,5 +52,49 @@ required-features = ["cmg"]
 name = "issue2_setup_cost_matrix"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue3_automatic_gap_matrix"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_bootstrap_challenge"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_fixture_search"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_cover_search"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_completion_matrix"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_portfolio_holdout"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_cycle_holdout"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_recursive_holdout"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_smoother_fallback_development"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_cycle_holdout_v3"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_cycle_split_development"
+required-features = ["cmg"]
+
 [lints]
 workspace = true

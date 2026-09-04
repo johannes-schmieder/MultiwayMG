@@ -1,0 +1,18 @@
+   Compiling multiway-mg v0.1.0 (/home/runner/work/MultiwayMG/MultiwayMG/crates/multiway-mg)
+error[E0432]: unresolved imports `multiway_mg::CyclePortfolioStructuralRejection`, `multiway_mg::CycleQualityCriteria`, `multiway_mg::CycleQualityOptions`, `multiway_mg::build_cycle_screened_bootstrap_aggregation`
+ --> crates/multiway-mg/tests/cycle_portfolio.rs:5:34
+  |
+5 |     CompatibleRelaxationOptions, CyclePortfolioStructuralRejection, CycleQualityCriteria,
+  |                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^^^^ no `CycleQualityCriteria` in the root
+  |                                  |
+  |                                  no `CyclePortfolioStructuralRejection` in the root
+6 |     CycleQualityOptions, DiagonalPreconditioner, FactorAggregation, SymmetricMapPreconditioner,
+  |     ^^^^^^^^^^^^^^^^^^^ no `CycleQualityOptions` in the root
+7 |     SymmetricTwoGridPreconditioner, ThreeWayProblem, build_cycle_screened_bootstrap_aggregation,
+  |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  |                                                      |
+  |                                                      no `build_cycle_screened_bootstrap_aggregation` in the root
+  |                                                      help: a similar name exists in the module: `build_screened_bootstrap_aggregation`
+
+For more information about this error, try `rustc --explain E0432`.
+error: could not compile `multiway-mg` (test "cycle_portfolio") due to 1 previous error

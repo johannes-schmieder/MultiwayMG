@@ -381,6 +381,7 @@ pub struct CompatibleRelaxationVectorReport {
     final_structural_defect: f64,
     diagonal_contraction: f64,
     energy_contraction: Option<f64>,
+    final_error: Vec<f64>,
 }
 
 impl CompatibleRelaxationVectorReport {
@@ -461,6 +462,41 @@ impl CompatibleRelaxationVectorReport {
     #[must_use]
     pub const fn energy_contraction(&self) -> Option<f64> {
         self.energy_contraction
+    }
+
+    /// Final projected compatible error after all smoothing sweeps.
+    ///
+    /// Retaining this witness lets bounded bootstrap and repair code attribute
+    /// the measured slow mode without rerunning a separate relaxation path.
+    #[must_use]
+    pub fn final_error(&self) -> &[f64] {
+        &self.final_error
+    }
+
+    /// Principal retained-memory estimate for owned vector storage.
+    #[must_use]
+    pub fn retained_bytes_estimate(&self) -> usize {
+        core::mem::size_of::<Self>()
+            .saturating_add(
+                self.diagonal_norm_history
+                    .capacity()
+                    .saturating_mul(core::mem::size_of::<f64>()),
+            )
+            .saturating_add(
+                self.energy_norm_history
+                    .capacity()
+                    .saturating_mul(core::mem::size_of::<f64>()),
+            )
+            .saturating_add(
+                self.coarse_drift_norm_history
+                    .capacity()
+                    .saturating_mul(core::mem::size_of::<f64>()),
+            )
+            .saturating_add(
+                self.final_error
+                    .capacity()
+                    .saturating_mul(core::mem::size_of::<f64>()),
+            )
     }
 }
 
@@ -559,6 +595,38 @@ impl CompatibleRelaxationReport {
     #[must_use]
     pub fn vectors(&self) -> &[CompatibleRelaxationVectorReport] {
         &self.vectors
+    }
+
+    /// Index of the test vector with the largest final diagonal contraction.
+    /// Ties are resolved by the lowest deterministic test-vector index.
+    #[must_use]
+    pub fn slowest_vector_index(&self) -> Option<usize> {
+        self.vectors
+            .iter()
+            .enumerate()
+            .max_by(|(left_index, left), (right_index, right)| {
+                left.diagonal_contraction()
+                    .total_cmp(&right.diagonal_contraction())
+                    .then_with(|| right_index.cmp(left_index))
+            })
+            .map(|(index, _)| index)
+    }
+
+    /// Principal retained-memory estimate for all owned diagnostic vectors.
+    #[must_use]
+    pub fn retained_bytes_estimate(&self) -> usize {
+        core::mem::size_of::<Self>()
+            .saturating_add(
+                self.vectors
+                    .capacity()
+                    .saturating_mul(core::mem::size_of::<CompatibleRelaxationVectorReport>()),
+            )
+            .saturating_add(
+                self.vectors
+                    .iter()
+                    .map(CompatibleRelaxationVectorReport::retained_bytes_estimate)
+                    .sum::<usize>(),
+            )
     }
 }
 
@@ -717,6 +785,7 @@ fn analyze_vector<P: Preconditioner + ?Sized>(
             .structural_defect_with_reference(&error, initial_diagonal_norm)?,
         diagonal_contraction: final_diagonal_norm / initial_diagonal_norm,
         energy_contraction,
+        final_error: error,
     })
 }
 
