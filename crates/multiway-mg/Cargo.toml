@@ -12,6 +12,7 @@ description = "Experimental multilevel solvers for weighted three-way incidence 
 default = ["cmg", "lsmr"]
 cmg = ["dep:cmg"]
 lsmr = ["dep:schwarz-precond"]
+within-comparator = ["dep:within", "lsmr"]
 
 [dependencies]
 multiway-incidence = { path = "../multiway-incidence" }
@@ -19,6 +20,7 @@ thiserror.workspace = true
 nalgebra.workspace = true
 cmg = { workspace = true, optional = true }
 schwarz-precond = { workspace = true, optional = true }
+within = { workspace = true, optional = true }
 
 [[example]]
 name = "feasibility_matrix"
