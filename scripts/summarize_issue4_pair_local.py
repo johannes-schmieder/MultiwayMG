@@ -7,6 +7,7 @@ import csv
 import math
 import statistics
 from collections import defaultdict
+from fractions import Fraction
 from pathlib import Path
 
 FAMILIES = ("path", "hubs", "weak", "dense", "dynamic")
@@ -24,8 +25,9 @@ def break_even(cmg_setup: float, cmg_rate: float, within_setup: float, within_ra
     values = (cmg_setup, cmg_rate, within_setup, within_rate)
     if any(not math.isfinite(x) or x < 0 for x in values):
         raise ValueError("costs must be finite and nonnegative")
-    setup_gap = cmg_setup - within_setup
-    savings = within_rate - cmg_rate
+    cs, ct, ws, wt = map(Fraction, values)
+    setup_gap = cs - ws
+    savings = wt - ct
     if savings > 0:
         first = max(1, math.floor(setup_gap / savings) + 1)
         return f"n >= {first}"
@@ -71,7 +73,7 @@ def validate(rows: list[dict[str, str]], profile: str) -> list[str]:
             if not math.isfinite(residual) or not 0 <= residual <= 1e-8:
                 errors.append(f"true residual {key}: {residual}")
             times = {field: float(row[field]) for field in TIME_FIELDS}
-            if any(not math.isfinite(x) or x < 0 for x in times.values()):
+            if any(not math.isfinite(x) or x < 0 for x in times.values()) or times["total_seconds"] <= 0:
                 errors.append(f"invalid timing {key}")
             total = times["domain_seconds"] + times["setup_seconds"] + times["solve_seconds"]
             if not math.isclose(times["total_seconds"], total, rel_tol=5e-8, abs_tol=1e-12):
@@ -79,12 +81,22 @@ def validate(rows: list[dict[str, str]], profile: str) -> list[str]:
             if times["workspace_seconds"] > times["setup_seconds"] * (1 + 1e-8):
                 errors.append(f"workspace is not a setup subset {key}")
             work = {field: int(row[field]) for field in WORK_FIELDS}
-            if any(x < 0 for x in work.values()):
-                errors.append(f"negative work count {key}")
+            if any(x < 0 for x in work.values()) or work["solver_b"] + work["solver_bt"] == 0:
+                errors.append(f"invalid solver work count {key}")
             if row["certified"] == "true" and (
                 work["certificate_b"] != key[3] or work["certificate_bt"] != 2 * key[3]
             ):
                 errors.append(f"incorrect certificate accounting {key}")
+            if row["recurrence_converged"] not in ("true", "false") or int(row["warning_count"]) < 0:
+                errors.append(f"invalid flags or warnings {key}")
+            if int(row["cmg_levels"]) < (1 if row["method"] == "cmg-fixed" else 0):
+                errors.append(f"invalid CMG level count {key}")
+            if row["method"] == "cmg-fixed":
+                terminals = {"Direct", "FullContraction", "StagnatedVertexReduction", "StagnatedFill", "MaximumLevels"}
+                if row["cmg_terminal"] not in terminals or row["cmg_direct_factor"] != str(row["cmg_terminal"] == "Direct").lower():
+                    errors.append(f"inconsistent CMG terminal metadata {key}")
+            elif row["cmg_terminal"] != "NA" or row["cmg_direct_factor"] != "NA":
+                errors.append(f"CMG metadata on non-CMG route {key}")
             n = int(row["vertices"])
             if n != 2 * int(row["fixture"].rsplit("-", 1)[1]) or int(row["edges"]) < n - 1:
                 errors.append(f"invalid connected pair dimensions {key}")
@@ -163,6 +175,17 @@ def render(rows: list[dict[str, str]], profile: str, errors: list[str]) -> str:
                 for c, w in zip(cmg, within)
             ]
             text.append(f"| {fixture} | {count} | {min(ratios):.3f} / {statistics.median(ratios):.3f} / {max(ratios):.3f} | {statistics.median(work):.3f} |")
+    text += ["", "## Jacobi control and CMG terminal", "",
+             "A win over within alone does not justify CMG when Jacobi is cheaper. "
+             "A one-level iterative terminal is diagonal iteration, not a demonstrated multilevel gain. "
+             "These are paired median total-time ratios at 32 RHS.", "",
+             "| Fixture | Jacobi / CMG time | CMG levels | CMG terminal | Direct factor |",
+             "|---|---:|---:|---|---|"]
+    for fixture in fixtures:
+        cmg = sorted(lookup[(fixture, "cmg-fixed", 32)], key=lambda row: int(row["repeat"]))
+        jacobi = sorted(lookup[(fixture, "jacobi", 32)], key=lambda row: int(row["repeat"]))
+        ratios = [float(j["total_seconds"]) / float(c["total_seconds"]) for c, j in zip(cmg, jacobi)]
+        text.append(f"| {fixture} | {statistics.median(ratios):.3f} | {cmg[0]['cmg_levels']} | {cmg[0]['cmg_terminal']} | {cmg[0]['cmg_direct_factor']} |")
     text += ["", "## Conditional RHS crossover model", "",
              "S+n*T uses median charged setup and median time per RHS from the 32-RHS prefix. "
              "This assumes future RHS cost resembles that prefix; it is not a measured extrapolation "

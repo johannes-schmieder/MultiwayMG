@@ -256,6 +256,8 @@ struct PairInverse {
     principal_bytes: Option<usize>,
     workspace_bytes: usize,
     cmg_levels: usize,
+    cmg_terminal: String,
+    cmg_direct_factor: Option<bool>,
     warnings: Vec<String>,
 }
 
@@ -267,6 +269,8 @@ impl PairInverse {
         let mut workspace_bytes = n * 8;
         let mut principal_bytes = None;
         let mut cmg_levels = 0;
+        let mut cmg_terminal = "NA".to_owned();
+        let mut cmg_direct_factor = None;
         let mut warnings = Vec::new();
         let action = match method {
             Method::Jacobi => {
@@ -287,6 +291,8 @@ impl PairInverse {
                     },
                 )?;
                 cmg_levels = inverse.hierarchy().levels().len();
+                cmg_terminal = format!("{:?}", inverse.hierarchy().report().terminal_reason());
+                cmg_direct_factor = Some(inverse.terminal_factor().is_some());
                 principal_bytes = Some(inverse.retained_bytes());
                 let workspace_start = Instant::now();
                 let workspace = inverse.try_workspace()?;
@@ -338,6 +344,8 @@ impl PairInverse {
             principal_bytes,
             workspace_bytes,
             cmg_levels,
+            cmg_terminal,
+            cmg_direct_factor,
             warnings,
         };
         // Charge the first action (including opaque lazy within scratch) as
@@ -514,7 +522,7 @@ fn fixture(family: &str, size: usize) -> Vec<(u32, u32, f64)> {
                     edges.push((
                         i as u32,
                         ((i + step) % size) as u32,
-                        10.0_f64.powi(((i * 7 + step * 11) % 7) as i32 - 3),
+                        10.0_f64.powi(((i * 5 + step * 11) % 7) as i32 - 3),
                     ));
                 }
             }
@@ -627,7 +635,7 @@ fn main() -> Result<()> {
     let mut writer = BufWriter::new(File::create(output.join("pair-local.tsv"))?);
     writeln!(
         writer,
-        "profile\tfixture\trepeat\tmethod\tvertices\tedges\trhs_count\tdomain_seconds\tsetup_seconds\tworkspace_seconds\tapply_seconds\tsolve_seconds\ttotal_seconds\tsolver_b\tsolver_bt\tpreconditioner_calls\tcertificate_b\tcertificate_bt\tmax_true_residual\trecurrence_converged\tcertified\tprincipal_solver_bytes\tknown_workspace_bytes\tcommon_graph_bytes\tcmg_levels\tsymmetry_defect\tlinearity_defect\tminimum_energy_eigenvalue\trange_condition\trelative_inverse_error\twarning_count\terror"
+        "profile\tfixture\trepeat\tmethod\tvertices\tedges\trhs_count\tdomain_seconds\tsetup_seconds\tworkspace_seconds\tapply_seconds\tsolve_seconds\ttotal_seconds\tsolver_b\tsolver_bt\tpreconditioner_calls\tcertificate_b\tcertificate_bt\tmax_true_residual\trecurrence_converged\tcertified\tprincipal_solver_bytes\tknown_workspace_bytes\tcommon_graph_bytes\tcmg_levels\tcmg_terminal\tcmg_direct_factor\tsymmetry_defect\tlinearity_defect\tminimum_energy_eigenvalue\trange_condition\trelative_inverse_error\twarning_count\terror"
     )?;
     let sizes: &[usize] = if profile == "smoke" {
         &[32]
@@ -712,7 +720,7 @@ fn main() -> Result<()> {
                     );
                     writeln!(
                         writer,
-                        "{}\t{}-{}\t{}\t{}\t{}\t{}\t{}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
+                        "{}\t{}-{}\t{}\t{}\t{}\t{}\t{}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
                         profile,
                         family,
                         size,
@@ -741,6 +749,10 @@ fn main() -> Result<()> {
                         inverse.workspace_bytes,
                         domain.graph.retained_bytes(),
                         inverse.cmg_levels,
+                        inverse.cmg_terminal,
+                        inverse
+                            .cmg_direct_factor
+                            .map_or_else(|| "NA".to_owned(), |x| x.to_string()),
                         quality_values,
                         inverse.warnings.len(),
                         batch.error
@@ -759,6 +771,20 @@ fn main() -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn dynamic_fixture_spans_all_prescribed_weight_scales() {
+        let edges = fixture("dynamic", 32);
+        let minimum = edges
+            .iter()
+            .map(|edge| edge.2)
+            .fold(f64::INFINITY, f64::min);
+        let maximum = edges.iter().map(|edge| edge.2).fold(0.0, f64::max);
+        assert_eq!(minimum, 1e-3);
+        assert_eq!(maximum, 1e3);
+        for exponent in -3..=3 {
+            assert!(edges.iter().any(|edge| edge.2 == 10.0_f64.powi(exponent)));
+        }
+    }
     #[test]
     fn invalid_domains_fail_closed() {
         for edges in [
