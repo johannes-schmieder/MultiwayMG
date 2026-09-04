@@ -66,8 +66,7 @@ impl ScheduledOracleHierarchyOptions {
                 message: "must be positive".to_owned(),
             });
         }
-        if !self.terminal_relative_tolerance.is_finite()
-            || self.terminal_relative_tolerance <= 0.0
+        if !self.terminal_relative_tolerance.is_finite() || self.terminal_relative_tolerance <= 0.0
         {
             return Err(MultiwayError::InvalidOption {
                 name: "oracle_terminal_relative_tolerance",

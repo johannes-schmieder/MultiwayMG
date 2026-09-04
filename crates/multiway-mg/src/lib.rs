@@ -75,9 +75,7 @@ pub use spectral::{
     analyze_preconditioner,
 };
 pub use stationary::{StationaryErrorReport, analyze_stationary_error};
-pub use two_grid::{
-    ExactCoarseBuildTiming, ExactCoarseCorrection, SymmetricTwoGridPreconditioner,
-};
+pub use two_grid::{ExactCoarseBuildTiming, ExactCoarseCorrection, SymmetricTwoGridPreconditioner};
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,
