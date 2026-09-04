@@ -1,0 +1,35 @@
+name: Apply frozen issue 3 v3 fixtures
+
+on:
+  push:
+    branches:
+      - codex/issue-3-completion-clean
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-completion-clean
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt
+      - name: Add frozen fixture factory and format
+        run: |
+          python3 scripts/add_issue3_v3_fixtures.py
+          cargo fmt --all
+      - name: Remove one-time files and commit
+        run: |
+          rm .github/workflows/apply-issue3-v3-fixtures.yml
+          rm scripts/add_issue3_v3_fixtures.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Add predeclared issue 3 v3 cover fixtures"
+          git push origin HEAD:codex/issue-3-completion-clean
