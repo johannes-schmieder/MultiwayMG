@@ -1,0 +1,105 @@
+name: Validate issue 3 complete-cycle screening
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: never
+  RUST_BACKTRACE: full
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Ensure public integration is present
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('crates/multiway-mg/src/lib.rs')
+          t = p.read_text()
+          if 'mod cycle_portfolio;' not in t:
+              t = t.replace('mod compatible_gate;\nmod cycle_probe;', 'mod compatible_gate;\nmod cycle_portfolio;\nmod cycle_probe;')
+          if 'pub use cycle_portfolio::' not in t:
+              block = '''pub use cycle_portfolio::{
+              CyclePortfolioBuildTiming, CyclePortfolioCandidateSource, CyclePortfolioEvaluation,
+              CyclePortfolioStructuralMetrics, CyclePortfolioStructuralRejection,
+              CyclePortfolioWorkReport, CycleScreenedBootstrapResult,
+              build_cycle_screened_bootstrap_aggregation,
+              build_cycle_screened_bootstrap_aggregation_with_timing,
+          };
+          '''
+              t = t.replace('pub use cycle_probe::{', block + 'pub use cycle_probe::{')
+          p.write_text(t)
+
+          p = Path('crates/multiway-mg/src/cycle_portfolio.rs')
+          t = p.read_text()
+          if 'let candidate_maps_considered = evaluations.len();' not in t:
+              t = t.replace(
+                  '    let cycle_screen = cycle_start.elapsed();\n    let result = CycleScreenedBootstrapResult {',
+                  '    let cycle_screen = cycle_start.elapsed();\n    let candidate_maps_considered = evaluations.len();\n    let result = CycleScreenedBootstrapResult {',
+              )
+              start = '            candidate_maps_considered: cycle_builds_attempted.saturating_add('
+              if start in t:
+                  begin = t.index(start)
+                  end_marker = '            cycle_builds_attempted,'
+                  end = t.index(end_marker, begin)
+                  t = t[:begin] + '            candidate_maps_considered,\n' + t[end:]
+          p.write_text(t)
+          PY
+          cargo fmt --all
+      - name: Run strict lint and all cycle-screening tests
+        shell: bash
+        run: |
+          rm -rf diagnostics/cycle-screening-validation
+          mkdir -p diagnostics/cycle-screening-validation
+          set +e
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings \
+            > diagnostics/cycle-screening-validation/clippy.log 2>&1
+          clippy_status=$?
+          for test in cycle_probe cycle_probe_calibration cycle_portfolio bootstrap_portfolio bootstrap repair; do
+            cargo test --locked -p multiway-mg --all-features --test "$test" -- --nocapture \
+              > "diagnostics/cycle-screening-validation/${test}.log" 2>&1
+            status=$?
+            printf '%s_status=%s\n' "$test" "$status" \
+              >> diagnostics/cycle-screening-validation/status.txt
+          done
+          printf 'clippy_status=%s\n' "$clippy_status" \
+            >> diagnostics/cycle-screening-validation/status.txt
+          if [ "$clippy_status" -eq 0 ] && \
+             ! grep -Eq '_status=[1-9][0-9]*' diagnostics/cycle-screening-validation/status.txt; then
+            printf 'passed\n' > diagnostics/cycle-screening-validation/verdict.txt
+          else
+            printf 'failed\n' > diagnostics/cycle-screening-validation/verdict.txt
+          fi
+          cat diagnostics/cycle-screening-validation/status.txt
+          cat diagnostics/cycle-screening-validation/verdict.txt
+          for log in diagnostics/cycle-screening-validation/*.log; do
+            echo "===== $log ====="
+            tail -n 120 "$log" || true
+          done
+          exit 0
+      - name: Commit exact source and diagnostic result
+        run: |
+          rm -f .github/workflows/validate-cycle-screening.yml
+          rm -f .github/workflows/integrate-cycle-portfolio.yml
+          rm -f .github/workflows/repair-cycle-probe.yml
+          rm -f .github/workflows/format-test-cycle-probe.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Validate complete-cycle screening against dense references"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
