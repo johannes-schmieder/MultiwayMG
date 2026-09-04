@@ -17,12 +17,11 @@ use issue3_fixtures::{Issue3Fixture, portfolio_holdout_fixtures};
 use multiway_mg::{
     AggregationRepairOptions, BootstrapAcceptanceScreen, BootstrapAggregationOptions,
     CompatibleRelaxationCriteria, CompatibleRelaxationOptions, DenseRangeDecomposition,
-    DiagonalPreconditioner, FactorAggregation, PairNeighborhoodAggregationOptions,
-    PcgTraceOptions, ScreenedBootstrapAggregationResult, SpectralAnalysisOptions,
-    SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, ThreeWayProblem,
-    analyze_compatible_relaxation, build_pair_neighborhood_aggregation,
-    build_screened_bootstrap_aggregation, evaluate_compatible_relaxation,
-    solve_projected_pcg_traced,
+    DiagonalPreconditioner, FactorAggregation, PairNeighborhoodAggregationOptions, PcgTraceOptions,
+    ScreenedBootstrapAggregationResult, SpectralAnalysisOptions, SymmetricMapPreconditioner,
+    SymmetricTwoGridPreconditioner, ThreeWayProblem, analyze_compatible_relaxation,
+    build_pair_neighborhood_aggregation, build_screened_bootstrap_aggregation,
+    evaluate_compatible_relaxation, solve_projected_pcg_traced,
 };
 
 const MAXIMUM_COARSE_DIMENSION_RATIO: f64 = 0.80;
@@ -114,12 +113,8 @@ fn run_fixture(
             maximum_neighbor_degree: 12,
         },
     )?;
-    let one_shot_acceptance = map_acceptance(
-        problem,
-        &one_shot,
-        &primary_screen,
-        &secondary_screen,
-    )?;
+    let one_shot_acceptance =
+        map_acceptance(problem, &one_shot, &primary_screen, &secondary_screen)?;
     evaluate_map(
         fixture,
         "one-shot-pair-neighborhood",
@@ -302,12 +297,7 @@ fn evaluate_map(
     let tuple_ratio = coarse.tuple_count() as f64 / problem.tuple_count() as f64;
     let tuple_reduction = 1.0 - tuple_ratio;
     let two_level_tuple_complexity = 1.0 + tuple_ratio;
-    let acceptance = map_acceptance(
-        problem,
-        aggregation,
-        primary_screen,
-        secondary_screen,
-    )?;
+    let acceptance = map_acceptance(problem, aggregation, primary_screen, secondary_screen)?;
     let accepted = requested_acceptance && acceptance.accepted;
     let partition = partition_metrics(&fixture.oracle, aggregation);
 
@@ -470,22 +460,15 @@ fn map_acceptance(
         });
     }
 
-    let primary_report = analyze_compatible_relaxation(
-        problem,
-        aggregation,
-        primary_screen,
-        compatible_options(),
-    )?;
-    let primary_decision =
-        evaluate_compatible_relaxation(&primary_report, primary_criteria())?;
+    let primary_report =
+        analyze_compatible_relaxation(problem, aggregation, primary_screen, compatible_options())?;
+    let primary_decision = evaluate_compatible_relaxation(&primary_report, primary_criteria())?;
     if primary_decision.accepted() {
         return Ok(MapAcceptance {
             structural_admissible,
             accepted: true,
             acceptance_screen: "weighted-jacobi",
-            primary_diagonal_factor: Some(
-                primary_decision.maximum_diagonal_factor_per_sweep(),
-            ),
+            primary_diagonal_factor: Some(primary_decision.maximum_diagonal_factor_per_sweep()),
             primary_energy_factor: primary_decision.maximum_energy_factor_per_sweep(),
             secondary_diagonal_factor: None,
             secondary_energy_factor: None,
@@ -510,9 +493,7 @@ fn map_acceptance(
         },
         primary_diagonal_factor: Some(primary_decision.maximum_diagonal_factor_per_sweep()),
         primary_energy_factor: primary_decision.maximum_energy_factor_per_sweep(),
-        secondary_diagonal_factor: Some(
-            secondary_decision.maximum_diagonal_factor_per_sweep(),
-        ),
+        secondary_diagonal_factor: Some(secondary_decision.maximum_diagonal_factor_per_sweep()),
         secondary_energy_factor: secondary_decision.maximum_energy_factor_per_sweep(),
     })
 }
@@ -584,9 +565,7 @@ fn secondary_criteria() -> CompatibleRelaxationCriteria {
     }
 }
 
-fn primary_selected_source(
-    primary: &multiway_mg::BootstrapAggregationResult,
-) -> &'static str {
+fn primary_selected_source(primary: &multiway_mg::BootstrapAggregationResult) -> &'static str {
     if primary.structural_baseline_selected() {
         "protected-structural-baseline"
     } else if primary
@@ -601,9 +580,7 @@ fn primary_selected_source(
     }
 }
 
-fn portfolio_selected_source(
-    portfolio: &ScreenedBootstrapAggregationResult,
-) -> &'static str {
+fn portfolio_selected_source(portfolio: &ScreenedBootstrapAggregationResult) -> &'static str {
     match portfolio.acceptance_screen() {
         BootstrapAcceptanceScreen::Primary => primary_selected_source(portfolio.primary_result()),
         BootstrapAcceptanceScreen::SecondaryBootstrapFinal => "secondary-bootstrap-final",
@@ -611,6 +588,7 @@ fn portfolio_selected_source(
             "secondary-protected-structural-baseline"
         }
         BootstrapAcceptanceScreen::Rejected => "rejected-primary-final",
+        _ => "rejected-unknown-screen",
     }
 }
 

@@ -1,2 +1,0 @@
-check_status=101
-clippy_status=101
