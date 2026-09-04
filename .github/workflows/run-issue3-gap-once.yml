@@ -1,0 +1,47 @@
+name: Record initial issue 3 automatic gap matrix
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Run deterministic matrix twice
+        run: |
+          rm -rf issue3-a issue3-b
+          mkdir issue3-a issue3-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_automatic_gap_matrix --all-features -- issue3-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_automatic_gap_matrix --all-features -- issue3-b
+          cmp issue3-a/issue3-automatic-gap-matrix.tsv \
+              issue3-b/issue3-automatic-gap-matrix.tsv
+      - name: Commit raw deterministic evidence
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp issue3-a/issue3-automatic-gap-matrix.tsv \
+             benchmarks/results/2026-09-04/issue3-automatic-gap-matrix.tsv
+          rm .github/workflows/run-issue3-gap-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Record initial issue 3 automatic-to-oracle gap matrix"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
