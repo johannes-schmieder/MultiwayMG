@@ -76,5 +76,13 @@ required-features = ["cmg"]
 name = "issue3_portfolio_holdout"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue3_cycle_holdout"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_recursive_holdout"
+required-features = ["cmg"]
+
 [lints]
 workspace = true
