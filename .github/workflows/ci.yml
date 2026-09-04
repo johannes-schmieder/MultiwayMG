@@ -117,7 +117,7 @@ jobs:
           if-no-files-found: error
 
   issue-2-completion:
-    name: Issue 2 two-grid and resolution matrices
+    name: Issue 2 deterministic two-grid and resolution gate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -125,17 +125,36 @@ jobs:
         with:
           toolchain: "1.85.0"
       - uses: Swatinem/rust-cache@v2
-      - name: Run explicit two-grid matrix
+      - name: Run deterministic matrices twice
         run: |
-          mkdir -p issue2-output
-          cargo run --locked --release -p multiway-mg \
-            --example issue2_two_grid_matrix --all-features -- issue2-output
-      - name: Run hierarchy-depth and resolution matrix
+          mkdir -p issue2-a issue2-b
+          for output in issue2-a issue2-b; do
+            cargo run --locked --release -p multiway-mg \
+              --example issue2_two_grid_matrix --all-features -- "$output"
+            cargo run --locked --release -p multiway-mg \
+              --example issue2_resolution_matrix --all-features -- "$output"
+          done
+      - name: Verify byte-identical deterministic evidence
+        run: |
+          for file in \
+            issue2-two-grid-matrix.tsv \
+            issue2-pcg-traces.tsv \
+            issue2-resolution-matrix.tsv \
+            issue2-resolution-traces.tsv; do
+            cmp "issue2-a/$file" "issue2-b/$file"
+          done
+      - name: Run phase-separated setup and apply diagnostics
         run: |
           cargo run --locked --release -p multiway-mg \
-            --example issue2_resolution_matrix --all-features -- issue2-output
+            --example issue2_setup_cost_matrix --all-features -- issue2-a
+      - name: Evaluate issue 2 acceptance gates
+        run: |
+          python3 scripts/summarize_issue2_completion.py \
+            issue2-a issue2-a/ISSUE2_FINAL_RESULTS.md
       - uses: actions/upload-artifact@v4
         with:
           name: issue-2-completion-output
-          path: issue2-output/*.tsv
+          path: |
+            issue2-a/*.tsv
+            issue2-a/ISSUE2_FINAL_RESULTS.md
           if-no-files-found: error
