@@ -207,6 +207,27 @@ The resulting decision is:
 See `docs/ISSUE3_FINAL_RESULTS.md` and
 `docs/ADR_0001_ISSUE3_AUTOMATIC_COARSENING.md`.
 
+## Issue 4 checkpoint: pair-solver economics
+
+PR #12 adds component-local CMG Schwarz, the public pinned `within`
+comparator, exact operator-work accounting and an identical-domain
+repeated-RHS benchmark with independent residual certification.
+The permanent GitHub Actions smoke gate checks correctness and accounting,
+not a preferred timing winner.
+
+The first five-family small-domain matrix is mixed: weak communities are a
+promising CMG candidate, but paths and six-order weight variation favor
+`within` at 32 RHS. Jacobi is cheaper than CMG on the dense and hub fixtures;
+the hub CMG route is a one-level diagonal terminal, not a multilevel gain.
+These are research diagnostics, not a production routing rule or a
+demonstrated three-way end-to-end advantage.
+
+See the [results and remaining gates](docs/ISSUE4_PAIR_LOCAL_RESULTS.md)
+and [measurement protocol](docs/ISSUE4_PAIR_LOCAL_PROTOCOL.md).
+[Issue #4](https://github.com/johannes-schmieder/MultiwayMG/issues/4)
+remains open for broad calibration, actual three-way comparisons, complete
+memory/thread accounting and a fresh holdout.
+
 ## Current implementation
 
 The workspace includes:
