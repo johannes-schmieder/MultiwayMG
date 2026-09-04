@@ -19,11 +19,10 @@ use std::{
 use issue2_fixtures::{DynError, deterministic_rhs};
 use issue3_cycle_fixtures::{CycleHoldoutFixture, cycle_holdout_v3_fixtures};
 use multiway_mg::{
-    CycleQualityCriteria, CycleQualityOptions, CycleSplitRepairOptions,
-    DenseRangeDecomposition, FactorAggregation, PairCmgOptions, PairCmgPreconditioner,
-    PairNeighborhoodAggregationOptions, PcgTraceOptions, Preconditioner,
-    SpectralAnalysisOptions, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
-    ThreeWayProblem, build_pair_neighborhood_aggregation,
+    CycleQualityCriteria, CycleQualityOptions, CycleSplitRepairOptions, DenseRangeDecomposition,
+    FactorAggregation, PairCmgOptions, PairCmgPreconditioner, PairNeighborhoodAggregationOptions,
+    PcgTraceOptions, Preconditioner, SpectralAnalysisOptions, SymmetricMapPreconditioner,
+    SymmetricTwoGridPreconditioner, ThreeWayProblem, build_pair_neighborhood_aggregation,
     repair_cycle_aggregation_by_splitting, solve_projected_pcg_traced,
 };
 
@@ -66,10 +65,7 @@ fn run_fixture(
     let map = SymmetricMapPreconditioner::new(fixture.problem.clone());
     run_smoother(fixture, &baseline, "symmetric-map", map, output)?;
 
-    let pair = PairCmgPreconditioner::build(
-        fixture.problem.clone(),
-        PairCmgOptions::default(),
-    )?;
+    let pair = PairCmgPreconditioner::build(fixture.problem.clone(), PairCmgOptions::default())?;
     run_smoother(fixture, &baseline, "all-pairs-cmg", pair, output)?;
     Ok(())
 }

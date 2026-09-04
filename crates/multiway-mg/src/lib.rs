@@ -85,8 +85,7 @@ pub use cycle_probe::{
 };
 pub use cycle_repair::{
     CycleAggregateSplit, CycleSplitRepairOptions, CycleSplitRepairResult, CycleSplitRepairRound,
-    CycleSplitRepairStopReason, CycleSplitStructuralMetrics,
-    repair_cycle_aggregation_by_splitting,
+    CycleSplitRepairStopReason, CycleSplitStructuralMetrics, repair_cycle_aggregation_by_splitting,
 };
 #[cfg(feature = "cmg")]
 pub use cycle_smoother_portfolio::{

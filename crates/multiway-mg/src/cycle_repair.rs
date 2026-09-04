@@ -14,7 +14,7 @@ use crate::{
 };
 
 /// Explicit policy for bounded complete-cycle split repair.
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy)]
 pub struct CycleSplitRepairOptions {
     /// Matrix-free complete-cycle power probe.
     pub probe: CycleQualityOptions,
@@ -396,7 +396,11 @@ where
         (options.maximum_coarse_dimension_ratio * problem.dimension() as f64).floor() as usize;
     let mut current_aggregation = initial_aggregation.clone();
     let mut current_metrics = structural_metrics(problem, &current_aggregation)?;
-    validate_metrics(current_metrics, maximum_coarse_dimension, options)?;
+    validate_metrics(current_metrics, maximum_coarse_dimension, options).map_err(|reason| {
+        MultiwayError::InvalidAggregation {
+            message: format!("initial cycle-split map violates structural budgets: {reason:?}"),
+        }
+    })?;
     let current_cycle = build_cycle(&current_aggregation)?;
     let mut current_report = analyze_cycle_quality(problem, &current_cycle, options.probe)?;
     let mut current_decision = evaluate_cycle_quality(&current_report, options.criteria)?;
@@ -429,7 +433,8 @@ where
         };
         let candidate_aggregation = apply_split(&current_aggregation, &split)?;
         let candidate_metrics = structural_metrics(problem, &candidate_aggregation)?;
-        if let Err(reason) = validate_metrics(candidate_metrics, maximum_coarse_dimension, options) {
+        if let Err(reason) = validate_metrics(candidate_metrics, maximum_coarse_dimension, options)
+        {
             return Ok(result(
                 initial_aggregation,
                 current_aggregation,
@@ -511,6 +516,7 @@ fn result(
     rounds: Vec<CycleSplitRepairRound>,
     stop_reason: CycleSplitRepairStopReason,
 ) -> CycleSplitRepairResult {
+    let accepted_splits = rounds.len();
     CycleSplitRepairResult {
         initial_aggregation,
         final_aggregation,
@@ -520,7 +526,7 @@ fn result(
         initial_decision,
         final_report,
         final_decision,
-        accepted_splits: rounds.len(),
+        accepted_splits,
         stop_reason,
         rounds,
     }
@@ -570,8 +576,8 @@ fn choose_split(
             }
             let replace = best.as_ref().is_none_or(|current| {
                 score_fraction.total_cmp(&current.0).is_gt()
-                    || (score_fraction.to_bits() == current.0.to_bits()
-                        && (factor, parent) < (current.1, current.2 as usize))
+                    || score_fraction.to_bits() == current.0.to_bits()
+                        && (factor, parent) < (current.1, current.2 as usize)
             });
             if replace {
                 best = Some((score_fraction, factor, parent as u32, levels));
@@ -595,8 +601,8 @@ fn choose_split(
     let mut left_mass = 0.0;
     for cut in 1..members.len() {
         left_mass += problem.diagonal()[offsets[factor] + members[cut - 1]];
-        let gap = witness[offsets[factor] + members[cut]]
-            - witness[offsets[factor] + members[cut - 1]];
+        let gap =
+            witness[offsets[factor] + members[cut]] - witness[offsets[factor] + members[cut - 1]];
         let balance = (2.0 * left_mass - total_mass).abs();
         if gap.total_cmp(&best_gap).is_gt()
             || (gap.to_bits() == best_gap.to_bits()
