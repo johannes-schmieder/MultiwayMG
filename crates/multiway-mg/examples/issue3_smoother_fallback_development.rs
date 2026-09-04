@@ -13,7 +13,7 @@ use std::{
     env,
     fs::{self, File},
     io::{BufWriter, Write},
-    path::{Path, PathBuf},
+    path::PathBuf,
 };
 
 use issue2_fixtures::{DynError, deterministic_rhs};
@@ -22,11 +22,11 @@ use multiway_mg::{
     AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
     CompatibleRelaxationOptions, CycleQualityCriteria, CycleQualityOptions,
     DenseRangeDecomposition, DiagonalAggregationProjector, DiagonalPreconditioner,
-    FactorAggregation, PairCmgOptions, PairCmgPreconditioner,
-    PairNeighborhoodAggregationOptions, PcgTraceOptions, Preconditioner,
-    SpectralAnalysisOptions, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
-    ThreeWayProblem, analyze_cycle_quality, build_cycle_screened_bootstrap_aggregation,
-    build_pair_neighborhood_aggregation, evaluate_cycle_quality, solve_projected_pcg_traced,
+    FactorAggregation, PairCmgOptions, PairCmgPreconditioner, PairNeighborhoodAggregationOptions,
+    PcgTraceOptions, Preconditioner, SpectralAnalysisOptions, SymmetricMapPreconditioner,
+    SymmetricTwoGridPreconditioner, ThreeWayProblem, analyze_cycle_quality,
+    build_cycle_screened_bootstrap_aggregation, build_pair_neighborhood_aggregation,
+    evaluate_cycle_quality, solve_projected_pcg_traced,
 };
 
 const MAXIMUM_COARSE_DIMENSION_RATIO: f64 = 0.80;
@@ -177,8 +177,8 @@ impl SmootherKind {
 
 #[derive(Debug, Clone)]
 enum DevelopmentCycle {
-    SymmetricMap(SymmetricTwoGridPreconditioner<SymmetricMapPreconditioner>),
-    PairCmg(SymmetricTwoGridPreconditioner<PairCmgPreconditioner>),
+    SymmetricMap(Box<SymmetricTwoGridPreconditioner<SymmetricMapPreconditioner>>),
+    PairCmg(Box<SymmetricTwoGridPreconditioner<PairCmgPreconditioner>>),
 }
 
 impl Preconditioner for DevelopmentCycle {
@@ -213,6 +213,7 @@ fn build_cycle(
             1.0,
             1.0e-12,
         )
+        .map(Box::new)
         .map(DevelopmentCycle::SymmetricMap),
         SmootherKind::PairCmg => SymmetricTwoGridPreconditioner::build(
             problem.clone(),
@@ -222,6 +223,7 @@ fn build_cycle(
             1.0,
             1.0e-12,
         )
+        .map(Box::new)
         .map(DevelopmentCycle::PairCmg),
     }
 }
@@ -320,7 +322,11 @@ fn evaluate_candidate(
         pcg.iterations(),
         pcg.converged(),
         pcg.final_relative_residual(),
-        if decision.accepted() { "accepted" } else { "cycle-rejected" },
+        if decision.accepted() {
+            "accepted"
+        } else {
+            "cycle-rejected"
+        },
     )?;
     Ok(())
 }

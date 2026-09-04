@@ -1,3 +1,5 @@
+#![allow(dead_code)]
+
 //! Frozen graph-cover fixtures for the issue #3 complete-cycle holdout.
 //!
 //! Every base factor level is lifted to four sheets. Each base tuple receives
