@@ -7,6 +7,7 @@
 mod aggregation;
 mod bootstrap;
 mod bootstrap_hierarchy;
+mod bootstrap_portfolio;
 mod combine;
 mod compatible;
 mod compatible_gate;
@@ -46,6 +47,13 @@ pub use bootstrap::{
 pub use bootstrap_hierarchy::{
     BootstrapHierarchyLevelReport, BootstrapHierarchyOptions, BootstrapHierarchyPlan,
     BootstrapHierarchyStopReason,
+};
+pub use bootstrap_portfolio::{
+    BootstrapAcceptanceScreen, ScreenedBootstrapAggregationResult, ScreenedBootstrapBuildTiming,
+    SecondaryScreenCandidateSource, SecondaryScreenEvaluation,
+    SecondaryScreenStructuralMetrics, SecondaryScreenStructuralRejection,
+    SecondaryScreenWorkReport, build_screened_bootstrap_aggregation,
+    build_screened_bootstrap_aggregation_with_timing,
 };
 pub use combine::WeightedSumPreconditioner;
 pub use compatible::{
