@@ -143,12 +143,14 @@ fn fixed_two_cycle_adapter_is_linear_symmetric_positive_and_range_preserving() {
     let symmetry_scale = xy.abs().max(yx.abs()).max(1.0);
     assert!((xy - yx).abs() / symmetry_scale < 2.0e-10);
     assert!(dot(&x, &mx) > 0.0);
+    let range_defect = problem
+        .components()
+        .maximum_structural_defect(&mx)
+        .expect("range defect");
+    let range_scale = mx.iter().map(|value| value.abs()).sum::<f64>().max(1.0);
     assert!(
-        problem
-            .components()
-            .maximum_structural_defect(&mx)
-            .expect("range defect")
-            < 2.0e-9
+        range_defect / range_scale < 64.0 * f64::EPSILON,
+        "structural range defect {range_defect:.3e} is too large relative to {range_scale:.3e}"
     );
     assert_eq!(adapter.fallback_workspace_allocations(), 0);
 }
