@@ -28,21 +28,24 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path("scripts/apply_issue3_secondary_portfolio.py")
           text = path.read_text()
           text = text.replace(
-              '        "retained_report_bytes_estimate: work.retained_report_bytes_estimate(),",',
-              '        "retained_report_bytes_estimate: work.retained_round_report_bytes_estimate(),",',
+              '"retained_report_bytes_estimate: work.retained_report_bytes_estimate(),"',
+              '"retained_report_bytes_estimate: work.retained_round_report_bytes_estimate(),"',
           )
-          text = text.replace(
-              '''retained_report_bytes_estimate: work
-                  .retained_report_bytes_estimate()
-                  .saturating_add(''',
-              '''retained_report_bytes_estimate: work
-                  .retained_round_report_bytes_estimate()
-                  .saturating_add(''',
+          text, replacements = re.subn(
+              r"(retained_report_bytes_estimate: work\s*\n\s*)\.retained_report_bytes_estimate\(\)",
+              r"\1.retained_round_report_bytes_estimate()",
+              text,
+              count=1,
           )
+          if '"retained_report_bytes_estimate: work.retained_round_report_bytes_estimate(),"' not in text:
+              raise SystemExit("failed to repair the current-source lookup")
+          if replacements != 1:
+              raise SystemExit(f"failed to repair the replacement body: {replacements}")
           path.write_text(text)
           PY
           python3 scripts/apply_issue3_secondary_portfolio.py
