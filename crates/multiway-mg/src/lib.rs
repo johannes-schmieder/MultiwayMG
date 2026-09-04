@@ -104,7 +104,8 @@ pub use hierarchy::{
 pub use jacobi::DiagonalPreconditioner;
 #[cfg(feature = "lsmr")]
 pub use lsmr::{
-    LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, solve_weighted_least_squares,
+    LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, LeastSquaresWorkReport,
+    solve_weighted_least_squares,
 };
 pub use map::SymmetricMapPreconditioner;
 #[cfg(feature = "cmg")]
