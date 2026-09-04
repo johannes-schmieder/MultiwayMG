@@ -1,0 +1,29 @@
+name: Issue 4 workspace export
+
+on:
+  push:
+    branches:
+      - codex/issue-4-pair-solver-economics
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    name: Export tracked workspace
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record source revision
+        run: git rev-parse HEAD > issue4-source-revision.txt
+      - name: Archive tracked source
+        run: git archive --format=tar.gz --output=multiwaymg-source.tar.gz HEAD
+      - uses: actions/upload-artifact@v4
+        with:
+          name: issue4-workspace-source
+          path: |
+            multiwaymg-source.tar.gz
+            issue4-source-revision.txt
+          if-no-files-found: error
+          retention-days: 3
