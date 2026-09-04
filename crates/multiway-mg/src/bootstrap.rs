@@ -629,17 +629,16 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
             })
             .unwrap_or(f64::INFINITY);
         let baseline_factor = decision.maximum_diagonal_factor_per_sweep();
-        let prefer_baseline = baseline_accepted
-            && (!accepted
-                || structural_baseline_metrics.coarse_tuple_count
-                    < current_metrics.coarse_tuple_count
-                || (structural_baseline_metrics.coarse_tuple_count
-                    == current_metrics.coarse_tuple_count
-                    && (structural_baseline_metrics.coarse_dimension
-                        < current_metrics.coarse_dimension
-                        || (structural_baseline_metrics.coarse_dimension
-                            == current_metrics.coarse_dimension
-                            && baseline_factor < current_factor))));
+        let baseline_no_worse = structural_baseline_metrics.coarse_tuple_count
+            <= current_metrics.coarse_tuple_count
+            && structural_baseline_metrics.coarse_dimension <= current_metrics.coarse_dimension
+            && baseline_factor <= current_factor;
+        let baseline_strictly_better = structural_baseline_metrics.coarse_tuple_count
+            < current_metrics.coarse_tuple_count
+            || structural_baseline_metrics.coarse_dimension < current_metrics.coarse_dimension
+            || baseline_factor < current_factor;
+        let prefer_baseline =
+            baseline_accepted && (!accepted || (baseline_no_worse && baseline_strictly_better));
         if prefer_baseline {
             final_aggregation = structural_baseline.clone();
             accepted = true;
