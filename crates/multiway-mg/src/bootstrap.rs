@@ -12,8 +12,10 @@ use std::collections::BTreeMap;
 use crate::{
     AggregationRepairOptions, AggregationRepairResult, CompatibleRelaxationCriteria,
     CompatibleRelaxationDecision, CompatibleRelaxationOptions, CompatibleRelaxationReport,
-    DiagonalPreconditioner, FactorAggregation, MultiwayError, Preconditioner, ThreeWayProblem,
-    analyze_compatible_relaxation, evaluate_compatible_relaxation, repair_aggregation_by_splitting,
+    DiagonalPreconditioner, FactorAggregation, MultiwayError, PairNeighborhoodAggregationOptions,
+    Preconditioner, ThreeWayProblem, analyze_compatible_relaxation,
+    build_pair_neighborhood_aggregation, evaluate_compatible_relaxation,
+    repair_aggregation_by_splitting,
 };
 
 /// Controls sparse test-vector aggregation and bounded witness enrichment.
@@ -185,6 +187,9 @@ pub enum BootstrapAggregationStopReason {
         /// Number of admitted aggregate splits.
         splits: usize,
     },
+    /// The bounded pair-neighborhood baseline was accepted and dominated the
+    /// accepted bootstrap map in the declared structural ordering.
+    AcceptedStructuralBaseline,
     /// Candidate matching produced no compatible complement.
     NoCompatibleComplement,
     /// The proposed map exceeded the coarse-dimension budget.
@@ -406,6 +411,9 @@ pub struct BootstrapAggregationResult {
     stop_reason: BootstrapAggregationStopReason,
     rounds: Vec<BootstrapAggregationRound>,
     split_repair: Option<AggregationRepairResult>,
+    structural_baseline_selected: bool,
+    structural_baseline_report: Option<CompatibleRelaxationReport>,
+    structural_baseline_decision: Option<CompatibleRelaxationDecision>,
     work: BootstrapAggregationWorkReport,
 }
 
@@ -444,6 +452,25 @@ impl BootstrapAggregationResult {
     #[must_use]
     pub const fn split_repair(&self) -> Option<&AggregationRepairResult> {
         self.split_repair.as_ref()
+    }
+
+    /// Whether the final map came from the protected pair-neighborhood baseline.
+    #[must_use]
+    pub const fn structural_baseline_selected(&self) -> bool {
+        self.structural_baseline_selected
+    }
+
+    /// Compatible-relaxation report for the protected structural baseline when
+    /// it had an admissible nontrivial complement.
+    #[must_use]
+    pub const fn structural_baseline_report(&self) -> Option<&CompatibleRelaxationReport> {
+        self.structural_baseline_report.as_ref()
+    }
+
+    /// Acceptance decision for the protected structural baseline.
+    #[must_use]
+    pub const fn structural_baseline_decision(&self) -> Option<&CompatibleRelaxationDecision> {
+        self.structural_baseline_decision.as_ref()
     }
 
     /// Deterministic structural-work and retained-state report.
@@ -569,6 +596,60 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         final_aggregation.ok_or_else(|| MultiwayError::CompatibleRelaxation {
             message: "bootstrap builder produced no aggregation".to_owned(),
         })?;
+
+    let structural_baseline = build_pair_neighborhood_aggregation(
+        problem,
+        PairNeighborhoodAggregationOptions {
+            minimum_affinity: 0.02,
+            maximum_neighbor_degree: options.maximum_neighbor_degree,
+        },
+    )?;
+    let structural_baseline_metrics = structural_metrics(problem, &structural_baseline)?;
+    let mut structural_baseline_selected = false;
+    let mut structural_baseline_report = None;
+    let mut structural_baseline_decision = None;
+    if structural_rejection(problem, structural_baseline_metrics, options).is_none()
+        && structural_baseline_metrics.coarse_dimension < problem.dimension()
+    {
+        let report = analyze_compatible_relaxation(
+            problem,
+            &structural_baseline,
+            screen_smoother,
+            options.compatible_relaxation,
+        )?;
+        let decision = evaluate_compatible_relaxation(&report, options.compatible_criteria)?;
+        let baseline_accepted = decision.accepted();
+        let current_metrics = structural_metrics(problem, &final_aggregation)?;
+        let current_factor = rounds
+            .last()
+            .map(|round| {
+                round
+                    .compatible_decision
+                    .maximum_diagonal_factor_per_sweep()
+            })
+            .unwrap_or(f64::INFINITY);
+        let baseline_factor = decision.maximum_diagonal_factor_per_sweep();
+        let prefer_baseline = baseline_accepted
+            && (!accepted
+                || structural_baseline_metrics.coarse_tuple_count
+                    < current_metrics.coarse_tuple_count
+                || (structural_baseline_metrics.coarse_tuple_count
+                    == current_metrics.coarse_tuple_count
+                    && (structural_baseline_metrics.coarse_dimension
+                        < current_metrics.coarse_dimension
+                        || (structural_baseline_metrics.coarse_dimension
+                            == current_metrics.coarse_dimension
+                            && baseline_factor < current_factor))));
+        if prefer_baseline {
+            final_aggregation = structural_baseline.clone();
+            accepted = true;
+            stop_reason = BootstrapAggregationStopReason::AcceptedStructuralBaseline;
+            structural_baseline_selected = true;
+        }
+        structural_baseline_report = Some(report);
+        structural_baseline_decision = Some(decision);
+    }
+
     let mut split_repair = None;
     if !accepted {
         if let Some(repair_options) = options.split_repair {
@@ -603,7 +684,12 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
     let retained_round_report_bytes_estimate = rounds
         .iter()
         .map(|round| round.compatible_report.retained_bytes_estimate())
-        .sum();
+        .sum::<usize>()
+        .saturating_add(
+            structural_baseline_report
+                .as_ref()
+                .map_or(0, CompatibleRelaxationReport::retained_bytes_estimate),
+        );
     let work = BootstrapAggregationWorkReport {
         setup_gramian_applications: options
             .setup_test_vectors
@@ -614,11 +700,21 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         compatible_gramian_applications: rounds
             .iter()
             .map(|round| round.compatible_report.gramian_applications())
-            .sum(),
+            .sum::<usize>()
+            .saturating_add(
+                structural_baseline_report
+                    .as_ref()
+                    .map_or(0, CompatibleRelaxationReport::gramian_applications),
+            ),
         compatible_smoother_applications: rounds
             .iter()
             .map(|round| round.compatible_report.smoother_applications())
-            .sum(),
+            .sum::<usize>()
+            .saturating_add(
+                structural_baseline_report
+                    .as_ref()
+                    .map_or(0, CompatibleRelaxationReport::smoother_applications),
+            ),
         candidate_pairs_generated: total_generated,
         candidate_pairs_retained: total_retained,
         retained_test_vector_bytes,
@@ -632,6 +728,9 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         stop_reason,
         rounds,
         split_repair,
+        structural_baseline_selected,
+        structural_baseline_report,
+        structural_baseline_decision,
         work,
     })
 }

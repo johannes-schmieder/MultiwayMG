@@ -60,6 +60,31 @@ fn parity_sparse_refinement_is_recovered_without_exact_shared_contexts() {
 }
 
 #[test]
+fn accepted_structural_baseline_is_not_replaced_by_a_more_expensive_map() {
+    let (problem, oracle) = refined_weak_chain(8, 2, 0.01, true);
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("smoother succeeds");
+    let result = build_bootstrap_aggregation(&problem, &smoother, bootstrap_options())
+        .expect("bootstrap build succeeds");
+    let baseline = result
+        .structural_baseline_report()
+        .expect("nontrivial structural baseline was evaluated");
+    let decision = result
+        .structural_baseline_decision()
+        .expect("structural baseline decision exists");
+
+    assert!(decision.accepted());
+    assert!(baseline.maximum_final_coarse_defect() < 1.0e-10);
+    let final_coarse = result
+        .final_aggregation()
+        .coarsen(&problem)
+        .expect("final coarsening succeeds");
+    let oracle_coarse = oracle
+        .coarsen(&problem)
+        .expect("oracle coarsening succeeds");
+    assert!(final_coarse.tuple_count() <= oracle_coarse.tuple_count());
+}
+
+#[test]
 fn structural_dimension_budget_rejects_before_compatible_acceptance() {
     let (problem, _) = refined_weak_chain(8, 2, 0.01, false);
     let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("smoother succeeds");
