@@ -1,0 +1,103 @@
+name: Frozen issue 3 recursive v1 holdout
+
+on:
+  push:
+    branches:
+      - codex/issue-3-completion-clean
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  holdout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-completion-clean
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Verify frozen recursive policy
+        run: |
+          test -f benchmarks/policies/issue3-recursive-cycle-v1.tsv
+          grep -q $'metadata\tpolicy_version\tissue3-recursive-cycle-v1' \
+            benchmarks/policies/issue3-recursive-cycle-v1.tsv
+          grep -q $'fixture\trecursive-latin-depth-2\t800' \
+            benchmarks/policies/issue3-recursive-cycle-v1.tsv
+          grep -q $'fixture\trecursive-communities-depth-3\t807' \
+            benchmarks/policies/issue3-recursive-cycle-v1.tsv
+          grep -q $'scientific_gate\tminimum_accepted_hierarchies\t6' \
+            benchmarks/policies/issue3-recursive-cycle-v1.tsv
+      - name: Validate recursive implementation
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --test cycle_hierarchy --all-features
+          cargo test --locked --workspace --no-default-features
+      - name: Run frozen recursive holdout twice
+        run: |
+          rm -rf /tmp/issue3-recursive-a /tmp/issue3-recursive-b
+          mkdir -p /tmp/issue3-recursive-a /tmp/issue3-recursive-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_recursive_holdout --all-features -- /tmp/issue3-recursive-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_recursive_holdout --all-features -- /tmp/issue3-recursive-b
+          cmp /tmp/issue3-recursive-a/issue3-recursive-holdout.tsv \
+              /tmp/issue3-recursive-b/issue3-recursive-holdout.tsv
+          cmp /tmp/issue3-recursive-a/issue3-recursive-traces.tsv \
+              /tmp/issue3-recursive-b/issue3-recursive-traces.tsv
+      - name: Evaluate frozen recursive gates
+        shell: bash
+        run: |
+          set +e
+          python3 scripts/summarize_issue3_recursive_holdout.py \
+            /tmp/issue3-recursive-a \
+            /tmp/issue3-recursive-a/ISSUE3_RECURSIVE_V1_RESULTS.md
+          status=$?
+          set -e
+          printf '%s\n' "$status" \
+            > /tmp/issue3-recursive-a/issue3-recursive-v1-gate-status.txt
+      - name: Preserve recursive evidence and remove one-time workflow
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp /tmp/issue3-recursive-a/issue3-recursive-holdout.tsv \
+            benchmarks/results/2026-09-04/issue3-recursive-v1-holdout.tsv
+          cp /tmp/issue3-recursive-a/issue3-recursive-traces.tsv \
+            benchmarks/results/2026-09-04/issue3-recursive-v1-traces.tsv
+          cp /tmp/issue3-recursive-a/issue3-recursive-v1-gate-status.txt \
+            benchmarks/results/2026-09-04/issue3-recursive-v1-gate-status.txt
+          cp /tmp/issue3-recursive-a/ISSUE3_RECURSIVE_V1_RESULTS.md \
+            docs/ISSUE3_RECURSIVE_V1_RESULTS.md
+          (
+            cd benchmarks/results/2026-09-04
+            sha256sum \
+              issue3-recursive-v1-holdout.tsv \
+              issue3-recursive-v1-traces.tsv \
+              > issue3-recursive-v1.sha256
+          )
+          rm .github/workflows/run-issue3-recursive-v1-authoritative.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Record frozen issue 3 recursive v1 holdout"
+          git push origin HEAD:codex/issue-3-completion-clean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue3-recursive-v1-authoritative
+          path: /tmp/issue3-recursive-a
+          if-no-files-found: error
+      - name: Enforce frozen recursive verdict
+        shell: bash
+        run: |
+          status="$(cat /tmp/issue3-recursive-a/issue3-recursive-v1-gate-status.txt)"
+          exit "$status"
