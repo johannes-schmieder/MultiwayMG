@@ -1,0 +1,51 @@
+name: Capture frozen issue 3 portfolio holdout failure
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: never
+  RUST_BACKTRACE: full
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Run frozen holdout and capture exact output
+        shell: bash
+        run: |
+          rm -rf diagnostics/portfolio-holdout
+          mkdir -p diagnostics/portfolio-holdout
+          set +e
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_portfolio_holdout --all-features -- \
+            diagnostics/portfolio-holdout/output \
+            > diagnostics/portfolio-holdout/stdout.log \
+            2> diagnostics/portfolio-holdout/stderr.log
+          status=$?
+          printf '%s\n' "$status" > diagnostics/portfolio-holdout/status.txt
+          find diagnostics/portfolio-holdout -maxdepth 2 -type f -print -exec wc -c {} \;
+          tail -n 200 diagnostics/portfolio-holdout/stdout.log || true
+          tail -n 400 diagnostics/portfolio-holdout/stderr.log || true
+          exit 0
+      - name: Commit diagnostic files and remove this workflow
+        run: |
+          rm .github/workflows/capture-portfolio-holdout-failure.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Capture frozen portfolio holdout runtime failure"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
