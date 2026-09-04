@@ -1,0 +1,36 @@
+name: One-time smoother fallback development fixes
+
+on:
+  push:
+    branches:
+      - codex/issue-3-completion-clean
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-completion-clean
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - name: Apply source fixes and validate
+        run: |
+          python3 scripts/fix_smoother_fallback_development.py
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - name: Remove one-time helpers and commit
+        run: |
+          rm .github/workflows/apply-smoother-fallback-development-fixes.yml
+          rm scripts/fix_smoother_fallback_development.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Fix and format smoother fallback development matrix"
+          git push origin HEAD:codex/issue-3-completion-clean
