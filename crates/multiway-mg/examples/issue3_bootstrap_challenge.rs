@@ -165,12 +165,8 @@ fn accepts(
     if aggregation.coarse_counts().iter().sum::<usize>() >= problem.dimension() {
         return Ok(false);
     }
-    let report = analyze_compatible_relaxation(
-        problem,
-        aggregation,
-        smoother,
-        compatible_options(),
-    )?;
+    let report =
+        analyze_compatible_relaxation(problem, aggregation, smoother, compatible_options())?;
     Ok(evaluate_compatible_relaxation(&report, compatible_criteria())?.accepted())
 }
 
@@ -182,12 +178,8 @@ fn compatible_factor(
     if aggregation.coarse_counts().iter().sum::<usize>() >= problem.dimension() {
         return Ok(None);
     }
-    let report = analyze_compatible_relaxation(
-        problem,
-        aggregation,
-        smoother,
-        compatible_options(),
-    )?;
+    let report =
+        analyze_compatible_relaxation(problem, aggregation, smoother, compatible_options())?;
     Ok(Some(
         report
             .maximum_diagonal_contraction()
@@ -259,11 +251,8 @@ fn voltage_lift(
 ) -> Result<ChallengeCase, Box<dyn std::error::Error>> {
     for seed in starting_seed..starting_seed + 256 {
         let counts = base.topology().level_counts().map(|count| count * 2);
-        let parents = core::array::from_fn(|_| {
-            (0..counts[0])
-                .map(|level| (level / 2) as u32)
-                .collect()
-        });
+        let parents =
+            core::array::from_fn(|_| (0..counts[0]).map(|level| (level / 2) as u32).collect());
         let oracle = FactorAggregation::new(counts, parents)?;
         let mut tuples = Vec::with_capacity(base.tuple_count() * 2);
         let mut weights = Vec::with_capacity(tuples.capacity());
@@ -304,10 +293,7 @@ fn voltage_lift(
     Err(format!("could not find a component-preserving voltage lift for {name}").into())
 }
 
-fn oracle_respects_components(
-    problem: &ThreeWayProblem,
-    oracle: &FactorAggregation,
-) -> bool {
+fn oracle_respects_components(problem: &ThreeWayProblem, oracle: &FactorAggregation) -> bool {
     let counts = problem.topology().level_counts();
     (0..3).all(|factor| {
         (0..counts[factor]).all(|level| {
@@ -358,7 +344,11 @@ fn latin_base(levels: usize) -> Result<ThreeWayProblem, Box<dyn std::error::Erro
             weights.push(0.8 + ((7 * first + 3 * second) % 13) as f64 / 10.0);
         }
     }
-    Ok(ThreeWayProblem::from_observations([levels; 3], &tuples, &weights)?)
+    Ok(ThreeWayProblem::from_observations(
+        [levels; 3],
+        &tuples,
+        &weights,
+    )?)
 }
 
 fn weak_cycle_base(
@@ -383,7 +373,11 @@ fn weak_cycle_base(
         ]);
         weights.push(bridge_weight * 1.1);
     }
-    Ok(ThreeWayProblem::from_observations([levels; 3], &tuples, &weights)?)
+    Ok(ThreeWayProblem::from_observations(
+        [levels; 3],
+        &tuples,
+        &weights,
+    )?)
 }
 
 fn nearly_nested_base(
@@ -396,15 +390,15 @@ fn nearly_nested_base(
         for second in 0..levels {
             tuples.push([first as u32, second as u32, first as u32]);
             weights.push(1.0 + ((first + 2 * second) % 7) as f64 / 10.0);
-            tuples.push([
-                first as u32,
-                second as u32,
-                ((first + 1) % levels) as u32,
-            ]);
+            tuples.push([first as u32, second as u32, ((first + 1) % levels) as u32]);
             weights.push(perturbation_weight);
         }
     }
-    Ok(ThreeWayProblem::from_observations([levels; 3], &tuples, &weights)?)
+    Ok(ThreeWayProblem::from_observations(
+        [levels; 3],
+        &tuples,
+        &weights,
+    )?)
 }
 
 fn community_base(
@@ -426,7 +420,11 @@ fn community_base(
             weights.push(if same { 1.0 } else { bridge_weight });
         }
     }
-    Ok(ThreeWayProblem::from_observations([levels; 3], &tuples, &weights)?)
+    Ok(ThreeWayProblem::from_observations(
+        [levels; 3],
+        &tuples,
+        &weights,
+    )?)
 }
 
 struct PartitionMetrics {
