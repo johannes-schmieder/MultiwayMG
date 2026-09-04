@@ -103,8 +103,7 @@ fn screened_bootstrap_is_invariant_to_observation_order() {
     .expect("first screened build succeeds");
     let second = build_screened_bootstrap_aggregation(
         &reversed,
-        &DiagonalPreconditioner::new(&reversed, 0.5)
-            .expect("second Jacobi screen succeeds"),
+        &DiagonalPreconditioner::new(&reversed, 0.5).expect("second Jacobi screen succeeds"),
         &SymmetricMapPreconditioner::new(reversed.clone()),
         options,
         secondary_criteria(),
@@ -174,12 +173,7 @@ fn refined_weak_chain_parts(
     levels: usize,
     clones: usize,
     bridge_weight: f64,
-) -> (
-    ThreeWayProblem,
-    FactorAggregation,
-    Vec<[u32; 3]>,
-    Vec<f64>,
-) {
+) -> (ThreeWayProblem, FactorAggregation, Vec<[u32; 3]>, Vec<f64>) {
     let mut coarse_tuples = Vec::new();
     let mut coarse_weights = Vec::new();
     for level in 0..levels {

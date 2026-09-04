@@ -398,12 +398,12 @@ where
                 options.compatible_relaxation,
             )?;
             let decision = evaluate_compatible_relaxation(&report, secondary_criteria)?;
-            compatible_gramian_applications = compatible_gramian_applications
-                .saturating_add(report.gramian_applications());
-            compatible_smoother_applications = compatible_smoother_applications
-                .saturating_add(report.smoother_applications());
-            retained_report_bytes_estimate = retained_report_bytes_estimate
-                .saturating_add(report.retained_bytes_estimate());
+            compatible_gramian_applications =
+                compatible_gramian_applications.saturating_add(report.gramian_applications());
+            compatible_smoother_applications =
+                compatible_smoother_applications.saturating_add(report.smoother_applications());
+            retained_report_bytes_estimate =
+                retained_report_bytes_estimate.saturating_add(report.retained_bytes_estimate());
             (Some(report), Some(decision))
         } else {
             (None, None)
