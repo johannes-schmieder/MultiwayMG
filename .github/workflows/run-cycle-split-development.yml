@@ -1,0 +1,153 @@
+name: Issue 3 observed-v3 complete-cycle split development
+
+on:
+  push:
+    branches:
+      - codex/issue-3-completion-clean
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  develop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-completion-clean
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Apply integration repair, format, and validate
+        run: |
+          python3 scripts/finalize_cycle_split_development.py
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --no-default-features
+      - name: Run observed v3 development matrix twice
+        run: |
+          rm -rf /tmp/issue3-cycle-split-a /tmp/issue3-cycle-split-b
+          mkdir -p /tmp/issue3-cycle-split-a /tmp/issue3-cycle-split-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_split_development --all-features -- \
+            /tmp/issue3-cycle-split-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_split_development --all-features -- \
+            /tmp/issue3-cycle-split-b
+          cmp /tmp/issue3-cycle-split-a/issue3-cycle-split-development.tsv \
+              /tmp/issue3-cycle-split-b/issue3-cycle-split-development.tsv
+      - name: Summarize development evidence
+        run: |
+          python3 - <<'PY'
+          import csv
+          from pathlib import Path
+
+          source = Path('/tmp/issue3-cycle-split-a/issue3-cycle-split-development.tsv')
+          target = Path('/tmp/issue3-cycle-split-a/ISSUE3_CYCLE_SPLIT_DEVELOPMENT.md')
+          with source.open(newline='', encoding='utf-8') as handle:
+              rows = list(csv.DictReader(handle, delimiter='\t'))
+          if len(rows) != 20:
+              raise SystemExit(f'expected 20 development rows, got {len(rows)}')
+
+          improved = [
+              row for row in rows
+              if int(row['accepted_splits']) > 0
+              and float(row['condition_improvement_fraction']) >= 0.10
+          ]
+          any_split = [row for row in rows if int(row['accepted_splits']) > 0]
+          accepted = [row for row in rows if row['final_cycle_accepted'].lower() == 'true']
+          maximum_residual = max(float(row['pcg_final_relative_residual']) for row in rows)
+          maximum_complexity = max(float(row['final_two_level_tuple_complexity']) for row in rows)
+          best = sorted(
+              rows,
+              key=lambda row: float(row['condition_improvement_fraction']),
+              reverse=True,
+          )[:10]
+
+          lines = [
+              '# Issue #3 complete-cycle split-repair development',
+              '',
+              '## Scope',
+              '',
+              'This experiment reuses the already observed v3 seeds `900`–`909`.',
+              'It is calibration evidence only and cannot change the frozen v3 verdict.',
+              'The new repair starts from the pair-neighborhood baseline, finds the',
+              'slowest complete-cycle witness, splits the aggregate carrying the most',
+              'remaining diagonal energy, and admits the split only when the matrix-free',
+              'cycle factor improves by at least two percent while all structural budgets',
+              'remain satisfied.',
+              '',
+              '## Aggregate result',
+              '',
+              f'- Rows admitting at least one split: **{len(any_split)} of {len(rows)}**.',
+              f'- Rows with at least ten percent dense condition-number improvement: **{len(improved)} of {len(rows)}**.',
+              f'- Final cycles passing the unchanged complete-cycle gate: **{len(accepted)} of {len(rows)}**.',
+              f'- Maximum true PCG residual: `{maximum_residual:.3e}`.',
+              f'- Maximum final two-level tuple complexity: `{maximum_complexity:.3f}`.',
+              '',
+              '## Largest condition-number improvements',
+              '',
+              '| Case | Smoother | Splits | Initial κ | Final κ | Improvement | Initial factor | Final factor | Stop |',
+              '|---|---|---:|---:|---:|---:|---:|---:|---|',
+          ]
+          for row in best:
+              lines.append(
+                  '| {case} | `{smoother}` | {splits} | {initial:.3f} | {final:.3f} | {improvement:.1%} | {before:.3f} | {after:.3f} | `{stop}` |'.format(
+                      case=row['case'],
+                      smoother=row['smoother'],
+                      splits=row['accepted_splits'],
+                      initial=float(row['initial_condition']),
+                      final=float(row['final_condition']),
+                      improvement=float(row['condition_improvement_fraction']),
+                      before=float(row['initial_probe_factor']),
+                      after=float(row['final_probe_factor']),
+                      stop=row['stop_reason'],
+                  )
+              )
+          lines.extend([
+              '',
+              '## Decision use',
+              '',
+              'A positive result—material improvements on multiple structurally distinct',
+              'cases—would justify integrating complete-cycle split repair into the',
+              'automatic candidate portfolio and freezing a new unseen holdout. A weak or',
+              'isolated result would support closing issue #3 with the protected structural',
+              'baseline as the accepted automatic method and bootstrap/repair as a negative',
+              'research result.',
+              '',
+          ])
+          target.write_text('\n'.join(lines), encoding='utf-8')
+          PY
+      - name: Preserve development evidence and exact source
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp /tmp/issue3-cycle-split-a/issue3-cycle-split-development.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-split-development.tsv
+          cp /tmp/issue3-cycle-split-a/ISSUE3_CYCLE_SPLIT_DEVELOPMENT.md \
+            docs/ISSUE3_CYCLE_SPLIT_DEVELOPMENT.md
+          (
+            cd benchmarks/results/2026-09-04
+            sha256sum issue3-cycle-split-development.tsv \
+              > issue3-cycle-split-development.sha256
+          )
+          rm .github/workflows/run-cycle-split-development.yml
+          rm scripts/finalize_cycle_split_development.py
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Record complete-cycle split-repair development evidence"
+          git push origin HEAD:codex/issue-3-completion-clean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue3-cycle-split-development
+          path: /tmp/issue3-cycle-split-a
+          if-no-files-found: error
