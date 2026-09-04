@@ -1,0 +1,98 @@
+name: Capture issue 3 portfolio determinism differences
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: never
+  RUST_BACKTRACE: full
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Run the unchanged holdout twice
+        shell: bash
+        run: |
+          rm -rf diagnostics/portfolio-determinism
+          mkdir -p diagnostics/portfolio-determinism/a diagnostics/portfolio-determinism/b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_portfolio_holdout --all-features -- \
+            diagnostics/portfolio-determinism/a \
+            > diagnostics/portfolio-determinism/a.stdout 2> diagnostics/portfolio-determinism/a.stderr
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_portfolio_holdout --all-features -- \
+            diagnostics/portfolio-determinism/b \
+            > diagnostics/portfolio-determinism/b.stdout 2> diagnostics/portfolio-determinism/b.stderr
+          sha256sum diagnostics/portfolio-determinism/a/* \
+                    diagnostics/portfolio-determinism/b/* \
+            > diagnostics/portfolio-determinism/sha256.txt
+          set +e
+          diff -u \
+            diagnostics/portfolio-determinism/a/issue3-portfolio-holdout.tsv \
+            diagnostics/portfolio-determinism/b/issue3-portfolio-holdout.tsv \
+            > diagnostics/portfolio-determinism/matrix.diff
+          matrix_status=$?
+          diff -u \
+            diagnostics/portfolio-determinism/a/issue3-portfolio-traces.tsv \
+            diagnostics/portfolio-determinism/b/issue3-portfolio-traces.tsv \
+            > diagnostics/portfolio-determinism/traces.diff
+          trace_status=$?
+          printf 'matrix_diff_status=%s\ntrace_diff_status=%s\n' \
+            "$matrix_status" "$trace_status" \
+            > diagnostics/portfolio-determinism/status.txt
+          python3 - <<'PY'
+          import csv
+          from pathlib import Path
+
+          root = Path('diagnostics/portfolio-determinism')
+          report = []
+          for name in ('issue3-portfolio-holdout.tsv', 'issue3-portfolio-traces.tsv'):
+              with (root / 'a' / name).open(newline='') as f:
+                  a = list(csv.reader(f, delimiter='\t'))
+              with (root / 'b' / name).open(newline='') as f:
+                  b = list(csv.reader(f, delimiter='\t'))
+              report.append(f'{name}: rows_a={len(a)} rows_b={len(b)}')
+              first = None
+              for index, (left, right) in enumerate(zip(a, b)):
+                  if left != right:
+                      first = (index, left, right)
+                      break
+              if first is None and len(a) != len(b):
+                  report.append('  first difference: row count')
+              elif first is None:
+                  report.append('  byte/row content identical')
+              else:
+                  index, left, right = first
+                  report.append(f'  first differing row: {index + 1}')
+                  for column, (lv, rv) in enumerate(zip(left, right)):
+                      if lv != rv:
+                          report.append(f'  column {column + 1}: {lv!r} != {rv!r}')
+                  if len(left) != len(right):
+                      report.append(f'  column counts: {len(left)} != {len(right)}')
+          (root / 'summary.txt').write_text('\n'.join(report) + '\n')
+          PY
+          cat diagnostics/portfolio-determinism/status.txt
+          cat diagnostics/portfolio-determinism/summary.txt
+          exit 0
+      - name: Commit diagnostic comparison and remove workflow
+        run: |
+          rm .github/workflows/capture-portfolio-determinism.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Capture frozen portfolio holdout determinism comparison"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
