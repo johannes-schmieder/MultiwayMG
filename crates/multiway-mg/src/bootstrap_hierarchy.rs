@@ -51,10 +51,16 @@ impl Default for BootstrapHierarchyOptions {
 impl BootstrapHierarchyOptions {
     fn validate(self) -> Result<Self, MultiwayError> {
         if self.maximum_levels == 0 {
-            return Err(invalid("bootstrap_hierarchy_maximum_levels", "must be positive"));
+            return Err(invalid(
+                "bootstrap_hierarchy_maximum_levels",
+                "must be positive",
+            ));
         }
         if self.terminal_dimension == 0 {
-            return Err(invalid("bootstrap_hierarchy_terminal_dimension", "must be positive"));
+            return Err(invalid(
+                "bootstrap_hierarchy_terminal_dimension",
+                "must be positive",
+            ));
         }
         validate_fraction(
             "bootstrap_hierarchy_minimum_dimension_reduction",
@@ -64,8 +70,7 @@ impl BootstrapHierarchyOptions {
             "bootstrap_hierarchy_minimum_tuple_reduction",
             self.minimum_tuple_reduction,
         )?;
-        if !self.maximum_dimension_complexity.is_finite()
-            || self.maximum_dimension_complexity < 1.0
+        if !self.maximum_dimension_complexity.is_finite() || self.maximum_dimension_complexity < 1.0
         {
             return Err(invalid(
                 "bootstrap_hierarchy_maximum_dimension_complexity",
@@ -297,10 +302,8 @@ impl BootstrapHierarchyPlan {
             }
             let aggregation = aggregation_result.final_aggregation().clone();
             let coarse = aggregation.coarsen(current)?;
-            let dimension_reduction =
-                1.0 - coarse.dimension() as f64 / current.dimension() as f64;
-            let tuple_reduction =
-                1.0 - coarse.tuple_count() as f64 / current.tuple_count() as f64;
+            let dimension_reduction = 1.0 - coarse.dimension() as f64 / current.dimension() as f64;
+            let tuple_reduction = 1.0 - coarse.tuple_count() as f64 / current.tuple_count() as f64;
             if dimension_reduction < options.minimum_dimension_reduction {
                 return Ok(Self::stopped(
                     problems,

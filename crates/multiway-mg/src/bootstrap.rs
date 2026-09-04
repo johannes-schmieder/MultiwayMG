@@ -7,7 +7,10 @@
 //! An optional monotone split-repair stage can enrich the final map without
 //! ever weakening factor or component boundaries.
 
-use std::collections::BTreeMap;
+use std::{
+    collections::BTreeMap,
+    time::{Duration, Instant},
+};
 
 use crate::{
     AggregationRepairOptions, AggregationRepairResult, CompatibleRelaxationCriteria,
@@ -430,6 +433,72 @@ impl BootstrapAggregationWorkReport {
     }
 }
 
+/// Phase-separated wall-clock diagnostics for bootstrap construction.
+///
+/// Timings are descriptive only. They are never consumed by matching,
+/// acceptance, repair, or portfolio decisions.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BootstrapAggregationBuildTiming {
+    setup_test_vectors: Duration,
+    candidate_matching: Duration,
+    tuple_remapping: Duration,
+    compatible_relaxation: Duration,
+    witness_enrichment: Duration,
+    split_repair: Duration,
+    structural_baseline: Duration,
+    total: Duration,
+}
+
+impl BootstrapAggregationBuildTiming {
+    /// Deterministic initial test-vector generation and relaxation.
+    #[must_use]
+    pub const fn setup_test_vectors(self) -> Duration {
+        self.setup_test_vectors
+    }
+
+    /// Candidate generation, scoring, pruning, and greedy matching.
+    #[must_use]
+    pub const fn candidate_matching(self) -> Duration {
+        self.candidate_matching
+    }
+
+    /// Exact coarse tuple mapping and structural metric construction.
+    #[must_use]
+    pub const fn tuple_remapping(self) -> Duration {
+        self.tuple_remapping
+    }
+
+    /// Projected compatible-relaxation screens and explicit decisions.
+    #[must_use]
+    pub const fn compatible_relaxation(self) -> Duration {
+        self.compatible_relaxation
+    }
+
+    /// Slow-witness extraction, range filtering, normalization, and retention.
+    #[must_use]
+    pub const fn witness_enrichment(self) -> Duration {
+        self.witness_enrichment
+    }
+
+    /// Optional monotone split-repair stage.
+    #[must_use]
+    pub const fn split_repair(self) -> Duration {
+        self.split_repair
+    }
+
+    /// Protected pair-neighborhood baseline construction and screening.
+    #[must_use]
+    pub const fn structural_baseline(self) -> Duration {
+        self.structural_baseline
+    }
+
+    /// Complete constructor time, including validation and bookkeeping.
+    #[must_use]
+    pub const fn total(self) -> Duration {
+        self.total
+    }
+}
+
 /// Complete deterministic bootstrap aggregation result.
 #[derive(Debug, Clone, PartialEq)]
 pub struct BootstrapAggregationResult {
@@ -514,6 +583,17 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
     screen_smoother: &P,
     options: BootstrapAggregationOptions,
 ) -> Result<BootstrapAggregationResult, MultiwayError> {
+    build_bootstrap_aggregation_with_timing(problem, screen_smoother, options)
+        .map(|(result, _timing)| result)
+}
+
+/// Build one aggregation and return descriptive phase-separated setup timing.
+pub fn build_bootstrap_aggregation_with_timing<P: Preconditioner + ?Sized>(
+    problem: &ThreeWayProblem,
+    screen_smoother: &P,
+    options: BootstrapAggregationOptions,
+) -> Result<(BootstrapAggregationResult, BootstrapAggregationBuildTiming), MultiwayError> {
+    let total_start = Instant::now();
     let options = options.validate()?;
     if screen_smoother.dimension() != problem.dimension() {
         return Err(crate::error::dimension(
@@ -523,8 +603,16 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         ));
     }
 
+    let setup_test_vectors_start = Instant::now();
     let mut test_vectors = relaxed_range_test_vectors(problem, options)?;
+    let setup_test_vectors = setup_test_vectors_start.elapsed();
     let initial_vector_count = test_vectors.len();
+    let mut candidate_matching = Duration::ZERO;
+    let mut tuple_remapping = Duration::ZERO;
+    let mut compatible_relaxation = Duration::ZERO;
+    let mut witness_enrichment = Duration::ZERO;
+    let mut split_repair_timing = Duration::ZERO;
+    let mut structural_baseline_timing = Duration::ZERO;
     let mut rounds = Vec::with_capacity(options.maximum_bootstrap_witnesses + 1);
     let mut previous: Option<FactorAggregation> = None;
     let mut initial_aggregation: Option<FactorAggregation> = None;
@@ -537,7 +625,9 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
     let mut total_retained = 0_usize;
 
     for round_index in 0..=options.maximum_bootstrap_witnesses {
+        let matching_start = Instant::now();
         let matching = build_matching(problem, &test_vectors, options)?;
+        candidate_matching += matching_start.elapsed();
         total_generated = total_generated.saturating_add(matching.generated);
         total_retained = total_retained.saturating_add(matching.retained);
         if initial_aggregation.is_none() {
@@ -546,7 +636,9 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         let matching_changed = previous
             .as_ref()
             .is_none_or(|prior| prior != &matching.aggregation);
+        let tuple_remapping_start = Instant::now();
         let structural = structural_metrics(problem, &matching.aggregation)?;
+        tuple_remapping += tuple_remapping_start.elapsed();
         if let Some(reason) = structural_rejection(problem, structural, options) {
             final_aggregation = Some(matching.aggregation);
             stop_reason = reason;
@@ -558,6 +650,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
             break;
         }
 
+        let compatible_start = Instant::now();
         let compatible_report = analyze_compatible_relaxation(
             problem,
             &matching.aggregation,
@@ -566,6 +659,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         )?;
         let compatible_decision =
             evaluate_compatible_relaxation(&compatible_report, options.compatible_criteria)?;
+        compatible_relaxation += compatible_start.elapsed();
         let decision_accepted = compatible_decision.accepted();
         rounds.push(BootstrapAggregationRound {
             index: round_index,
@@ -603,6 +697,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
             break;
         }
 
+        let witness_start = Instant::now();
         let report = &rounds
             .last()
             .expect("current compatible-relaxation round was just appended")
@@ -617,6 +712,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         range_filter_and_normalize(problem, &mut witness)?;
         orient_deterministically(&mut witness);
         test_vectors.push(witness);
+        witness_enrichment += witness_start.elapsed();
         previous = Some(matching.aggregation);
     }
 
@@ -628,6 +724,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
     let mut split_repair = None;
     if !accepted {
         if let Some(repair_options) = options.split_repair {
+            let split_repair_start = Instant::now();
             let repair = repair_aggregation_by_splitting(
                 problem,
                 &final_aggregation,
@@ -645,9 +742,11 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
                 stop_reason = BootstrapAggregationStopReason::SplitRepairRejected;
             }
             split_repair = Some(repair);
+            split_repair_timing += split_repair_start.elapsed();
         }
     }
 
+    let structural_baseline_start = Instant::now();
     let structural_baseline = build_pair_neighborhood_aggregation(
         problem,
         PairNeighborhoodAggregationOptions {
@@ -719,6 +818,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         structural_baseline_report = Some(report);
         structural_baseline_decision = Some(decision);
     }
+    structural_baseline_timing += structural_baseline_start.elapsed();
 
     let retained_test_vector_bytes = test_vectors
         .iter()
@@ -804,7 +904,7 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         retained_round_report_bytes_estimate,
     };
 
-    Ok(BootstrapAggregationResult {
+    let result = BootstrapAggregationResult {
         initial_aggregation: initial_aggregation.expect("first matching is always retained"),
         final_aggregation,
         accepted,
@@ -815,7 +915,18 @@ pub fn build_bootstrap_aggregation<P: Preconditioner + ?Sized>(
         structural_baseline_report,
         structural_baseline_decision,
         work,
-    })
+    };
+    let timing = BootstrapAggregationBuildTiming {
+        setup_test_vectors,
+        candidate_matching,
+        tuple_remapping,
+        compatible_relaxation,
+        witness_enrichment,
+        split_repair: split_repair_timing,
+        structural_baseline: structural_baseline_timing,
+        total: total_start.elapsed(),
+    };
+    Ok((result, timing))
 }
 
 #[derive(Debug)]

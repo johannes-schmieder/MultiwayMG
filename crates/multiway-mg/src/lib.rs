@@ -38,9 +38,10 @@ pub use aggregation::{
     build_pair_neighborhood_aggregation,
 };
 pub use bootstrap::{
-    BootstrapAggregationOptions, BootstrapAggregationResult, BootstrapAggregationRound,
-    BootstrapAggregationStopReason, BootstrapAggregationWorkReport, BootstrapStructuralMetrics,
-    build_bootstrap_aggregation,
+    BootstrapAggregationBuildTiming, BootstrapAggregationOptions, BootstrapAggregationResult,
+    BootstrapAggregationRound, BootstrapAggregationStopReason, BootstrapAggregationWorkReport,
+    BootstrapStructuralMetrics, build_bootstrap_aggregation,
+    build_bootstrap_aggregation_with_timing,
 };
 pub use bootstrap_hierarchy::{
     BootstrapHierarchyLevelReport, BootstrapHierarchyOptions, BootstrapHierarchyPlan,

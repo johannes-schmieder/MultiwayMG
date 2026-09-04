@@ -22,10 +22,11 @@ fn planted_recursive_problem_reaches_the_declared_terminal() {
     assert_eq!(plan.terminal_candidate().dimension(), 6);
     assert!(plan.dimension_complexity() < 2.0);
     assert!(plan.tuple_complexity() < 1.2);
-    assert!(plan
-        .level_reports()
-        .iter()
-        .all(|level| level.aggregation_result().accepted()));
+    assert!(
+        plan.level_reports()
+            .iter()
+            .all(|level| level.aggregation_result().accepted())
+    );
 }
 
 #[test]
@@ -51,12 +52,9 @@ fn tuple_order_permutation_leaves_the_complete_plan_unchanged() {
     let (problem, mut tuples, mut weights) = recursive_clone_problem(2, 2);
     tuples.reverse();
     weights.reverse();
-    let permuted = ThreeWayProblem::from_observations(
-        problem.topology().level_counts(),
-        &tuples,
-        &weights,
-    )
-    .expect("permuted problem is valid");
+    let permuted =
+        ThreeWayProblem::from_observations(problem.topology().level_counts(), &tuples, &weights)
+            .expect("permuted problem is valid");
     let options = hierarchy_options(2.5, 3.0);
     let first = BootstrapHierarchyPlan::build(problem, options)
         .expect("first recursive bootstrap plan succeeds");
@@ -138,8 +136,8 @@ fn recursive_clone_problem(
             let mut scores = [0.0; 8];
             let mut score_sum = 0.0;
             for child in 0..8 {
-                let score = 0.75
-                    + ((tuple_index * 13 + refinement * 17 + child * 5) % 19) as f64 / 20.0;
+                let score =
+                    0.75 + ((tuple_index * 13 + refinement * 17 + child * 5) % 19) as f64 / 20.0;
                 scores[child] = score;
                 score_sum += score;
             }
