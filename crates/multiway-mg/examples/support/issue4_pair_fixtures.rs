@@ -129,6 +129,110 @@ pub fn small_cases(suite: PairSuite) -> Result<Vec<PairCase>, DynError> {
     Ok(cases)
 }
 
+pub const LARGE_CALIBRATION_CASES: [&str; 6] = [
+    "cal-large-path-dynamic",
+    "cal-large-tree-dominant-left",
+    "cal-large-hub-power-law",
+    "cal-large-weak-communities",
+    "cal-large-dense",
+    "cal-large-nearly-nested",
+];
+
+pub const LARGE_HOLDOUT_CASES: [&str; 6] = [
+    "holdout-large-path-ragged",
+    "holdout-large-tree-dominant-right",
+    "holdout-large-hub-asymmetric",
+    "holdout-large-seven-communities",
+    "holdout-large-dense-asymmetric",
+    "holdout-large-nearly-nested-ragged",
+];
+
+pub fn large_case_names(suite: PairSuite) -> &'static [&'static str] {
+    match suite {
+        PairSuite::Calibration => &LARGE_CALIBRATION_CASES,
+        PairSuite::Holdout => &LARGE_HOLDOUT_CASES,
+    }
+}
+
+pub fn large_case(suite: PairSuite, name: &str) -> Result<PairCase, DynError> {
+    let case = match (suite, name) {
+        (PairSuite::Calibration, "cal-large-path-dynamic") => PairCase {
+            name: "cal-large-path-dynamic",
+            family: "path-dynamic-range",
+            interpretation: "40k-vertex low-mobility path with eight decades of weights",
+            domain: path_domain(20_000, 4, 20_003)?,
+        },
+        (PairSuite::Calibration, "cal-large-tree-dominant-left") => PairCase {
+            name: "cal-large-tree-dominant-left",
+            family: "tree-dominant-factor",
+            interpretation: "48k-vertex worker-heavy pair tree",
+            domain: tree_domain(40_000, 8_000, 3, 20_011)?,
+        },
+        (PairSuite::Calibration, "cal-large-hub-power-law") => PairCase {
+            name: "cal-large-hub-power-law",
+            family: "hub-power-law",
+            interpretation: "28k-vertex hub graph with a long degree tail",
+            domain: hub_domain(20_000, 8_000, 256, 3, 20_021)?,
+        },
+        (PairSuite::Calibration, "cal-large-weak-communities") => PairCase {
+            name: "cal-large-weak-communities",
+            family: "weak-communities",
+            interpretation: "24k-vertex six-community graph with weak global bridges",
+            domain: community_domain(12_000, 12_000, 6, 6, 1.0e-6, 2, 20_033)?,
+        },
+        (PairSuite::Calibration, "cal-large-dense") => PairCase {
+            name: "cal-large-dense",
+            family: "dense",
+            interpretation: "420k-edge asymmetric dense component",
+            domain: dense_domain(700, 600, 2, 20_047)?,
+        },
+        (PairSuite::Calibration, "cal-large-nearly-nested") => PairCase {
+            name: "cal-large-nearly-nested",
+            family: "nearly-nested",
+            interpretation: "48k-vertex near-nesting with weak mobility bridges",
+            domain: nearly_nested_domain(40_000, 8_000, 1.0e-6, 3, 20_059)?,
+        },
+        (PairSuite::Holdout, "holdout-large-path-ragged") => PairCase {
+            name: "holdout-large-path-ragged",
+            family: "path-dynamic-range",
+            interpretation: "fresh 46k-vertex weighted path",
+            domain: path_domain(23_000, 5, 90_007)?,
+        },
+        (PairSuite::Holdout, "holdout-large-tree-dominant-right") => PairCase {
+            name: "holdout-large-tree-dominant-right",
+            family: "tree-dominant-factor",
+            interpretation: "fresh 51.5k-vertex tree with the second factor dominant",
+            domain: tree_domain(8_500, 43_000, 3, 90_011)?,
+        },
+        (PairSuite::Holdout, "holdout-large-hub-asymmetric") => PairCase {
+            name: "holdout-large-hub-asymmetric",
+            family: "hub-power-law",
+            interpretation: "fresh asymmetric 27k-vertex hub graph",
+            domain: hub_domain(18_000, 9_000, 384, 3, 90_019)?,
+        },
+        (PairSuite::Holdout, "holdout-large-seven-communities") => PairCase {
+            name: "holdout-large-seven-communities",
+            family: "weak-communities",
+            interpretation: "fresh seven-community graph with a new bridge scale",
+            domain: community_domain(14_000, 14_000, 7, 7, 3.0e-7, 2, 90_029)?,
+        },
+        (PairSuite::Holdout, "holdout-large-dense-asymmetric") => PairCase {
+            name: "holdout-large-dense-asymmetric",
+            family: "dense",
+            interpretation: "fresh 471k-edge asymmetric dense component",
+            domain: dense_domain(620, 760, 3, 90_037)?,
+        },
+        (PairSuite::Holdout, "holdout-large-nearly-nested-ragged") => PairCase {
+            name: "holdout-large-nearly-nested-ragged",
+            family: "nearly-nested",
+            interpretation: "fresh 51k-vertex ragged near-nesting",
+            domain: nearly_nested_domain(42_000, 9_000, 3.0e-7, 3, 90_047)?,
+        },
+        _ => return Err(format!("unknown {} large pair case {name:?}", suite.label()).into()),
+    };
+    Ok(case)
+}
+
 pub fn path_domain(n: usize, exponent_span: i32, seed: u64) -> Result<PairDomain, DynError> {
     let mut edges = Vec::with_capacity(2 * n - 1);
     for index in 0..n {

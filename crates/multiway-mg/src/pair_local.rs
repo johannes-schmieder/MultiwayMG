@@ -627,6 +627,21 @@ impl PairLocalCmgPreconditioner {
         self.inner.hierarchy().levels().len()
     }
 
+    /// Sum of symmetric matrix nonzeros across retained hierarchy levels.
+    ///
+    /// This is a machine-independent structural-work proxy, not an exact count
+    /// of every arithmetic operation performed by a cycle.
+    #[must_use]
+    pub fn hierarchy_matrix_nonzeros(&self) -> usize {
+        self.inner
+            .hierarchy()
+            .report()
+            .matrix_nonzeros()
+            .iter()
+            .copied()
+            .sum()
+    }
+
     /// Phase-separated construction timing.
     #[must_use]
     pub const fn build_timing(&self) -> PairLocalCmgBuildTiming {

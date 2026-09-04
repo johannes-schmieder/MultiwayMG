@@ -102,5 +102,9 @@ required-features = ["cmg"]
 name = "issue4_pair_local_spectral"
 required-features = ["cmg", "within-comparator"]
 
+[[example]]
+name = "issue4_pair_local_timing"
+required-features = ["cmg", "within-comparator"]
+
 [lints]
 workspace = true
