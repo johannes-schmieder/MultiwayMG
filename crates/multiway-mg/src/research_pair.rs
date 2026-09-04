@@ -2,16 +2,21 @@
 //!
 //! The production-facing [`crate::PairCmgPreconditioner`] always builds all
 //! three factor pairs. Issue #2 also needs controlled experiments using one
-//! dominant pair, selected pair portfolios, and explicit memory accounting.
+//! dominant pair, selected pair portfolios, and explicit setup/memory
+//! accounting.
 
 use std::{
     collections::BTreeMap,
     sync::{Arc, Mutex},
+    time::{Duration, Instant},
 };
 
 use cmg::{CmgOptions, CmgPreconditioner, CmgWorkspace, Components, Laplacian};
 
-use crate::{MultiwayError, PairCmgOptions, Preconditioner, ThreeWayProblem};
+use crate::{
+    MultiwayError, PairCmgOptions, Preconditioner, ThreeWayProblem,
+    memory_estimate::estimate_three_way_problem_bytes,
+};
 
 /// One of the three bipartite factor pairs in a three-way problem.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -46,6 +51,45 @@ impl FactorPair {
             Self::OneThree => "1-3",
             Self::TwoThree => "2-3",
         }
+    }
+}
+
+/// Build-phase timing for a selected pair-CMG portfolio.
+///
+/// Timings are diagnostics from one construction and are not deterministic
+/// routing inputs. `total` includes validation and small bookkeeping in
+/// addition to the three named phases.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct PairCmgBuildTiming {
+    pair_graph_setup: Duration,
+    cmg_setup: Duration,
+    workspace_setup: Duration,
+    total: Duration,
+}
+
+impl PairCmgBuildTiming {
+    /// Marginal accumulation, graph construction, and component discovery.
+    #[must_use]
+    pub const fn pair_graph_setup(self) -> Duration {
+        self.pair_graph_setup
+    }
+
+    /// CMG hierarchy/preconditioner construction.
+    #[must_use]
+    pub const fn cmg_setup(self) -> Duration {
+        self.cmg_setup
+    }
+
+    /// Retained pair RHS, solution, and CMG workspace construction.
+    #[must_use]
+    pub const fn workspace_setup(self) -> Duration {
+        self.workspace_setup
+    }
+
+    /// Complete selected-pair constructor time.
+    #[must_use]
+    pub const fn total(self) -> Duration {
+        self.total
     }
 }
 
@@ -106,6 +150,7 @@ pub struct PairSubsetCmgPreconditioner {
     selected_pairs: Vec<FactorPair>,
     systems: Vec<PairSystem>,
     partition_weight: f64,
+    build_timing: PairCmgBuildTiming,
 }
 
 impl PairSubsetCmgPreconditioner {
@@ -115,6 +160,7 @@ impl PairSubsetCmgPreconditioner {
         selected_pairs: &[FactorPair],
         options: PairCmgOptions,
     ) -> Result<Self, MultiwayError> {
+        let total_start = Instant::now();
         options
             .cmg
             .validate()
@@ -138,16 +184,30 @@ impl PairSubsetCmgPreconditioner {
                 message: "at least one factor pair must be selected".to_owned(),
             });
         }
-        let systems = selected_pairs
-            .iter()
-            .copied()
-            .map(|pair| PairSystem::build(&problem, pair, options.cmg))
-            .collect::<Result<Vec<_>, _>>()?;
+
+        let mut systems = Vec::with_capacity(selected_pairs.len());
+        let mut pair_graph_setup = Duration::ZERO;
+        let mut cmg_setup = Duration::ZERO;
+        let mut workspace_setup = Duration::ZERO;
+        for pair in &selected_pairs {
+            let (system, timing) = PairSystem::build(&problem, *pair, options.cmg)?;
+            pair_graph_setup += timing.pair_graph_setup;
+            cmg_setup += timing.cmg_setup;
+            workspace_setup += timing.workspace_setup;
+            systems.push(system);
+        }
+        let build_timing = PairCmgBuildTiming {
+            pair_graph_setup,
+            cmg_setup,
+            workspace_setup,
+            total: total_start.elapsed(),
+        };
         Ok(Self {
             problem,
             selected_pairs,
             systems,
             partition_weight: options.partition_weight,
+            build_timing,
         })
     }
 
@@ -169,6 +229,12 @@ impl PairSubsetCmgPreconditioner {
     #[must_use]
     pub const fn problem(&self) -> &ThreeWayProblem {
         &self.problem
+    }
+
+    /// Build-phase timing from construction.
+    #[must_use]
+    pub const fn build_timing(&self) -> PairCmgBuildTiming {
+        self.build_timing
     }
 
     /// Principal retained-memory report.
@@ -257,7 +323,9 @@ impl PairSystem {
         problem: &ThreeWayProblem,
         pair: FactorPair,
         options: CmgOptions,
-    ) -> Result<Self, MultiwayError> {
+    ) -> Result<(Self, PairCmgBuildTiming), MultiwayError> {
+        let total_start = Instant::now();
+        let pair_graph_start = Instant::now();
         let (first, second) = pair.factors();
         let counts = problem.topology().level_counts();
         let offsets = problem.topology().offsets();
@@ -273,8 +341,14 @@ impl PairSystem {
         let graph = Laplacian::from_edges(first_count + second_count, edges)
             .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
         let components = Components::from_laplacian(&graph);
+        let pair_graph_setup = pair_graph_start.elapsed();
+
+        let cmg_start = Instant::now();
         let preconditioner = CmgPreconditioner::build(&graph, options)
             .map_err(|error| MultiwayError::Cmg(error.to_string()))?;
+        let cmg_setup = cmg_start.elapsed();
+
+        let workspace_start = Instant::now();
         let local_dimension = first_count + second_count;
         let cmg_workspace = preconditioner.workspace();
         let workspace_bytes = cmg_workspace
@@ -286,7 +360,8 @@ impl PairSystem {
             solution: vec![0.0; local_dimension],
             cmg: cmg_workspace,
         };
-        Ok(Self {
+        let workspace_setup = workspace_start.elapsed();
+        let system = Self {
             pair,
             first_count,
             second_count,
@@ -297,7 +372,14 @@ impl PairSystem {
             workspace: Arc::new(Mutex::new(workspace)),
             cmg_retained_bytes,
             workspace_bytes,
-        })
+        };
+        let timing = PairCmgBuildTiming {
+            pair_graph_setup,
+            cmg_setup,
+            workspace_setup,
+            total: total_start.elapsed(),
+        };
+        Ok((system, timing))
     }
 
     const fn local_dimension(&self) -> usize {
@@ -353,22 +435,7 @@ struct PairWorkspace {
 /// Principal immutable state estimate used by issue #2 diagnostics.
 #[must_use]
 pub fn estimate_problem_bytes(problem: &ThreeWayProblem) -> usize {
-    let tuple_bytes = problem
-        .tuple_count()
-        .saturating_mul(core::mem::size_of::<[u32; 3]>() + 16);
-    let level_bytes = problem.dimension().saturating_mul(16);
-    let component_bytes = problem
-        .dimension()
-        .saturating_mul(core::mem::size_of::<usize>())
-        .saturating_add(
-            problem
-                .components()
-                .count()
-                .saturating_mul(core::mem::size_of::<[usize; 3]>()),
-        );
-    tuple_bytes
-        .saturating_add(level_bytes)
-        .saturating_add(component_bytes)
+    estimate_three_way_problem_bytes(problem)
 }
 
 fn validate_dimensions(
