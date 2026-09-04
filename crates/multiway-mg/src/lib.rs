@@ -14,6 +14,8 @@ mod compatible_gate;
 mod cycle_hierarchy;
 mod cycle_portfolio;
 mod cycle_probe;
+#[cfg(feature = "cmg")]
+mod cycle_smoother_portfolio;
 mod dense;
 mod dense_pair;
 mod error;
@@ -79,6 +81,12 @@ pub use cycle_portfolio::{
 pub use cycle_probe::{
     CycleQualityCriteria, CycleQualityDecision, CycleQualityOptions, CycleQualityRejection,
     CycleQualityReport, CycleQualityVectorReport, analyze_cycle_quality, evaluate_cycle_quality,
+};
+#[cfg(feature = "cmg")]
+pub use cycle_smoother_portfolio::{
+    CycleSmootherKind, CycleSmootherPortfolioBuildTiming, CycleSmootherPortfolioOptions,
+    CycleSmootherPortfolioResult, CycleSmootherPortfolioStopReason, SelectedTwoGridCycle,
+    build_cycle_smoother_portfolio,
 };
 pub use dense::DensePseudoinverse;
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
