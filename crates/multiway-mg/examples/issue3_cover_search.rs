@@ -61,11 +61,8 @@ fn main() -> Result<(), DynError> {
             } else {
                 baseline_condition
             };
-            let one_shot_recovery = recovery(
-                baseline_condition,
-                oracle_condition,
-                one_shot_condition,
-            );
+            let one_shot_recovery =
+                recovery(baseline_condition, oracle_condition, one_shot_condition);
             if one_shot_recovery >= 0.80 {
                 continue;
             }
@@ -78,11 +75,8 @@ fn main() -> Result<(), DynError> {
                 &range,
                 spectral_options,
             )?;
-            let bootstrap_recovery = recovery(
-                baseline_condition,
-                oracle_condition,
-                bootstrap_condition,
-            );
+            let bootstrap_recovery =
+                recovery(baseline_condition, oracle_condition, bootstrap_condition);
             let one_shot_coarse = one_shot.coarsen(&problem)?;
             let bootstrap_coarse = bootstrap.final_aggregation().coarsen(&problem)?;
             let witnesses = bootstrap
@@ -229,10 +223,7 @@ fn cover_lift(
     Ok(Some((problem, oracle)))
 }
 
-fn oracle_respects_components(
-    problem: &ThreeWayProblem,
-    oracle: &FactorAggregation,
-) -> bool {
+fn oracle_respects_components(problem: &ThreeWayProblem, oracle: &FactorAggregation) -> bool {
     let counts = problem.topology().level_counts();
     (0..3).all(|factor| {
         (0..counts[factor]).all(|level| {
