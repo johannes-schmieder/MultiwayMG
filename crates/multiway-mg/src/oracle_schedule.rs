@@ -6,10 +6,13 @@
 //! every nonterminal level. This module supplies that research harness without
 //! changing automatic routing.
 
+use std::time::{Duration, Instant};
+
 use crate::{
     DensePseudoinverse, DiagonalPreconditioner, FactorAggregation, MultiwayError,
-    PairCmgMemoryReport, PairCmgOptions, PairSubsetCmgPreconditioner, Preconditioner,
-    SymmetricMapPreconditioner, ThreeWayProblem, memory_estimate::estimate_three_way_problem_bytes,
+    PairCmgBuildTiming, PairCmgMemoryReport, PairCmgOptions, PairSubsetCmgPreconditioner,
+    Preconditioner, SymmetricMapPreconditioner, ThreeWayProblem,
+    memory_estimate::estimate_three_way_problem_bytes,
 };
 
 /// Fixed smoother selected for one nonterminal oracle level.
@@ -63,7 +66,8 @@ impl ScheduledOracleHierarchyOptions {
                 message: "must be positive".to_owned(),
             });
         }
-        if !self.terminal_relative_tolerance.is_finite() || self.terminal_relative_tolerance <= 0.0
+        if !self.terminal_relative_tolerance.is_finite()
+            || self.terminal_relative_tolerance <= 0.0
         {
             return Err(MultiwayError::InvalidOption {
                 name: "oracle_terminal_relative_tolerance",
@@ -77,6 +81,66 @@ impl ScheduledOracleHierarchyOptions {
             return Err(MultiwayError::InvalidSuppliedAggregation { level: 0 });
         }
         Ok(())
+    }
+}
+
+/// Build-phase timing for a supplied-map scheduled oracle hierarchy.
+///
+/// Timings are diagnostics only and are never consumed by routing logic.
+/// `smoother_setup` includes pair graph, CMG, and workspace construction for
+/// pair-CMG levels; the narrower fields expose those subphases separately.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct ScheduledOracleBuildTiming {
+    coarsening_setup: Duration,
+    smoother_setup: Duration,
+    pair_graph_setup: Duration,
+    cmg_setup: Duration,
+    pair_workspace_setup: Duration,
+    terminal_setup: Duration,
+    total: Duration,
+}
+
+impl ScheduledOracleBuildTiming {
+    /// Exact tuple mapping, duplicate collapse, and coarse-problem construction.
+    #[must_use]
+    pub const fn coarsening_setup(self) -> Duration {
+        self.coarsening_setup
+    }
+
+    /// Complete construction time for all level smoothers.
+    #[must_use]
+    pub const fn smoother_setup(self) -> Duration {
+        self.smoother_setup
+    }
+
+    /// Pair marginal, graph, and component construction within CMG levels.
+    #[must_use]
+    pub const fn pair_graph_setup(self) -> Duration {
+        self.pair_graph_setup
+    }
+
+    /// CMG hierarchy/preconditioner construction within CMG levels.
+    #[must_use]
+    pub const fn cmg_setup(self) -> Duration {
+        self.cmg_setup
+    }
+
+    /// Retained pair RHS, solution, and CMG workspace construction.
+    #[must_use]
+    pub const fn pair_workspace_setup(self) -> Duration {
+        self.pair_workspace_setup
+    }
+
+    /// Rank-revealing dense terminal construction.
+    #[must_use]
+    pub const fn terminal_setup(self) -> Duration {
+        self.terminal_setup
+    }
+
+    /// Complete constructor time, including validation and bookkeeping.
+    #[must_use]
+    pub const fn total(self) -> Duration {
+        self.total
     }
 }
 
@@ -153,6 +217,7 @@ pub struct ScheduledOracleHierarchy {
     terminal: DensePseudoinverse,
     sweeps: usize,
     memory: ScheduledOracleMemoryReport,
+    build_timing: ScheduledOracleBuildTiming,
 }
 
 impl ScheduledOracleHierarchy {
@@ -161,9 +226,16 @@ impl ScheduledOracleHierarchy {
         finest: ThreeWayProblem,
         options: ScheduledOracleHierarchyOptions,
     ) -> Result<Self, MultiwayError> {
+        let total_start = Instant::now();
         options.validate(&finest)?;
         let mut problems = vec![finest];
         let mut smoothers = Vec::with_capacity(options.smoothers.len());
+        let mut coarsening_setup = Duration::ZERO;
+        let mut smoother_setup = Duration::ZERO;
+        let mut pair_graph_setup = Duration::ZERO;
+        let mut cmg_setup = Duration::ZERO;
+        let mut pair_workspace_setup = Duration::ZERO;
+
         for (level, (aggregation, smoother_spec)) in options
             .aggregations
             .iter()
@@ -176,17 +248,41 @@ impl ScheduledOracleHierarchy {
             if aggregation.fine_counts() != problem.topology().level_counts() {
                 return Err(MultiwayError::InvalidSuppliedAggregation { level });
             }
-            smoothers.push(LevelSmoother::build(problem, *smoother_spec)?);
+
+            let smoother_start = Instant::now();
+            let smoother = LevelSmoother::build(problem, *smoother_spec)?;
+            smoother_setup += smoother_start.elapsed();
+            if let Some(pair_timing) = smoother.pair_timing() {
+                pair_graph_setup += pair_timing.pair_graph_setup();
+                cmg_setup += pair_timing.cmg_setup();
+                pair_workspace_setup += pair_timing.workspace_setup();
+            }
+            smoothers.push(smoother);
+
+            let coarsening_start = Instant::now();
             problems.push(aggregation.coarsen(problem)?);
+            coarsening_setup += coarsening_start.elapsed();
         }
+
         let terminal_problem = problems
             .last()
             .expect("oracle hierarchy contains a terminal problem");
+        let terminal_start = Instant::now();
         let terminal = DensePseudoinverse::from_problem(
             terminal_problem,
             options.terminal_relative_tolerance,
         )?;
+        let terminal_setup = terminal_start.elapsed();
         let memory = memory_report(&problems, &options.aggregations, &smoothers);
+        let build_timing = ScheduledOracleBuildTiming {
+            coarsening_setup,
+            smoother_setup,
+            pair_graph_setup,
+            cmg_setup,
+            pair_workspace_setup,
+            terminal_setup,
+            total: total_start.elapsed(),
+        };
         Ok(Self {
             problems,
             aggregations: options.aggregations,
@@ -194,6 +290,7 @@ impl ScheduledOracleHierarchy {
             terminal,
             sweeps: options.sweeps,
             memory,
+            build_timing,
         })
     }
 
@@ -257,6 +354,12 @@ impl ScheduledOracleHierarchy {
     #[must_use]
     pub const fn memory_report(&self) -> ScheduledOracleMemoryReport {
         self.memory
+    }
+
+    /// Build-phase timing from construction.
+    #[must_use]
+    pub const fn build_timing(&self) -> ScheduledOracleBuildTiming {
+        self.build_timing
     }
 
     fn apply_level(&self, level: usize, rhs: &[f64]) -> Result<Vec<f64>, MultiwayError> {
@@ -373,6 +476,13 @@ impl LevelSmoother {
             Self::Jacobi(_) | Self::SymmetricMap(_) => None,
         }
     }
+
+    fn pair_timing(&self) -> Option<PairCmgBuildTiming> {
+        match self {
+            Self::AllPairsCmg(pair) => Some(pair.build_timing()),
+            Self::Jacobi(_) | Self::SymmetricMap(_) => None,
+        }
+    }
 }
 
 impl Preconditioner for LevelSmoother {
@@ -429,7 +539,7 @@ fn memory_report(
             LevelSmoother::Jacobi(_) => problems[level].dimension().saturating_mul(8),
             LevelSmoother::SymmetricMap(_) | LevelSmoother::AllPairsCmg(_) => 0,
         })
-        .sum();
+        .sum::<usize>();
     let pair_cmg_preconditioner_bytes = smoothers
         .iter()
         .filter_map(LevelSmoother::pair_memory)
@@ -453,7 +563,7 @@ fn memory_report(
     let maximum_apply_scratch_bytes_estimate = problems
         .iter()
         .map(|problem| problem.dimension().saturating_mul(7).saturating_mul(8))
-        .sum();
+        .sum::<usize>();
     ScheduledOracleMemoryReport {
         problem_state_bytes_estimate,
         aggregation_bytes,
