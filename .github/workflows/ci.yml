@@ -115,3 +115,27 @@ jobs:
           name: compatible-relaxation-output
           path: compatible-relaxation-matrix.tsv
           if-no-files-found: error
+
+  issue-2-completion:
+    name: Issue 2 two-grid and resolution matrices
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Run explicit two-grid matrix
+        run: |
+          mkdir -p issue2-output
+          cargo run --locked --release -p multiway-mg \
+            --example issue2_two_grid_matrix --all-features -- issue2-output
+      - name: Run hierarchy-depth and resolution matrix
+        run: |
+          cargo run --locked --release -p multiway-mg \
+            --example issue2_resolution_matrix --all-features -- issue2-output
+      - uses: actions/upload-artifact@v4
+        with:
+          name: issue-2-completion-output
+          path: issue2-output/*.tsv
+          if-no-files-found: error
