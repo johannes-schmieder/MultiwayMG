@@ -1,0 +1,39 @@
+name: Issue 4 apply checkpoint
+
+on:
+  push:
+    branches:
+      - codex/issue-4-pair-solver-economics
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    name: Apply compressed development checkpoint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply pending patch and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          patches=(.issue4/*.patch.gz)
+          if (( ${#patches[@]} == 0 )); then
+            echo "No pending issue-4 checkpoint patch."
+            exit 0
+          fi
+          if (( ${#patches[@]} != 1 )); then
+            echo "Expected exactly one pending patch, found ${#patches[@]}." >&2
+            exit 1
+          fi
+          gzip -dc "${patches[0]}" | git apply --index
+          git rm "${patches[0]}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Apply issue 4 development checkpoint"
+          git push
