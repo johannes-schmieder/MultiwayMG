@@ -396,11 +396,6 @@ where
         (options.maximum_coarse_dimension_ratio * problem.dimension() as f64).floor() as usize;
     let mut current_aggregation = initial_aggregation.clone();
     let mut current_metrics = structural_metrics(problem, &current_aggregation)?;
-    validate_metrics(current_metrics, maximum_coarse_dimension, options).map_err(|reason| {
-        MultiwayError::InvalidAggregation {
-            message: format!("initial cycle-split map violates structural budgets: {reason:?}"),
-        }
-    })?;
     let current_cycle = build_cycle(&current_aggregation)?;
     let mut current_report = analyze_cycle_quality(problem, &current_cycle, options.probe)?;
     let mut current_decision = evaluate_cycle_quality(&current_report, options.criteria)?;
@@ -408,6 +403,20 @@ where
     let initial_report = current_report.clone();
     let initial_decision = current_decision.clone();
     let mut rounds = Vec::with_capacity(options.maximum_rounds);
+    if let Err(reason) = validate_metrics(current_metrics, maximum_coarse_dimension, options) {
+        return Ok(result(
+            initial_aggregation,
+            current_aggregation,
+            initial_metrics,
+            current_metrics,
+            initial_report,
+            initial_decision,
+            current_report,
+            current_decision,
+            rounds,
+            reason,
+        ));
+    }
 
     for round_index in 0..options.maximum_rounds {
         let Some(split) = choose_split(
