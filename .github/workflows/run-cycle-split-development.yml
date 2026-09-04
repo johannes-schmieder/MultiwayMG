@@ -32,16 +32,41 @@ jobs:
           cargo fmt --all
           cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
           cargo test --locked --workspace --no-default-features
+      - name: Persist validated cycle-split source before numerical evaluation
+        run: |
+          if git diff --quiet -- crates; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates
+          git commit -m "Fix and format complete-cycle split repair"
+          git push origin HEAD:codex/issue-3-completion-clean
       - name: Run observed v3 development matrix twice
+        shell: bash
         run: |
           rm -rf /tmp/issue3-cycle-split-a /tmp/issue3-cycle-split-b
           mkdir -p /tmp/issue3-cycle-split-a /tmp/issue3-cycle-split-b
+          set +e
           cargo run --locked --release -p multiway-mg \
             --example issue3_cycle_split_development --all-features -- \
-            /tmp/issue3-cycle-split-a
+            /tmp/issue3-cycle-split-a \
+            > /tmp/issue3-cycle-split-a/stdout.txt \
+            2> /tmp/issue3-cycle-split-a/stderr.txt
+          status_a=$?
           cargo run --locked --release -p multiway-mg \
             --example issue3_cycle_split_development --all-features -- \
-            /tmp/issue3-cycle-split-b
+            /tmp/issue3-cycle-split-b \
+            > /tmp/issue3-cycle-split-b/stdout.txt \
+            2> /tmp/issue3-cycle-split-b/stderr.txt
+          status_b=$?
+          set -e
+          printf '%s\n' "$status_a" > /tmp/issue3-cycle-split-a/status.txt
+          printf '%s\n' "$status_b" > /tmp/issue3-cycle-split-b/status.txt
+          cat /tmp/issue3-cycle-split-a/stdout.txt
+          cat /tmp/issue3-cycle-split-a/stderr.txt >&2
+          test "$status_a" -eq 0
+          test "$status_b" -eq 0
           cmp /tmp/issue3-cycle-split-a/issue3-cycle-split-development.tsv \
               /tmp/issue3-cycle-split-b/issue3-cycle-split-development.tsv
       - name: Summarize development evidence
@@ -149,5 +174,7 @@ jobs:
         if: always()
         with:
           name: issue3-cycle-split-development
-          path: /tmp/issue3-cycle-split-a
+          path: |
+            /tmp/issue3-cycle-split-a
+            /tmp/issue3-cycle-split-b
           if-no-files-found: error
