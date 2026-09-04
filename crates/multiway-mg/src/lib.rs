@@ -5,6 +5,7 @@
 //! by the `cmg` crate.
 
 mod aggregation;
+mod combine;
 mod compatible;
 mod compatible_gate;
 mod dense;
@@ -15,16 +16,25 @@ mod jacobi;
 #[cfg(feature = "lsmr")]
 mod lsmr;
 mod map;
+mod memory_estimate;
+#[cfg(feature = "cmg")]
+mod oracle_schedule;
 #[cfg(feature = "cmg")]
 mod pair_cmg;
 mod pcg;
+mod pcg_trace;
 mod preconditioner;
+#[cfg(feature = "cmg")]
+mod research_pair;
 mod spectral;
+mod stationary;
+mod two_grid;
 
 pub use aggregation::{
     AffinityAggregationOptions, PairNeighborhoodAggregationOptions, build_affinity_aggregation,
     build_pair_neighborhood_aggregation,
 };
+pub use combine::WeightedSumPreconditioner;
 pub use compatible::{
     CompatibleRelaxationOptions, CompatibleRelaxationReport, CompatibleRelaxationVectorReport,
     DiagonalAggregationProjector, analyze_compatible_relaxation,
@@ -46,13 +56,26 @@ pub use lsmr::{
 };
 pub use map::SymmetricMapPreconditioner;
 #[cfg(feature = "cmg")]
+pub use oracle_schedule::{
+    OracleLevelSmootherSpec, ScheduledOracleBuildTiming, ScheduledOracleHierarchy,
+    ScheduledOracleHierarchyOptions, ScheduledOracleMemoryReport,
+};
+#[cfg(feature = "cmg")]
 pub use pair_cmg::{HybridPairVcycle, PairCmgOptions, PairCmgPreconditioner};
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
+pub use pcg_trace::{PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced};
 pub use preconditioner::Preconditioner;
+#[cfg(feature = "cmg")]
+pub use research_pair::{
+    FactorPair, PairCmgBuildTiming, PairCmgMemoryReport, PairSubsetCmgPreconditioner,
+    estimate_problem_bytes,
+};
 pub use spectral::{
     DenseRangeDecomposition, SpectralAnalysisOptions, SpectralAnalysisReport,
     analyze_preconditioner,
 };
+pub use stationary::{StationaryErrorReport, analyze_stationary_error};
+pub use two_grid::{ExactCoarseBuildTiming, ExactCoarseCorrection, SymmetricTwoGridPreconditioner};
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,

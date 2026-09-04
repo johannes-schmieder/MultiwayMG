@@ -163,40 +163,56 @@ MultiwayMG combines two complementary ideas:
    G_c = P'GP = (BP)'W(BP),       P = diag(P1, P2, P3).
    ```
 
-A symmetric V-cycle uses weighted-Jacobi or pair-CMG smoothing, exact tuple
-restriction/prolongation, and a rank-revealing terminal. Projected PCG is used
-for controlled Gramian experiments; modified LSMR on `sqrt(W)B` is the more
-rank-robust production candidate.
+A symmetric V-cycle uses weighted-Jacobi, symmetric MAP, or pair-CMG smoothing,
+exact tuple restriction/prolongation, and a rank-revealing terminal. Projected
+PCG is used for controlled Gramian experiments; modified LSMR on `sqrt(W)B` is
+the more rank-robust production candidate.
 
 ## Current step
 
-The first research MVP and the primary oracle-hierarchy feasibility gate are
-complete.
+The first research MVP and the complete oracle two-grid/multilevel feasibility
+milestone are finished.
 
-The oracle study materializes the complete numerical range of small singular
-three-way Gramians, including extra rank deficiency, and measures the spectrum
-of each fixed preconditioner. Across six manufactured families:
+The final oracle study now includes explicit energy-coordinate error operators,
+coarse-only and complete two-grid actions, true PCG residual traces, selected
+factor-pair experiments, level-specific smoother schedules, phase-separated
+setup diagnostics, and principal memory reports. It covers nine one-level
+families and exact two- through five-level resolution sequences.
 
-- an oracle Jacobi V-cycle kept the preconditioned condition number below about
-  `1.46`;
-- an oracle pair-CMG/coarse hybrid kept it below about `1.006`;
-- the oracle hybrid converged in three or four projected-PCG iterations; and
-- every reported preconditioner remained positive and symmetric on the
-  numerical range and passed a recomputed original-Gramian residual check.
+The central result is positive:
 
-These results establish that a good factor-preserving coarse space can add
-substantial information beyond exact pairwise corrections. They are an
-idealized ceiling, not evidence that automatic aggregation can yet discover the
-same space or that the current implementation wins in wall-clock time. See
-[`docs/ORACLE_RESULTS.md`](docs/ORACLE_RESULTS.md) and
-[`docs/SPECTRAL_ANALYSIS.md`](docs/SPECTRAL_ANALYSIS.md).
+- adding the exact factor-preserving coarse correction improved Jacobi,
+  symmetric MAP, exact pair Schwarz, and pair-CMG in **all nine** one-level
+  families;
+- every admitted action was symmetric and positive on the complete numerical
+  range;
+- every returned solve passed a recomputed original-Gramian residual, with
+  full per-iteration traces retained;
+- hierarchy tuple complexity remained at most about `1.333` through five
+  supplied levels, and iteration spreads within every family/schedule sequence
+  were at most two;
+- in the twelve-order-of-magnitude weight case, the condition number fell from
+  about `1.59 million` under diagonal scaling and `1,367` under pair-CMG to
+  about `1.021` for the pair-CMG two-grid cycle; and
+- pair-CMG on only the finest level captured nearly all the benefit of retaining
+  pair-CMG on every level, while all-level symmetric MAP was usually the
+  strongest and much lighter retained-state oracle schedule.
+
+This resolves the question posed by issue #2: **a good hard
+factor-respecting coarse space can supply the missing global three-way
+correction.** The unresolved problem is discovering a comparably effective
+space automatically and cheaply on realistic sparse systems.
+
+See [`docs/ISSUE2_FINAL_RESULTS.md`](docs/ISSUE2_FINAL_RESULTS.md) for the
+complete findings, [`docs/ISSUE2_METHODS.md`](docs/ISSUE2_METHODS.md) for the
+protocol, and `benchmarks/results/2026-09-03/issue2-*.tsv` for the raw matrices,
+residual histories, setup diagnostics, and checksums.
 
 The current milestone is
 [issue #3](https://github.com/johannes-schmieder/MultiwayMG/issues/3):
-**compatible-relaxation and bootstrap aggregation**. It will measure the gap
-between automatic and oracle hierarchies, identify slow errors missed by a
-proposed map, repair bad aggregates deterministically, and reject inadequate
-hierarchies before solving.
+**compatible-relaxation and bootstrap aggregation**. Its diagnostic foundation
+is already present. The next step is bounded witness-driven aggregate repair,
+followed by a direct automatic-to-oracle gap analysis.
 
 Further work is tracked in GitHub issues:
 
@@ -210,34 +226,34 @@ The package currently includes:
 
 - deterministic validation and collapse of repeated three-way tuples;
 - matrix-free `B`, `B'`, `sqrt(W)B`, and `B'WB` kernels;
-- incidence-component discovery and projection of the two structural shift
-  directions per connected component;
+- incidence-component discovery and projection of structural shift directions;
 - exact hard factor-respecting Galerkin coarsening;
 - deterministic exact-context and bounded pair-neighborhood aggregation;
 - stable weighted-Jacobi smoothing from the three-way bound `G <= 3D`;
 - symmetric MAP and exact pair-Schwarz small-problem references;
 - recursive symmetric V-cycles with a scale-invariant rank-revealing terminal;
-- pairwise CMG corrections for all three factor pairs;
-- a symmetric hybrid of pair-CMG smoothing and three-way coarse correction;
-- projected PCG and modified LSMR drivers;
+- pairwise CMG corrections for all three factor pairs and selected-pair research
+  portfolios;
+- explicit exact coarse corrections and symmetric two-grid cycles;
+- fixed level-specific oracle smoother schedules;
+- projected PCG, traced true-residual PCG, and modified LSMR drivers;
 - independent normal-equation residual certification;
-- dense quotient-space spectral diagnostics; and
+- dense quotient-space spectral and stationary-error diagnostics;
+- phase-separated pair/coarse/hierarchy setup timing and memory reports;
+- deterministic byte-comparison gates for research matrices; and
 - tests covering disconnected components, nesting-induced extra rank
   deficiency, numerical symmetry, positive action, weight-scale invariance,
-  exact Galerkin identities, and an executable oracle spectral acceptance gate.
+  exact Galerkin identities, and multilevel schedule behavior.
 
-The earlier non-oracle matrix also showed strong iteration reductions on a
-small weak-chain case: diagonal PCG required 85 iterations, pair-CMG required
-9, the three-way V-cycle required 6, and the hybrid required 3. These results
-establish mathematical and software feasibility, not a production speed
-advantage.
+These results establish mathematical and software feasibility, not a production
+speed advantage. The present implementation still allocates temporary vectors
+in important paths, builds several solver structures, and has not yet been
+compared fairly with `within`'s mature approximate-Cholesky Schwarz solver on
+large identical pair domains.
 
-The present implementation still allocates temporary vectors in important
-paths, builds several solver structures, uses simple structural aggregation
-rules, and has not yet been compared fairly with `within`'s mature
-approximate-Cholesky Schwarz solver on large identical problems. See
-[`docs/RESULTS.md`](docs/RESULTS.md),
-[`docs/FEASIBILITY.md`](docs/FEASIBILITY.md), and
+See [`docs/RESULTS.md`](docs/RESULTS.md),
+[`docs/FEASIBILITY.md`](docs/FEASIBILITY.md),
+[`docs/COMPATIBLE_RESULTS.md`](docs/COMPATIBLE_RESULTS.md), and
 [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ## Workspace
@@ -248,8 +264,8 @@ crates/multiway-incidence
     factor-respecting coarsening. It does not depend on CMG or within.
 
 crates/multiway-mg
-    Aggregation, rank-revealing terminals, V-cycles, pair-CMG, projected PCG,
-    modified LSMR, and dense research spectral analysis.
+    Aggregation, rank-revealing terminals, two-grid and V-cycle research
+    operators, pair-CMG, projected PCG, modified LSMR, and diagnostics.
 ```
 
 ## Development and validation
@@ -267,6 +283,10 @@ cargo run --locked --release -p multiway-mg --example feasibility --all-features
 cargo run --locked --release -p multiway-mg --example feasibility_matrix --all-features
 cargo run --locked --release -p multiway-mg --example scaling_probe --all-features
 cargo run --locked --release -p multiway-mg --example oracle_spectral_matrix --all-features
+cargo run --locked --release -p multiway-mg --example issue2_two_grid_matrix --all-features -- output
+cargo run --locked --release -p multiway-mg --example issue2_resolution_matrix --all-features -- output
+cargo run --locked --release -p multiway-mg --example issue2_setup_cost_matrix --all-features -- output
+python3 scripts/summarize_issue2_completion.py output output/ISSUE2_FINAL_RESULTS.md
 ```
 
 The feasibility programs are research diagnostics. Their iteration counts,
