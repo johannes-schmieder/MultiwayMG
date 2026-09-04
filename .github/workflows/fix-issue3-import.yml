@@ -1,0 +1,42 @@
+name: One-time issue 3 import repair
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - name: Remove obsolete import and validate lint
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('crates/multiway-mg/src/repair.rs')
+          text = path.read_text()
+          old = '    CompatibleRelaxationReport, DiagonalAggregationProjector, FactorAggregation, MultiwayError,\n'
+          new = '    CompatibleRelaxationReport, FactorAggregation, MultiwayError,\n'
+          if text.count(old) != 1:
+              raise SystemExit('obsolete import pattern not found exactly once')
+          path.write_text(text.replace(old, new))
+          PY
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - name: Commit repair
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates
+          git commit -m "Remove obsolete compatible projector import"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
