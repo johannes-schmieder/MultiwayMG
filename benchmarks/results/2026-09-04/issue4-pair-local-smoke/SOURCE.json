@@ -1,0 +1,19 @@
+{
+  "source_head": "ad608f856ac5e61f94b80d74550597a8fae02c11",
+  "tested_merge": "236c6c65c8ee70a6c294b5e7f992dc160e64db1e",
+  "source_tree": "e013333ede421b667a775c658eb091dd0a18938c",
+  "merged_as": "2ff28724b65c031070a0e04a97c790c81cd4a590",
+  "workflow_run": 33919335599,
+  "artifact_id": 9954398642,
+  "artifact_name": "issue-4-pair-local-output",
+  "artifact_zip_sha256": "0cd28a983a0cd20966fdd79481256e1c843344641d6ebf0339a4ee3928fa756b",
+  "files_sha256": {
+    "SUMMARY.md": "d9eb9b097b7b8887f4aa0c82b1c1b7e147fa392e629abb2d2e67cdcc1c3a1408",
+    "checksums.sha256": "760c80fcf0c8e0dfc606148e2d02c58040ff47386a0c168c0eabc3fdf604a157",
+    "metadata.txt": "dd38cbefffd724abfa29f226e365e047e801aabefdfcecbb9f4e7ff54b0d666c",
+    "pair-local.tsv": "db3d0aded48fffe2158431a7bfea0ff08bdd081141fd54f7c3dc2e071567a70e",
+    "process-resources.txt": "287798978862b70409510408b305ecf54fc92efa1c7a1ee9c63afed8368d98cc",
+    "warnings.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "note": "Byte-preserved original smoke evidence; not a rerun, holdout, or production qualification."
+}
