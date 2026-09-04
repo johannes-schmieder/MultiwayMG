@@ -182,8 +182,7 @@ fn random_sparse_refinement(
         for (child, &is_used) in used.iter().enumerate() {
             if is_used {
                 let score = 0.6
-                    + (mix(mixed ^ (child as u64).wrapping_mul(0xbf58_476d_1ce4_e5b9)) % 19)
-                        as f64
+                    + (mix(mixed ^ (child as u64).wrapping_mul(0xbf58_476d_1ce4_e5b9)) % 19) as f64
                         / 20.0;
                 selected.push((child, score));
                 score_sum += score;
@@ -220,9 +219,7 @@ fn random_sparse_refinement(
 fn balanced_patterns() -> Vec<Vec<usize>> {
     let mut patterns = Vec::new();
     for mask in 0_u16..256 {
-        let selected: Vec<usize> = (0..8)
-            .filter(|child| mask & (1 << child) != 0)
-            .collect();
+        let selected: Vec<usize> = (0..8).filter(|child| mask & (1 << child) != 0).collect();
         if !(4..=6).contains(&selected.len()) {
             continue;
         }
@@ -241,10 +238,7 @@ fn balanced_patterns() -> Vec<Vec<usize>> {
     patterns
 }
 
-fn oracle_respects_components(
-    problem: &ThreeWayProblem,
-    oracle: &FactorAggregation,
-) -> bool {
+fn oracle_respects_components(problem: &ThreeWayProblem, oracle: &FactorAggregation) -> bool {
     let counts = problem.topology().level_counts();
     (0..3).all(|factor| {
         (0..counts[factor]).all(|level| {
