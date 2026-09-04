@@ -1,0 +1,45 @@
+name: Search issue 3 graph covers
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format, lint, and search graph covers
+        run: |
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cover_search --all-features \
+            | tee issue3-cover-search.tsv
+      - name: Commit formatter output and search evidence
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp issue3-cover-search.tsv \
+             benchmarks/results/2026-09-04/issue3-cover-search.tsv
+          rm .github/workflows/run-issue3-cover-search.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Search graph covers for issue 3 bootstrap recovery"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
