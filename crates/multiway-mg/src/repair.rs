@@ -91,21 +91,21 @@ pub enum AggregationRepairStopReason {
         /// Minimum required fraction of witness diagonal energy.
         minimum_score_fraction: f64,
     },
-    /// The proposed split would make the coarse space too large.
+    /// The current map or proposed split makes the coarse space too large.
     CoarseDimensionBudget {
         /// Coarse dimension after the proposed split.
         attempted_dimension: usize,
         /// Largest admitted coarse dimension.
         maximum_dimension: usize,
     },
-    /// The proposed split would leave too many unique coarse tuples.
+    /// The current map or proposed split leaves too many unique coarse tuples.
     TupleReductionBudget {
         /// Reduction after the proposed split.
         attempted_reduction: f64,
         /// Minimum admitted reduction.
         minimum_reduction: f64,
     },
-    /// The proposed split would exceed the two-level tuple-work budget.
+    /// The current map or proposed split exceeds the two-level tuple-work budget.
     TupleComplexityBudget {
         /// Complexity after the proposed split.
         attempted_complexity: f64,
@@ -344,6 +344,78 @@ pub fn repair_aggregation_by_splitting<P: Preconditioner + ?Sized>(
         let report =
             analyze_compatible_relaxation(problem, &current, smoother, options.relaxation)?;
         let decision = evaluate_compatible_relaxation(&report, options.criteria)?;
+        if coarse_dimension > maximum_coarse_dimension {
+            rounds.push(AggregationRepairRound {
+                index: round_index,
+                coarse_dimension,
+                coarse_tuple_count,
+                coarse_dimension_ratio: metrics.coarse_dimension_ratio,
+                tuple_reduction: metrics.tuple_reduction,
+                two_level_tuple_complexity: metrics.two_level_tuple_complexity,
+                report,
+                decision,
+                proposed_split: None,
+            });
+            return Ok(AggregationRepairResult {
+                initial_aggregation: initial,
+                final_aggregation: current,
+                accepted: false,
+                accepted_splits: round_index,
+                stop_reason: AggregationRepairStopReason::CoarseDimensionBudget {
+                    attempted_dimension: coarse_dimension,
+                    maximum_dimension: maximum_coarse_dimension,
+                },
+                rounds,
+            });
+        }
+        if metrics.tuple_reduction < options.minimum_tuple_reduction {
+            rounds.push(AggregationRepairRound {
+                index: round_index,
+                coarse_dimension,
+                coarse_tuple_count,
+                coarse_dimension_ratio: metrics.coarse_dimension_ratio,
+                tuple_reduction: metrics.tuple_reduction,
+                two_level_tuple_complexity: metrics.two_level_tuple_complexity,
+                report,
+                decision,
+                proposed_split: None,
+            });
+            return Ok(AggregationRepairResult {
+                initial_aggregation: initial,
+                final_aggregation: current,
+                accepted: false,
+                accepted_splits: round_index,
+                stop_reason: AggregationRepairStopReason::TupleReductionBudget {
+                    attempted_reduction: metrics.tuple_reduction,
+                    minimum_reduction: options.minimum_tuple_reduction,
+                },
+                rounds,
+            });
+        }
+        if metrics.two_level_tuple_complexity > options.maximum_two_level_tuple_complexity {
+            rounds.push(AggregationRepairRound {
+                index: round_index,
+                coarse_dimension,
+                coarse_tuple_count,
+                coarse_dimension_ratio: metrics.coarse_dimension_ratio,
+                tuple_reduction: metrics.tuple_reduction,
+                two_level_tuple_complexity: metrics.two_level_tuple_complexity,
+                report,
+                decision,
+                proposed_split: None,
+            });
+            return Ok(AggregationRepairResult {
+                initial_aggregation: initial,
+                final_aggregation: current,
+                accepted: false,
+                accepted_splits: round_index,
+                stop_reason: AggregationRepairStopReason::TupleComplexityBudget {
+                    attempted_complexity: metrics.two_level_tuple_complexity,
+                    maximum_complexity: options.maximum_two_level_tuple_complexity,
+                },
+                rounds,
+            });
+        }
         if decision.accepted() {
             rounds.push(AggregationRepairRound {
                 index: round_index,

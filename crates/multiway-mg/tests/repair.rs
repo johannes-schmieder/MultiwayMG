@@ -70,6 +70,29 @@ fn overmerged_weak_chain_is_repaired_under_explicit_budgets() {
 }
 
 #[test]
+fn structurally_overlarge_current_map_is_rejected_even_when_compatible() {
+    let (problem, oracle) = refined_weak_chain(8, 2, 0.01);
+    let initial_dimension: usize = oracle.coarse_counts().iter().sum();
+    let smoother = DiagonalPreconditioner::new(&problem, 0.5).expect("diagonal smoother succeeds");
+    let result =
+        repair_aggregation_by_splitting(&problem, &oracle, &smoother, repair_options(12, 0.49))
+            .expect("structural rejection returns a decision");
+
+    assert!(!result.accepted());
+    assert_eq!(result.accepted_splits(), 0);
+    assert_eq!(result.final_aggregation(), &oracle);
+    assert!(result.rounds()[0].decision().accepted());
+    assert!(matches!(
+        result.stop_reason(),
+        AggregationRepairStopReason::CoarseDimensionBudget {
+            attempted_dimension,
+            maximum_dimension,
+        } if *attempted_dimension == initial_dimension
+            && *maximum_dimension < initial_dimension
+    ));
+}
+
+#[test]
 fn coarse_dimension_budget_rejects_a_split_before_mutation() {
     let (problem, oracle) = refined_weak_chain(8, 2, 0.01);
     let overmerged = overmerged_pairs(&oracle);
