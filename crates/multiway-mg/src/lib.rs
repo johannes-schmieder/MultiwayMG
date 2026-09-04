@@ -14,6 +14,7 @@ mod compatible_gate;
 mod cycle_hierarchy;
 mod cycle_portfolio;
 mod cycle_probe;
+mod cycle_repair;
 #[cfg(feature = "cmg")]
 mod cycle_smoother_portfolio;
 mod dense;
@@ -81,6 +82,11 @@ pub use cycle_portfolio::{
 pub use cycle_probe::{
     CycleQualityCriteria, CycleQualityDecision, CycleQualityOptions, CycleQualityRejection,
     CycleQualityReport, CycleQualityVectorReport, analyze_cycle_quality, evaluate_cycle_quality,
+};
+pub use cycle_repair::{
+    CycleAggregateSplit, CycleSplitRepairOptions, CycleSplitRepairResult, CycleSplitRepairRound,
+    CycleSplitRepairStopReason, CycleSplitStructuralMetrics,
+    repair_cycle_aggregation_by_splitting,
 };
 #[cfg(feature = "cmg")]
 pub use cycle_smoother_portfolio::{
