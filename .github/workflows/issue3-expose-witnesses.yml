@@ -1,0 +1,32 @@
+name: One-time issue 3 witness retention
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt
+      - name: Apply witness patch and format
+        run: |
+          python3 scripts/issue3_expose_witnesses.py
+          cargo fmt --all
+      - name: Commit patched source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates
+          git commit -m "Retain measured compatible witnesses for repair"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
