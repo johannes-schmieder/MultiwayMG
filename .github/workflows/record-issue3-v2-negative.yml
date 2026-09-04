@@ -1,0 +1,137 @@
+name: Preserve frozen issue 3 v2 negative result
+
+on:
+  push:
+    branches:
+      - codex/issue-3-completion-clean
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  preserve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-completion-clean
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Reproduce frozen v2 holdout twice
+        run: |
+          rm -rf /tmp/issue3-v2-a /tmp/issue3-v2-b
+          mkdir -p /tmp/issue3-v2-a /tmp/issue3-v2-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_holdout --all-features -- /tmp/issue3-v2-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_cycle_holdout --all-features -- /tmp/issue3-v2-b
+          cmp /tmp/issue3-v2-a/issue3-cycle-holdout.tsv \
+              /tmp/issue3-v2-b/issue3-cycle-holdout.tsv
+          cmp /tmp/issue3-v2-a/issue3-cycle-traces.tsv \
+              /tmp/issue3-v2-b/issue3-cycle-traces.tsv
+      - name: Require the frozen scientific gate to remain negative
+        shell: bash
+        run: |
+          set +e
+          python3 scripts/summarize_issue3_cycle_holdout.py \
+            /tmp/issue3-v2-a /tmp/issue3-v2-a/ISSUE3_CYCLE_V2_NEGATIVE.md
+          status=$?
+          set -e
+          test "$status" -eq 1
+          printf '%s\n' "$status" > /tmp/issue3-v2-a/issue3-cycle-v2-gate-status.txt
+      - name: Append diagnosis without changing the frozen policy
+        run: |
+          python3 - <<'PY'
+          import csv
+          from pathlib import Path
+
+          matrix = Path('/tmp/issue3-v2-a/issue3-cycle-holdout.tsv')
+          report = Path('/tmp/issue3-v2-a/ISSUE3_CYCLE_V2_NEGATIVE.md')
+          with matrix.open(newline='', encoding='utf-8') as handle:
+              rows = list(csv.DictReader(handle, delimiter='\t'))
+          oracle = [row for row in rows if row['method'] == 'oracle']
+          failed = [row for row in oracle if row['cycle_probe_accepted'].lower() != 'true']
+          if len(oracle) != 10 or len(failed) != 4:
+              raise SystemExit(
+                  f'expected 10 oracle rows and 4 frozen-cycle failures, got {len(oracle)} and {len(failed)}'
+              )
+          families = sorted({row['family'] for row in failed})
+          if families != ['cover-communities', 'cover-weak-chain']:
+              raise SystemExit(f'unexpected oracle failure families: {families}')
+
+          lines = [
+              '',
+              '## Root-cause diagnosis',
+              '',
+              'The negative result is not caused by invalid oracle maps, nondeterministic output,',
+              'failed solves, or a broken matrix-free probe. All ten oracle maps satisfy the hard',
+              'structural gates and reconstruct their declared coarse problems exactly. The two',
+              'independent executions are byte-identical.',
+              '',
+              'The binding failure is the **predeclared one-sweep symmetric-MAP two-grid cycle**.',
+              'Four structurally valid oracle maps fail its frozen `0.50` estimated energy-factor',
+              'threshold:',
+              '',
+              '| Case | Baseline MAP κ | Oracle two-grid κ | Exact cycle error radius | PCG residual |',
+              '|---|---:|---:|---:|---:|',
+          ]
+          for row in failed:
+              lines.append(
+                  '| {case} | {baseline:.3f} | {condition:.3f} | {radius:.6f} | {residual:.3e} |'.format(
+                      case=row['case'],
+                      baseline=float(row['baseline_map_condition']),
+                      condition=float(row['candidate_condition']),
+                      radius=float(row['exact_cycle_error_radius']),
+                      residual=float(row['pcg_final_relative_residual']),
+                  )
+              )
+          lines.extend([
+              '',
+              'The weak-chain cycles remain extremely slow even with the correct coarse map; the',
+              'community cycles improve the baseline substantially but still miss the frozen',
+              'factor threshold. Every oracle PCG solve nevertheless converges to a recomputed',
+              'true residual below `1e-10`.',
+              '',
+              'This is a second useful falsification after the preserved v1 result. V1 showed that',
+              'smoother-only compatible relaxation cannot be the final authority. V2 shows that a',
+              'single universal MAP complete cycle is also not robust enough for sparse graph-cover',
+              'fiber modes. The next policy must keep the same hard map gates and complete-cycle',
+              'authority while predeclaring a stronger smoother fallback before evaluating new',
+              'unseen seeds.',
+              '',
+              'The v2 seeds `700`–`709` are now development evidence and must not be reused as an',
+              'unseen holdout.',
+              '',
+          ])
+          report.write_text(report.read_text(encoding='utf-8') + '\n'.join(lines), encoding='utf-8')
+          PY
+      - name: Commit immutable negative evidence
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp /tmp/issue3-v2-a/issue3-cycle-holdout.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-v2-holdout.tsv
+          cp /tmp/issue3-v2-a/issue3-cycle-traces.tsv \
+            benchmarks/results/2026-09-04/issue3-cycle-v2-traces.tsv
+          cp /tmp/issue3-v2-a/issue3-cycle-v2-gate-status.txt \
+            benchmarks/results/2026-09-04/issue3-cycle-v2-gate-status.txt
+          cp /tmp/issue3-v2-a/ISSUE3_CYCLE_V2_NEGATIVE.md \
+            docs/ISSUE3_CYCLE_V2_NEGATIVE.md
+          (
+            cd benchmarks/results/2026-09-04
+            sha256sum issue3-cycle-v2-holdout.tsv issue3-cycle-v2-traces.tsv \
+              > issue3-cycle-v2.sha256
+          )
+          rm .github/workflows/record-issue3-v2-negative.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Preserve frozen issue 3 v2 negative holdout"
+          git push origin HEAD:codex/issue-3-completion-clean
