@@ -42,8 +42,31 @@
   condition numbers, and stationary energy radii.
 - Symmetric MAP/block-Gauss--Seidel and exact dense pair-Schwarz reference
   preconditioners.
-- Two- through four-level oracle hierarchy generators spanning weak
+- Two- through four-level first-stage oracle hierarchy generators spanning weak
   communities, Latin-square patterns, weak chains, nearly nested structure,
   disconnected components, and complete weighted systems.
-- A release-mode oracle spectral matrix, compact machine-readable summary,
-  detailed interpretation, and an executable oracle acceptance test.
+- Projected compatible-relaxation diagnostics, diagonal-energy coarse
+  projection, deterministic map-quality matrices, and explicit acceptance
+  criteria.
+- Explicit energy-coordinate stationary error operators with spectral-radius
+  and induced-energy-norm diagnostics.
+- Exact hard-space coarse correction and complete symmetric two-grid cycles for
+  Jacobi, MAP, exact-pair, and pair-CMG smoothers.
+- Canonical selected-pair CMG research portfolios with positive background
+  smoothers.
+- Scheduled supplied-map hierarchies supporting Jacobi, symmetric MAP, and
+  pair-CMG on selected levels.
+- True PCG residual traces recomputed against the submitted Gramian after every
+  iteration, with Gramian and preconditioner application counts.
+- Pair graph, CMG, workspace, coarsening, smoother, terminal, and complete setup
+  timing diagnostics.
+- Principal retained-state and serial apply-scratch memory reports, using exact
+  CMG byte reports where available.
+- A nine-family one-level matrix covering weak communities, a dominant pair,
+  weak chains, near nesting, Latin and tensor patterns, hubs, disconnected
+  ragged hierarchies, and twelve orders of magnitude in positive weights.
+- Exact two- through five-level resolution sequences comparing all-level
+  Jacobi/MAP with pair-CMG on the finest, first two, or every hierarchy level.
+- Deterministic CI byte-comparison gates, machine-readable raw matrices, full
+  residual histories, generated final findings, and SHA-256 evidence checksums
+  resolving the oracle feasibility milestone in issue #2.
