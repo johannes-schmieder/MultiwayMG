@@ -64,5 +64,9 @@ required-features = ["cmg"]
 name = "issue3_fixture_search"
 required-features = ["cmg"]
 
+[[example]]
+name = "issue3_cover_search"
+required-features = ["cmg"]
+
 [lints]
 workspace = true
