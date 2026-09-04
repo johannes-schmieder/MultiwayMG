@@ -1,0 +1,63 @@
+name: Record frozen issue 3 completion matrix
+
+on:
+  push:
+    branches:
+      - codex/issue-3-repair-bootstrap
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  completion:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-3-repair-bootstrap
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Format, lint, and run frozen matrix twice
+        run: |
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          rm -rf issue3-completion-a issue3-completion-b
+          mkdir issue3-completion-a issue3-completion-b
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_completion_matrix --all-features -- issue3-completion-a
+          cargo run --locked --release -p multiway-mg \
+            --example issue3_completion_matrix --all-features -- issue3-completion-b
+          for file in \
+            issue3-completion-matrix.tsv \
+            issue3-pcg-traces.tsv \
+            issue3-policy.tsv; do
+            cmp "issue3-completion-a/$file" "issue3-completion-b/$file"
+          done
+      - name: Commit formatter output and deterministic evidence
+        run: |
+          mkdir -p benchmarks/results/2026-09-04
+          cp issue3-completion-a/issue3-completion-matrix.tsv \
+             benchmarks/results/2026-09-04/issue3-completion-matrix.tsv
+          cp issue3-completion-a/issue3-pcg-traces.tsv \
+             benchmarks/results/2026-09-04/issue3-pcg-traces.tsv
+          cp issue3-completion-a/issue3-policy.tsv \
+             benchmarks/results/2026-09-04/issue3-policy.tsv
+          sha256sum \
+            benchmarks/results/2026-09-04/issue3-completion-matrix.tsv \
+            benchmarks/results/2026-09-04/issue3-pcg-traces.tsv \
+            benchmarks/results/2026-09-04/issue3-policy.tsv \
+            > benchmarks/results/2026-09-04/issue3-completion.sha256
+          rm .github/workflows/run-issue3-completion-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Record frozen issue 3 calibration and holdout evidence"
+          git push origin HEAD:codex/issue-3-repair-bootstrap
