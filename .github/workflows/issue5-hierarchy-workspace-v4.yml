@@ -1,0 +1,90 @@
+# One-time robust executor for the hierarchy workspace refactor; removes all temporary workflows.
+name: Issue 5 hierarchy workspace v4
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-v4.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  implement:
+    name: Execute robust reusable hierarchy workspace refactor
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Execute source transformation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          hierarchy = Path("crates/multiway-mg/src/hierarchy.rs")
+          if "pub fn application_workspace(&self)" not in hierarchy.read_text():
+              workflow = Path(".github/workflows/issue5-hierarchy-workspace-v2.yml").read_text()
+              marker = "python3 - <<'PY'\n"
+              start = workflow.index(marker) + len(marker)
+              end = workflow.index("\n          PY", start)
+              script = textwrap.dedent(workflow[start:end])
+
+              insertion_point = 'if "pub fn application_workspace(&self)" not in text:\n'
+              if insertion_point not in script:
+                  raise SystemExit("workspace method insertion point not found")
+              fresh_ranges = '''    impls = []
+              for match in re.finditer(r"impl\\s+([^\\{]+)\\{", text):
+                  opening = text.index("{", match.start())
+                  try:
+                      closing = matching_brace(text, opening)
+                  except RuntimeError:
+                      continue
+                  impls.append((opening, closing, " ".join(match.group(1).split())))
+          '''
+              script = script.replace(
+                  insertion_point,
+                  insertion_point + textwrap.dedent(fresh_ranges),
+                  1,
+              )
+              script = script.replace(
+                  '#[path = "../examples/support/issue2_fixtures.rs"]',
+                  '#[allow(dead_code)]\n          #[path = "../examples/support/issue2_fixtures.rs"]',
+                  1,
+              )
+              script = script.replace(
+                  '#[path = "../examples/support/issue3_recursive_fixtures.rs"]',
+                  '#[allow(dead_code)]\n          #[path = "../examples/support/issue3_recursive_fixtures.rs"]',
+                  1,
+              )
+              exec(compile(script, "issue5-hierarchy-workspace-v2.py", "exec"), {"__name__": "__main__"})
+          PY
+          cargo fmt --all
+          cargo clippy --locked -p multiway-mg --all-features --all-targets -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_workspace
+          cargo test --locked -p multiway-mg --all-features
+          cargo test --locked -p multiway-mg --no-default-features
+          cargo doc --locked -p multiway-mg --all-features --no-deps
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates/multiway-mg/src/hierarchy.rs crates/multiway-mg/src/lib.rs \
+            crates/multiway-mg/tests/hierarchy_workspace.rs CHANGELOG.md
+          git rm -f .github/workflows/issue5-hierarchy-workspace.yml \
+            .github/workflows/issue5-hierarchy-workspace-cleanup.yml \
+            .github/workflows/issue5-hierarchy-workspace-v2.yml \
+            .github/workflows/issue5-hierarchy-workspace-v3.yml \
+            .github/workflows/issue5-hierarchy-workspace-v4.yml
+          git commit -m "Add reusable hierarchy application workspace"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
