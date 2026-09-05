@@ -1,0 +1,59 @@
+# One-time cleanup for the hierarchy-workspace implementation; removes itself.
+name: Issue 5 hierarchy workspace cleanup
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-cleanup.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  cleanup:
+    name: Verify hierarchy workspace and remove temporary workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Wait for implementation commit
+        run: |
+          found=false
+          for attempt in $(seq 1 120); do
+            git fetch origin codex/issue-5-hierarchy-workspace
+            git reset --hard origin/codex/issue-5-hierarchy-workspace
+            if grep -q 'pub fn application_workspace(&self)' crates/multiway-mg/src/hierarchy.rs \
+              && grep -q 'hierarchy_workspace_is_exact_reusable_and_fail_closed' crates/multiway-mg/tests/hierarchy_workspace.rs; then
+              found=true
+              break
+            fi
+            sleep 5
+          done
+          test "$found" = true
+      - name: Verify permanent implementation
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+      - name: Remove temporary workflows
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/issue5-hierarchy-workspace.yml \
+            .github/workflows/issue5-hierarchy-workspace-cleanup.yml
+          git commit -m "Remove temporary hierarchy workspace workflows"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
