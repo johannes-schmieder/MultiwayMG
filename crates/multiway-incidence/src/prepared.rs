@@ -269,6 +269,28 @@ impl PreparedThreeWayTopology {
             tuples.extend_from_slice(rows);
             (tuples, None)
         };
+        Self::finish_with(counts, tuples, groups, before)
+    }
+
+    // Internal callers supply canonical keys and a consistent optional source map.
+    // The keys move into their owner rather than being copied during symbolic coarsening.
+    pub(crate) fn finish_with<F>(
+        counts: [usize; 3],
+        tuples: Vec<[u32; 3]>,
+        groups: Option<ObservationGroups>,
+        before: &mut F,
+    ) -> Result<Self, IncidenceError>
+    where
+        F: FnMut(&'static str) -> Result<(), IncidenceError>,
+    {
+        if tuples.is_empty() {
+            return Err(IncidenceError::EmptyProblem);
+        }
+        if let Some(index) = tuples.windows(2).position(|pair| pair[0] >= pair[1]) {
+            return Err(IncidenceError::NonCanonicalTuples {
+                tuple_index: index + 1,
+            });
+        }
         let topology = ThreeWayTopology::new(counts, tuples)?;
         let partition = partition::build(&topology, before)?;
         for factor in 0..3 {
