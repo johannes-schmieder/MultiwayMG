@@ -16,9 +16,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use cmg::{
-    CmgOptions, CmgPreconditioner, CmgWorkspace, Components, Laplacian, TerminalReason,
-};
+use cmg::{CmgOptions, CmgPreconditioner, CmgWorkspace, Components, Laplacian, TerminalReason};
 use schwarz_precond::{
     LocalSolveError, LocalSolver, PartitionWeights, ReductionStrategy, SchwarzPreconditioner,
     SubdomainCore, SubdomainEntry,
@@ -837,9 +835,7 @@ mod tests {
     fn component_reports_expose_terminal_reason_and_factorization_state() {
         let problem = ThreeWayProblem::from_observations(
             [8, 8, 8],
-            &(
-                0..8
-            )
+            &(0..8)
                 .flat_map(|a| (0..8).map(move |b| [a, b, (a + b) % 8]))
                 .collect::<Vec<_>>(),
             &vec![1.0; 64],
