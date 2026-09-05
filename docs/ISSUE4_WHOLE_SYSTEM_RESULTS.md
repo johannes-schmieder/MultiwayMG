@@ -1,5 +1,13 @@
 # Issue 4: whole-system pair-solver results
 
+> **Historical checkpoint.** This document records the whole-system calibration
+> state on September 4, 2026. Issue #4 was completed on September 5, 2026 after
+> the size-ladder and coarse-hierarchy experiments. See
+> [`ISSUE4_FINAL_RESULTS.md`](ISSUE4_FINAL_RESULTS.md) and
+> [`ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`](ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md)
+> for the final evidence synthesis and current policy. The “next experiments”
+> below are preserved as the contemporaneous plan for this checkpoint.
+
 Date: 2026-09-04. Status: calibration evidence, **not a fresh holdout and not a production routing decision**.
 
 ## Question

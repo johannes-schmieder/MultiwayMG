@@ -207,26 +207,48 @@ The resulting decision is:
 See `docs/ISSUE3_FINAL_RESULTS.md` and
 `docs/ADR_0001_ISSUE3_AUTOMATIC_COARSENING.md`.
 
-## Issue 4 checkpoint: pair-solver economics
+### Issue #4: pair-solver economics — completed with no current CMG advancement
 
-PR #12 adds component-local CMG Schwarz, the public pinned `within`
-comparator, exact operator-work accounting and an identical-domain
-repeated-RHS benchmark with independent residual certification.
-The permanent GitHub Actions smoke gate checks correctness and accounting,
-not a preferred timing winner.
+Issue #4 compared the current fixed-CMG pair action with the pinned public
+`within` local solver in four increasingly controlled settings:
 
-The first five-family small-domain matrix is mixed: weak communities are a
-promising CMG candidate, but paths and six-order weight variation favor
-`within` at 32 RHS. Jacobi is cheaper than CMG on the dense and hub fixtures;
-the hub CMG route is a one-level diagonal terminal, not a multilevel gain.
-These are research diagnostics, not a production routing rule or a
-demonstrated three-way end-to-end advantage.
+1. identical connected pair domains with Jacobi and exact controls;
+2. complete three-way Schwarz systems under modified LSMR and projected PCG;
+3. a frozen balanced size ladder through 72 levels per factor and 32 RHS; and
+4. non-finest pair solves inside the recursive issue-3 hierarchy while keeping
+   the fine `within` smoother and three-way maps fixed.
 
-See the [results and remaining gates](docs/ISSUE4_PAIR_LOCAL_RESULTS.md)
-and [measurement protocol](docs/ISSUE4_PAIR_LOCAL_PROTOCOL.md).
-[Issue #4](https://github.com/johannes-schmieder/MultiwayMG/issues/4)
-remains open for broad calibration, actual three-way comparisons, complete
-memory/thread accounting and a fresh holdout.
+CMG showed genuine local and scale-dependent work reductions. The strongest
+balanced size-ladder point, planted clones with 48 levels per factor, used about
+21.5 percent less LSMR work and 24.2 percent less PCG work than `within`.
+However, **no finest-level family/size/solver cell produced a fully charged CMG
+timing win through 32 RHS**, the crossover was nonmonotone, and size or terminal
+metadata did not yield a stable selector.
+
+Coarse-only use did not rescue the current method. In the oracle-map controlled
+calibration, none of fourteen comparable solver cells reduced outer work by at
+least 20 percent. Two weak-chain cells were faster at 32 RHS, but both used more
+outer work than `within`. The automatic planner admitted only one of eight
+revealed recursive fixtures, where coarse CMG changed outer work by zero percent
+and was slower when fully charged.
+
+The issue-4 decision is therefore:
+
+- retain `within` as the pair-local production-shaped baseline;
+- retain symmetric MAP as the preferred cheap smoother where admitted;
+- retain pair-CMG, terminal diagnostics, and all evidence harnesses as explicit
+  research controls;
+- do not introduce a CMG routing rule from the observed calibration cases; and
+- do not spend a fresh holdout when no calibrated candidate met the joint work-
+  plus-economics advancement gate.
+
+The frozen issue-3 MAP/CMG research portfolio remains reproducible, but its CMG
+fallback is not a downstream production endorsement. A materially redesigned or
+re-engineered CMG candidate must create a new calibration signal before a fresh
+holdout.
+
+See `docs/ISSUE4_FINAL_RESULTS.md` and
+`docs/ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`.
 
 ## Current implementation
 
@@ -243,6 +265,8 @@ The workspace includes:
 - dense quotient-space spectral diagnostics;
 - compatible-relaxation, bootstrap, repair, and complete-cycle probes;
 - fail-closed structural and cycle-screened portfolios;
+- identical-domain and whole-system pair-solver economics harnesses;
+- frozen size-ladder and coarse-level CMG evidence with permanent validators;
 - deterministic evidence matrices, frozen policies, checksums, and preserved
   negative results.
 
@@ -253,17 +277,22 @@ systems.
 ## Next steps
 
 The next primary milestone is
-[#4 — compare pair-CMG with the existing approximate-Cholesky pair solver](https://github.com/johannes-schmieder/MultiwayMG/issues/4).
-This determines whether CMG belongs broadly, selectively, or not at all in the
-production smoother portfolio.
-
-Then
-[#5 — prepared topology, reusable workspaces, and changing-weight replay](https://github.com/johannes-schmieder/MultiwayMG/issues/5)
-will address allocation-free cycles, repeated right-hand sides, cumulative
-hierarchy cost, and PPML-style reweighting.
+[#5 — prepared topology, reusable workspaces, and changing-weight replay](https://github.com/johannes-schmieder/MultiwayMG/issues/5).
+It will separate immutable topology from numerical generations, remove steady-
+state allocations, fuse repeated-RHS kernels, report complete memory lifetimes,
+and replay all weight-dependent hierarchy state exactly. This work should use
+`within` as the pair-local baseline and MAP as the preferred cheap smoother,
+while retaining CMG as a controlled comparator. A material improvement in CMG
+setup or application economics should return to issue-4-style calibration under
+ADR 0002 before any routing policy changes.
 
 A private, certified fereg integration remains tracked by
-[#6](https://github.com/johannes-schmieder/MultiwayMG/issues/6).
+[#6](https://github.com/johannes-schmieder/MultiwayMG/issues/6). It must preserve
+fereg's sample policy, memory admission, fallback, and independent observation-
+space certificate.
+
+PPML and broader `Q > 3` generalization remain later milestones after the
+three-way fixed-topology production path is understood.
 
 ## Workspace
 

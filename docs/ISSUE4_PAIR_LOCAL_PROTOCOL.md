@@ -1,5 +1,15 @@
 # Issue 4: identical-domain pair-local protocol
 
+> **Historical protocol.** This file preserves the preregistered first-stage
+> protocol and its then-remaining work as of September 4, 2026. Issue #4 was
+> completed on September 5, 2026 after the whole-system, size-ladder, and
+> coarse-hierarchy calibrations. See
+> [`ISSUE4_FINAL_RESULTS.md`](ISSUE4_FINAL_RESULTS.md) and
+> [`ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`](ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md).
+> Production-engineering items not needed to decide the current candidate were
+> transferred to issue #5; the historical protocol text below is otherwise
+> unchanged.
+
 Status: research infrastructure and a numerical/economics smoke matrix. This is
 not completion of issue #4 and does not authorize a production routing rule.
 The issue #3 automatic coarse-space policy is unchanged.
