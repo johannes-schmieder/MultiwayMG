@@ -6,6 +6,32 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A fallible immutable topology or component array reservation failed.
+    #[error("topology array allocation failed in {context}")]
+    TopologyAllocation {
+        /// Array reservation boundary.
+        context: &'static str,
+    },
+    /// Conservative requested-array setup payload exceeds the declared budget.
+    #[error("topology setup requests at most {required} payload bytes, budget is {budget}")]
+    TopologySetupBudgetExceeded {
+        /// Conservative requested-array upper bound, not OS memory.
+        required: usize,
+        /// Declared requested-array payload budget.
+        budget: usize,
+    },
+    /// A symbolic binding was issued by another prepared owner.
+    #[error("prepared topology binding belongs to a different owner")]
+    TopologyBindingMismatch,
+    /// Factor counts or original coded source rows differ from preparation.
+    #[error("source layout differs from the prepared topology")]
+    TopologyLayoutMismatch,
+    /// Collapsed source is not strictly increasing and unique.
+    #[error("collapsed tuple {tuple_index} is not strictly greater than its predecessor")]
+    NonCanonicalTuples {
+        /// First offending zero-based tuple row.
+        tuple_index: usize,
+    },
     /// A factor had no levels.
     #[error("factor {factor} must have at least one level")]
     EmptyFactor {
