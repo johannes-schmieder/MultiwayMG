@@ -1,0 +1,104 @@
+# One-time compatibility executor/fixup for hierarchy workspace implementation.
+name: Issue 5 hierarchy workspace v7
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-v7.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  implement:
+    name: Complete and verify hierarchy workspace compatibility
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Complete transformation when needed
+        run: |
+          if ! grep -q 'pub fn application_workspace(&self)' crates/multiway-mg/src/hierarchy.rs; then
+            python3 - <<'PY'
+          from pathlib import Path
+          path = Path("scripts/issue5_hierarchy_workspace_refactor.py")
+          text = path.read_text()
+          old = '''    if not replacements:
+                  raise RuntimeError(
+                      "no nonescaping zero-filled vector declarations found on hierarchy application path"
+                  )'''
+          new = '''    if not replacements:
+                  for function in parsed:
+                      replacements.extend(replacement_in_function(source, function))
+              if not replacements:
+                  raise RuntimeError(
+                      "no nonescaping zero-filled vector declarations found in hierarchy module"
+                  )'''
+          if old not in text:
+              raise SystemExit("final zero-vector fallback block not found")
+          path.write_text(text.replace(old, new, 1))
+          PY
+            python3 scripts/issue5_hierarchy_workspace_refactor.py
+          fi
+      - name: Add consuming iterator compatibility
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("crates/multiway-mg/src/hierarchy.rs")
+          text = path.read_text()
+          if "impl IntoIterator for HierarchyScratchVector" not in text:
+              marker = "impl Drop for HierarchyScratchVector {"
+              addition = '''impl IntoIterator for HierarchyScratchVector {
+              type Item = f64;
+              type IntoIter = std::vec::IntoIter<f64>;
+
+              fn into_iter(mut self) -> Self::IntoIter {
+                  self.pool_id = None;
+                  std::mem::take(&mut self.values).into_iter()
+              }
+          }
+
+          '''
+              if marker not in text:
+                  raise SystemExit("HierarchyScratchVector drop implementation not found")
+              path.write_text(text.replace(marker, addition + marker, 1))
+          PY
+      - name: Validate implementation
+        run: |
+          cargo fmt --all
+          cargo clippy --locked -p multiway-mg --all-features --all-targets -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_workspace
+          cargo test --locked -p multiway-mg --all-features
+          cargo test --locked -p multiway-mg --no-default-features
+          cargo doc --locked -p multiway-mg --all-features --no-deps
+      - name: Commit permanent diff and clean temporary files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates/multiway-mg/src/hierarchy.rs crates/multiway-mg/src/lib.rs \
+            crates/multiway-mg/tests/hierarchy_workspace.rs CHANGELOG.md
+          git rm -f --ignore-unmatch scripts/issue5_hierarchy_workspace_refactor.py \
+            .github/workflows/issue5-hierarchy-workspace.yml \
+            .github/workflows/issue5-hierarchy-workspace-cleanup.yml \
+            .github/workflows/issue5-hierarchy-workspace-v2.yml \
+            .github/workflows/issue5-hierarchy-workspace-v3.yml \
+            .github/workflows/issue5-hierarchy-workspace-v4.yml \
+            .github/workflows/issue5-hierarchy-workspace-v5.yml \
+            .github/workflows/issue5-hierarchy-workspace-v6.yml \
+            .github/workflows/issue5-hierarchy-workspace-v7.yml
+          if ! git diff --cached --quiet; then
+            git commit -m "Add reusable hierarchy application workspace"
+            git push origin HEAD:codex/issue-5-hierarchy-workspace
+          fi
