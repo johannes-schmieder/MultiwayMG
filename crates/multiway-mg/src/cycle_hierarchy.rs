@@ -10,9 +10,13 @@
 use crate::{
     BootstrapAggregationOptions, CyclePortfolioCandidateSource, CycleQualityCriteria,
     CycleQualityOptions, CycleScreenedBootstrapResult, DensePseudoinverse, FactorAggregation,
-    MultiwayError, Preconditioner, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner,
-    ThreeWayProblem, build_cycle_screened_bootstrap_aggregation,
+    MultiwayError, SymmetricMapPreconditioner, SymmetricTwoGridPreconditioner, ThreeWayProblem,
+    build_cycle_screened_bootstrap_aggregation,
 };
+
+mod workspace;
+
+pub use workspace::CycleScreenedMapHierarchyWorkspace;
 
 /// Options for recursive complete-cycle-screened hierarchy construction.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -558,79 +562,6 @@ impl CycleScreenedMapHierarchy {
     #[must_use]
     pub fn finest_problem(&self) -> &ThreeWayProblem {
         &self.problems[0]
-    }
-
-    fn apply_level(&self, level: usize, rhs: &[f64]) -> Result<Vec<f64>, MultiwayError> {
-        let problem = &self.problems[level];
-        if rhs.len() != problem.dimension() {
-            return Err(crate::error::dimension(
-                "CycleScreenedMapHierarchy::apply_level",
-                problem.dimension(),
-                rhs.len(),
-            ));
-        }
-        if level == self.aggregations.len() {
-            let mut solution = vec![0.0; problem.dimension()];
-            self.terminal.solve_into(rhs, &mut solution)?;
-            problem
-                .components()
-                .project_structural_range(&mut solution)?;
-            return Ok(solution);
-        }
-
-        let mut compatible_rhs = rhs.to_vec();
-        problem
-            .components()
-            .project_structural_range(&mut compatible_rhs)?;
-        let mut solution = vec![0.0; problem.dimension()];
-        self.smoothers[level].apply(&compatible_rhs, &mut solution)?;
-
-        let residual = problem.residual(&compatible_rhs, &solution)?;
-        let coarse_problem = &self.problems[level + 1];
-        let mut coarse_rhs = vec![0.0; coarse_problem.dimension()];
-        self.aggregations[level].restrict(&residual, &mut coarse_rhs)?;
-        coarse_problem
-            .components()
-            .project_structural_range(&mut coarse_rhs)?;
-        let coarse_solution = self.apply_level(level + 1, &coarse_rhs)?;
-        let mut prolonged = vec![0.0; problem.dimension()];
-        self.aggregations[level].prolong(&coarse_solution, &mut prolonged)?;
-        add_assign(&mut solution, &prolonged);
-
-        let post_residual = problem.residual(&compatible_rhs, &solution)?;
-        let mut post = vec![0.0; problem.dimension()];
-        self.smoothers[level].apply(&post_residual, &mut post)?;
-        add_assign(&mut solution, &post);
-        problem
-            .components()
-            .project_structural_range(&mut solution)?;
-        Ok(solution)
-    }
-}
-
-impl Preconditioner for CycleScreenedMapHierarchy {
-    fn dimension(&self) -> usize {
-        self.finest_problem().dimension()
-    }
-
-    fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
-        if rhs.len() != self.dimension() {
-            return Err(crate::error::dimension(
-                "CycleScreenedMapHierarchy::apply rhs",
-                self.dimension(),
-                rhs.len(),
-            ));
-        }
-        if out.len() != self.dimension() {
-            return Err(crate::error::dimension(
-                "CycleScreenedMapHierarchy::apply output",
-                self.dimension(),
-                out.len(),
-            ));
-        }
-        let solution = self.apply_level(0, rhs)?;
-        out.copy_from_slice(&solution);
-        Ok(())
     }
 }
 
