@@ -89,3 +89,41 @@ fn workspace_traced_pcg_rejects_nonfinite_rhs_without_preparing_scratch() {
     assert_eq!(actual, expected);
     assert!(actual.converged());
 }
+
+#[test]
+fn unrepresentable_initial_diagnostics_fail_before_preconditioner_application() {
+    let problem = problem();
+    let hierarchy = hierarchy(&problem);
+    let options = PcgTraceOptions::default();
+    let half_max = f64::MAX / 2.0;
+    let overflowing_norm = vec![half_max, -half_max, half_max, -half_max, half_max, -half_max];
+    let overflowing_projection = vec![1.0e160, 1.0e160, -1.0e160, -1.0e160, 0.0, 0.0];
+    let overflowing_tolerance = PcgTraceOptions {
+        relative_tolerance: f64::MAX,
+        ..options
+    };
+    for (rhs, options) in [
+        (overflowing_norm, options),
+        (overflowing_projection, options),
+        (vec![3.0; 6], overflowing_tolerance),
+    ] {
+        let mut workspace = CycleScreenedMapHierarchyWorkspace::new();
+        let expected = solve_projected_pcg_traced(&problem, &rhs, &hierarchy, options)
+            .unwrap_err();
+        let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
+            &problem,
+            &rhs,
+            &hierarchy,
+            options,
+            &mut workspace,
+        )
+        .unwrap_err();
+        assert!(matches!(
+            actual,
+            MultiwayError::PcgBreakdown { iteration: 0, .. }
+        ));
+        assert_eq!(actual.to_string(), expected.to_string());
+        assert_eq!(workspace.retained_bytes().unwrap(), 0);
+        assert_eq!(workspace.retained_buffer_count(), 0);
+    }
+}
