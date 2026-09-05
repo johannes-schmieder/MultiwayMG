@@ -7,13 +7,18 @@
 
 mod aggregation;
 mod components;
+mod construction;
 mod error;
+mod prepared;
 mod problem;
 mod topology;
 
 pub use aggregation::FactorAggregation;
 pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
 pub use error::IncidenceError;
+pub use prepared::{
+    ObservationGroups, PreparedThreeWayTopology, PreparedTopologyBinding, PreparedTopologySource,
+};
 pub use problem::ThreeWayProblem;
 pub use topology::ThreeWayTopology;
 
