@@ -17,14 +17,15 @@ use std::{
 };
 
 use cmg::{CmgOptions, TerminalReason};
-use issue3_recursive_fixtures::{recursive_holdout_fixtures, RecursiveHoldoutFixture};
+use issue3_recursive_fixtures::{RecursiveHoldoutFixture, recursive_holdout_fixtures};
 use multiway_mg::{
-    solve_projected_pcg_traced, solve_weighted_least_squares, AggregationRepairOptions,
-    BootstrapAggregationOptions, CompatibleRelaxationCriteria, CompatibleRelaxationOptions,
-    CycleQualityCriteria, CycleQualityOptions, CycleScreenedHierarchyOptions,
-    CycleScreenedHierarchyPlan, DensePseudoinverse, FactorAggregation, LeastSquaresOptions,
-    MultiwayError, PairCmgSchwarzOptions, PairCmgSchwarzPreconditioner, PcgTraceOptions,
-    Preconditioner, ThreeWayProblem, WithinApproxCholOptions, WithinApproxCholPreconditioner,
+    AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
+    CompatibleRelaxationOptions, CycleQualityCriteria, CycleQualityOptions,
+    CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan, DensePseudoinverse,
+    FactorAggregation, LeastSquaresOptions, MultiwayError, PairCmgSchwarzOptions,
+    PairCmgSchwarzPreconditioner, PcgTraceOptions, Preconditioner, ThreeWayProblem,
+    WithinApproxCholOptions, WithinApproxCholPreconditioner, solve_projected_pcg_traced,
+    solve_weighted_least_squares,
 };
 
 const PREFIXES: [usize; 4] = [1, 4, 16, 32];
@@ -337,7 +338,10 @@ fn main() -> Result<()> {
     }
     fs::create_dir_all(&output)?;
     let mut writer = BufWriter::new(File::create(output.join("coarse-cmg.tsv"))?);
-    writeln!(writer, "case\tfamily\trequested_depth\tplan_accepted\tplan_depth\tplan_seconds\tdimension_complexity\ttuple_complexity\tmethod\trepeat\tsolver\trhs_count\tfine_dimension\tfine_tuples\tlevel_dimensions\tlevel_tuples\tnumerical_setup_seconds\tinitialization_seconds\tsetup_plus_solve_seconds\tcumulative_solve_seconds\tcumulative_iterations\tcumulative_outer_work\twork_unit\tcumulative_preconditioner_applications\tcumulative_certificate_work\tmax_true_residual\tconverged\tcertified\tknown_retained_bytes\tcmg_components\tcmg_max_vertices\tcmg_max_edges\tcmg_max_cycle_excess\tcmg_max_levels\tcmg_multilevel_components\tcmg_direct_components\tcmg_full_contraction_components\tcmg_stagnated_vertex_components\tcmg_stagnated_fill_components\tcmg_maximum_levels_components\tcmg_one_level_iterative_components\tfallback_allocations\twarning_count\terror")?;
+    writeln!(
+        writer,
+        "case\tfamily\trequested_depth\tplan_accepted\tplan_depth\tplan_seconds\tdimension_complexity\ttuple_complexity\tmethod\trepeat\tsolver\trhs_count\tfine_dimension\tfine_tuples\tlevel_dimensions\tlevel_tuples\tnumerical_setup_seconds\tinitialization_seconds\tsetup_plus_solve_seconds\tcumulative_solve_seconds\tcumulative_iterations\tcumulative_outer_work\twork_unit\tcumulative_preconditioner_applications\tcumulative_certificate_work\tmax_true_residual\tconverged\tcertified\tknown_retained_bytes\tcmg_components\tcmg_max_vertices\tcmg_max_edges\tcmg_max_cycle_excess\tcmg_max_levels\tcmg_multilevel_components\tcmg_direct_components\tcmg_full_contraction_components\tcmg_stagnated_vertex_components\tcmg_stagnated_fill_components\tcmg_maximum_levels_components\tcmg_one_level_iterative_components\tfallback_allocations\twarning_count\terror"
+    )?;
 
     for (case_index, fixture) in recursive_holdout_fixtures()?.iter().enumerate() {
         run_fixture(case_index, fixture, &mut writer)?;
@@ -712,7 +716,10 @@ mod tests {
         for (left, right) in within.problems.iter().zip(&hybrid.problems) {
             assert_eq!(left.dimension(), right.dimension());
             assert_eq!(left.tuple_count(), right.tuple_count());
-            assert_eq!(left.topology().level_counts(), right.topology().level_counts());
+            assert_eq!(
+                left.topology().level_counts(),
+                right.topology().level_counts()
+            );
         }
         assert!(matches!(within.smoothers[0], Smoother::Within(_)));
         assert!(matches!(hybrid.smoothers[0], Smoother::Within(_)));
