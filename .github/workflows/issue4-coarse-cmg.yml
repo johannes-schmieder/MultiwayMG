@@ -1,5 +1,5 @@
 # One-time calibration workflow; remove before merge.
-# Temporary write permission is only to commit the scoped test correction.
+# Temporary write permission is only to commit the explicit oracle-map calibration mode.
 name: Issue 4 coarse-CMG calibration
 
 on:
@@ -19,7 +19,7 @@ env:
 
 jobs:
   coarse-cmg:
-    name: Frozen coarse-CMG comparison
+    name: Automatic and oracle-map coarse-CMG comparison
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -31,40 +31,193 @@ jobs:
           toolchain: "1.85.0"
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - name: Correct structural-test planner assumption and commit
+      - name: Add explicit oracle-map mode and commit
         run: |
           python3 - <<'PY'
           from pathlib import Path
           path = Path("crates/multiway-mg/examples/issue4_coarse_cmg.rs")
           text = path.read_text()
-          old = "        assert!(plan.accepted());\n        let within = ExperimentalHierarchy::build("
-          new = "        assert!(!plan.aggregations().is_empty());\n        let within = ExperimentalHierarchy::build("
-          if new not in text:
-              if old not in text:
-                  raise SystemExit("structural test assertion not found")
-              path.write_text(text.replace(old, new, 1))
+
+          marker = "enum Smoother {"
+          mode = '''#[derive(Clone, Copy, Debug)]
+          enum MapMode {
+              Automatic,
+              Oracle,
+          }
+
+          impl MapMode {
+              fn parse(value: Option<String>) -> Result<Self> {
+                  match value.as_deref() {
+                      None | Some("automatic") => Ok(Self::Automatic),
+                      Some("oracle") => Ok(Self::Oracle),
+                      Some(other) => Err(format!("unknown map mode: {other}").into()),
+                  }
+              }
+          }
+
+          '''
+          if "enum MapMode" not in text:
+              if marker not in text:
+                  raise SystemExit("smoother marker not found")
+              text = text.replace(marker, mode + marker, 1)
+
+          old_main = '''    if args.next().is_some() {
+              return Err("usage: issue4_coarse_cmg [output-directory]".into());
+          }
+          fs::create_dir_all(&output)?;'''
+          new_main = '''    let map_mode = MapMode::parse(args.next())?;
+          if args.next().is_some() {
+              return Err("usage: issue4_coarse_cmg [output-directory] [automatic|oracle]".into());
+          }
+          fs::create_dir_all(&output)?;'''
+          if new_main not in text:
+              if old_main not in text:
+                  raise SystemExit("main argument block not found")
+              text = text.replace(old_main, new_main, 1)
+
+          old_call = "        run_fixture(case_index, fixture, &mut writer)?;"
+          new_call = "        run_fixture(case_index, fixture, map_mode, &mut writer)?;"
+          if new_call not in text:
+              if old_call not in text:
+                  raise SystemExit("run_fixture call not found")
+              text = text.replace(old_call, new_call, 1)
+
+          old_sig = '''fn run_fixture(
+              case_index: usize,
+              fixture: &RecursiveHoldoutFixture,
+              writer: &mut BufWriter<File>,
+          ) -> Result<()> {'''
+          new_sig = '''fn run_fixture(
+              case_index: usize,
+              fixture: &RecursiveHoldoutFixture,
+              map_mode: MapMode,
+              writer: &mut BufWriter<File>,
+          ) -> Result<()> {'''
+          if new_sig not in text:
+              if old_sig not in text:
+                  raise SystemExit("run_fixture signature not found")
+              text = text.replace(old_sig, new_sig, 1)
+
+          start = text.index("    let plan_start = Instant::now();", text.index("fn run_fixture("))
+          end_marker = "    let maps = plan.aggregations();\n"
+          end = text.index(end_marker, start) + len(end_marker)
+          if "let (maps, plan_depth" not in text[start:end]:
+              replacement = '''    let (maps, plan_depth, plan_seconds, dimension_complexity, tuple_complexity) =
+                  match map_mode {
+                      MapMode::Automatic => {
+                          let plan_start = Instant::now();
+                          let plan = CycleScreenedHierarchyPlan::build(
+                              fixture.problem.clone(),
+                              hierarchy_options(fixture.terminal_dimension),
+                          )?;
+                          let plan_seconds = plan_start.elapsed().as_secs_f64();
+                          if !plan.accepted() || plan.depth() != fixture.depth {
+                              writeln!(
+                                  writer,
+                                  "{}\\t{}\\t{}\\t{}\\t{}\\t{:.9e}\\t{:.9e}\\t{:.9e}\\tNA\\t0\\tNA\\t0\\t{}\\t{}\\tNA\\tNA\\t0\\t0\\t0\\t0\\t0\\t0\\tNA\\t0\\t0\\tinf\\tfalse\\tfalse\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\tplan rejected: {:?}",
+                                  fixture.name,
+                                  fixture.family,
+                                  fixture.depth,
+                                  plan.accepted(),
+                                  plan.depth(),
+                                  plan_seconds,
+                                  plan.dimension_complexity(),
+                                  plan.tuple_complexity(),
+                                  fixture.problem.dimension(),
+                                  fixture.problem.tuple_count(),
+                                  plan.stop_reason(),
+                              )?;
+                              return Ok(());
+                          }
+                          (
+                              plan.aggregations().to_vec(),
+                              plan.depth(),
+                              plan_seconds,
+                              plan.dimension_complexity(),
+                              plan.tuple_complexity(),
+                          )
+                      }
+                      MapMode::Oracle => {
+                          let complexity = map_complexity(&fixture.problem, &fixture.oracle_maps)?;
+                          (
+                              fixture.oracle_maps.clone(),
+                              fixture.depth,
+                              0.0,
+                              complexity.0,
+                              complexity.1,
+                          )
+                      }
+                  };
+          '''
+              text = text[:start] + replacement + text[end:]
+
+          text = text.replace(
+              "ExperimentalHierarchy::build(fixture.problem.clone(), maps, method)?",
+              "ExperimentalHierarchy::build(fixture.problem.clone(), &maps, method)?",
+          )
+          text = text.replace(
+              '''                        plan.depth(),
+                                  plan_seconds,
+                                  plan.dimension_complexity(),
+                                  plan.tuple_complexity(),''',
+              '''                        plan_depth,
+                                  plan_seconds,
+                                  dimension_complexity,
+                                  tuple_complexity,''',
+          )
+
+          helper_marker = "fn hierarchy_options(terminal_dimension: usize) -> CycleScreenedHierarchyOptions {"
+          helper = '''fn map_complexity(
+              problem: &ThreeWayProblem,
+              maps: &[FactorAggregation],
+          ) -> Result<(f64, f64)> {
+              let finest_dimension = problem.dimension();
+              let finest_tuples = problem.tuple_count();
+              let mut dimension_sum = finest_dimension;
+              let mut tuple_sum = finest_tuples;
+              let mut current = problem.clone();
+              for map in maps {
+                  current = map.coarsen(&current)?;
+                  dimension_sum += current.dimension();
+                  tuple_sum += current.tuple_count();
+              }
+              Ok((
+                  dimension_sum as f64 / finest_dimension as f64,
+                  tuple_sum as f64 / finest_tuples as f64,
+              ))
+          }
+
+          '''
+          if "fn map_complexity(" not in text:
+              if helper_marker not in text:
+                  raise SystemExit("hierarchy options marker not found")
+              text = text.replace(helper_marker, helper + helper_marker, 1)
+
+          path.write_text(text)
           PY
           cargo fmt --all
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           if ! git diff --quiet; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add crates/multiway-mg/examples/issue4_coarse_cmg.rs
-            git commit -m "Correct coarse-CMG structural test planner assumption"
+            git commit -m "Support oracle maps in coarse-CMG calibration"
             git push origin HEAD:codex/issue-4-coarse-cmg
           fi
       - name: Record reproducibility metadata
         run: |
-          mkdir -p issue4-coarse-cmg-output
-          {
-            git rev-parse HEAD
-            echo "event=$GITHUB_EVENT_NAME sha=$(git rev-parse HEAD) run=$GITHUB_RUN_ID"
-            rustc --version --verbose
-            uname -a
-            lscpu
-            echo "RAYON_NUM_THREADS=$RAYON_NUM_THREADS"
-            echo "OMP_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS"
-            grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
-          } > issue4-coarse-cmg-output/metadata.txt
+          for mode in automatic oracle; do
+            mkdir -p "issue4-coarse-cmg-$mode"
+            {
+              git rev-parse HEAD
+              echo "mode=$mode event=$GITHUB_EVENT_NAME sha=$(git rev-parse HEAD) run=$GITHUB_RUN_ID"
+              rustc --version --verbose
+              uname -a
+              lscpu
+              echo "RAYON_NUM_THREADS=$RAYON_NUM_THREADS"
+              echo "OMP_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS"
+              grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
+            } > "issue4-coarse-cmg-$mode/metadata.txt"
+          done
       - name: Check harness
         run: |
           cargo fmt --all -- --check
@@ -72,20 +225,44 @@ jobs:
           cargo test --locked -p multiway-mg --all-features --example issue4_coarse_cmg
       - name: Build release benchmark
         run: cargo build --locked --release -p multiway-mg --all-features --example issue4_coarse_cmg
-      - name: Run frozen calibration
+      - name: Run automatic calibration
         run: |
-          /usr/bin/time -v -o issue4-coarse-cmg-output/process-resources.txt \
-            target/release/examples/issue4_coarse_cmg issue4-coarse-cmg-output \
-            2> issue4-coarse-cmg-output/warnings.txt
+          /usr/bin/time -v -o issue4-coarse-cmg-automatic/process-resources.txt \
+            target/release/examples/issue4_coarse_cmg issue4-coarse-cmg-automatic automatic \
+            2> issue4-coarse-cmg-automatic/warnings.txt
+      - name: Run oracle-map calibration
+        run: |
+          /usr/bin/time -v -o issue4-coarse-cmg-oracle/process-resources.txt \
+            target/release/examples/issue4_coarse_cmg issue4-coarse-cmg-oracle oracle \
+            2> issue4-coarse-cmg-oracle/warnings.txt
       - name: Validate and summarize
         run: |
           python3 scripts/summarize_issue4_coarse_cmg.py \
-            issue4-coarse-cmg-output/coarse-cmg.tsv \
-            issue4-coarse-cmg-output/SUMMARY.md
-          (cd issue4-coarse-cmg-output && sha256sum coarse-cmg.tsv metadata.txt > checksums.sha256)
+            issue4-coarse-cmg-automatic/coarse-cmg.tsv \
+            issue4-coarse-cmg-automatic/SUMMARY.md
+          python3 scripts/summarize_issue4_coarse_cmg.py \
+            issue4-coarse-cmg-oracle/coarse-cmg.tsv \
+            issue4-coarse-cmg-oracle/SUMMARY.md
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("issue4-coarse-cmg-oracle/SUMMARY.md")
+          text = path.read_text()
+          text = text.replace("# Issue 4 coarse-only CMG calibration", "# Issue 4 coarse-only CMG oracle-map calibration", 1)
+          text = text.replace(
+              "The automatic map plan and the fine `within` smoother are identical across methods; only non-finest smoothers change.",
+              "The revealed issue-3 oracle map sequence and the fine `within` smoother are identical across methods; only non-finest smoothers change.",
+              1,
+          )
+          path.write_text(text)
+          PY
+          for mode in automatic oracle; do
+            (cd "issue4-coarse-cmg-$mode" && sha256sum coarse-cmg.tsv metadata.txt > checksums.sha256)
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: issue-4-coarse-cmg-output
-          path: issue4-coarse-cmg-output/
+          path: |
+            issue4-coarse-cmg-automatic/
+            issue4-coarse-cmg-oracle/
           if-no-files-found: error
