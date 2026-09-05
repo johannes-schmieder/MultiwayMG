@@ -205,3 +205,21 @@ impl FactorAggregation {
         })
     }
 }
+
+#[cfg(test)]
+mod payload_tests {
+    use super::*;
+    #[test]
+    fn unused_parent_capacity_is_charged() {
+        let parents: [Vec<u32>; 3] = core::array::from_fn(|factor| {
+            let mut values = Vec::with_capacity(8 + factor * 8);
+            values.extend([0, 0]);
+            values
+        });
+        let expected: usize = parents.iter().map(|p| p.capacity() * 4).sum();
+        let map = FactorAggregation::new([2; 3], parents).unwrap();
+        assert_eq!(map.retained_payload_bytes().unwrap(), expected);
+        assert!(expected > 6 * core::mem::size_of::<u32>());
+        assert_eq!(map.retained_payload_bytes().unwrap(), map.retained_bytes());
+    }
+}
