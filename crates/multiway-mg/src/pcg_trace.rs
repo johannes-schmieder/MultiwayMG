@@ -1,6 +1,9 @@
 //! Projected PCG with a true residual sample after every iteration.
 
-use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
+use crate::{
+    CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, MultiwayError, Preconditioner,
+    ThreeWayProblem,
+};
 
 /// Options for the issue #2 traced PCG driver.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -122,6 +125,49 @@ pub fn solve_projected_pcg_traced<P: Preconditioner + ?Sized>(
     preconditioner: &P,
     options: PcgTraceOptions,
 ) -> Result<PcgTraceResult, MultiwayError> {
+    solve_projected_pcg_traced_with_apply(problem, rhs, preconditioner, options, |rhs, out| {
+        preconditioner.apply(rhs, out)
+    })
+}
+
+/// Solve traced PCG with one caller-owned hierarchy workspace for the full solve.
+///
+/// This uses the same private recurrence, validation order, true-residual
+/// samples, and work accounting as [`solve_projected_pcg_traced`]. Only the
+/// preconditioner application closure differs. The workspace can also be reused
+/// across subsequent solves and independently constructed hierarchies.
+///
+/// Invalid options or dimensions are rejected before the workspace is touched.
+/// A zero projected RHS needs no preconditioner application and does not prepare
+/// an empty workspace. Otherwise a changed hierarchy layout can grow scratch on
+/// its first application. Outer PCG vectors, trace storage, and the remaining
+/// MAP/projection internals still allocate; this is not a full solver workspace.
+pub fn solve_projected_pcg_traced_with_hierarchy_workspace(
+    problem: &ThreeWayProblem,
+    rhs: &[f64],
+    hierarchy: &CycleScreenedMapHierarchy,
+    options: PcgTraceOptions,
+    workspace: &mut CycleScreenedMapHierarchyWorkspace,
+) -> Result<PcgTraceResult, MultiwayError> {
+    solve_projected_pcg_traced_with_apply(problem, rhs, hierarchy, options, |rhs, out| {
+        hierarchy.apply_with_workspace(rhs, out, workspace)
+    })
+}
+
+// Keep the preconditioner reference for the original dimension-validation path;
+// parameterize only its application. No recurrence or interior-mutable adapter
+// is duplicated for the workspace entry point.
+fn solve_projected_pcg_traced_with_apply<P, F>(
+    problem: &ThreeWayProblem,
+    rhs: &[f64],
+    preconditioner: &P,
+    options: PcgTraceOptions,
+    mut apply_preconditioner: F,
+) -> Result<PcgTraceResult, MultiwayError>
+where
+    P: Preconditioner + ?Sized,
+    F: FnMut(&[f64], &mut [f64]) -> Result<(), MultiwayError>,
+{
     validate_options(options)?;
     let dimension = problem.dimension();
     if rhs.len() != dimension {
@@ -165,7 +211,7 @@ pub fn solve_projected_pcg_traced<P: Preconditioner + ?Sized>(
     let mut solution = vec![0.0; dimension];
     let mut residual = projected_rhs.clone();
     let mut preconditioned = vec![0.0; dimension];
-    preconditioner.apply(&residual, &mut preconditioned)?;
+    apply_preconditioner(&residual, &mut preconditioned)?;
     problem
         .components()
         .project_structural_range(&mut preconditioned)?;
@@ -214,7 +260,7 @@ pub fn solve_projected_pcg_traced<P: Preconditioner + ?Sized>(
                 samples,
             });
         }
-        preconditioner.apply(&residual, &mut preconditioned)?;
+        apply_preconditioner(&residual, &mut preconditioned)?;
         preconditioner_applications += 1;
         problem
             .components()
