@@ -423,3 +423,35 @@ mod tests {
         );
     }
 }
+
+impl CycleScreenedMapHierarchyWorkspace {
+    /// Read-only validation of every active vector, modal buffer and binding.
+    ///
+    /// Does not prepare, allocate, mutate or compare numerical weights. Inactive
+    /// storage is allowed and remains included in retained-byte accounting.
+    #[must_use]
+    pub fn is_prepared_for(&self, hierarchy: &CycleScreenedMapHierarchy) -> bool {
+        let Ok(count) = required_buffer_count(hierarchy.depth()) else {
+            return false;
+        };
+        if self.buffers.len() < count
+            || self.buffers[0].len() != hierarchy.finest_problem().dimension()
+            || !self.operators.is_prepared_for(hierarchy)
+        {
+            return false;
+        }
+        hierarchy
+            .problems
+            .windows(2)
+            .enumerate()
+            .all(|(level, pair)| {
+                let start = 1 + FRAME_BUFFERS * level;
+                let fine = pair[0].dimension();
+                let coarse = pair[1].dimension();
+                self.buffers[start..start + FRAME_BUFFERS]
+                    .iter()
+                    .zip([fine, fine, coarse, coarse, fine, fine, fine])
+                    .all(|(buffer, expected)| buffer.len() == expected)
+            })
+    }
+}

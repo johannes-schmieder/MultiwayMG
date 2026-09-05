@@ -3,6 +3,8 @@
 #[allow(dead_code)]
 #[path = "../examples/support/issue3_recursive_fixtures.rs"]
 mod fixtures;
+#[path = "support/payload_allocations.rs"]
+mod payload_allocations;
 #[path = "support/pcg_allocations.rs"]
 mod pcg_allocations;
 

@@ -359,3 +359,26 @@ fn neumaier_add(sum: &mut f64, correction: &mut f64, value: f64) {
     }
     *sum = updated;
 }
+
+impl IncidenceComponents {
+    /// Retained labels and factor-size array payload, including unused capacity.
+    ///
+    /// Excludes this inline object, the zero-sized identity token's Arc header,
+    /// allocator overhead and any separately owned projection workspace.
+    pub fn retained_payload_bytes(&self) -> Result<usize, IncidenceError> {
+        let overflow = || IncidenceError::DimensionOverflow {
+            context: "component payload",
+        };
+        let labels = self
+            .labels
+            .capacity()
+            .checked_mul(core::mem::size_of::<usize>())
+            .ok_or_else(overflow)?;
+        let sizes = self
+            .factor_sizes
+            .capacity()
+            .checked_mul(core::mem::size_of::<[usize; 3]>())
+            .ok_or_else(overflow)?;
+        labels.checked_add(sizes).ok_or_else(overflow)
+    }
+}

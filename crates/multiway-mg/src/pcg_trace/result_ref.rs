@@ -131,3 +131,24 @@ impl PcgTraceResult {
         }
     }
 }
+
+impl PcgTraceResult {
+    /// Exclusive retained solution and trace payload, using actual capacities.
+    ///
+    /// Useful for charging live owned copies as additional caller payload during
+    /// another solve. Excludes the inline result object and allocator overhead.
+    pub fn retained_payload_bytes(&self) -> Result<usize, crate::MultiwayError> {
+        self.solution
+            .capacity()
+            .checked_mul(core::mem::size_of::<f64>())
+            .and_then(|solution| {
+                self.samples
+                    .capacity()
+                    .checked_mul(core::mem::size_of::<PcgTraceSample>())
+                    .and_then(|trace| solution.checked_add(trace))
+            })
+            .ok_or(crate::MultiwayError::WorkspaceSizeOverflow {
+                context: "owned PCG result payload",
+            })
+    }
+}

@@ -418,3 +418,43 @@ fn neumaier_add(sum: &mut f64, correction: &mut f64, value: f64) {
     }
     *sum = updated;
 }
+
+impl ThreeWayProblem {
+    /// Payload reachable through the five shared problem allocations, counted once.
+    ///
+    /// Counts topology/component objects behind Arc, their vector capacities,
+    /// and the three numerical Arc slices. Excludes the inline problem handle,
+    /// Arc headers/alignment padding, identity headers and allocator overhead.
+    /// Ordinary problem clones share this payload; do not sum their reports.
+    pub fn retained_payload_bytes(&self) -> Result<usize, IncidenceError> {
+        let parts = [
+            core::mem::size_of::<ThreeWayTopology>(),
+            self.topology.retained_payload_bytes()?,
+            core::mem::size_of::<IncidenceComponents>(),
+            self.components.retained_payload_bytes()?,
+            core::mem::size_of_val(self.weights.as_ref()),
+            core::mem::size_of_val(self.square_root_weights.as_ref()),
+            core::mem::size_of_val(self.diagonal.as_ref()),
+        ];
+        parts.into_iter().try_fold(0usize, |total, bytes| {
+            total
+                .checked_add(bytes)
+                .ok_or(IncidenceError::DimensionOverflow {
+                    context: "shared problem payload",
+                })
+        })
+    }
+
+    /// Whether all five immutable backing allocations are shared with `other`.
+    ///
+    /// This is storage identity, not value equality or authorization to reuse
+    /// numerical state under changed weights. Independent equal builds return false.
+    #[must_use]
+    pub fn shares_storage_with(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.topology, &other.topology)
+            && Arc::ptr_eq(&self.weights, &other.weights)
+            && Arc::ptr_eq(&self.square_root_weights, &other.square_root_weights)
+            && Arc::ptr_eq(&self.diagonal, &other.diagonal)
+            && Arc::ptr_eq(&self.components, &other.components)
+    }
+}
