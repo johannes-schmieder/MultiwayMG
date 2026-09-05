@@ -5,7 +5,12 @@ use crate::{
     ThreeWayProblem,
 };
 
+mod admission;
 mod finite;
+pub use admission::{
+    MapPcgPayloadReport, PcgPayloadBudget, prepared_map_pcg_payload_report,
+    solve_projected_pcg_traced_with_payload_budget,
+};
 mod result_ref;
 mod workspace;
 

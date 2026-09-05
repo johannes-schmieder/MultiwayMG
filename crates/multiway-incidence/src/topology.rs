@@ -104,3 +104,17 @@ impl ThreeWayTopology {
         self.offsets[factor] + level as usize
     }
 }
+
+impl ThreeWayTopology {
+    /// Retained tuple-array payload, using capacity rather than length.
+    ///
+    /// Excludes this inline object and allocator overhead.
+    pub fn retained_payload_bytes(&self) -> Result<usize, IncidenceError> {
+        self.tuples
+            .capacity()
+            .checked_mul(core::mem::size_of::<[u32; 3]>())
+            .ok_or(IncidenceError::DimensionOverflow {
+                context: "topology payload",
+            })
+    }
+}

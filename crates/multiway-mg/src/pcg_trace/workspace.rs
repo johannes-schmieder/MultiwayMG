@@ -79,6 +79,20 @@ impl PcgTraceWorkspace {
         problem: &ThreeWayProblem,
         options: PcgTraceOptions,
     ) -> Result<(), MultiwayError> {
+        self.prepare_with(problem, options, || Ok(()))
+    }
+
+    // A local boundary callback permits deterministic failure/unwind tests.
+    // The public path passes a no-op; no hook, allocator or mutable global is retained.
+    fn prepare_with<F>(
+        &mut self,
+        problem: &ThreeWayProblem,
+        options: PcgTraceOptions,
+        mut before_reservation: F,
+    ) -> Result<(), MultiwayError>
+    where
+        F: FnMut() -> Result<(), MultiwayError>,
+    {
         Self::required_bytes(problem, options)?;
         let dimension = problem.dimension();
         let samples = required_samples(options.max_iterations)?;
@@ -90,9 +104,23 @@ impl PcgTraceWorkspace {
             &mut self.direction,
             &mut self.applied,
         ] {
+            if dimension > vector.capacity() {
+                before_reservation()?;
+            }
             reserve(vector, dimension)?;
         }
+        if samples > self.samples.capacity() {
+            before_reservation()?;
+        }
         reserve(&mut self.samples, samples)?;
+        // This is a delegated preparation boundary, not a hook into the incidence allocator.
+        if self
+            .projection
+            .as_ref()
+            .is_none_or(|p| !p.is_compatible_with(problem.components()))
+        {
+            before_reservation()?;
+        }
         if let Some(projection) = self.projection.as_mut() {
             projection.try_prepare_for(problem.components())?;
         } else {
@@ -346,3 +374,6 @@ mod tests {
         assert_eq!(values.capacity(), capacity);
     }
 }
+
+#[cfg(test)]
+mod failure_tests;

@@ -101,3 +101,24 @@ pub(super) fn required_bytes(
                 .ok_or_else(size_overflow)
         })
 }
+
+impl OperatorWorkspaces {
+    pub(super) fn is_prepared_for(&self, hierarchy: &CycleScreenedMapHierarchy) -> bool {
+        self.levels.len() >= hierarchy.problems.len()
+            && hierarchy.terminal.workspace_is_prepared(&self.terminal)
+            && hierarchy
+                .problems
+                .iter()
+                .enumerate()
+                .all(|(level, problem)| {
+                    let state = &self.levels[level];
+                    state.projection.is_compatible_with(problem.components())
+                        && hierarchy.smoothers.get(level).is_none_or(|smoother| {
+                            state
+                                .map
+                                .as_ref()
+                                .is_some_and(|map| map.is_prepared_for(smoother))
+                        })
+                })
+    }
+}

@@ -188,3 +188,20 @@ impl FactorAggregation {
         ThreeWayProblem::from_collapsed_parts(self.coarse_counts, tuples, weights)
     }
 }
+
+impl FactorAggregation {
+    /// Checked parent-array payload, including unused capacities.
+    ///
+    /// Excludes the inline aggregation descriptor and allocator overhead.
+    pub fn retained_payload_bytes(&self) -> Result<usize, IncidenceError> {
+        self.parents.iter().try_fold(0usize, |total, parents| {
+            parents
+                .capacity()
+                .checked_mul(core::mem::size_of::<u32>())
+                .and_then(|bytes| total.checked_add(bytes))
+                .ok_or(IncidenceError::DimensionOverflow {
+                    context: "aggregation payload",
+                })
+        })
+    }
+}

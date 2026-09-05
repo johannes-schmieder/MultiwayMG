@@ -4,6 +4,9 @@
 
 ### Added
 
+- Checked fixed-MAP hierarchy payload inventories and strict prepared traced-PCG
+  payload-budget admission; see `docs/ISSUE5_PAYLOAD_ADMISSION.md`.
+
 - Caller-owned outer traced-PCG vectors, projection and bounded trace storage,
   with borrowed results and one shared recurrence; see `docs/ISSUE5_PCG_STORAGE.md`.
 

@@ -156,6 +156,20 @@ fn every_public_path_matches_independent_prechange_pcg_on_revealed_fixtures()
             )?
             .to_owned();
             assert_reference(&prepared, &expected);
+            let budgeted = multiway_mg::solve_projected_pcg_traced_with_payload_budget(
+                &hierarchy,
+                &rhs,
+                options,
+                &mut storage,
+                &mut hierarchy_storage,
+                multiway_mg::PcgPayloadBudget {
+                    maximum_bytes: usize::MAX,
+                    additional_live_bytes: 0,
+                },
+            )?
+            .to_owned();
+            assert_reference(&budgeted, &expected);
+            certify(&problem, &rhs, &budgeted);
             certify(&problem, &rhs, &prepared);
             assert_eq!(storage.retained_bytes()?, bytes);
             assert_eq!(storage.trace_capacity(), trace_capacity);

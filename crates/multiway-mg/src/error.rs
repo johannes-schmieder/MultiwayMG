@@ -8,6 +8,23 @@ use multiway_incidence::IncidenceError;
 #[derive(Debug, Error)]
 #[non_exhaustive]
 pub enum MultiwayError {
+    /// A prepared working-set payload exceeds the explicitly supplied budget.
+    #[error("prepared payload requires {required} bytes, budget is {budget}")]
+    PayloadBudgetExceeded {
+        /// Counted retained and declared caller payload.
+        required: usize,
+        /// Maximum payload admitted by this call.
+        budget: usize,
+    },
+    /// Strict prepared execution found unprepared hierarchy scratch.
+    #[error("workspace is not prepared for {context}")]
+    WorkspaceNotPrepared {
+        /// Rejected workspace boundary.
+        context: &'static str,
+    },
+    /// The private hierarchy ownership invariant no longer matches its inventory.
+    #[error("MAP hierarchy problem/smoother ownership invariant is inconsistent")]
+    PayloadInventoryMismatch,
     /// Incidence construction or operator application failed.
     #[error(transparent)]
     Incidence(#[from] IncidenceError),
