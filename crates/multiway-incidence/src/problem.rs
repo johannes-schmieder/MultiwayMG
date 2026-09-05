@@ -284,14 +284,25 @@ impl ThreeWayProblem {
         Ok(sum + correction)
     }
 
-    /// Form the normal-equation right-hand side `B^T W targets`.
-    pub fn rhs_from_targets(&self, targets: &[f64]) -> Result<Vec<f64>, IncidenceError> {
+    /// Form `rhs = B^T W targets` in caller-owned storage.
+    ///
+    /// Dimensions are checked before `rhs` is modified.
+    pub fn rhs_from_targets_into(
+        &self,
+        targets: &[f64],
+        rhs: &mut [f64],
+    ) -> Result<(), IncidenceError> {
         validate_len(
-            "ThreeWayProblem::rhs_from_targets",
+            "ThreeWayProblem::rhs_from_targets_into targets",
             self.tuple_count(),
             targets.len(),
         )?;
-        let mut rhs = vec![0.0; self.dimension()];
+        validate_len(
+            "ThreeWayProblem::rhs_from_targets_into rhs",
+            self.dimension(),
+            rhs.len(),
+        )?;
+        rhs.fill(0.0);
         for ((&tuple, &weight), &target) in self
             .topology
             .tuples()
@@ -304,18 +315,52 @@ impl ThreeWayProblem {
                 rhs[self.topology.global_index(factor, tuple[factor])] += value;
             }
         }
+        Ok(())
+    }
+
+    /// Form the normal-equation right-hand side `B^T W targets`.
+    pub fn rhs_from_targets(&self, targets: &[f64]) -> Result<Vec<f64>, IncidenceError> {
+        let mut rhs = vec![0.0; self.dimension()];
+        self.rhs_from_targets_into(targets, &mut rhs)?;
         Ok(rhs)
+    }
+
+    /// Compute `out = rhs - G x` in caller-owned storage.
+    ///
+    /// Dimensions are checked before `out` is modified.
+    pub fn residual_into(
+        &self,
+        rhs: &[f64],
+        x: &[f64],
+        out: &mut [f64],
+    ) -> Result<(), IncidenceError> {
+        validate_len(
+            "ThreeWayProblem::residual_into rhs",
+            self.dimension(),
+            rhs.len(),
+        )?;
+        validate_len(
+            "ThreeWayProblem::residual_into x",
+            self.dimension(),
+            x.len(),
+        )?;
+        validate_len(
+            "ThreeWayProblem::residual_into output",
+            self.dimension(),
+            out.len(),
+        )?;
+        self.apply_gramian(x, out)?;
+        for (value, &right) in out.iter_mut().zip(rhs) {
+            *value = right - *value;
+        }
+        Ok(())
     }
 
     /// Compute `rhs - G x` into a newly allocated vector.
     pub fn residual(&self, rhs: &[f64], x: &[f64]) -> Result<Vec<f64>, IncidenceError> {
-        validate_len("ThreeWayProblem::residual rhs", self.dimension(), rhs.len())?;
-        let mut applied = vec![0.0; self.dimension()];
-        self.apply_gramian(x, &mut applied)?;
-        for (value, &right) in applied.iter_mut().zip(rhs) {
-            *value = right - *value;
-        }
-        Ok(applied)
+        let mut residual = vec![0.0; self.dimension()];
+        self.residual_into(rhs, x, &mut residual)?;
+        Ok(residual)
     }
 
     /// Materialize the dense Gramian for reference tests and small terminals.
