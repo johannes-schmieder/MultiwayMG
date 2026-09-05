@@ -100,7 +100,7 @@ pub use cycle_smoother_portfolio::{
     CycleSmootherPortfolioResult, CycleSmootherPortfolioStopReason, SelectedTwoGridCycle,
     build_cycle_smoother_portfolio,
 };
-pub use dense::DensePseudoinverse;
+pub use dense::{DensePseudoinverse, DensePseudoinverseWorkspace};
 pub use dense_pair::{DensePairOptions, DensePairSchwarzPreconditioner};
 pub use error::MultiwayError;
 pub use hierarchy::{
@@ -112,7 +112,7 @@ pub use lsmr::{
     LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, LeastSquaresWorkReport,
     solve_weighted_least_squares,
 };
-pub use map::SymmetricMapPreconditioner;
+pub use map::{SymmetricMapPreconditioner, SymmetricMapWorkspace};
 #[cfg(feature = "cmg")]
 pub use oracle_schedule::{
     OracleLevelSmootherSpec, ScheduledOracleBuildTiming, ScheduledOracleHierarchy,
