@@ -1,0 +1,67 @@
+name: Issue 4 balanced size ladder
+
+on:
+  push:
+    branches: [codex/issue-4-size-ladder]
+    paths: [.github/workflows/issue4-size-ladder.yml]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  RAYON_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+
+jobs:
+  ladder:
+    name: Frozen balanced size ladder
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Record reproducibility metadata
+        run: |
+          mkdir -p issue4-size-ladder-output
+          {
+            git rev-parse HEAD
+            echo "event=$GITHUB_EVENT_NAME sha=$GITHUB_SHA run=$GITHUB_RUN_ID"
+            rustc --version --verbose
+            uname -a
+            lscpu
+            echo "RAYON_NUM_THREADS=$RAYON_NUM_THREADS"
+            echo "OMP_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS"
+            grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
+          } > issue4-size-ladder-output/metadata.txt
+      - name: Check harness and validator
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked -p multiway-mg --all-features --example issue4_size_ladder -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --example issue4_size_ladder
+          python3 -m unittest discover -s scripts -p test_issue4_size_ladder_summary.py
+      - name: Build release benchmark
+        run: cargo build --locked --release -p multiway-mg --all-features --example issue4_size_ladder
+      - name: Run frozen ladder
+        run: |
+          /usr/bin/time -v -o issue4-size-ladder-output/process-resources.txt \
+            target/release/examples/issue4_size_ladder issue4-size-ladder-output \
+            2> issue4-size-ladder-output/warnings.txt
+      - name: Validate and summarize
+        run: |
+          python3 scripts/summarize_issue4_size_ladder.py \
+            issue4-size-ladder-output/size-ladder.tsv \
+            issue4-size-ladder-output/SUMMARY.md
+          (cd issue4-size-ladder-output && sha256sum size-ladder.tsv metadata.txt > checksums.sha256)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-4-size-ladder-output
+          path: issue4-size-ladder-output/
+          if-no-files-found: error
