@@ -1,0 +1,55 @@
+name: Complete MAP cycle allocation contract
+
+on:
+  push:
+    branches: [main, "codex/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  allocations:
+    name: Prepared allocations (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      CARGO_TERM_COLOR: never
+      RUST_BACKTRACE: "1"
+      RAYON_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Record exact source and platform
+        shell: bash
+        run: |
+          mkdir -p allocation-evidence
+          {
+            git rev-parse HEAD
+            echo "event=$GITHUB_EVENT_NAME sha=$GITHUB_SHA run=$GITHUB_RUN_ID"
+            rustc --version --verbose
+            uname -a
+          } > allocation-evidence/metadata.txt
+      - name: Run isolated debug and release allocation gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo test --locked -p multiway-mg --no-default-features --test workspace_allocations 2>&1 | tee allocation-evidence/debug-minimal.txt
+          cargo test --locked -p multiway-mg --all-features --test workspace_allocations 2>&1 | tee allocation-evidence/debug-all.txt
+          cargo test --locked --release -p multiway-mg --no-default-features --test workspace_allocations 2>&1 | tee allocation-evidence/release-minimal.txt
+          cargo test --locked --release -p multiway-mg --all-features --test workspace_allocations 2>&1 | tee allocation-evidence/release-all.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allocation-evidence-${{ matrix.os }}
+          path: allocation-evidence/
+          if-no-files-found: error
