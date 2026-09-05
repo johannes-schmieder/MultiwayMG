@@ -43,11 +43,12 @@ jobs:
               grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
             } > "issue4-coarse-cmg-$mode/metadata.txt"
           done
-      - name: Check harness
+      - name: Check harness and validator
         run: |
           cargo fmt --all -- --check
           cargo clippy --locked -p multiway-mg --all-features --example issue4_coarse_cmg -- -D warnings
           cargo test --locked -p multiway-mg --all-features --example issue4_coarse_cmg
+          python3 -m unittest scripts/test_issue4_coarse_cmg_summary.py
       - name: Build release benchmark
         run: cargo build --locked --release -p multiway-mg --all-features --example issue4_coarse_cmg
       - name: Run automatic calibration
