@@ -1,0 +1,26 @@
+6f413c04c45d0a0fa26e147441d001e7b9eae119
+event=push sha=6f413c04c45d0a0fa26e147441d001e7b9eae119 run=33934987774
+rustc 1.85.0 (4d91de4e4 2025-02-17)
+binary: rustc
+commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688
+commit-date: 2025-02-17
+host: x86_64-unknown-linux-gnu
+release: 1.85.0
+LLVM version: 19.1.7
+Linux runnervmejwal 6.17.0-1022-azure #22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026 x86_64 x86_64 x86_64 GNU/Linux
+Architecture: x86_64
+CPU(s): 4
+Model name: AMD EPYC 9V74 80-Core Processor
+Thread(s) per core: 2
+Core(s) per socket: 2
+Socket(s): 1
+L1d cache: 64 KiB (2 instances)
+L1i cache: 64 KiB (2 instances)
+L2 cache: 2 MiB (2 instances)
+L3 cache: 32 MiB (1 instance)
+NUMA node(s): 1
+RAYON_NUM_THREADS=1
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1
+cmg = { git = "https://github.com/johannes-schmieder/CMG", rev = "90e1fe0b0c14065155532711246ede6678bb4935" }
+schwarz-precond = { git = "https://github.com/py-econometrics/within", rev = "b7779cbab7a3116be56aae4389fde1f6e6a99a9f", package = "schwarz-precond" }
+within = { git = "https://github.com/py-econometrics/within", rev = "b7779cbab7a3116be56aae4389fde1f6e6a99a9f", package = "within" }
