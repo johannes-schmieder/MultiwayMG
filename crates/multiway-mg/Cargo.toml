@@ -2,37 +2,43 @@
 name = "multiway-mg"
 version.workspace = true
 edition.workspace = true
-rust-version.workspace = true
-authors.workspace = true
 license.workspace = true
+rust-version.workspace = true
 repository.workspace = true
-description = "Experimental multilevel solvers for weighted three-way incidence Gramians"
 
 [features]
-default = ["cmg", "lsmr"]
+default = ["cmg", "lsmr", "within-comparator"]
 cmg = ["dep:cmg"]
-lsmr = ["dep:schwarz-precond"]
-within-comparator = ["dep:within", "lsmr"]
+lsmr = ["dep:lsmr"]
+within-comparator = ["dep:within", "dep:schwarz-precond"]
 
 [dependencies]
 multiway-incidence = { path = "../multiway-incidence" }
-thiserror.workspace = true
 nalgebra.workspace = true
+thiserror.workspace = true
 cmg = { workspace = true, optional = true }
-schwarz-precond = { workspace = true, optional = true }
+lsmr = { workspace = true, optional = true }
 within = { workspace = true, optional = true }
+schwarz-precond = { workspace = true, optional = true }
+
+[dev-dependencies]
+approx.workspace = true
+
+[[example]]
+name = "feasibility"
+required-features = ["cmg"]
 
 [[example]]
 name = "feasibility_matrix"
-required-features = ["cmg", "lsmr"]
-
-[[example]]
-name = "scaling_probe"
-required-features = ["cmg", "lsmr"]
+required-features = ["cmg"]
 
 [[example]]
 name = "difficult_scaling_probe"
-required-features = ["cmg", "lsmr"]
+required-features = ["cmg"]
+
+[[example]]
+name = "scaling_probe"
+required-features = ["cmg"]
 
 [[example]]
 name = "oracle_spectral_matrix"
@@ -55,15 +61,7 @@ name = "issue2_setup_cost_matrix"
 required-features = ["cmg"]
 
 [[example]]
-name = "issue3_automatic_gap_matrix"
-required-features = ["cmg"]
-
-[[example]]
-name = "issue3_bootstrap_challenge"
-required-features = ["cmg"]
-
-[[example]]
-name = "issue3_fixture_search"
+name = "issue3_completion_matrix"
 required-features = ["cmg"]
 
 [[example]]
@@ -71,7 +69,15 @@ name = "issue3_cover_search"
 required-features = ["cmg"]
 
 [[example]]
-name = "issue3_completion_matrix"
+name = "issue3_automatic_gap_matrix"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_fixture_search"
+required-features = ["cmg"]
+
+[[example]]
+name = "issue3_bootstrap_challenge"
 required-features = ["cmg"]
 
 [[example]]
@@ -108,6 +114,10 @@ required-features = ["cmg", "within-comparator"]
 
 [[example]]
 name = "issue4_size_ladder"
+required-features = ["cmg", "within-comparator"]
+
+[[example]]
+name = "issue4_coarse_cmg"
 required-features = ["cmg", "within-comparator"]
 
 [lints]
