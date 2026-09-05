@@ -1,0 +1,151 @@
+name: Assemble permanent operator workspace source
+on:
+  push:
+    branches: [implementation/issue-5-operator-assembly]
+    paths: [.github/workflows/issue5-operator-assembly.yml]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt
+      - name: Preserve references and make hash-guarded source edits
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          def read(path, sha):
+              assert subprocess.check_output(['git','hash-object',path], text=True).strip() == sha, path
+              return Path(path).read_text()
+          def replace(text, old, new, n=1):
+              assert text.count(old) == n, (old, text.count(old), n)
+              return text.replace(old, new)
+          def reference(text, name, target, path):
+              text = text.replace('use crate::{MultiwayError, Preconditioner, ThreeWayProblem};', 'use multiway_mg::{MultiwayError, Preconditioner, ThreeWayProblem};')
+              text = text.replace(name, target)
+              text = text.replace('crate::error::dimension(', 'dimension(')
+              text += '\nfn dimension(context: &\'static str, expected: usize, actual: usize) -> MultiwayError {\n    MultiwayError::DimensionMismatch { context, expected, actual }\n}\n'
+              Path(path).parent.mkdir(parents=True, exist_ok=True)
+              Path(path).write_text('// Test-only allocating reference from e60809b; do not use in production.\n' + text)
+          path = 'crates/multiway-incidence/src/components.rs'
+          text = read(path, '0d5ea393189a9d0a0ca0d07e18f8278e92e5cc33')
+          text = replace(text, 'use crate::{IncidenceError, ThreeWayTopology};\n', 'use crate::{IncidenceError, ThreeWayTopology};\n\nmod workspace;\n')
+          Path(path).write_text(text)
+          path = 'crates/multiway-incidence/src/error.rs'
+          text = read(path, '1c6355cfdabedef7231f2b73d6e32a1ffec80d3d')
+          marker = '    /// Projection scratch belongs to a different component decomposition.\n'
+          addition = '''    /// Fallible projection scratch reservation failed.
+              #[error("workspace allocation failed in {context}")]
+              WorkspaceAllocation {
+                  /// Setup operation whose reservation failed.
+                  context: &'static str,
+              },
+          '''
+          text = replace(text, marker, addition + marker)
+          Path(path).write_text(text)
+          path = 'crates/multiway-mg/src/map.rs'
+          text = read(path, 'd23757488c4553e7ef2fbcaef146de2ae5b8e24d')
+          reference(text, 'SymmetricMapPreconditioner', 'AllocatingMapReference', 'crates/multiway-mg/tests/support/pre_workspace_map.rs')
+          text = replace(text, 'use crate::{MultiwayError, Preconditioner, ThreeWayProblem};\n', 'use crate::{MultiwayError, Preconditioner, ThreeWayProblem};\n\nmod workspace;\npub use workspace::SymmetricMapWorkspace;\n')
+          start = text.index('impl Preconditioner for SymmetricMapPreconditioner {')
+          text = text[:start] + text[start:].replace('impl Preconditioner for SymmetricMapPreconditioner {\n    fn dimension(&self) -> usize {\n        self.problem.dimension()\n    }\n\n    fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {', '''impl SymmetricMapPreconditioner {
+              /// Apply one symmetric MAP sweep using explicitly prepared caller scratch.
+              ///
+              /// Dimensions and projection binding are checked before mutation. No
+              /// allocation occurs on a valid prepared call; output is transactional.
+              pub fn apply_with_workspace(
+                  &self,
+                  rhs: &[f64],
+                  out: &mut [f64],
+                  workspace: &mut SymmetricMapWorkspace,
+              ) -> Result<(), MultiwayError> {''', 1)
+          text = replace(text, '        let mut compatible_rhs = rhs.to_vec();', '''        workspace.validate(self)?;
+                  let SymmetricMapWorkspace { compatible_rhs, forward, middle, solution, projection } = workspace;
+                  compatible_rhs.copy_from_slice(rhs);''')
+          text = replace(text, '.project_structural_range(&mut compatible_rhs)?;', '.project_structural_range_with_workspace(compatible_rhs, projection)?;')
+          text = replace(text, '        let mut forward = vec![0.0; dimension];', '        forward.fill(0.0);')
+          old = '''        let middle: Vec<f64> = forward
+                      .iter()
+                      .zip(diagonal)
+                      .map(|(&value, &degree)| value * degree)
+                      .collect();'''
+          # Literal indentation from the preserved source, not YAML indentation.
+          old = '        let middle: Vec<f64> = forward\n            .iter()\n            .zip(diagonal)\n            .map(|(&value, &degree)| value * degree)\n            .collect();'
+          text = replace(text, old, '        for ((middle, &value), &degree) in middle.iter_mut().zip(forward.iter()).zip(diagonal) {\n            *middle = value * degree;\n        }')
+          start = text.index('        out.fill(0.0);')
+          tail = text[start:].replace('out', 'solution')
+          tail = replace(tail, 'self.problem.components().project_structural_range(solution)?;', 'self.problem.components().project_structural_range_with_workspace(solution, projection)?;\n        out.copy_from_slice(solution);')
+          text = text[:start] + tail
+          text += '''
+          impl Preconditioner for SymmetricMapPreconditioner {
+              fn dimension(&self) -> usize { self.problem.dimension() }
+              fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+                  if rhs.len() != self.dimension() {
+                      return Err(crate::error::dimension("SymmetricMapPreconditioner::apply rhs", self.dimension(), rhs.len()));
+                  }
+                  if out.len() != self.dimension() {
+                      return Err(crate::error::dimension("SymmetricMapPreconditioner::apply output", self.dimension(), out.len()));
+                  }
+                  let mut workspace = self.application_workspace()?;
+                  self.apply_with_workspace(rhs, out, &mut workspace)
+              }
+          }
+          '''
+          Path(path).write_text(text)
+          path = 'crates/multiway-mg/src/dense.rs'
+          text = read(path, '3a2c3c17f12c06b12fe8363f4fa2c0658b2012ec')
+          reference(text, 'DensePseudoinverse', 'AllocatingTerminalReference', 'crates/multiway-mg/tests/support/pre_workspace_dense.rs')
+          text = replace(text, 'use crate::{MultiwayError, Preconditioner, ThreeWayProblem};\n', 'use crate::{MultiwayError, Preconditioner, ThreeWayProblem};\n\nmod workspace;\npub use workspace::DensePseudoinverseWorkspace;\n')
+          old = '    pub fn solve_into(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {'
+          new = '''    pub fn solve_into(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+                  if rhs.len() != self.dimension() {
+                      return Err(crate::error::dimension("DensePseudoinverse::solve_into rhs", self.dimension(), rhs.len()));
+                  }
+                  if out.len() != self.dimension() {
+                      return Err(crate::error::dimension("DensePseudoinverse::solve_into output", self.dimension(), out.len()));
+                  }
+                  let mut workspace = self.application_workspace()?;
+                  self.solve_into_with_workspace(rhs, out, &mut workspace)
+              }
+
+              /// Apply the spectral pseudoinverse without allocating prepared scratch.
+              ///
+              /// All vector lengths are validated before output or scratch is changed.
+              pub fn solve_into_with_workspace(
+                  &self,
+                  rhs: &[f64],
+                  out: &mut [f64],
+                  workspace: &mut DensePseudoinverseWorkspace,
+              ) -> Result<(), MultiwayError> {'''
+          text = replace(text, old, new)
+          text = replace(text, '        let mut modal = vec![0.0; dimension];', '''        if workspace.modal.len() != dimension {
+                      return Err(crate::error::dimension("DensePseudoinverseWorkspace", dimension, workspace.modal.len()));
+                  }
+                  let modal = &mut workspace.modal;''')
+          Path(path).write_text(text)
+          path = 'crates/multiway-mg/src/lib.rs'
+          text = read(path, '5fca4582869ee7cab2836b87a607221e2b0c4537')
+          text = replace(text, 'pub use dense::DensePseudoinverse;', 'pub use dense::{DensePseudoinverse, DensePseudoinverseWorkspace};')
+          text = replace(text, 'pub use map::SymmetricMapPreconditioner;', 'pub use map::{SymmetricMapPreconditioner, SymmetricMapWorkspace};')
+          Path(path).write_text(text)
+          PY
+          cargo fmt --all
+          git diff --check
+      - name: Publish only the permanent formatted source tree
+        run: |
+          set -euo pipefail
+          git rm .github/workflows/issue5-operator-assembly.yml
+          git add crates docs/ISSUE5_OPERATOR_WORKSPACES.md
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Assemble permanent operator workspace source; not a validation receipt'
+          git push origin HEAD:implementation/issue-5-operator-assembly
+          git log -1 --format='source_commit=%H%nsource_tree=%T'
+          git diff --stat e60809b60d0eefba5f071682cdbdd36e26b98010 HEAD
