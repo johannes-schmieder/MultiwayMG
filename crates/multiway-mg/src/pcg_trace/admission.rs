@@ -35,6 +35,9 @@ pub struct MapPcgPayloadReport {
     /// Complete recursive workspace, including inactive retained capacity.
     pub hierarchy_workspace_bytes: usize,
     /// Submitted RHS slice payload; unused owner capacity is caller-declared extra.
+    ///
+    /// Always charged, even if it aliases immutable hierarchy data. Such aliasing
+    /// conservatively overcounts; this API is not a pointer-deduplicating ledger.
     pub rhs_bytes: usize,
     /// Additional disjoint live payload declared by the caller.
     pub additional_live_bytes: usize,

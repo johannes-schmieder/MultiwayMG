@@ -168,3 +168,35 @@ fn shared_identity_is_distinct_from_value_equality_and_owned_copy_payload() {
     assert!(a.terminal_bytes > 0);
     assert!(a.aggregation_bytes > 0);
 }
+
+#[test]
+fn immutable_rhs_alias_is_conservatively_charged_and_not_omitted() {
+    let hierarchy = hierarchy(2);
+    let options = PcgTraceOptions::default();
+    let mut outer = PcgTraceWorkspace::try_new(hierarchy.finest_problem(), options).unwrap();
+    let mut inner = hierarchy.application_workspace().unwrap();
+    let rhs = hierarchy.finest_problem().diagonal();
+    let report =
+        prepared_map_pcg_payload_report(&hierarchy, rhs, options, &outer, &inner, 0).unwrap();
+    assert_eq!(report.rhs_bytes, core::mem::size_of_val(rhs));
+    assert_eq!(
+        report.total_bytes().unwrap(),
+        report.hierarchy.total_bytes().unwrap()
+            + outer.retained_bytes().unwrap()
+            + inner.retained_bytes().unwrap()
+            + core::mem::size_of_val(rhs)
+    );
+    let result = solve_projected_pcg_traced_with_payload_budget(
+        &hierarchy,
+        rhs,
+        options,
+        &mut outer,
+        &mut inner,
+        PcgPayloadBudget {
+            maximum_bytes: report.total_bytes().unwrap(),
+            additional_live_bytes: 0,
+        },
+    )
+    .unwrap();
+    assert!(result.converged());
+}

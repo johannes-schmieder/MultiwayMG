@@ -382,3 +382,21 @@ impl IncidenceComponents {
         labels.checked_add(sizes).ok_or_else(overflow)
     }
 }
+
+#[cfg(test)]
+mod payload_tests {
+    use super::*;
+    #[test]
+    fn component_payload_counts_spare_capacity_without_projection_scratch() {
+        let topology = ThreeWayTopology::new([2; 3], vec![[0, 0, 0], [1, 1, 1]]).unwrap();
+        let mut components = IncidenceComponents::from_topology(&topology);
+        components.labels.reserve_exact(64);
+        components.factor_sizes.reserve_exact(16);
+        let expected = components.labels.capacity() * core::mem::size_of::<usize>()
+            + components.factor_sizes.capacity() * core::mem::size_of::<[usize; 3]>();
+        assert_eq!(components.retained_payload_bytes().unwrap(), expected);
+        let scratch = components.try_projection_workspace().unwrap();
+        assert!(scratch.retained_bytes() > 0);
+        assert_eq!(components.retained_payload_bytes().unwrap(), expected);
+    }
+}

@@ -112,4 +112,23 @@ mod tests {
         };
         assert!(report.total_bytes().is_err());
     }
+
+    #[test]
+    fn inventory_rejects_an_independently_rebuilt_smoother_problem() {
+        let tuples = [[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 0]];
+        let problem = ThreeWayProblem::from_observations([2; 3], &tuples, &[1.0; 4]).unwrap();
+        let independent = ThreeWayProblem::from_observations([2; 3], &tuples, &[1.0; 4]).unwrap();
+        let mut hierarchy = CycleScreenedMapHierarchy::from_maps(
+            problem,
+            vec![FactorAggregation::consecutive_halving([2; 3]).unwrap()],
+            1.0e-12,
+        )
+        .unwrap();
+        assert!(hierarchy.retained_payload_report().is_ok());
+        hierarchy.smoothers[0] = SymmetricMapPreconditioner::new(independent);
+        assert!(matches!(
+            hierarchy.retained_payload_report(),
+            Err(MultiwayError::PayloadInventoryMismatch)
+        ));
+    }
 }

@@ -50,8 +50,11 @@ contains its solution and full trace budget. Borrowed views add no heap payload;
 `PcgTraceResult::retained_payload_bytes` charges an explicitly retained owned result.
 Use the extra-live category for other RHS columns, input capacity beyond the slice,
 retained result copies, old-state overlap and other independent retained buffers.
-Do not charge an alias of already-counted storage twice. The library cannot discover
-or verify unreported external allocations.
+Do not add an alias of already-counted storage to the caller's extra-live charge.
+The RHS slice itself is always charged, even if it aliases immutable hierarchy data;
+in that unusual case the report conservatively overcounts. It is exact within its
+payload exclusions for the normal disjoint-RHS case, not an arbitrary pointer-based
+deduplicating ledger. The library cannot discover or verify external allocations.
 
 ## Exclusions and lifetime boundaries
 
@@ -83,8 +86,6 @@ injection, other hierarchy/pair routes and LSMR remain separate increments. No
 numerical replay, fresh holdout, speedup or production-routing change is implied;
 ADR 0002 and frozen scientific evidence remain unchanged.
 
-
-
 ### Outer preparation failure coverage in this increment
 
 The outer workspace's production setup path has a private local no-op callback at
@@ -98,3 +99,11 @@ real `TryReserveError` value obtained from an impossible tiny-vector reservation
 they do not cause the OS allocator itself to fail. Failure inside the delegated
 incidence preparation, every recursive hierarchy allocation, and arbitrary external
 allocator failures are NOT exhaustively injected by these tests.
+
+
+Review regressions also remove each active traversal vector element in turn, swap
+each projection/MAP binding, omit per-level storage and change terminal modal size.
+The read-only preparation check rejects all of them before a strict solve, even for
+zero RHS. Separate tests verify spare tuple/parent/component capacity and the
+smoother-sharing invariant. Immutable-RHS aliasing is explicitly tested as
+conservative overcharging rather than silently claiming general deduplication.

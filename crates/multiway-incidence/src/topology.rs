@@ -118,3 +118,18 @@ impl ThreeWayTopology {
             })
     }
 }
+
+#[cfg(test)]
+mod payload_tests {
+    use super::*;
+    #[test]
+    fn unused_tuple_capacity_is_charged() {
+        let mut tuples = Vec::with_capacity(32);
+        tuples.extend([[0, 0, 0], [1, 1, 1]]);
+        let capacity = tuples.capacity();
+        let topology = ThreeWayTopology::new([2; 3], tuples).unwrap();
+        let bytes = topology.retained_payload_bytes().unwrap();
+        assert_eq!(bytes, capacity * core::mem::size_of::<[u32; 3]>());
+        assert!(bytes > core::mem::size_of_val(topology.tuples()));
+    }
+}
