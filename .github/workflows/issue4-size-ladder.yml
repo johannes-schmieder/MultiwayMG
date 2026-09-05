@@ -1,3 +1,4 @@
+# One-time calibration workflow; remove before merge.
 name: Issue 4 balanced size ladder
 
 on:
