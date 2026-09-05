@@ -36,14 +36,14 @@ impl Preconditioner for AllocatingMapReference {
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
         let dimension = self.dimension();
         if rhs.len() != dimension {
-            return Err(dimension(
+            return Err(dimension_error(
                 "AllocatingMapReference::apply rhs",
                 dimension,
                 rhs.len(),
             ));
         }
         if out.len() != dimension {
-            return Err(dimension(
+            return Err(dimension_error(
                 "AllocatingMapReference::apply output",
                 dimension,
                 out.len(),
@@ -105,7 +105,7 @@ impl Preconditioner for AllocatingMapReference {
     }
 }
 
-fn dimension(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
+fn dimension_error(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
     MultiwayError::DimensionMismatch {
         context,
         expected,

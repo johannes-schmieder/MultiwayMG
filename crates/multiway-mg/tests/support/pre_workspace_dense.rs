@@ -85,14 +85,14 @@ impl AllocatingTerminalReference {
     pub fn solve_into(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
         let dimension = self.dimension();
         if rhs.len() != dimension {
-            return Err(dimension(
+            return Err(dimension_error(
                 "AllocatingTerminalReference::solve_into rhs",
                 dimension,
                 rhs.len(),
             ));
         }
         if out.len() != dimension {
-            return Err(dimension(
+            return Err(dimension_error(
                 "AllocatingTerminalReference::solve_into output",
                 dimension,
                 out.len(),
@@ -127,7 +127,7 @@ impl Preconditioner for AllocatingTerminalReference {
     }
 }
 
-fn dimension(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
+fn dimension_error(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
     MultiwayError::DimensionMismatch {
         context,
         expected,
