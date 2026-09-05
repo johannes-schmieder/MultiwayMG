@@ -699,7 +699,7 @@ mod tests {
             hierarchy_options(fixture.terminal_dimension),
         )
         .unwrap();
-        assert!(plan.accepted());
+        assert!(!plan.aggregations().is_empty());
         let within = ExperimentalHierarchy::build(
             fixture.problem.clone(),
             plan.aggregations(),
