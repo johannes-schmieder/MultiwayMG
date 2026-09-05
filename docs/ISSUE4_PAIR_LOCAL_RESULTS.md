@@ -1,5 +1,12 @@
 # Issue 4 checkpoint: certified pair-local economics
 
+> **Historical checkpoint.** This document records the state after PR #12 on
+> September 4, 2026. Issue #4 was completed on September 5, 2026; the final
+> synthesis and policy are in [`ISSUE4_FINAL_RESULTS.md`](ISSUE4_FINAL_RESULTS.md)
+> and [`ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`](ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md).
+> Statements below that issue #4 “remains open” are preserved as historical
+> descriptions of this checkpoint, not the current project status.
+
 Date: 2026-09-04. Status: substantial infrastructure merged in PR #12;
 **issue #4 remains open**. No production routing decision is authorized.
 
