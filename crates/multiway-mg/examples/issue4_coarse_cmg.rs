@@ -17,15 +17,14 @@ use std::{
 };
 
 use cmg::{CmgOptions, TerminalReason};
-use issue3_recursive_fixtures::{RecursiveHoldoutFixture, recursive_holdout_fixtures};
+use issue3_recursive_fixtures::{recursive_holdout_fixtures, RecursiveHoldoutFixture};
 use multiway_mg::{
-    AggregationRepairOptions, BootstrapAggregationOptions, CompatibleRelaxationCriteria,
-    CompatibleRelaxationOptions, CycleQualityCriteria, CycleQualityOptions,
-    CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan, DensePseudoinverse,
-    FactorAggregation, LeastSquaresOptions, MultiwayError, PairCmgSchwarzOptions,
-    PairCmgSchwarzPreconditioner, PcgTraceOptions, Preconditioner, ThreeWayProblem,
-    WithinApproxCholOptions, WithinApproxCholPreconditioner, solve_projected_pcg_traced,
-    solve_weighted_least_squares,
+    solve_projected_pcg_traced, solve_weighted_least_squares, AggregationRepairOptions,
+    BootstrapAggregationOptions, CompatibleRelaxationCriteria, CompatibleRelaxationOptions,
+    CycleQualityCriteria, CycleQualityOptions, CycleScreenedHierarchyOptions,
+    CycleScreenedHierarchyPlan, DensePseudoinverse, FactorAggregation, LeastSquaresOptions,
+    MultiwayError, PairCmgSchwarzOptions, PairCmgSchwarzPreconditioner, PcgTraceOptions,
+    Preconditioner, ThreeWayProblem, WithinApproxCholOptions, WithinApproxCholPreconditioner,
 };
 
 const PREFIXES: [usize; 4] = [1, 4, 16, 32];
@@ -124,11 +123,7 @@ struct ExperimentalHierarchy {
 }
 
 impl ExperimentalHierarchy {
-    fn build(
-        finest: ThreeWayProblem,
-        maps: &[FactorAggregation],
-        method: Method,
-    ) -> Result<Self> {
+    fn build(finest: ThreeWayProblem, maps: &[FactorAggregation], method: Method) -> Result<Self> {
         let start = Instant::now();
         let mut problems = Vec::with_capacity(maps.len() + 1);
         problems.push(finest);
@@ -179,19 +174,19 @@ impl ExperimentalHierarchy {
                 smoothers.push(Smoother::Within(preconditioner));
             }
         }
+
         let terminal = DensePseudoinverse::from_problem(
             problems
                 .last()
                 .expect("experimental hierarchy retains a terminal"),
             TERMINAL_TOLERANCE,
         )?;
-        let setup_seconds = start.elapsed().as_secs_f64();
         Ok(Self {
             problems,
             maps: maps.to_vec(),
             smoothers,
             terminal,
-            setup_seconds,
+            setup_seconds: start.elapsed().as_secs_f64(),
             known_retained_bytes,
             warning_count,
             cmg,
@@ -205,7 +200,11 @@ impl ExperimentalHierarchy {
             .sum()
     }
 
-    fn apply_level(&self, level: usize, rhs: &[f64]) -> std::result::Result<Vec<f64>, MultiwayError> {
+    fn apply_level(
+        &self,
+        level: usize,
+        rhs: &[f64],
+    ) -> std::result::Result<Vec<f64>, MultiwayError> {
         let problem = &self.problems[level];
         if rhs.len() != problem.dimension() {
             return Err(MultiwayError::DimensionMismatch {
@@ -217,7 +216,9 @@ impl ExperimentalHierarchy {
         if level == self.maps.len() {
             let mut solution = vec![0.0; problem.dimension()];
             self.terminal.solve_into(rhs, &mut solution)?;
-            problem.components().project_structural_range(&mut solution)?;
+            problem
+                .components()
+                .project_structural_range(&mut solution)?;
             return Ok(solution);
         }
 
@@ -244,9 +245,13 @@ impl ExperimentalHierarchy {
 
         let post_residual = problem.residual(&compatible_rhs, &solution)?;
         let mut post = vec![0.0; problem.dimension()];
-        self.smoothers[level].action().apply(&post_residual, &mut post)?;
+        self.smoothers[level]
+            .action()
+            .apply(&post_residual, &mut post)?;
         add_assign(&mut solution, &post);
-        problem.components().project_structural_range(&mut solution)?;
+        problem
+            .components()
+            .project_structural_range(&mut solution)?;
         Ok(solution)
     }
 }
@@ -332,10 +337,7 @@ fn main() -> Result<()> {
     }
     fs::create_dir_all(&output)?;
     let mut writer = BufWriter::new(File::create(output.join("coarse-cmg.tsv"))?);
-    writeln!(
-        writer,
-        "case\tfamily\trequested_depth\tplan_accepted\tplan_depth\tplan_seconds\tdimension_complexity\ttuple_complexity\tmethod\trepeat\tsolver\trhs_count\tfine_dimension\tfine_tuples\tlevel_dimensions\tlevel_tuples\tnumerical_setup_seconds\tinitialization_seconds\tsetup_plus_solve_seconds\tcumulative_solve_seconds\tcumulative_iterations\tcumulative_outer_work\twork_unit\tcumulative_preconditioner_applications\tcumulative_certificate_work\tmax_true_residual\tconverged\tcertified\tknown_retained_bytes\tcmg_components\tcmg_max_vertices\tcmg_max_edges\tcmg_max_cycle_excess\tcmg_max_levels\tcmg_multilevel_components\tcmg_direct_components\tcmg_full_contraction_components\tcmg_stagnated_vertex_components\tcmg_stagnated_fill_components\tcmg_maximum_levels_components\tcmg_one_level_iterative_components\tfallback_allocations\twarning_count\terror"
-    )?;
+    writeln!(writer, "case\tfamily\trequested_depth\tplan_accepted\tplan_depth\tplan_seconds\tdimension_complexity\ttuple_complexity\tmethod\trepeat\tsolver\trhs_count\tfine_dimension\tfine_tuples\tlevel_dimensions\tlevel_tuples\tnumerical_setup_seconds\tinitialization_seconds\tsetup_plus_solve_seconds\tcumulative_solve_seconds\tcumulative_iterations\tcumulative_outer_work\twork_unit\tcumulative_preconditioner_applications\tcumulative_certificate_work\tmax_true_residual\tconverged\tcertified\tknown_retained_bytes\tcmg_components\tcmg_max_vertices\tcmg_max_edges\tcmg_max_cycle_excess\tcmg_max_levels\tcmg_multilevel_components\tcmg_direct_components\tcmg_full_contraction_components\tcmg_stagnated_vertex_components\tcmg_stagnated_fill_components\tcmg_maximum_levels_components\tcmg_one_level_iterative_components\tfallback_allocations\twarning_count\terror")?;
 
     for (case_index, fixture) in recursive_holdout_fixtures()?.iter().enumerate() {
         run_fixture(case_index, fixture, &mut writer)?;
@@ -408,6 +410,11 @@ fn run_fixture(
                         continue;
                     }
                     let setup = plan_seconds + hierarchy.setup_seconds + initialization_seconds;
+                    let work_unit = if solver == "mlsmr" {
+                        "rectangular-operator"
+                    } else {
+                        "gramian"
+                    };
                     writeln!(
                         writer,
                         "{}\t{}\t{}\ttrue\t{}\t{:.9e}\t{:.9e}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{:.9e}\t{:.9e}\t{:.9e}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{:.9e}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}",
@@ -432,7 +439,7 @@ fn run_fixture(
                         batch.solve_seconds,
                         batch.iterations,
                         batch.outer_work,
-                        if solver == "mlsmr" { "rectangular-operator" } else { "gramian" },
+                        work_unit,
                         batch.preconditioner_applications,
                         batch.certificate_work,
                         batch.max_true_residual,
@@ -658,7 +665,10 @@ fn bootstrap_options() -> BootstrapAggregationOptions {
 }
 
 fn join_usize(values: impl Iterator<Item = usize>) -> String {
-    values.map(|value| value.to_string()).collect::<Vec<_>>().join(";")
+    values
+        .map(|value| value.to_string())
+        .collect::<Vec<_>>()
+        .join(";")
 }
 
 fn add_assign(destination: &mut [f64], source: &[f64]) {
@@ -676,8 +686,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn coarse_variant_preserves_fine_within_and_frozen_maps() {
-        let fixture = recursive_holdout_fixtures().unwrap().remove(0);
+    fn coarse_variant_preserves_fine_within_and_level_sequence() {
+        let mut fixtures = recursive_holdout_fixtures().unwrap();
+        let fixture = fixtures.remove(0);
         let plan = CycleScreenedHierarchyPlan::build(
             fixture.problem.clone(),
             hierarchy_options(fixture.terminal_dimension),
@@ -696,17 +707,26 @@ mod tests {
             Method::WithinFineCmgCoarse,
         )
         .unwrap();
-        assert_eq!(within.maps, hybrid.maps);
+        assert_eq!(within.maps.len(), hybrid.maps.len());
+        assert_eq!(within.problems.len(), hybrid.problems.len());
+        for (left, right) in within.problems.iter().zip(&hybrid.problems) {
+            assert_eq!(left.dimension(), right.dimension());
+            assert_eq!(left.tuple_count(), right.tuple_count());
+            assert_eq!(left.topology().level_counts(), right.topology().level_counts());
+        }
         assert!(matches!(within.smoothers[0], Smoother::Within(_)));
         assert!(matches!(hybrid.smoothers[0], Smoother::Within(_)));
-        assert!(hybrid.smoothers[1..]
-            .iter()
-            .all(|smoother| matches!(smoother, Smoother::PairCmg(_))));
+        assert!(
+            hybrid.smoothers[1..]
+                .iter()
+                .all(|smoother| matches!(smoother, Smoother::PairCmg(_)))
+        );
     }
 
     #[test]
     fn hybrid_action_is_numerically_linear_and_symmetric() {
-        let fixture = recursive_holdout_fixtures().unwrap().remove(0);
+        let mut fixtures = recursive_holdout_fixtures().unwrap();
+        let fixture = fixtures.remove(0);
         let plan = CycleScreenedHierarchyPlan::build(
             fixture.problem.clone(),
             hierarchy_options(fixture.terminal_dimension),
