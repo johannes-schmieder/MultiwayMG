@@ -1,0 +1,91 @@
+# One-time compiler-guided executor. It commits only after the full matrix passes, then removes itself.
+name: Issue 5 hierarchy workspace v8
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-v8.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  implement:
+    name: Build and verify reusable hierarchy workspace
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Harden and run compiler-guided transformation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("scripts/issue5_hierarchy_workspace_refactor_v8.py")
+          text = path.read_text()
+          old = '''        header = source[block.start : block.opening]
+                  if required in " ".join(header.split()):
+                      return block'''
+          new = '''        header = " ".join(source[block.start : block.opening].split())
+                  if required == "CycleScreenedMapHierarchy":
+                      if header == "impl CycleScreenedMapHierarchy":
+                          return block
+                  elif required in header:
+                      return block'''
+          if old not in text:
+              raise SystemExit("exact impl matcher block not found")
+          path.write_text(text.replace(old, new, 1))
+          PY
+          python3 scripts/issue5_hierarchy_workspace_refactor_v8.py
+      - name: Assert API and scratch route
+        run: |
+          grep -q 'pub struct CycleScreenedMapHierarchyWorkspace' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'pub fn application_workspace(&self)' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'pub fn apply_with_workspace(' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'with_hierarchy_scratch(&mut workspace.buffers' crates/multiway-mg/src/hierarchy.rs
+          test "$(grep -c 'hierarchy_scratch_zeroed' crates/multiway-mg/src/hierarchy.rs)" -ge 2
+          ! grep -q 'workspace_binding' crates/multiway-mg/src/hierarchy.rs
+          test -f crates/multiway-mg/tests/hierarchy_workspace.rs
+      - name: Validate targeted and full repository matrices
+        run: |
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_workspace
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+          git diff --check
+      - name: Commit only the permanent source slice
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md crates/multiway-mg/src/hierarchy.rs \
+            crates/multiway-mg/src/lib.rs crates/multiway-mg/tests/hierarchy_workspace.rs
+          git rm -f --ignore-unmatch \
+            scripts/issue5_hierarchy_workspace_refactor.py \
+            scripts/issue5_hierarchy_workspace_refactor_v8.py \
+            .github/workflows/issue5-hierarchy-final-ci-connector.yml \
+            .github/workflows/issue5-hierarchy-workspace-finalize.yml \
+            .github/workflows/issue5-hierarchy-workspace.yml \
+            .github/workflows/issue5-hierarchy-workspace-cleanup.yml \
+            .github/workflows/issue5-hierarchy-workspace-v2.yml \
+            .github/workflows/issue5-hierarchy-workspace-v3.yml \
+            .github/workflows/issue5-hierarchy-workspace-v4.yml \
+            .github/workflows/issue5-hierarchy-workspace-v5.yml \
+            .github/workflows/issue5-hierarchy-workspace-v6.yml \
+            .github/workflows/issue5-hierarchy-workspace-v7.yml \
+            .github/workflows/issue5-hierarchy-workspace-v8.yml
+          git diff --cached --check
+          git commit -m "Add reusable hierarchy application workspace"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
