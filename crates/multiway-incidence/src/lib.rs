@@ -9,17 +9,21 @@ mod aggregation;
 mod components;
 mod construction;
 mod error;
+mod factor_pair;
 mod prepared;
 mod problem;
+mod symbolic;
 mod topology;
 
 pub use aggregation::FactorAggregation;
 pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
 pub use error::IncidenceError;
+pub use factor_pair::FactorPair;
 pub use prepared::{
     ObservationGroups, PreparedThreeWayTopology, PreparedTopologyBinding, PreparedTopologySource,
 };
 pub use problem::ThreeWayProblem;
+pub use symbolic::{PreparedCoarseTupleMap, PreparedPairEdgeMap, TupleMergeGroups};
 pub use topology::ThreeWayTopology;
 
 #[cfg(test)]

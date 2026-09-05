@@ -6,6 +6,35 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A symbolic map was built from a different factor aggregation owner.
+    #[error("symbolic map belongs to a different factor aggregation owner")]
+    AggregationBindingMismatch,
+    /// A factor aggregation would merge distinct exact incidence components.
+    #[error("factor {factor} aggregate {parent} crosses incidence components")]
+    CrossComponentAggregation {
+        /// Zero-based factor index.
+        factor: usize,
+        /// Rejected factor-local coarse level.
+        parent: usize,
+    },
+    /// A symbolic coarse/fine component correspondence is not a bijection.
+    #[error("symbolic component correspondence is inconsistent")]
+    ComponentMapMismatch,
+    /// An operation submitted a different pair from the prepared pair map.
+    #[error("factor pair differs from the prepared edge map")]
+    FactorPairMismatch,
+    /// Conservative additional requested-array payload exceeds the setup budget.
+    #[error(
+        "{context}: symbolic setup requests at most {required} payload bytes, budget is {budget}"
+    )]
+    SymbolicSetupBudgetExceeded {
+        /// Symbolic construction boundary.
+        context: &'static str,
+        /// Conservative requested-array upper bound, not allocator or OS memory.
+        required: usize,
+        /// Declared additional requested-array payload budget.
+        budget: usize,
+    },
     /// A fallible immutable topology or component array reservation failed.
     #[error("topology array allocation failed in {context}")]
     TopologyAllocation {

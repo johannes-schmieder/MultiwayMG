@@ -4,6 +4,10 @@
 
 ### Added
 
+- Owner-bound symbolic coarse-tuple and pair-edge maps with deterministic merge
+  groups, component correspondence and checked fallible setup; see
+  `docs/ISSUE5_SYMBOLIC_MAPS.md`.
+
 - Weights-free prepared incidence topology with deterministic observation groups,
   borrowed owner bindings, fallible arrays and checked setup-payload admission;
   see `docs/ISSUE5_PREPARED_TOPOLOGY.md`.
