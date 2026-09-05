@@ -1,0 +1,63 @@
+name: Issue 4 whole-system calibration
+
+on:
+  push:
+    branches: [codex/issue-4-whole-calibration]
+    paths: [.github/workflows/issue4-whole-calibration.yml]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  RAYON_NUM_THREADS: "1"
+  OMP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+
+jobs:
+  calibrate:
+    name: Larger whole-system calibration matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Record reproducibility metadata
+        run: |
+          mkdir -p issue4-calibration-output
+          {
+            git rev-parse HEAD
+            echo "event=$GITHUB_EVENT_NAME sha=$GITHUB_SHA run=$GITHUB_RUN_ID"
+            rustc --version --verbose
+            uname -a
+            lscpu
+            echo "RAYON_NUM_THREADS=$RAYON_NUM_THREADS"
+            echo "OMP_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS"
+            grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
+          } > issue4-calibration-output/metadata.txt
+      - name: Test evidence validator
+        run: python3 -m unittest discover -s scripts -p test_issue4_whole_system_summary.py
+      - name: Build release benchmark
+        run: cargo build --locked --release -p multiway-mg --all-features --example issue4_whole_system
+      - name: Run larger calibration profile
+        run: |
+          /usr/bin/time -v -o issue4-calibration-output/process-resources.txt \
+            target/release/examples/issue4_whole_system issue4-calibration-output calibration \
+            2> issue4-calibration-output/warnings.txt
+      - name: Validate and summarize
+        run: |
+          python3 scripts/summarize_issue4_whole_system.py \
+            --profile calibration \
+            issue4-calibration-output/whole-system.tsv \
+            issue4-calibration-output/SUMMARY.md
+          (cd issue4-calibration-output && sha256sum whole-system.tsv metadata.txt > checksums.sha256)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-4-whole-system-calibration
+          path: issue4-calibration-output/
+          if-no-files-found: error
