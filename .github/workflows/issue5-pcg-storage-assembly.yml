@@ -1,0 +1,46 @@
+name: Assemble outer traced-PCG storage source
+on:
+  push:
+    branches: [implementation/issue-5-pcg-storage-assembly]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.85.0'
+          components: rustfmt
+      - name: Preserve exact reference and transform shared storage
+        run: |
+          python3 scripts/issue5_pcg_storage_assembly.py
+          cargo fmt --all
+          rm scripts/issue5_pcg_storage_assembly.py .github/workflows/issue5-pcg-storage-assembly.yml
+          git diff --check
+      - name: Publish permanent source tree only; no qualification claim
+        run: |
+          python3 - <<'PY'
+          import subprocess
+          allowed = {
+            'CHANGELOG.md', 'crates/multiway-mg/src/lib.rs',
+            'crates/multiway-mg/src/pcg_trace.rs',
+            'crates/multiway-mg/src/pcg_trace/workspace.rs',
+            'crates/multiway-mg/src/pcg_trace/result_ref.rs',
+            'crates/multiway-mg/tests/pcg_storage.rs',
+            'crates/multiway-mg/tests/support/pre_workspace_pcg.rs',
+            'crates/multiway-mg/tests/support/pre_workspace_pcg_finite.rs',
+            'docs/ISSUE5_PCG_STORAGE.md', 'docs/ISSUE5_PCG_WORKSPACE.md',
+          }
+          subprocess.run(['git', 'add', '-A'], check=True)
+          paths = set(subprocess.check_output(['git','diff','--cached','--name-only','78f13b1c8b17e5ba4df90e406e375549b6169f25'], text=True).splitlines())
+          assert paths == allowed, (paths - allowed, allowed - paths)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Format permanent outer PCG storage source; not a validation receipt'
+          git push origin HEAD:implementation/issue-5-pcg-storage-assembly
