@@ -1,8 +1,8 @@
 # Issue 5: prepared projection, MAP and terminal scratch
 
 This slice removes temporary vector allocation from the prepared symmetric-MAP
-and dense-terminal **application** APIs. Hierarchy integration and measured
-whole-cycle allocation qualification are separate work. No timing improvement,
+and dense-terminal **application** APIs. Hierarchy integration and the measured complete-cycle allocation contract are
+now documented in `ISSUE5_WORKSPACES.md`. No timing improvement,
 complete solver workspace, weight replay, or total peak-memory claim is made.
 
 ## Projection: explicit preparation, strict application
