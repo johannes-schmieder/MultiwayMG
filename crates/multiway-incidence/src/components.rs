@@ -1,5 +1,7 @@
 //! Incidence-component metadata and structural-kernel projection.
 
+use std::sync::Arc;
+
 use crate::{IncidenceError, ThreeWayTopology};
 
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
@@ -12,13 +14,24 @@ struct StructuralProjectionScratch {
 /// Reusable scratch for structural-range projection and defect evaluation.
 ///
 /// Construct this workspace from [`IncidenceComponents::projection_workspace`]
-/// and reuse it only with a component decomposition having the same coefficient
-/// dimension and number of incidence components. The workspace owns all heap
-/// storage needed by the allocation-free projection and defect methods.
-#[derive(Debug, Clone, PartialEq)]
+/// and reuse it only with that component decomposition or one of its ordinary
+/// clones. Independently constructed decompositions are rejected, even if their
+/// dimensions and component counts match. The private identity token contains
+/// no numerical state. The workspace owns all mutable scratch needed by the
+/// allocation-free projection and defect methods.
+#[derive(Debug, Clone)]
 pub struct StructuralProjectionWorkspace {
     dimension: usize,
     scratch: Vec<StructuralProjectionScratch>,
+    binding: Arc<()>,
+}
+
+impl PartialEq for StructuralProjectionWorkspace {
+    fn eq(&self, other: &Self) -> bool {
+        self.dimension == other.dimension
+            && Arc::ptr_eq(&self.binding, &other.binding)
+            && self.scratch == other.scratch
+    }
 }
 
 impl StructuralProjectionWorkspace {
@@ -34,7 +47,11 @@ impl StructuralProjectionWorkspace {
         self.scratch.len()
     }
 
-    /// Retained heap bytes in the reusable component scratch array.
+    /// Retained heap bytes in the exclusively owned component scratch array.
+    ///
+    /// This capacity-based payload count excludes the inline workspace object,
+    /// allocator metadata, and the shared identity token's reference-counting
+    /// metadata. Cloning the binding does not allocate another identity token.
     #[must_use]
     pub fn retained_bytes(&self) -> usize {
         self.scratch.capacity() * core::mem::size_of::<StructuralProjectionScratch>()
@@ -50,11 +67,17 @@ impl StructuralProjectionWorkspace {
 /// Every component carries the two structural shift directions
 /// `(1, -1, 0)` and `(1, 0, -1)`. Extra rank deficiencies may exist and are
 /// deliberately left to rank-revealing solvers and external certification.
+/// Value equality compares component metadata, not workspace compatibility.
+/// Ordinary clones share their private workspace binding; independent builds
+/// do not, even when their component metadata is value-equal.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct IncidenceComponents {
     labels: Vec<usize>,
     factor_sizes: Vec<[usize; 3]>,
     offsets: [usize; 4],
+    // Arc<()> value equality preserves the existing metadata equality contract.
+    // Workspace compatibility is deliberately checked with Arc::ptr_eq instead.
+    binding: Arc<()>,
 }
 
 impl IncidenceComponents {
@@ -103,6 +126,7 @@ impl IncidenceComponents {
             labels,
             factor_sizes,
             offsets,
+            binding: Arc::new(()),
         }
     }
 
@@ -131,12 +155,16 @@ impl IncidenceComponents {
         self.labels[self.offsets[factor] + level]
     }
 
-    /// Allocate reusable scratch for structural projection and defect checks.
+    /// Allocate reusable scratch bound to this component decomposition.
+    ///
+    /// Ordinary clones of this decomposition share the binding. Independently
+    /// constructed decompositions require their own projection workspaces.
     #[must_use]
     pub fn projection_workspace(&self) -> StructuralProjectionWorkspace {
         StructuralProjectionWorkspace {
             dimension: self.labels.len(),
             scratch: vec![StructuralProjectionScratch::default(); self.count()],
+            binding: Arc::clone(&self.binding),
         }
     }
 
@@ -152,9 +180,9 @@ impl IncidenceComponents {
 
     /// Orthogonally remove structural shift directions without allocating.
     ///
-    /// `workspace` must have been prepared for a component decomposition with
-    /// the same coefficient dimension and component count. Dimensions are
-    /// checked before `values` is modified.
+    /// `workspace` must have been prepared by this component decomposition or
+    /// one of its ordinary clones. Dimensions and exact private binding are
+    /// checked before either `values` or workspace scratch is modified.
     pub fn project_structural_range_with_workspace(
         &self,
         values: &mut [f64],
@@ -214,8 +242,8 @@ impl IncidenceComponents {
 
     /// Evaluate the maximum structural defect without allocating.
     ///
-    /// `workspace` must have been prepared for a component decomposition with
-    /// the same coefficient dimension and component count.
+    /// `workspace` must have been prepared by this component decomposition or
+    /// one of its ordinary clones. Validation precedes scratch mutation.
     pub fn maximum_structural_defect_with_workspace(
         &self,
         values: &[f64],
@@ -268,6 +296,9 @@ impl IncidenceComponents {
                 self.count(),
                 workspace.scratch.len(),
             ));
+        }
+        if !Arc::ptr_eq(&self.binding, &workspace.binding) {
+            return Err(IncidenceError::WorkspaceBindingMismatch { context });
         }
         Ok(())
     }

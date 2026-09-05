@@ -79,6 +79,12 @@ pub enum IncidenceError {
         /// Submitted vector length.
         actual: usize,
     },
+    /// Projection scratch belongs to a different component decomposition.
+    #[error("{context}: workspace belongs to a different component decomposition")]
+    WorkspaceBindingMismatch {
+        /// Operation that rejected the incompatible workspace.
+        context: &'static str,
+    },
     /// An aggregation parent vector did not cover every fine level.
     #[error("factor {factor} parent count {actual} does not match fine level count {expected}")]
     ParentLengthMismatch {

@@ -84,3 +84,26 @@ fn cloned_components_and_workspace_remain_compatible_after_owner_drop() {
         assert_eq!(cloned_workspace.retained_bytes(), bytes);
     }
 }
+
+#[test]
+fn equal_metadata_is_not_a_shared_binding_even_after_the_owner_is_dropped() {
+    let owner = problem(false);
+    let other = problem(false);
+    assert_eq!(owner.components(), other.components());
+    let mut workspace = owner.components().projection_workspace();
+    let other_workspace = other.components().projection_workspace();
+    assert_ne!(workspace, other_workspace);
+    let before = workspace.clone();
+    drop(owner);
+    let mut values = [2.0, -3.0, 5.0, 7.0, -11.0, 13.0];
+    let original = values;
+    let result = other
+        .components()
+        .project_structural_range_with_workspace(&mut values, &mut workspace);
+    assert!(matches!(
+        result,
+        Err(multiway_incidence::IncidenceError::WorkspaceBindingMismatch { .. })
+    ));
+    assert_eq!(values, original);
+    assert_eq!(workspace, before);
+}
