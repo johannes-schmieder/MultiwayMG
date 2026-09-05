@@ -1,0 +1,28 @@
+name: Assemble weight-frame source (temporary)
+on:
+  push:
+    branches: [implementation/issue-5-weight-frame-assembly]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.85.0
+          components: rustfmt
+      - name: Assemble and format permanent source, not a validation receipt
+        run: |
+          set -euo pipefail
+          python3 scripts/issue5_weight_frame_assembly.py
+          cargo fmt --all
+          rm scripts/issue5_weight_frame_assembly.py .github/workflows/issue5-weight-frame-assembly.yml
+          git add -A
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Assemble permanent weight-frame source; not a validation receipt'
+          git push origin HEAD:${{ github.ref_name }}
