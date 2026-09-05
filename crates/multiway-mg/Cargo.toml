@@ -106,5 +106,9 @@ required-features = ["cmg", "within-comparator"]
 name = "issue4_whole_system"
 required-features = ["cmg", "within-comparator"]
 
+[[example]]
+name = "issue4_size_ladder"
+required-features = ["cmg", "within-comparator"]
+
 [lints]
 workspace = true
