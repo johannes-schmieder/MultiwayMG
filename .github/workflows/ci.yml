@@ -208,3 +208,53 @@ jobs:
           name: issue-4-pair-local-output
           path: issue4-output/
           if-no-files-found: error
+
+  issue-4-whole-system:
+    name: Issue 4 whole-system Schwarz work matrix
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      RAYON_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Record reproducibility metadata
+        run: |
+          mkdir -p issue4-whole-output
+          {
+            git rev-parse HEAD
+            echo "event=$GITHUB_EVENT_NAME sha=$GITHUB_SHA run=$GITHUB_RUN_ID"
+            rustc --version --verbose
+            uname -a
+            lscpu
+            echo "RAYON_NUM_THREADS=$RAYON_NUM_THREADS"
+            echo "OMP_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OPENBLAS_NUM_THREADS"
+            grep -E '^(cmg|schwarz-precond|within) =' Cargo.toml
+          } > issue4-whole-output/metadata.txt
+      - name: Test whole-system harness and evidence validator
+        run: |
+          cargo test --locked -p multiway-mg --all-features --example issue4_whole_system
+          python3 -m unittest discover -s scripts -p test_issue4_whole_system_summary.py
+      - name: Build release benchmark
+        run: cargo build --locked --release -p multiway-mg --all-features --example issue4_whole_system
+      - name: Run whole-system smoke matrix
+        run: |
+          /usr/bin/time -v -o issue4-whole-output/process-resources.txt \
+            target/release/examples/issue4_whole_system issue4-whole-output smoke \
+            2> issue4-whole-output/warnings.txt
+      - name: Validate evidence and summarize work ratios
+        run: |
+          python3 scripts/summarize_issue4_whole_system.py \
+            issue4-whole-output/whole-system.tsv issue4-whole-output/SUMMARY.md
+          (cd issue4-whole-output && sha256sum whole-system.tsv metadata.txt > checksums.sha256)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: issue-4-whole-system-output
+          path: issue4-whole-output/
+          if-no-files-found: error
