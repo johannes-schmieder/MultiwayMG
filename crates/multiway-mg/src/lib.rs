@@ -127,8 +127,9 @@ pub use pair_schwarz::{
 };
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use pcg_trace::{
-    PcgTraceOptions, PcgTraceResult, PcgTraceSample, solve_projected_pcg_traced,
-    solve_projected_pcg_traced_with_hierarchy_workspace,
+    PcgTraceOptions, PcgTraceResult, PcgTraceResultRef, PcgTraceSample, PcgTraceWorkspace,
+    solve_projected_pcg_traced, solve_projected_pcg_traced_with_hierarchy_workspace,
+    solve_projected_pcg_traced_with_workspace, solve_projected_pcg_traced_with_workspaces,
 };
 pub use preconditioner::Preconditioner;
 pub use repair::{

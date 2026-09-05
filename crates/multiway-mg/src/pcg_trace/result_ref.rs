@@ -48,41 +48,61 @@ impl<'a> PcgTraceResultRef<'a> {
         samples: &'a [PcgTraceSample],
         summary: PcgTraceSummary,
     ) -> Self {
-        Self { solution, samples, summary }
+        Self {
+            solution,
+            samples,
+            summary,
+        }
     }
 
     /// Final normalized solution candidate, valid for this workspace borrow.
     #[must_use]
-    pub const fn solution(&self) -> &'a [f64] { self.solution }
+    pub const fn solution(&self) -> &'a [f64] {
+        self.solution
+    }
 
     /// Completed iterations.
     #[must_use]
-    pub const fn iterations(&self) -> usize { self.summary.iterations }
+    pub const fn iterations(&self) -> usize {
+        self.summary.iterations
+    }
 
     /// Whether the recomputed projected residual met tolerance.
     #[must_use]
-    pub const fn converged(&self) -> bool { self.summary.converged }
+    pub const fn converged(&self) -> bool {
+        self.summary.converged
+    }
 
     /// Euclidean norm removed by the structural-range projection of the RHS.
     #[must_use]
-    pub const fn rhs_projection_norm(&self) -> f64 { self.summary.rhs_projection_norm }
+    pub const fn rhs_projection_norm(&self) -> f64 {
+        self.summary.rhs_projection_norm
+    }
 
     /// Original-Gramian applications, including the residual audits.
     #[must_use]
-    pub const fn gramian_applications(&self) -> usize { self.summary.gramian_applications }
+    pub const fn gramian_applications(&self) -> usize {
+        self.summary.gramian_applications
+    }
 
     /// Preconditioner applications, including the original iteration-limit call.
     #[must_use]
-    pub const fn preconditioner_applications(&self) -> usize { self.summary.preconditioner_applications }
+    pub const fn preconditioner_applications(&self) -> usize {
+        self.summary.preconditioner_applications
+    }
 
     /// Initial and per-iteration residual samples; unused capacity is not exposed.
     #[must_use]
-    pub const fn samples(&self) -> &'a [PcgTraceSample] { self.samples }
+    pub const fn samples(&self) -> &'a [PcgTraceSample] {
+        self.samples
+    }
 
     /// Final relative true residual, using the same convention as the owned result.
     #[must_use]
     pub fn final_relative_residual(&self) -> f64 {
-        self.samples.last().map_or(0.0, |sample| sample.relative_residual())
+        self.samples
+            .last()
+            .map_or(0.0, |sample| sample.relative_residual())
     }
 
     /// Explicitly allocate and copy both arrays into an independent owned result.

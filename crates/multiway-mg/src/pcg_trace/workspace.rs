@@ -117,8 +117,13 @@ impl PcgTraceWorkspace {
     /// Includes unused capacity after larger solves. The exclusions are the same
     /// as [`Self::required_bytes`]; this is not total peak memory or process RSS.
     pub fn retained_bytes(&self) -> Result<usize, MultiwayError> {
-        let initial = self.trace_retained_bytes()?
-            .checked_add(self.projection.as_ref().map_or(0, StructuralProjectionWorkspace::retained_bytes))
+        let initial = self
+            .trace_retained_bytes()?
+            .checked_add(
+                self.projection
+                    .as_ref()
+                    .map_or(0, StructuralProjectionWorkspace::retained_bytes),
+            )
             .ok_or_else(overflow)?;
         [
             &self.projected_rhs,
@@ -130,7 +135,9 @@ impl PcgTraceWorkspace {
         ]
         .into_iter()
         .try_fold(initial, |total, vector| {
-            total.checked_add(bytes::<f64>(vector.capacity())?).ok_or_else(overflow)
+            total
+                .checked_add(bytes::<f64>(vector.capacity())?)
+                .ok_or_else(overflow)
         })
     }
 
@@ -160,15 +167,30 @@ impl PcgTraceWorkspace {
             &self.applied,
         ] {
             if vector.len() != problem.dimension() {
-                return Err(crate::error::dimension(CONTEXT, problem.dimension(), vector.len()));
+                return Err(crate::error::dimension(
+                    CONTEXT,
+                    problem.dimension(),
+                    vector.len(),
+                ));
             }
         }
-        if !self.projection.as_ref().is_some_and(|p| p.is_compatible_with(problem.components())) {
-            return Err(multiway_incidence::IncidenceError::WorkspaceBindingMismatch { context: CONTEXT }.into());
+        if !self
+            .projection
+            .as_ref()
+            .is_some_and(|p| p.is_compatible_with(problem.components()))
+        {
+            return Err(
+                multiway_incidence::IncidenceError::WorkspaceBindingMismatch { context: CONTEXT }
+                    .into(),
+            );
         }
         let required = required_samples(options.max_iterations)?;
         if self.samples.capacity() < required {
-            return Err(crate::error::dimension("PcgTraceWorkspace trace capacity", required, self.samples.capacity()));
+            return Err(crate::error::dimension(
+                "PcgTraceWorkspace trace capacity",
+                required,
+                self.samples.capacity(),
+            ));
         }
         Ok(())
     }
@@ -196,9 +218,14 @@ pub fn solve_projected_pcg_traced_with_workspace<'a, P: Preconditioner + ?Sized>
     options: PcgTraceOptions,
     workspace: &'a mut PcgTraceWorkspace,
 ) -> Result<PcgTraceResultRef<'a>, MultiwayError> {
-    let summary = super::run(problem, rhs, preconditioner, options, workspace, |right, out| {
-        preconditioner.apply(right, out)
-    })?;
+    let summary = super::run(
+        problem,
+        rhs,
+        preconditioner,
+        options,
+        workspace,
+        |right, out| preconditioner.apply(right, out),
+    )?;
     Ok(workspace.result_ref(summary))
 }
 
@@ -235,13 +262,20 @@ fn required_samples(iterations: usize) -> Result<usize, MultiwayError> {
 }
 
 fn bytes<T>(count: usize) -> Result<usize, MultiwayError> {
-    count.checked_mul(core::mem::size_of::<T>()).ok_or_else(overflow)
+    count
+        .checked_mul(core::mem::size_of::<T>())
+        .ok_or_else(overflow)
 }
 
 fn reserve<T>(vector: &mut Vec<T>, length: usize) -> Result<(), MultiwayError> {
     bytes::<T>(length)?;
     if length > vector.len() {
-        vector.try_reserve_exact(length - vector.len()).map_err(|source| MultiwayError::WorkspaceAllocation { context: CONTEXT, source })?;
+        vector
+            .try_reserve_exact(length - vector.len())
+            .map_err(|source| MultiwayError::WorkspaceAllocation {
+                context: CONTEXT,
+                source,
+            })?;
     }
     Ok(())
 }
