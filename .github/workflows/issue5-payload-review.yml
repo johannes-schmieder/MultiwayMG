@@ -1,0 +1,29 @@
+name: Format payload review repairs
+on:
+  push:
+    branches: [implementation/issue-5-payload-review]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          ref: ${{ github.ref_name }}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.85.0
+          components: rustfmt
+      - name: Apply review repairs and remove one-time machinery
+        run: |
+          set -euo pipefail
+          python3 scripts/issue5_payload_review.py
+          rm scripts/issue5_payload_review.py .github/workflows/issue5-payload-review.yml
+          cargo fmt --all
+          git diff --check
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Format permanent payload review repairs; not a validation receipt'
+          git push origin HEAD:${{ github.ref_name }}
