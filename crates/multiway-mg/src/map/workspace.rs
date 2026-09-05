@@ -154,3 +154,9 @@ fn overflow() -> MultiwayError {
         context: "SymmetricMapWorkspace",
     }
 }
+
+impl SymmetricMapWorkspace {
+    pub(crate) fn is_prepared_for(&self, operator: &SymmetricMapPreconditioner) -> bool {
+        self.validate(operator).is_ok()
+    }
+}

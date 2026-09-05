@@ -162,3 +162,25 @@ impl Preconditioner for DensePseudoinverse {
         self.solve_into(rhs, out)
     }
 }
+
+impl DensePseudoinverse {
+    /// Exclusive retained matrix and inverse-eigenvalue payload, by capacity.
+    ///
+    /// Excludes the inline descriptor, temporary factorization storage and
+    /// allocator overhead. This does not estimate factorization peak memory.
+    pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
+        self.eigenvectors
+            .data
+            .as_vec()
+            .capacity()
+            .checked_add(self.inverse_eigenvalues.capacity())
+            .and_then(|values| values.checked_mul(core::mem::size_of::<f64>()))
+            .ok_or(MultiwayError::WorkspaceSizeOverflow {
+                context: "dense terminal payload",
+            })
+    }
+
+    pub(crate) fn workspace_is_prepared(&self, workspace: &DensePseudoinverseWorkspace) -> bool {
+        workspace.modal.len() == self.dimension()
+    }
+}

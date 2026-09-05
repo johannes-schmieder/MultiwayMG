@@ -14,7 +14,9 @@ use crate::{
     build_cycle_screened_bootstrap_aggregation,
 };
 
+mod payload;
 mod workspace;
+pub use payload::MapHierarchyPayloadReport;
 
 pub use workspace::CycleScreenedMapHierarchyWorkspace;
 

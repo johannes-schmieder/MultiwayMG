@@ -326,6 +326,38 @@ fn size_overflow() -> MultiwayError {
     MultiwayError::WorkspaceSizeOverflow { context: CONTEXT }
 }
 
+impl CycleScreenedMapHierarchyWorkspace {
+    /// Read-only validation of every active vector, modal buffer and binding.
+    ///
+    /// Does not prepare, allocate, mutate or compare numerical weights. Inactive
+    /// storage is allowed and remains included in retained-byte accounting.
+    #[must_use]
+    pub fn is_prepared_for(&self, hierarchy: &CycleScreenedMapHierarchy) -> bool {
+        let Ok(count) = required_buffer_count(hierarchy.depth()) else {
+            return false;
+        };
+        if self.buffers.len() < count
+            || self.buffers[0].len() != hierarchy.finest_problem().dimension()
+            || !self.operators.is_prepared_for(hierarchy)
+        {
+            return false;
+        }
+        hierarchy
+            .problems
+            .windows(2)
+            .enumerate()
+            .all(|(level, pair)| {
+                let start = 1 + FRAME_BUFFERS * level;
+                let fine = pair[0].dimension();
+                let coarse = pair[1].dimension();
+                self.buffers[start..start + FRAME_BUFFERS]
+                    .iter()
+                    .zip([fine, fine, coarse, coarse, fine, fine, fine])
+                    .all(|(buffer, expected)| buffer.len() == expected)
+            })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -421,5 +453,87 @@ mod tests {
                 .collect::<Vec<_>>(),
             pointers
         );
+    }
+
+    fn assert_unprepared(
+        hierarchy: &CycleScreenedMapHierarchy,
+        workspace: &CycleScreenedMapHierarchyWorkspace,
+    ) {
+        let before = format!("{workspace:?}");
+        assert!(!workspace.is_prepared_for(hierarchy));
+        let options = crate::PcgTraceOptions::default();
+        let outer = crate::PcgTraceWorkspace::try_new(hierarchy.finest_problem(), options).unwrap();
+        let rhs = vec![0.0; hierarchy.dimension()];
+        assert!(matches!(
+            crate::prepared_map_pcg_payload_report(hierarchy, &rhs, options, &outer, workspace, 0),
+            Err(MultiwayError::WorkspaceNotPrepared { .. })
+        ));
+        assert_eq!(format!("{workspace:?}"), before);
+    }
+
+    #[test]
+    fn strict_preparation_inspects_every_active_recursive_buffer_and_binding() {
+        let hierarchy = hierarchy();
+        let other = self::hierarchy();
+        let mut workspace = hierarchy.application_workspace().unwrap();
+        assert!(workspace.is_prepared_for(&hierarchy));
+        assert!(workspace.is_prepared_for(&hierarchy.clone()));
+        for index in 0..workspace.buffers.len() {
+            let value = workspace.buffers[index].pop().unwrap();
+            assert_unprepared(&hierarchy, &workspace);
+            workspace.buffers[index].push(value);
+            assert!(workspace.is_prepared_for(&hierarchy));
+        }
+        let last = workspace.buffers.pop().unwrap();
+        assert_unprepared(&hierarchy, &workspace);
+        workspace.buffers.push(last);
+        let last = workspace.operators.levels.pop().unwrap();
+        assert_unprepared(&hierarchy, &workspace);
+        workspace.operators.levels.push(last);
+        for level in 0..hierarchy.problems.len() {
+            workspace.operators.levels[level]
+                .projection
+                .try_prepare_for(other.problems[level].components())
+                .unwrap();
+            assert_unprepared(&hierarchy, &workspace);
+            workspace.operators.levels[level]
+                .projection
+                .try_prepare_for(hierarchy.problems[level].components())
+                .unwrap();
+            assert!(workspace.is_prepared_for(&hierarchy));
+        }
+        for level in 0..hierarchy.smoothers.len() {
+            let map = workspace.operators.levels[level].map.take();
+            assert_unprepared(&hierarchy, &workspace);
+            workspace.operators.levels[level].map = map;
+            workspace.operators.levels[level]
+                .map
+                .as_mut()
+                .unwrap()
+                .try_prepare_for(&other.smoothers[level])
+                .unwrap();
+            assert_unprepared(&hierarchy, &workspace);
+            workspace.operators.levels[level]
+                .map
+                .as_mut()
+                .unwrap()
+                .try_prepare_for(&hierarchy.smoothers[level])
+                .unwrap();
+            assert!(workspace.is_prepared_for(&hierarchy));
+        }
+        let wrong_terminal =
+            crate::DensePseudoinverse::from_problem(hierarchy.finest_problem(), 1.0e-12).unwrap();
+        workspace
+            .operators
+            .terminal
+            .try_prepare_for(&wrong_terminal)
+            .unwrap();
+        assert_unprepared(&hierarchy, &workspace);
+        workspace
+            .operators
+            .terminal
+            .try_prepare_for(&hierarchy.terminal)
+            .unwrap();
+        assert!(workspace.is_prepared_for(&hierarchy));
     }
 }

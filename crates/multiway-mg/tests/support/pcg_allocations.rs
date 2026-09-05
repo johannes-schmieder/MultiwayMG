@@ -18,7 +18,7 @@ fn input(problem: &ThreeWayProblem, scale: f64) -> Vec<f64> {
     rhs
 }
 
-fn equal(view: PcgTraceResultRef<'_>, expected: &PcgTraceResult) {
+pub(super) fn equal(view: PcgTraceResultRef<'_>, expected: &PcgTraceResult) {
     assert_eq!(view.iterations(), expected.iterations());
     assert_eq!(view.converged(), expected.converged());
     assert_eq!(view.gramian_applications(), expected.gramian_applications());
@@ -252,6 +252,7 @@ fn instance(
         let b = rhs.iter().map(|x| x * x).sum::<f64>().sqrt();
         assert!(r <= 1.0e-8 * b.max(1.0));
     }
+    super::payload_allocations::check(hierarchy, &rhs, options, &mut outer, &mut inner, &expected)?;
     let before = GLOBAL.stats();
     drop(outer);
     let released = GLOBAL.stats() - before;

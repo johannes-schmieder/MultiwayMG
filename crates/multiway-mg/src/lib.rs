@@ -78,7 +78,7 @@ pub use compatible_gate::{
 pub use cycle_hierarchy::{
     CycleScreenedHierarchyLevelReport, CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan,
     CycleScreenedHierarchyStopReason, CycleScreenedMapHierarchy,
-    CycleScreenedMapHierarchyWorkspace,
+    CycleScreenedMapHierarchyWorkspace, MapHierarchyPayloadReport,
 };
 pub use cycle_portfolio::{
     CyclePortfolioBuildTiming, CyclePortfolioCandidateSource, CyclePortfolioEvaluation,
@@ -127,9 +127,11 @@ pub use pair_schwarz::{
 };
 pub use pcg::{PcgOptions, PcgResult, PcgStopReason, solve_projected_pcg};
 pub use pcg_trace::{
-    PcgTraceOptions, PcgTraceResult, PcgTraceResultRef, PcgTraceSample, PcgTraceWorkspace,
-    solve_projected_pcg_traced, solve_projected_pcg_traced_with_hierarchy_workspace,
-    solve_projected_pcg_traced_with_workspace, solve_projected_pcg_traced_with_workspaces,
+    MapPcgPayloadReport, PcgPayloadBudget, PcgTraceOptions, PcgTraceResult, PcgTraceResultRef,
+    PcgTraceSample, PcgTraceWorkspace, prepared_map_pcg_payload_report, solve_projected_pcg_traced,
+    solve_projected_pcg_traced_with_hierarchy_workspace,
+    solve_projected_pcg_traced_with_payload_budget, solve_projected_pcg_traced_with_workspace,
+    solve_projected_pcg_traced_with_workspaces,
 };
 pub use preconditioner::Preconditioner;
 pub use repair::{

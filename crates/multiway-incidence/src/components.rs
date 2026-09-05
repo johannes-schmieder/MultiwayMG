@@ -359,3 +359,44 @@ fn neumaier_add(sum: &mut f64, correction: &mut f64, value: f64) {
     }
     *sum = updated;
 }
+
+impl IncidenceComponents {
+    /// Retained labels and factor-size array payload, including unused capacity.
+    ///
+    /// Excludes this inline object, the zero-sized identity token's Arc header,
+    /// allocator overhead and any separately owned projection workspace.
+    pub fn retained_payload_bytes(&self) -> Result<usize, IncidenceError> {
+        let overflow = || IncidenceError::DimensionOverflow {
+            context: "component payload",
+        };
+        let labels = self
+            .labels
+            .capacity()
+            .checked_mul(core::mem::size_of::<usize>())
+            .ok_or_else(overflow)?;
+        let sizes = self
+            .factor_sizes
+            .capacity()
+            .checked_mul(core::mem::size_of::<[usize; 3]>())
+            .ok_or_else(overflow)?;
+        labels.checked_add(sizes).ok_or_else(overflow)
+    }
+}
+
+#[cfg(test)]
+mod payload_tests {
+    use super::*;
+    #[test]
+    fn component_payload_counts_spare_capacity_without_projection_scratch() {
+        let topology = ThreeWayTopology::new([2; 3], vec![[0, 0, 0], [1, 1, 1]]).unwrap();
+        let mut components = IncidenceComponents::from_topology(&topology);
+        components.labels.reserve_exact(64);
+        components.factor_sizes.reserve_exact(16);
+        let expected = components.labels.capacity() * core::mem::size_of::<usize>()
+            + components.factor_sizes.capacity() * core::mem::size_of::<[usize; 3]>();
+        assert_eq!(components.retained_payload_bytes().unwrap(), expected);
+        let scratch = components.try_projection_workspace().unwrap();
+        assert!(scratch.retained_bytes() > 0);
+        assert_eq!(components.retained_payload_bytes().unwrap(), expected);
+    }
+}
