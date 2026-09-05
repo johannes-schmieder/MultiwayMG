@@ -1,0 +1,324 @@
+# One-time implementation workflow for the first solver-level reusable-state slice.
+name: Issue 5 traced-PCG hierarchy workspace
+
+on:
+  push:
+    branches: [codex/issue-5-solver-workspace-v2]
+    paths: [.github/workflows/issue5-solver-pcg-workspace.yml]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  implement:
+    name: Reuse hierarchy scratch throughout traced PCG
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-solver-workspace-v2
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Prove prerequisite hierarchy slice is on main
+        run: |
+          git fetch origin main
+          grep -q 'pub struct CycleScreenedMapHierarchyWorkspace' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'pub fn apply_with_workspace(' crates/multiway-mg/src/hierarchy.rs
+          test -f crates/multiway-mg/tests/hierarchy_workspace.rs
+          test -z "$(git diff --name-only origin/main...HEAD -- . ':!.github/workflows/issue5-solver-pcg-workspace.yml')"
+      - name: Generate concrete workspace-backed traced-PCG adapter
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          src = Path("crates/multiway-mg/src")
+          lib_path = src / "lib.rs"
+          module_path = src / "hierarchy_pcg_workspace.rs"
+          test_path = Path("crates/multiway-mg/tests/hierarchy_pcg_workspace.rs")
+          changelog_path = Path("CHANGELOG.md")
+
+          def matching(source: str, opening: int, left: str, right: str) -> int:
+              depth = 0
+              state = "code"
+              escaped = False
+              block_depth = 0
+              index = opening
+              while index < len(source):
+                  char = source[index]
+                  following = source[index + 1] if index + 1 < len(source) else ""
+                  if state == "line":
+                      if char == "\n": state = "code"
+                  elif state == "block":
+                      if char == "/" and following == "*":
+                          block_depth += 1; index += 1
+                      elif char == "*" and following == "/":
+                          block_depth -= 1; index += 1
+                          if block_depth == 0: state = "code"
+                  elif state == "string":
+                      if escaped: escaped = False
+                      elif char == "\\": escaped = True
+                      elif char == '"': state = "code"
+                  else:
+                      if char == "/" and following == "/": state = "line"; index += 1
+                      elif char == "/" and following == "*": state = "block"; block_depth = 1; index += 1
+                      elif char == '"': state = "string"
+                      elif char == left: depth += 1
+                      elif char == right:
+                          depth -= 1
+                          if depth == 0: return index
+                  index += 1
+              raise RuntimeError(f"unmatched {left} at {opening}")
+
+          files = list(src.glob("*.rs"))
+          solver_file = None
+          solver_text = None
+          solver_match = None
+          for path in files:
+              text = path.read_text()
+              match = re.search(r"pub\s+fn\s+solve_projected_pcg_traced\s*(?:<[^\{]*?>)?\s*\(", text)
+              if match:
+                  solver_file, solver_text, solver_match = path, text, match
+                  break
+          if solver_file is None:
+              raise SystemExit("solve_projected_pcg_traced definition not found")
+
+          paren = solver_text.index("(", solver_match.start())
+          paren_end = matching(solver_text, paren, "(", ")")
+          body_open = solver_text.index("{", paren_end)
+          signature_tail = solver_text[paren_end + 1 : body_open].strip()
+          if not signature_tail.startswith("->"):
+              raise SystemExit("traced PCG return type not found")
+          result_type = signature_tail[2:].strip()
+          result_type = re.split(r"\bwhere\b", result_type, maxsplit=1)[0].strip()
+
+          trait_file = None
+          trait_text = None
+          trait_match = None
+          for path in files:
+              text = path.read_text()
+              match = re.search(r"pub\s+trait\s+Preconditioner\s*\{", text)
+              if match:
+                  trait_file, trait_text, trait_match = path, text, match
+                  break
+          if trait_file is None:
+              raise SystemExit("Preconditioner trait not found")
+          trait_open = trait_text.index("{", trait_match.start())
+          trait_close = matching(trait_text, trait_open, "{", "}")
+          trait_body = trait_text[trait_open + 1 : trait_close]
+          apply_match = re.search(r"\bfn\s+apply\s*\(", trait_body)
+          if apply_match is None:
+              raise SystemExit("Preconditioner::apply signature not found")
+          apply_start = trait_open + 1 + apply_match.start()
+          apply_paren = trait_text.index("(", apply_start)
+          apply_paren_end = matching(trait_text, apply_paren, "(", ")")
+          apply_terminator_candidates = [
+              value for value in (
+                  trait_text.find(";", apply_paren_end, trait_close),
+                  trait_text.find("{", apply_paren_end, trait_close),
+              ) if value != -1
+          ]
+          apply_end = min(apply_terminator_candidates)
+          apply_signature = trait_text[apply_start:apply_end].strip()
+          parameter_text = trait_text[apply_paren + 1 : apply_paren_end]
+          parameter_names = re.findall(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*:", parameter_text)
+          if len(parameter_names) < 2:
+              raise SystemExit(f"unable to parse apply parameters: {parameter_text!r}")
+          input_name, output_name = parameter_names[-2:]
+
+          module = f'''//! Solver adapter that retains recursive hierarchy scratch across traced-PCG iterations.
+
+          use std::cell::RefCell;
+
+          use crate::{{
+              CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, PcgTraceOptions,
+              PcgTraceResult, Preconditioner, ThreeWayProblem, solve_projected_pcg_traced,
+          }};
+
+          struct WorkspaceBackedHierarchy<'hierarchy, 'workspace> {{
+              hierarchy: &'hierarchy CycleScreenedMapHierarchy,
+              workspace: RefCell<&'workspace mut CycleScreenedMapHierarchyWorkspace>,
+          }}
+
+          impl Preconditioner for WorkspaceBackedHierarchy<'_, '_> {{
+              {apply_signature} {{
+                  let mut workspace = self.workspace.borrow_mut();
+                  self.hierarchy.apply_with_workspace(
+                      {input_name},
+                      {output_name},
+                      &mut **workspace,
+                  )
+              }}
+          }}
+
+          /// Solve projected normal equations with traced PCG while retaining recursive hierarchy
+          /// scratch across every preconditioner application in this solve.
+          ///
+          /// The numerical solver and stopping rules are exactly those of
+          /// [`solve_projected_pcg_traced`]. Only hierarchy scratch ownership changes.
+          pub fn solve_projected_pcg_traced_with_hierarchy_workspace(
+              problem: &ThreeWayProblem,
+              rhs: &[f64],
+              hierarchy: &CycleScreenedMapHierarchy,
+              workspace: &mut CycleScreenedMapHierarchyWorkspace,
+              options: PcgTraceOptions,
+          ) -> {result_type} {{
+              let adapter = WorkspaceBackedHierarchy {{
+                  hierarchy,
+                  workspace: RefCell::new(workspace),
+              }};
+              solve_projected_pcg_traced(problem, rhs, &adapter, options)
+          }}
+          '''
+          module_path.write_text(module)
+
+          lib = lib_path.read_text()
+          if "mod hierarchy_pcg_workspace;" not in lib:
+              first_mod = re.search(r"^mod\s+", lib, re.MULTILINE)
+              if first_mod is None:
+                  raise SystemExit("module insertion point not found")
+              lib = lib[: first_mod.start()] + "mod hierarchy_pcg_workspace;\n" + lib[first_mod.start():]
+          export = "pub use hierarchy_pcg_workspace::solve_projected_pcg_traced_with_hierarchy_workspace;\n"
+          if export not in lib:
+              first_export = re.search(r"^pub use\s+", lib, re.MULTILINE)
+              if first_export is None:
+                  raise SystemExit("public export insertion point not found")
+              lib = lib[: first_export.start()] + export + lib[first_export.start():]
+          lib_path.write_text(lib)
+
+          test_path.write_text('''//! Exact traced-PCG equivalence with a caller-owned hierarchy workspace.
+
+          #[allow(dead_code)]
+          #[path = "../examples/support/issue2_fixtures.rs"]
+          mod issue2_fixtures;
+          #[allow(dead_code)]
+          #[path = "../examples/support/issue3_recursive_fixtures.rs"]
+          mod issue3_recursive_fixtures;
+
+          use issue2_fixtures::{DynError, deterministic_rhs};
+          use issue3_recursive_fixtures::recursive_holdout_fixtures;
+          use multiway_mg::{
+              CycleScreenedMapHierarchy, PcgTraceOptions, solve_projected_pcg_traced,
+              solve_projected_pcg_traced_with_hierarchy_workspace,
+          };
+
+          #[test]
+          fn traced_pcg_reuses_one_hierarchy_workspace_without_changing_trace() -> Result<(), DynError> {
+              let fixture = recursive_holdout_fixtures()?
+                  .into_iter()
+                  .next()
+                  .expect("the frozen recursive fixture set is nonempty");
+              let hierarchy = CycleScreenedMapHierarchy::from_maps(
+                  fixture.problem.clone(),
+                  fixture.oracle_maps.clone(),
+                  1.0e-12,
+              )?;
+              let rhs = deterministic_rhs(&fixture.problem)?;
+              let options = PcgTraceOptions {
+                  relative_tolerance: 1.0e-10,
+                  absolute_tolerance: 0.0,
+                  max_iterations: 2_000,
+              };
+
+              let baseline = solve_projected_pcg_traced(
+                  &fixture.problem,
+                  &rhs,
+                  &hierarchy,
+                  options,
+              )?;
+              let mut workspace = hierarchy.application_workspace();
+              let reused = solve_projected_pcg_traced_with_hierarchy_workspace(
+                  &fixture.problem,
+                  &rhs,
+                  &hierarchy,
+                  &mut workspace,
+                  options,
+              )?;
+
+              assert_eq!(reused.iterations(), baseline.iterations());
+              assert_eq!(reused.converged(), baseline.converged());
+              assert_eq!(reused.final_relative_residual(), baseline.final_relative_residual());
+              assert_eq!(reused.gramian_applications(), baseline.gramian_applications());
+              assert_eq!(reused.preconditioner_applications(), baseline.preconditioner_applications());
+              assert_eq!(reused.samples().len(), baseline.samples().len());
+              for (left, right) in reused.samples().iter().zip(baseline.samples()) {
+                  assert_eq!(left.iteration(), right.iteration());
+                  assert_eq!(left.relative_residual(), right.relative_residual());
+              }
+              let warm_bytes = workspace.retained_bytes();
+              let warm_buffers = workspace.retained_buffer_count();
+              assert!(warm_bytes > 0);
+              assert!(warm_buffers > 0);
+
+              let second = solve_projected_pcg_traced_with_hierarchy_workspace(
+                  &fixture.problem,
+                  &rhs,
+                  &hierarchy,
+                  &mut workspace,
+                  options,
+              )?;
+              assert_eq!(second.iterations(), baseline.iterations());
+              assert_eq!(second.final_relative_residual(), baseline.final_relative_residual());
+              assert_eq!(workspace.retained_bytes(), warm_bytes);
+              assert_eq!(workspace.retained_buffer_count(), warm_buffers);
+              Ok(())
+          }
+          ''')
+
+          changelog = changelog_path.read_text()
+          entry = "- Add a traced-PCG entry point that retains one caller-owned recursive hierarchy workspace across all preconditioner applications in a solve.\n"
+          if entry not in changelog:
+              lines = changelog.splitlines(keepends=True)
+              insertion = 1
+              for index, line in enumerate(lines):
+                  if line.startswith("## "):
+                      insertion = index + 1
+                      while insertion < len(lines) and not lines[insertion].strip():
+                          insertion += 1
+                      break
+              lines.insert(insertion, entry)
+              changelog_path.write_text("".join(lines))
+          PY
+      - name: Validate exact solver equivalence and complete repository
+        run: |
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_pcg_workspace
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+          git diff --check
+      - name: Commit permanent slice and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md crates/multiway-mg/src/lib.rs \
+            crates/multiway-mg/src/hierarchy_pcg_workspace.rs \
+            crates/multiway-mg/tests/hierarchy_pcg_workspace.rs
+          git rm .github/workflows/issue5-solver-pcg-workspace.yml
+          git diff --cached --check
+          git commit -m "Reuse hierarchy workspace throughout traced PCG"
+          git push origin HEAD:codex/issue-5-solver-workspace-v2
+      - name: Open draft pull request
+        run: |
+          if ! gh pr view --repo johannes-schmieder/MultiwayMG \
+            codex/issue-5-solver-workspace-v2 >/dev/null 2>&1; then
+            gh pr create \
+              --repo johannes-schmieder/MultiwayMG \
+              --base main \
+              --head codex/issue-5-solver-workspace-v2 \
+              --draft \
+              --title 'Issue #5: reuse hierarchy workspace throughout traced PCG' \
+              --body 'Adds a concrete traced-PCG entry point that retains one caller-owned recursive hierarchy workspace across all preconditioner applications. Existing solver APIs and stopping rules remain unchanged. Exact trace equivalence and stable post-warmup retained storage are regression-tested. Part of #5.'
+          fi
