@@ -31,7 +31,11 @@ impl SymmetricMapPreconditioner {
             .and_then(|n| n.checked_mul(core::mem::size_of::<f64>()))
             .ok_or_else(overflow)?;
         vectors
-            .checked_add(self.problem().components().projection_workspace_required_bytes()?)
+            .checked_add(
+                self.problem()
+                    .components()
+                    .projection_workspace_required_bytes()?,
+            )
             .ok_or_else(overflow)
     }
 
@@ -56,7 +60,10 @@ impl SymmetricMapWorkspace {
     /// No numerical factors or weights are retained. Partial reservation failure
     /// may grow capacities, but does not change vector lengths or the projection
     /// binding. Application never performs this preparation implicitly.
-    pub fn try_prepare_for(&mut self, operator: &SymmetricMapPreconditioner) -> Result<(), MultiwayError> {
+    pub fn try_prepare_for(
+        &mut self,
+        operator: &SymmetricMapPreconditioner,
+    ) -> Result<(), MultiwayError> {
         operator.workspace_required_bytes()?;
         let dimension = operator.problem().dimension();
         for vector in [
@@ -74,7 +81,8 @@ impl SymmetricMapWorkspace {
                     })?;
             }
         }
-        self.projection.try_prepare_for(operator.problem().components())?;
+        self.projection
+            .try_prepare_for(operator.problem().components())?;
         for vector in [
             &mut self.compatible_rhs,
             &mut self.forward,
@@ -99,27 +107,50 @@ impl SymmetricMapWorkspace {
         ]
         .into_iter()
         .try_fold(self.projection.retained_bytes(), |total, vector| {
-            let bytes = vector.capacity().checked_mul(core::mem::size_of::<f64>()).ok_or_else(overflow)?;
+            let bytes = vector
+                .capacity()
+                .checked_mul(core::mem::size_of::<f64>())
+                .ok_or_else(overflow)?;
             total.checked_add(bytes).ok_or_else(overflow)
         })
     }
 
-    pub(super) fn validate(&self, operator: &SymmetricMapPreconditioner) -> Result<(), MultiwayError> {
+    pub(super) fn validate(
+        &self,
+        operator: &SymmetricMapPreconditioner,
+    ) -> Result<(), MultiwayError> {
         let dimension = operator.problem().dimension();
-        for vector in [&self.compatible_rhs, &self.forward, &self.middle, &self.solution] {
+        for vector in [
+            &self.compatible_rhs,
+            &self.forward,
+            &self.middle,
+            &self.solution,
+        ] {
             if vector.len() != dimension {
-                return Err(crate::error::dimension("SymmetricMapWorkspace", dimension, vector.len()));
+                return Err(crate::error::dimension(
+                    "SymmetricMapWorkspace",
+                    dimension,
+                    vector.len(),
+                ));
             }
         }
-        if !self.projection.is_compatible_with(operator.problem().components()) {
-            return Err(multiway_incidence::IncidenceError::WorkspaceBindingMismatch {
-                context: "SymmetricMapWorkspace",
-            }.into());
+        if !self
+            .projection
+            .is_compatible_with(operator.problem().components())
+        {
+            return Err(
+                multiway_incidence::IncidenceError::WorkspaceBindingMismatch {
+                    context: "SymmetricMapWorkspace",
+                }
+                .into(),
+            );
         }
         Ok(())
     }
 }
 
 fn overflow() -> MultiwayError {
-    MultiwayError::WorkspaceSizeOverflow { context: "SymmetricMapWorkspace" }
+    MultiwayError::WorkspaceSizeOverflow {
+        context: "SymmetricMapWorkspace",
+    }
 }

@@ -45,18 +45,22 @@ impl DensePseudoinverse {
 }
 
 fn bytes(dimension: usize) -> Result<usize, MultiwayError> {
-    dimension.checked_mul(core::mem::size_of::<f64>()).ok_or(MultiwayError::WorkspaceSizeOverflow {
-        context: "DensePseudoinverseWorkspace",
-    })
+    dimension
+        .checked_mul(core::mem::size_of::<f64>())
+        .ok_or(MultiwayError::WorkspaceSizeOverflow {
+            context: "DensePseudoinverseWorkspace",
+        })
 }
 
 fn resize(vector: &mut Vec<f64>, dimension: usize) -> Result<(), MultiwayError> {
     bytes(dimension)?;
     if dimension > vector.len() {
-        vector.try_reserve_exact(dimension - vector.len()).map_err(|source| MultiwayError::WorkspaceAllocation {
-            context: "DensePseudoinverseWorkspace",
-            source,
-        })?;
+        vector
+            .try_reserve_exact(dimension - vector.len())
+            .map_err(|source| MultiwayError::WorkspaceAllocation {
+                context: "DensePseudoinverseWorkspace",
+                source,
+            })?;
     }
     vector.resize(dimension, 0.0);
     Ok(())

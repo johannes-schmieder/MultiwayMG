@@ -17,7 +17,9 @@ impl IncidenceComponents {
     ///
     /// The ordinary [`Self::projection_workspace`] constructor remains available.
     /// No new identity token is allocated here; this clones the owner's token.
-    pub fn try_projection_workspace(&self) -> Result<StructuralProjectionWorkspace, IncidenceError> {
+    pub fn try_projection_workspace(
+        &self,
+    ) -> Result<StructuralProjectionWorkspace, IncidenceError> {
         let mut scratch = Vec::new();
         prepare_scratch(&mut scratch, self.count())?;
         Ok(StructuralProjectionWorkspace {
@@ -46,7 +48,10 @@ impl StructuralProjectionWorkspace {
     /// only after successful reservation. A failed reservation leaves the previous
     /// dimensions, contents and binding usable. Preparing an already compatible
     /// workspace does nothing and allocates nothing.
-    pub fn try_prepare_for(&mut self, components: &IncidenceComponents) -> Result<(), IncidenceError> {
+    pub fn try_prepare_for(
+        &mut self,
+        components: &IncidenceComponents,
+    ) -> Result<(), IncidenceError> {
         if self.is_compatible_with(components) {
             return Ok(());
         }
