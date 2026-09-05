@@ -3,6 +3,8 @@
 #[allow(dead_code)]
 #[path = "../examples/support/issue3_recursive_fixtures.rs"]
 mod fixtures;
+#[path = "support/pcg_allocations.rs"]
+mod pcg_allocations;
 
 use multiway_mg::{
     CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, DensePseudoinverse,
@@ -206,6 +208,7 @@ fn main() -> Result<()> {
     println!("issue5-complete-map-cycle-allocation-v1");
     positive_controls();
     operator_checks()?;
+    pcg_allocations::run()?;
     let fixtures = fixtures::recursive_holdout_fixtures()?;
     assert_eq!(fixtures.len(), 8);
     let mut reuse = CycleScreenedMapHierarchyWorkspace::new();
