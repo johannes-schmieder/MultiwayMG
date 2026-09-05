@@ -289,6 +289,50 @@ mod tests {
     use super::*;
 
     #[test]
+    fn poisoned_vectors_and_trace_are_overwritten_before_use() {
+        let problem =
+            ThreeWayProblem::from_observations([2; 3], &[[0, 0, 0], [1, 1, 1]], &[1.0, 2.0])
+                .unwrap();
+        let hierarchy =
+            CycleScreenedMapHierarchy::from_maps(problem.clone(), vec![], 1.0e-12).unwrap();
+        let options = PcgTraceOptions::default();
+        let mut input = vec![0.0; problem.dimension()];
+        problem
+            .apply_gramian(&[1.0, -2.0, 3.0, -4.0, 5.0, -6.0], &mut input)
+            .unwrap();
+        let expected =
+            crate::solve_projected_pcg_traced(&problem, &input, &hierarchy, options).unwrap();
+        let mut workspace = PcgTraceWorkspace::try_new(&problem, options).unwrap();
+        let bytes = workspace.retained_bytes().unwrap();
+        for vector in [
+            &mut workspace.projected_rhs,
+            &mut workspace.solution,
+            &mut workspace.residual,
+            &mut workspace.preconditioned,
+            &mut workspace.direction,
+            &mut workspace.applied,
+        ] {
+            vector.fill(f64::NAN);
+        }
+        workspace.samples.push(PcgTraceSample {
+            iteration: 999,
+            residual_norm: f64::NAN,
+            relative_residual: f64::NAN,
+        });
+        let actual = solve_projected_pcg_traced_with_workspace(
+            &problem,
+            &input,
+            &hierarchy,
+            options,
+            &mut workspace,
+        )
+        .unwrap()
+        .to_owned();
+        assert_eq!(actual, expected);
+        assert_eq!(workspace.retained_bytes().unwrap(), bytes);
+    }
+
+    #[test]
     fn counter_and_capacity_overflow_preserve_existing_storage() {
         assert!(required_samples(usize::MAX).is_err());
         assert!(required_samples(usize::MAX / 2 + 1).is_err());
