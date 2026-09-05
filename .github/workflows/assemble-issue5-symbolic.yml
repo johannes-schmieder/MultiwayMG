@@ -1,0 +1,27 @@
+name: Assemble symbolic mapping checkpoint (development only)
+on:
+  push:
+    branches: [implementation/issue-5-symbolic-map-assembly]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.85.0
+          components: rustfmt
+      - name: Assemble and format permanent sources, not a validation gate
+        run: |
+          set -euo pipefail
+          python scripts/assemble_issue5_symbolic_sources.py
+          python scripts/assemble_issue5_symbolic_tests.py
+          cargo fmt --all
+          rm scripts/assemble_issue5_symbolic_sources.py scripts/assemble_issue5_symbolic_tests.py .github/workflows/assemble-issue5-symbolic.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Assemble permanent symbolic mapping sources; not a validation receipt'
+          git push origin HEAD:implementation/issue-5-symbolic-map-assembly
