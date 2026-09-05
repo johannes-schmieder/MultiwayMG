@@ -59,43 +59,65 @@ admission.
 
 ## Milestone 4 — pair-solver economics
 
-Tracked by issue #4. **In progress; not a production-routing decision.**
+Tracked by completed issue #4.
 
 - [x] Component-local fixed-CMG adapter hosted by the generic Schwarz executor.
 - [x] Public pinned `within` comparator without copied elimination/Cholesky code.
 - [x] Exact rectangular operator, preconditioner, and certificate work counters.
-- [x] Identical connected pair-domain harness for Jacobi, exact, CMG, and within.
-- [x] Small five-family, three-repeat matrix with RHS prefixes 1, 4, 16, and 32.
-- [x] Charged setup/workspace/failed-solve time and conditional crossover report.
-- [x] True-residual, algebra, coverage, and accounting gates in GitHub Actions.
-- [x] Explicit Jacobi controls, CMG terminal metadata, and opaque-memory limits.
-- [x] Nonfinite/overflow/failure recovery and compensated pair-mass regressions.
-- [ ] Broad large/mixed/disconnected-domain calibration and a fresh holdout.
-- [ ] Whole-system three-way Schwarz comparisons under MLSMR and projected PCG.
-- [ ] Integration with the unchanged issue #3 coarse maps and cycle policy.
-- [ ] Complete retained/peak memory and single-/multi-thread lifetime accounting.
-- [ ] Selected-pair/component portfolios and fixed repeated-cycle alternatives.
-- [ ] Changing-weight build/replay economics without premature symbolic reuse.
-- [ ] Determine whether CMG is broadly useful, selective by component, finest-
-      level only, or merely a quality reference.
+- [x] Identical connected pair-domain harness for Jacobi, exact, CMG, and
+      `within`.
+- [x] Fail-closed residual, algebra, coverage, failure-cost, and accounting
+      validators.
+- [x] Explicit CMG terminal reasons, hierarchy depths, direct-factor state,
+      warnings, and retained-memory boundaries.
+- [x] Complete three-way Schwarz comparisons under modified LSMR and projected
+      PCG on identical problems.
+- [x] Larger mixed, disconnected, weakly coupled, unbalanced, and balanced
+      calibration families.
+- [x] Frozen balanced size ladder through 72 levels per factor and 32 RHS.
+- [x] Controlled integration with the issue-3 recursive hierarchy, keeping fine
+      `within` and three-way maps fixed while changing only non-finest solvers.
+- [x] Automatic-map and revealed oracle-map coarse-only calibrations.
+- [x] Permanent adversarial validator regression tests and archived provenance.
+- [x] Determine the current CMG role: explicit research/control route, not an
+      advanced production-shaped pair-local solver.
+- [x] Decide not to spend a fresh holdout after no calibrated candidate met the
+      joint work-plus-economics gate.
 
-See `ISSUE4_PAIR_LOCAL_PROTOCOL.md` for the exact small-matrix protocol and
-measurement boundaries. A local timing win does not establish a three-way
-solver advantage; a one-level diagonal terminal is not a multilevel gain.
-The GitHub issue is the planning authority for the remaining acceptance gates.
+**Result:** current fixed CMG can reduce Krylov work on some larger balanced
+pair domains, reaching about 21.5 percent under LSMR and 24.2 percent under PCG
+at the strongest size-ladder point. The effect is nonmonotone, does not yield a
+stable structural selector, and never produces a fully charged finest-level
+win through 32 RHS. Replacing only non-finest `within` solvers with CMG produces
+no material work reduction on the controlled recursive calibration. The pinned
+`within` route remains the pair-local baseline; MAP remains the preferred cheap
+smoother where the complete-cycle gate admits it; CMG remains an explicit
+research comparator.
+
+Complete lifetime memory, thread scaling, caller-owned workspaces, and changing-
+weight replay are not unfinished pair-selection gates. They are production-
+engineering work owned by milestone 5 and cannot rescue the current failed
+work-plus-time candidate.
+
+See `ISSUE4_FINAL_RESULTS.md` and
+`ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`.
 
 ## Milestone 5 — production engineering and changing weights
 
-Tracked by issue #5.
+Tracked by issue #5. **Current primary milestone.**
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
 - [ ] Caller-owned allocation-free cycle and Krylov workspaces.
 - [ ] Fused multiple-RHS incidence and restriction/prolongation kernels.
 - [ ] Exact retained and peak memory reports.
+- [ ] Single- and multi-thread setup/apply/repeated-RHS accounting.
 - [ ] Component-local hierarchy depths and terminals.
 - [ ] Exact numerical replay under changing positive weights.
 - [ ] Hierarchy quality invalidation and deterministic rebuild policy.
+- [ ] Generation-safe caches that cannot silently mix incompatible weights.
+- [ ] Preserve `within`/MAP as the local baseline while retaining CMG as an
+      explicit comparator.
 
 ## Milestone 6 — certified fereg integration
 
