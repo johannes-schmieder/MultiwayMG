@@ -322,14 +322,18 @@ impl Batch {
         self.converged &= solve.converged;
         self.certified &= solve.certified;
         if !solve.error.is_empty() {
-            self.error.push_str(&format!("rhs {rhs}: {}; ", solve.error));
+            self.error
+                .push_str(&format!("rhs {rhs}: {}; ", solve.error));
         }
     }
 }
 
 fn main() -> Result<()> {
     let mut args = std::env::args().skip(1);
-    let output = PathBuf::from(args.next().unwrap_or_else(|| "issue4-size-ladder".to_owned()));
+    let output = PathBuf::from(
+        args.next()
+            .unwrap_or_else(|| "issue4-size-ladder".to_owned()),
+    );
     if args.next().is_some() {
         return Err("usage: issue4_size_ladder [output-directory]".into());
     }
