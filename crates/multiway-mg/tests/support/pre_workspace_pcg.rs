@@ -1,20 +1,13 @@
+// Test-only allocating reference from 78f13b1; never a production solver.
 //! Projected PCG with a true residual sample after every iteration.
 
-use crate::{
+use multiway_mg::{
     CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, MultiwayError, Preconditioner,
     ThreeWayProblem,
 };
 
+#[path = "pre_workspace_pcg_finite.rs"]
 mod finite;
-mod result_ref;
-mod workspace;
-
-pub use result_ref::PcgTraceResultRef;
-use result_ref::PcgTraceSummary;
-pub use workspace::{
-    PcgTraceWorkspace, solve_projected_pcg_traced_with_workspace,
-    solve_projected_pcg_traced_with_workspaces,
-};
 
 /// Options for the issue #2 traced PCG driver.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -155,9 +148,8 @@ pub fn solve_projected_pcg_traced<P: Preconditioner + ?Sized>(
 /// Invalid options or dimensions are rejected before the workspace is touched.
 /// A zero projected RHS needs no preconditioner application and does not prepare
 /// an empty workspace. Otherwise a changed hierarchy layout can grow scratch on
-/// its first application. This owned-result convenience API creates local outer
-/// storage. Use [`solve_projected_pcg_traced_with_workspaces`] to retain that
-/// storage as well and return a borrowed result without output cloning.
+/// its first application. Outer PCG vectors, trace storage, and the remaining
+/// MAP/projection internals still allocate; this is not a full solver workspace.
 pub fn solve_projected_pcg_traced_with_hierarchy_workspace(
     problem: &ThreeWayProblem,
     rhs: &[f64],
@@ -178,93 +170,72 @@ fn solve_projected_pcg_traced_with_apply<P, F>(
     rhs: &[f64],
     preconditioner: &P,
     options: PcgTraceOptions,
-    apply_preconditioner: F,
+    mut apply_preconditioner: F,
 ) -> Result<PcgTraceResult, MultiwayError>
 where
     P: Preconditioner + ?Sized,
     F: FnMut(&[f64], &mut [f64]) -> Result<(), MultiwayError>,
 {
-    validate_inputs(problem, rhs, preconditioner, options)?;
-    let mut workspace = PcgTraceWorkspace::try_new(problem, options)?;
-    let summary = run(
-        problem,
-        rhs,
-        preconditioner,
-        options,
-        &mut workspace,
-        apply_preconditioner,
-    )?;
-    Ok(workspace.into_result(summary))
-}
-
-fn run<P, F>(
-    problem: &ThreeWayProblem,
-    rhs: &[f64],
-    preconditioner: &P,
-    options: PcgTraceOptions,
-    workspace: &mut PcgTraceWorkspace,
-    mut apply_preconditioner: F,
-) -> Result<PcgTraceSummary, MultiwayError>
-where
-    P: Preconditioner + ?Sized,
-    F: FnMut(&[f64], &mut [f64]) -> Result<(), MultiwayError>,
-{
-    validate_inputs(problem, rhs, preconditioner, options)?;
-    workspace.validate(problem, options)?;
-    let PcgTraceWorkspace {
-        projected_rhs,
-        solution,
-        residual,
-        preconditioned,
-        direction,
-        applied,
-        projection,
-        samples,
-    } = workspace;
-    let projection = projection.as_mut().expect("validated projection workspace");
-    projected_rhs.copy_from_slice(rhs);
-    solution.fill(0.0);
-    samples.clear();
+    validate_options(options)?;
+    let dimension = problem.dimension();
+    if rhs.len() != dimension {
+        return Err(reference_dimension_error(
+            "solve_projected_pcg_traced rhs",
+            dimension,
+            rhs.len(),
+        ));
+    }
+    if preconditioner.dimension() != dimension {
+        return Err(reference_dimension_error(
+            "solve_projected_pcg_traced preconditioner",
+            dimension,
+            preconditioner.dimension(),
+        ));
+    }
+    let mut projected_rhs = rhs.to_vec();
     let rhs_projection_norm = problem
         .components()
-        .project_structural_range_with_workspace(projected_rhs, projection)?;
-    let rhs_norm = finite::checked_norm(projected_rhs, "projected traced-PCG RHS", 0)?;
+        .project_structural_range(&mut projected_rhs)?;
+    let rhs_norm = finite::checked_norm(&projected_rhs, "projected traced-PCG RHS", 0)?;
     finite::require_finite(rhs_projection_norm, "traced-PCG RHS projection norm", 0)?;
-    samples.push(PcgTraceSample {
+    let mut samples = vec![PcgTraceSample {
         iteration: 0,
         residual_norm: rhs_norm,
         relative_residual: if rhs_norm == 0.0 { 0.0 } else { 1.0 },
-    });
+    }];
     if rhs_norm == 0.0 {
-        return Ok(PcgTraceSummary {
+        return Ok(PcgTraceResult {
+            solution: vec![0.0; dimension],
             iterations: 0,
             converged: true,
             rhs_projection_norm,
             gramian_applications: 0,
             preconditioner_applications: 0,
+            samples,
         });
     }
     let tolerance = options
         .absolute_tolerance
         .max(options.relative_tolerance * rhs_norm);
     finite::require_finite(tolerance, "traced-PCG stopping tolerance", 0)?;
-    residual.copy_from_slice(projected_rhs);
-    preconditioned.fill(0.0);
-    apply_preconditioner(residual, preconditioned)?;
+    let mut solution = vec![0.0; dimension];
+    let mut residual = projected_rhs.clone();
+    let mut preconditioned = vec![0.0; dimension];
+    apply_preconditioner(&residual, &mut preconditioned)?;
     problem
         .components()
-        .project_structural_range_with_workspace(preconditioned, projection)?;
+        .project_structural_range(&mut preconditioned)?;
     let mut preconditioner_applications = 1;
-    let mut rho = dot(residual, preconditioned);
+    let mut rho = dot(&residual, &preconditioned);
     validate_positive_metric(0, "initial preconditioned metric", rho)?;
-    direction.copy_from_slice(preconditioned);
-    applied.fill(0.0);
+    let mut direction = preconditioned.clone();
+    let mut applied = vec![0.0; dimension];
     let mut gramian_applications = 0;
 
     for iteration in 1..=options.max_iterations {
-        problem.apply_gramian(direction, applied)?;
+        problem.apply_gramian(&direction, &mut applied)?;
         gramian_applications += 1;
-        let curvature = dot(direction, applied);
+        let curvature = dot(&direction, &applied);
         validate_positive_metric(iteration - 1, "search-direction curvature", curvature)?;
         let alpha = rho / curvature;
         if !alpha.is_finite() {
@@ -273,13 +244,13 @@ where
                 message: format!("step length is {alpha}"),
             });
         }
-        axpy(alpha, direction, solution);
-        problem.residual_into(projected_rhs, solution, residual)?;
+        axpy(alpha, &direction, &mut solution);
+        residual = problem.residual(&projected_rhs, &solution)?;
         gramian_applications += 1;
         problem
             .components()
-            .project_structural_range_with_workspace(residual, projection)?;
-        let residual_norm = finite::checked_norm(residual, "traced-PCG residual", iteration)?;
+            .project_structural_range(&mut residual)?;
+        let residual_norm = finite::checked_norm(&residual, "traced-PCG residual", iteration)?;
         let relative_residual = finite::require_finite(
             residual_norm / rhs_norm,
             "traced-PCG relative residual",
@@ -293,68 +264,47 @@ where
         if residual_norm <= tolerance {
             problem
                 .components()
-                .project_structural_range_with_workspace(solution, projection)?;
-            finite::ensure_values(solution, "traced-PCG solution", iteration)?;
-            return Ok(PcgTraceSummary {
+                .project_structural_range(&mut solution)?;
+            finite::ensure_values(&solution, "traced-PCG solution", iteration)?;
+            return Ok(PcgTraceResult {
+                solution,
                 iterations: iteration,
                 converged: true,
                 rhs_projection_norm,
                 gramian_applications,
                 preconditioner_applications,
+                samples,
             });
         }
-        apply_preconditioner(residual, preconditioned)?;
+        apply_preconditioner(&residual, &mut preconditioned)?;
         preconditioner_applications += 1;
         problem
             .components()
-            .project_structural_range_with_workspace(preconditioned, projection)?;
-        let new_rho = dot(residual, preconditioned);
+            .project_structural_range(&mut preconditioned)?;
+        let new_rho = dot(&residual, &preconditioned);
         validate_positive_metric(iteration, "preconditioned metric", new_rho)?;
         let beta = new_rho / rho;
-        for (search, &value) in direction.iter_mut().zip(preconditioned.iter()) {
+        for (search, &value) in direction.iter_mut().zip(&preconditioned) {
             *search = beta.mul_add(*search, value);
         }
         problem
             .components()
-            .project_structural_range_with_workspace(direction, projection)?;
+            .project_structural_range(&mut direction)?;
         rho = new_rho;
     }
     problem
         .components()
-        .project_structural_range_with_workspace(solution, projection)?;
-    finite::ensure_values(solution, "traced-PCG solution", options.max_iterations)?;
-    Ok(PcgTraceSummary {
+        .project_structural_range(&mut solution)?;
+    finite::ensure_values(&solution, "traced-PCG solution", options.max_iterations)?;
+    Ok(PcgTraceResult {
+        solution,
         iterations: options.max_iterations,
         converged: false,
         rhs_projection_norm,
         gramian_applications,
         preconditioner_applications,
+        samples,
     })
-}
-
-fn validate_inputs<P: Preconditioner + ?Sized>(
-    problem: &ThreeWayProblem,
-    rhs: &[f64],
-    preconditioner: &P,
-    options: PcgTraceOptions,
-) -> Result<(), MultiwayError> {
-    validate_options(options)?;
-    let dimension = problem.dimension();
-    if rhs.len() != dimension {
-        return Err(crate::error::dimension(
-            "solve_projected_pcg_traced rhs",
-            dimension,
-            rhs.len(),
-        ));
-    }
-    if preconditioner.dimension() != dimension {
-        return Err(crate::error::dimension(
-            "solve_projected_pcg_traced preconditioner",
-            dimension,
-            preconditioner.dimension(),
-        ));
-    }
-    Ok(())
 }
 
 fn validate_options(options: PcgTraceOptions) -> Result<(), MultiwayError> {
@@ -438,4 +388,16 @@ fn norm(values: &[f64]) -> f64 {
             .map(|value| (value / scale) * (value / scale))
             .sum::<f64>()
             .sqrt()
+}
+
+fn reference_dimension_error(
+    context: &'static str,
+    expected: usize,
+    actual: usize,
+) -> MultiwayError {
+    MultiwayError::DimensionMismatch {
+        context,
+        expected,
+        actual,
+    }
 }

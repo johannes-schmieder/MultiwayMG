@@ -4,6 +4,9 @@
 
 ### Added
 
+- Caller-owned outer traced-PCG vectors, projection and bounded trace storage,
+  with borrowed results and one shared recurrence; see `docs/ISSUE5_PCG_STORAGE.md`.
+
 - Complete prepared recursive MAP-cycle scratch, including nested projection,
   MAP and dense-terminal modal storage; explicit reprepare and checked memory
   boundaries with isolated allocator regression gates on three platforms.

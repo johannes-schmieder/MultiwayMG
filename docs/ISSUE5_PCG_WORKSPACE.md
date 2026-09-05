@@ -1,5 +1,9 @@
 # Issue 5: reuse hierarchy scratch throughout traced PCG
 
+For reusable outer vectors, projection scratch and borrowed solution/trace storage,
+see [ISSUE5_PCG_STORAGE.md](ISSUE5_PCG_STORAGE.md). The owned-return entry points
+below remain allocating convenience APIs.
+
 ## Entry points and ownership
 
 `solve_projected_pcg_traced_with_hierarchy_workspace(problem, rhs, hierarchy,
