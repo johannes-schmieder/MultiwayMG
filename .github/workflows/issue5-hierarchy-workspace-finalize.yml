@@ -1,0 +1,76 @@
+# One-time final gate; deletes itself after validating the permanent hierarchy workspace diff.
+name: Issue 5 hierarchy workspace finalizer
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-finalize.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  finalize:
+    name: Validate permanent hierarchy workspace diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Wait for permanent implementation head
+        run: |
+          found=false
+          for attempt in $(seq 1 180); do
+            git fetch origin codex/issue-5-hierarchy-workspace
+            git reset --hard origin/codex/issue-5-hierarchy-workspace
+            if grep -q 'pub fn application_workspace(&self)' crates/multiway-mg/src/hierarchy.rs \
+              && test -f crates/multiway-mg/tests/hierarchy_workspace.rs; then
+              found=true
+              break
+            fi
+            sleep 5
+          done
+          test "$found" = true
+      - name: Assert permanent scope and exercised pool
+        run: |
+          test "$(grep -c 'hierarchy_scratch_zeroed' crates/multiway-mg/src/hierarchy.rs)" -ge 2
+          grep -q 'with_hierarchy_scratch(&mut workspace.buffers' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'hierarchy_workspace_is_exact_reusable_and_cross_instance_safe' \
+            crates/multiway-mg/tests/hierarchy_workspace.rs
+          test ! -e scripts/issue5_hierarchy_workspace_refactor.py
+          for temporary in \
+            .github/workflows/issue5-hierarchy-workspace.yml \
+            .github/workflows/issue5-hierarchy-workspace-cleanup.yml \
+            .github/workflows/issue5-hierarchy-workspace-v2.yml \
+            .github/workflows/issue5-hierarchy-workspace-v3.yml \
+            .github/workflows/issue5-hierarchy-workspace-v4.yml \
+            .github/workflows/issue5-hierarchy-workspace-v5.yml \
+            .github/workflows/issue5-hierarchy-workspace-v6.yml \
+            .github/workflows/issue5-hierarchy-workspace-v7.yml; do
+            test ! -e "$temporary"
+          done
+      - name: Validate full repository
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+      - name: Remove finalizer
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/issue5-hierarchy-workspace-finalize.yml
+          git commit -m "Remove temporary hierarchy workspace finalizer"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
