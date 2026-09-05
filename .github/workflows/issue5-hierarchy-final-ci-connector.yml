@@ -1,0 +1,112 @@
+# One-time exact-head gate for PR #21. Remove after a successful run.
+name: Issue 5 hierarchy workspace exact-head gate
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-final-ci-connector.yml]
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  verify:
+    name: Verify permanent hierarchy-workspace slice
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Audit permanent scope and contracts
+        run: |
+          git fetch origin main
+          git diff --check origin/main...HEAD
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          allowed = {
+              "CHANGELOG.md",
+              "crates/multiway-mg/src/hierarchy.rs",
+              "crates/multiway-mg/src/lib.rs",
+              "crates/multiway-mg/tests/hierarchy_workspace.rs",
+              ".github/workflows/issue5-hierarchy-final-ci-connector.yml",
+          }
+          changed = set(
+              subprocess.check_output(
+                  ["git", "diff", "--name-only", "origin/main...HEAD"], text=True
+              ).splitlines()
+          )
+          unexpected = changed - allowed
+          required = {
+              "CHANGELOG.md",
+              "crates/multiway-mg/src/hierarchy.rs",
+              "crates/multiway-mg/src/lib.rs",
+              "crates/multiway-mg/tests/hierarchy_workspace.rs",
+          }
+          missing = required - changed
+          if unexpected or missing:
+              raise SystemExit(
+                  f"scope mismatch: unexpected={sorted(unexpected)} missing={sorted(missing)}"
+              )
+
+          for path in Path(".github/workflows").glob("issue5-hierarchy-workspace*.yml"):
+              raise SystemExit(f"temporary workflow remains: {path}")
+          temporary_script = Path("scripts/issue5_hierarchy_workspace_refactor.py")
+          if temporary_script.exists():
+              raise SystemExit(f"temporary script remains: {temporary_script}")
+
+          hierarchy = Path("crates/multiway-mg/src/hierarchy.rs").read_text()
+          test = Path("crates/multiway-mg/tests/hierarchy_workspace.rs").read_text()
+          exports = Path("crates/multiway-mg/src/lib.rs").read_text()
+
+          required_hierarchy = [
+              "pub struct CycleScreenedMapHierarchyWorkspace",
+              "pub fn application_workspace(&self)",
+              "pub fn apply_with_workspace(",
+              "with_hierarchy_scratch(&mut workspace.buffers",
+              "hierarchy_scratch_zeroed(",
+              "values.resize(length, 0.0)",
+              "values.fill(0.0)",
+              "thread_local!",
+          ]
+          for needle in required_hierarchy:
+              if needle not in hierarchy:
+                  raise SystemExit(f"missing hierarchy contract: {needle}")
+          if hierarchy.count("hierarchy_scratch_zeroed(") < 2:
+              raise SystemExit("scratch helper is not used by an application allocation site")
+          for forbidden in ("Mutex<", "RwLock<", "unsafe {"):
+              if forbidden in hierarchy:
+                  raise SystemExit(f"forbidden hidden-state mechanism introduced: {forbidden}")
+          if "CycleScreenedMapHierarchyWorkspace" not in exports:
+              raise SystemExit("workspace is not re-exported")
+
+          required_tests = [
+              "hierarchy_workspace_is_exact_reusable_and_cross_instance_safe",
+              "retained_bytes()",
+              "retained_buffer_count()",
+              "assert_eq!(reused, reference)",
+              "independent.apply_with_workspace",
+              "assert_eq!(bad_output, sentinel)",
+          ]
+          for needle in required_tests:
+              if needle not in test:
+                  raise SystemExit(f"missing regression assertion: {needle}")
+          PY
+      - name: Format, lint, test, and document
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
