@@ -2,6 +2,9 @@
 
 use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
 
+mod workspace;
+pub use workspace::SymmetricMapWorkspace;
+
 /// One symmetric factor sweep, equivalent to a block symmetric
 /// Gauss--Seidel preconditioner for the three-way Gramian.
 ///
@@ -27,12 +30,17 @@ impl SymmetricMapPreconditioner {
     }
 }
 
-impl Preconditioner for SymmetricMapPreconditioner {
-    fn dimension(&self) -> usize {
-        self.problem.dimension()
-    }
-
-    fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+impl SymmetricMapPreconditioner {
+    /// Apply one symmetric MAP sweep using explicitly prepared caller scratch.
+    ///
+    /// Dimensions and projection binding are checked before mutation. No
+    /// allocation occurs on a valid prepared call; output is transactional.
+    pub fn apply_with_workspace(
+        &self,
+        rhs: &[f64],
+        out: &mut [f64],
+        workspace: &mut SymmetricMapWorkspace,
+    ) -> Result<(), MultiwayError> {
         let dimension = self.dimension();
         if rhs.len() != dimension {
             return Err(crate::error::dimension(
@@ -49,14 +57,22 @@ impl Preconditioner for SymmetricMapPreconditioner {
             ));
         }
 
-        let mut compatible_rhs = rhs.to_vec();
+        workspace.validate(self)?;
+        let SymmetricMapWorkspace {
+            compatible_rhs,
+            forward,
+            middle,
+            solution,
+            projection,
+        } = workspace;
+        compatible_rhs.copy_from_slice(rhs);
         self.problem
             .components()
-            .project_structural_range(&mut compatible_rhs)?;
+            .project_structural_range_with_workspace(compatible_rhs, projection)?;
         let topology = self.problem.topology();
         let offsets = topology.offsets();
         let diagonal = self.problem.diagonal();
-        let mut forward = vec![0.0; dimension];
+        forward.fill(0.0);
 
         for factor in 0..3 {
             let start = offsets[factor];
@@ -76,30 +92,55 @@ impl Preconditioner for SymmetricMapPreconditioner {
             }
         }
 
-        let middle: Vec<f64> = forward
-            .iter()
-            .zip(diagonal)
-            .map(|(&value, &degree)| value * degree)
-            .collect();
-        out.fill(0.0);
+        for ((middle, &value), &degree) in middle.iter_mut().zip(forward.iter()).zip(diagonal) {
+            *middle = value * degree;
+        }
+        solution.fill(0.0);
         for factor in (0..3).rev() {
             let start = offsets[factor];
             let end = offsets[factor + 1];
-            out[start..end].copy_from_slice(&middle[start..end]);
+            solution[start..end].copy_from_slice(&middle[start..end]);
             for (&tuple, &weight) in topology.tuples().iter().zip(self.problem.weights()) {
                 let target = topology.global_index(factor, tuple[factor]);
                 let mut coupling = 0.0;
                 for following in (factor + 1)..3 {
-                    coupling = out[topology.global_index(following, tuple[following])]
+                    coupling = solution[topology.global_index(following, tuple[following])]
                         .mul_add(weight, coupling);
                 }
-                out[target] -= coupling;
+                solution[target] -= coupling;
             }
             for index in start..end {
-                out[index] /= diagonal[index];
+                solution[index] /= diagonal[index];
             }
         }
-        self.problem.components().project_structural_range(out)?;
+        self.problem
+            .components()
+            .project_structural_range_with_workspace(solution, projection)?;
+        out.copy_from_slice(solution);
         Ok(())
+    }
+}
+
+impl Preconditioner for SymmetricMapPreconditioner {
+    fn dimension(&self) -> usize {
+        self.problem.dimension()
+    }
+    fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+        if rhs.len() != self.dimension() {
+            return Err(crate::error::dimension(
+                "SymmetricMapPreconditioner::apply rhs",
+                self.dimension(),
+                rhs.len(),
+            ));
+        }
+        if out.len() != self.dimension() {
+            return Err(crate::error::dimension(
+                "SymmetricMapPreconditioner::apply output",
+                self.dimension(),
+                out.len(),
+            ));
+        }
+        let mut workspace = self.application_workspace()?;
+        self.apply_with_workspace(rhs, out, &mut workspace)
     }
 }

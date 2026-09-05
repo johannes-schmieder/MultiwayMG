@@ -4,6 +4,8 @@ use std::sync::Arc;
 
 use crate::{IncidenceError, ThreeWayTopology};
 
+mod workspace;
+
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 struct StructuralProjectionScratch {
     sums: [f64; 3],

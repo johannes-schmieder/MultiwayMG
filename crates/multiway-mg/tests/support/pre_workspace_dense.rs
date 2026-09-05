@@ -1,22 +1,20 @@
+// Test-only allocating reference from e60809b; do not use in production.
 //! Rank-revealing dense terminal pseudoinverse.
 
 use nalgebra::{DMatrix, linalg::SymmetricEigen};
 
-use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
-
-mod workspace;
-pub use workspace::DensePseudoinverseWorkspace;
+use multiway_mg::{MultiwayError, Preconditioner, ThreeWayProblem};
 
 /// Dense spectral pseudoinverse used by small hierarchy terminals and references.
 #[derive(Debug, Clone)]
-pub struct DensePseudoinverse {
+pub struct AllocatingTerminalReference {
     eigenvectors: DMatrix<f64>,
     inverse_eigenvalues: Vec<f64>,
     rank: usize,
     threshold: f64,
 }
 
-impl DensePseudoinverse {
+impl AllocatingTerminalReference {
     /// Build a pseudoinverse with a relative eigenvalue threshold.
     pub fn from_problem(
         problem: &ThreeWayProblem,
@@ -85,56 +83,22 @@ impl DensePseudoinverse {
 
     /// Apply the spectral pseudoinverse.
     pub fn solve_into(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
-        if rhs.len() != self.dimension() {
-            return Err(crate::error::dimension(
-                "DensePseudoinverse::solve_into rhs",
-                self.dimension(),
-                rhs.len(),
-            ));
-        }
-        if out.len() != self.dimension() {
-            return Err(crate::error::dimension(
-                "DensePseudoinverse::solve_into output",
-                self.dimension(),
-                out.len(),
-            ));
-        }
-        let mut workspace = self.application_workspace()?;
-        self.solve_into_with_workspace(rhs, out, &mut workspace)
-    }
-
-    /// Apply the spectral pseudoinverse without allocating prepared scratch.
-    ///
-    /// All vector lengths are validated before output or scratch is changed.
-    pub fn solve_into_with_workspace(
-        &self,
-        rhs: &[f64],
-        out: &mut [f64],
-        workspace: &mut DensePseudoinverseWorkspace,
-    ) -> Result<(), MultiwayError> {
         let dimension = self.dimension();
         if rhs.len() != dimension {
-            return Err(crate::error::dimension(
-                "DensePseudoinverse::solve_into rhs",
+            return Err(dimension(
+                "AllocatingTerminalReference::solve_into rhs",
                 dimension,
                 rhs.len(),
             ));
         }
         if out.len() != dimension {
-            return Err(crate::error::dimension(
-                "DensePseudoinverse::solve_into output",
+            return Err(dimension(
+                "AllocatingTerminalReference::solve_into output",
                 dimension,
                 out.len(),
             ));
         }
-        if workspace.modal.len() != dimension {
-            return Err(crate::error::dimension(
-                "DensePseudoinverseWorkspace",
-                dimension,
-                workspace.modal.len(),
-            ));
-        }
-        let modal = &mut workspace.modal;
+        let mut modal = vec![0.0; dimension];
         for (mode, modal_value) in modal.iter_mut().enumerate() {
             let mut sum = 0.0;
             for (row, &right) in rhs.iter().enumerate() {
@@ -153,12 +117,20 @@ impl DensePseudoinverse {
     }
 }
 
-impl Preconditioner for DensePseudoinverse {
+impl Preconditioner for AllocatingTerminalReference {
     fn dimension(&self) -> usize {
         self.inverse_eigenvalues.len()
     }
 
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
         self.solve_into(rhs, out)
+    }
+}
+
+fn dimension(context: &'static str, expected: usize, actual: usize) -> MultiwayError {
+    MultiwayError::DimensionMismatch {
+        context,
+        expected,
+        actual,
     }
 }

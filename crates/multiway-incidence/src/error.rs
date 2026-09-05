@@ -79,6 +79,12 @@ pub enum IncidenceError {
         /// Submitted vector length.
         actual: usize,
     },
+    /// Fallible projection scratch reservation failed.
+    #[error("workspace allocation failed in {context}")]
+    WorkspaceAllocation {
+        /// Setup operation whose reservation failed.
+        context: &'static str,
+    },
     /// Projection scratch belongs to a different component decomposition.
     #[error("{context}: workspace belongs to a different component decomposition")]
     WorkspaceBindingMismatch {
