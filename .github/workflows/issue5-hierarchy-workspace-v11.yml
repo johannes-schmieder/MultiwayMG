@@ -1,0 +1,124 @@
+# One-time import-safe finalizer for PR #21.
+name: Issue 5 hierarchy workspace v11
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-v11.yml]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  finalize:
+    name: Complete import-safe hierarchy workspace slice
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Run compiler-guided refactor with exact matcher
+        run: |
+          if ! grep -q 'pub fn application_workspace(&self)' crates/multiway-mg/src/hierarchy.rs; then
+            test -f scripts/issue5_hierarchy_workspace_refactor_v8.py
+            python3 - <<'PY'
+          import importlib.util
+          import sys
+          from pathlib import Path
+
+          path = Path("scripts/issue5_hierarchy_workspace_refactor_v8.py")
+          spec = importlib.util.spec_from_file_location("issue5_hierarchy_v8", path)
+          module = importlib.util.module_from_spec(spec)
+          assert spec.loader is not None
+          sys.modules[spec.name] = module
+          spec.loader.exec_module(module)
+
+          def exact_impl(source: str, required: str):
+              for block in module.blocks(source, module.IMPL_PATTERN):
+                  header = " ".join(source[block.start:block.opening].split())
+                  if required == "CycleScreenedMapHierarchy":
+                      if header == "impl CycleScreenedMapHierarchy":
+                          return block
+                  elif required in header:
+                      return block
+              raise RuntimeError(f"impl block not found: {required}")
+
+          module.exact_impl = exact_impl
+          module.transform()
+          PY
+          fi
+      - name: Audit hierarchy workspace implementation
+        run: |
+          grep -q 'pub struct CycleScreenedMapHierarchyWorkspace' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'pub fn application_workspace(&self)' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'pub fn apply_with_workspace(' crates/multiway-mg/src/hierarchy.rs
+          grep -q 'with_hierarchy_scratch(&mut workspace.buffers' crates/multiway-mg/src/hierarchy.rs
+          test "$(grep -c 'hierarchy_scratch_zeroed' crates/multiway-mg/src/hierarchy.rs)" -ge 2
+          ! grep -q 'workspace_binding' crates/multiway-mg/src/hierarchy.rs
+          ! grep -q 'Mutex<' crates/multiway-mg/src/hierarchy.rs
+          ! grep -q 'RwLock<' crates/multiway-mg/src/hierarchy.rs
+          ! grep -q 'unsafe {' crates/multiway-mg/src/hierarchy.rs
+          test -f crates/multiway-mg/tests/hierarchy_workspace.rs
+          grep -q 'hierarchy_workspace_is_exact_reusable_and_cross_instance_safe' \
+            crates/multiway-mg/tests/hierarchy_workspace.rs
+      - name: Run full repository validation
+        run: |
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_workspace
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+          git diff --check
+      - name: Commit exact four-file permanent head
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md crates/multiway-mg/src/hierarchy.rs \
+            crates/multiway-mg/src/lib.rs crates/multiway-mg/tests/hierarchy_workspace.rs
+          git rm -f --ignore-unmatch scripts/issue5_hierarchy_workspace_refactor*.py
+          git rm -f --ignore-unmatch .github/workflows/issue5-hierarchy*.yml
+          git diff --cached --check
+          git commit -m "Add reusable hierarchy application workspace"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
+          git fetch origin main
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+              "CHANGELOG.md",
+              "crates/multiway-mg/src/hierarchy.rs",
+              "crates/multiway-mg/src/lib.rs",
+              "crates/multiway-mg/tests/hierarchy_workspace.rs",
+          }
+          changed = set(subprocess.check_output(
+              ["git", "diff", "--name-only", "origin/main...HEAD"], text=True
+          ).splitlines())
+          if changed != expected:
+              raise SystemExit(f"unexpected clean-head scope: {sorted(changed)}")
+          PY
+      - name: Mark ready and exact-head squash merge
+        run: |
+          head_sha=$(git rev-parse HEAD)
+          if [ "$(gh pr view 21 --repo johannes-schmieder/MultiwayMG --json isDraft --jq .isDraft)" = true ]; then
+            gh pr ready 21 --repo johannes-schmieder/MultiwayMG
+          fi
+          gh api \
+            --method PUT \
+            repos/johannes-schmieder/MultiwayMG/pulls/21/merge \
+            -f merge_method=squash \
+            -f sha="$head_sha" \
+            -f commit_title='Add reusable hierarchy application workspace (#21)' \
+            -f commit_message='Continue issue #5 with caller-owned recursive hierarchy scratch, retained-memory diagnostics, cross-instance reuse, and exact numerical-equivalence tests.'
