@@ -93,9 +93,22 @@ rejection, changed-size preparation, non-finite/overflow errors, injected generi
 preconditioner errors/unwinds and independent concurrent workspaces. A compile-fail
 doctest protects borrowed-result lifetime discipline.
 
-The complete prepared-solve allocator gate must additionally run in the existing
-isolated executable and three-platform debug/release, minimal/all-feature Actions
-matrix before this increment is qualified. Full Rust 1.85/scientific Actions and
-an exact-diff review are required. No speedup, complete LSMR workspace, total peak
+The existing isolated allocation executable now measures complete borrowed solves
+in `tests/support/pcg_allocations.rs`: 17 hierarchy cases plus an allocation-free
+generic-preconditioner control. It asserts zero allocations, reallocations and
+deallocations on the first prepared solve, eight repeated signed/zero/scaled RHS
+solves, the iteration-limit path, explicit repreparation and recovery after an
+invalid numerical state. Solution and trace pointers remain stable. Static
+binding/dimension/budget rejection allocates nothing. Error-message construction
+for numerical failures is separately measured and is not claimed allocation-free.
+Fresh outer storage allocation and release must equal its exclusive byte report;
+an explicit `to_owned` copy must make the separately charged two array allocations.
+Input construction, setup, reference solves, logging and external independent
+certification are outside the measured solve region. The pre-existing complete
+MAP-cycle allocation tests remain intact.
+
+The unchanged three-platform debug/release, minimal/all-feature Actions workflow
+runs this expanded executable. Full Rust 1.85/scientific Actions and an exact-diff
+review are required. No speedup, complete LSMR workspace, total peak
 memory, numerical weight replay, default-solver change or production readiness is
 claimed. ADR 0002 remains in force; revealed fixtures are not a fresh holdout.

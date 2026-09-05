@@ -373,7 +373,7 @@ fn validation_is_transactional_and_preparation_is_explicit() {
 #[derive(Debug)]
 struct Interrupt {
     dimension: usize,
-    calls: std::cell::Cell<usize>,
+    calls: std::sync::atomic::AtomicUsize,
     at: usize,
     panic: bool,
 }
@@ -382,8 +382,10 @@ impl Preconditioner for Interrupt {
         self.dimension
     }
     fn apply(&self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
-        let calls = self.calls.get() + 1;
-        self.calls.set(calls);
+        let calls = self
+            .calls
+            .fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+            + 1;
         if calls == self.at {
             assert!(!self.panic, "injected preconditioner unwind");
             return Err(MultiwayError::PcgBreakdown {
@@ -452,7 +454,7 @@ fn numerical_errors_and_preconditioner_unwind_leave_reusable_scratch() {
         for at in [1, 2] {
             let mock = Interrupt {
                 dimension: problem.dimension(),
-                calls: std::cell::Cell::new(0),
+                calls: std::sync::atomic::AtomicUsize::new(0),
                 at,
                 panic,
             };
@@ -469,7 +471,7 @@ fn numerical_errors_and_preconditioner_unwind_leave_reusable_scratch() {
                 );
             }));
             assert_eq!(outcome.is_err(), panic);
-            assert_eq!(mock.calls.get(), at);
+            assert_eq!(mock.calls.load(std::sync::atomic::Ordering::Relaxed), at);
             let expected = reference::solve_projected_pcg_traced(
                 &problem,
                 &input,
@@ -524,4 +526,90 @@ fn independent_workspaces_support_concurrent_borrowed_solves() {
             thread.join().unwrap();
         }
     });
+}
+
+#[test]
+fn failed_trace_reservation_does_not_publish_a_new_problem_binding() {
+    let owner = problem(2, 1.0);
+    let larger = problem(5, 1.0);
+    let hierarchy = hierarchy(&owner);
+    let options = PcgTraceOptions::default();
+    let input = rhs(&owner, 1.0);
+    let mut workspace = PcgTraceWorkspace::try_new(&owner, options).unwrap();
+    let expected = solve_projected_pcg_traced_with_workspace(
+        &owner,
+        &input,
+        &hierarchy,
+        options,
+        &mut workspace,
+    )
+    .unwrap()
+    .to_owned();
+    let before = format!("{workspace:?}");
+    // The requested trace exceeds isize::MAX bytes, so Vec rejects capacity
+    // before asking the allocator for a huge allocation. Earlier small vector
+    // reservations may succeed; lengths, values and binding must not publish.
+    let impossible = PcgTraceOptions {
+        max_iterations: isize::MAX as usize / core::mem::size_of::<multiway_mg::PcgTraceSample>(),
+        ..options
+    };
+    assert!(matches!(
+        workspace.try_prepare_for(&larger, impossible),
+        Err(MultiwayError::WorkspaceAllocation { .. })
+    ));
+    assert_eq!(format!("{workspace:?}"), before);
+    let actual = solve_projected_pcg_traced_with_workspace(
+        &owner,
+        &input,
+        &hierarchy,
+        options,
+        &mut workspace,
+    )
+    .unwrap()
+    .to_owned();
+    assert_eq!(actual, expected);
+}
+
+#[test]
+fn same_sized_different_component_partitions_require_explicit_preparation() {
+    let owner =
+        ThreeWayProblem::from_observations([2; 3], &[[0, 0, 0], [1, 1, 1]], &[1.0, 2.0]).unwrap();
+    let other =
+        ThreeWayProblem::from_observations([2; 3], &[[0, 1, 0], [1, 0, 1]], &[1.0, 2.0]).unwrap();
+    assert_eq!(owner.dimension(), other.dimension());
+    assert_eq!(owner.components().count(), other.components().count());
+    let hierarchy = CycleScreenedMapHierarchy::from_maps(other.clone(), vec![], 1.0e-12).unwrap();
+    let options = PcgTraceOptions::default();
+    let input = rhs(&other, 1.0);
+    let mut workspace = PcgTraceWorkspace::try_new(&owner, options).unwrap();
+    let before = format!("{workspace:?}");
+    let error = solve_projected_pcg_traced_with_workspace(
+        &other,
+        &input,
+        &hierarchy,
+        options,
+        &mut workspace,
+    )
+    .unwrap_err();
+    assert!(matches!(
+        error,
+        MultiwayError::Incidence(
+            multiway_incidence::IncidenceError::WorkspaceBindingMismatch { .. }
+        )
+    ));
+    assert_eq!(format!("{workspace:?}"), before);
+    workspace.try_prepare_for(&other, options).unwrap();
+    let actual = solve_projected_pcg_traced_with_workspace(
+        &other,
+        &input,
+        &hierarchy,
+        options,
+        &mut workspace,
+    )
+    .unwrap()
+    .to_owned();
+    let expected =
+        reference::solve_projected_pcg_traced(&other, &input, &hierarchy, old_options(options))
+            .unwrap();
+    assert_reference(&actual, &expected);
 }
