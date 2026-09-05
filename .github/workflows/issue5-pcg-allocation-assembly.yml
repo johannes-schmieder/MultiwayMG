@@ -1,0 +1,41 @@
+name: Assemble whole prepared-PCG allocation qualification
+on:
+  push:
+    branches: [implementation/issue-5-pcg-allocation-assembly]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: '1.85.0'
+          components: rustfmt
+      - name: Integrate isolated solve allocation tests and format source
+        run: |
+          python3 scripts/issue5_pcg_allocation_assembly.py
+          cargo fmt --all
+          rm scripts/issue5_pcg_allocation_assembly.py .github/workflows/issue5-pcg-allocation-assembly.yml
+          git diff --check
+          git add -A
+          python3 - <<'PY'
+          import subprocess
+          allowed = {
+            'crates/multiway-mg/tests/support/pcg_allocations.rs',
+            'crates/multiway-mg/tests/workspace_allocations.rs',
+            'crates/multiway-mg/tests/pcg_storage.rs',
+            'crates/multiway-mg/src/pcg_trace/workspace.rs',
+            'docs/ISSUE5_PCG_STORAGE.md',
+          }
+          paths=set(subprocess.check_output(['git','diff','--cached','--name-only','7a1650925502e10f1c58d4682c57b17f316c7836'],text=True).splitlines())
+          assert paths == allowed, (paths-allowed, allowed-paths)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Format complete borrowed-solve allocation gate; not a validation receipt'
+          git push origin HEAD:implementation/issue-5-pcg-allocation-assembly
