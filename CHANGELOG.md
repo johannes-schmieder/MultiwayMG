@@ -4,6 +4,9 @@
 
 ### Added
 
+- Complete prepared recursive MAP-cycle scratch, including nested projection,
+  MAP and dense-terminal modal storage; explicit reprepare and checked memory
+  boundaries with isolated allocator regression gates on three platforms.
 - Caller-owned recursive MAP hierarchy traversal workspace with checked
   retained-heap accounting, transactional output, and cross-instance reuse.
   MAP/projection internals still allocate; see `docs/ISSUE5_WORKSPACES.md`.
