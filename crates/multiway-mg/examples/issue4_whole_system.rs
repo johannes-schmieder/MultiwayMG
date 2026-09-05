@@ -124,15 +124,13 @@ fn build(problem: &ThreeWayProblem, targets: &[Vec<f64>], method: Method) -> Res
                 reports.len(),
                 reports.iter().map(|r| r.vertices()).max().unwrap_or(0),
                 reports.iter().map(|r| r.edges()).max().unwrap_or(0),
-                reports
-                    .iter()
-                    .map(|r| r.cycle_excess())
-                    .max()
-                    .unwrap_or(0),
+                reports.iter().map(|r| r.cycle_excess()).max().unwrap_or(0),
                 reports.iter().map(|r| r.cmg_levels()).max().unwrap_or(0),
                 reports.iter().filter(|r| r.cmg_levels() > 1).count(),
             );
-            let bytes = preconditioner.memory_report().total_retained_bytes_estimate();
+            let bytes = preconditioner
+                .memory_report()
+                .total_retained_bytes_estimate();
             (Action::PairCmg(preconditioner), Some(bytes), 0, metadata)
         }
         Method::Within => {
@@ -385,7 +383,10 @@ fn cases(profile: &str) -> Result<Vec<Case>> {
         ("latin-square", latin_square(24 * scale, 0)?),
         ("weak-chain", weak_chain(16 * scale, 2)?),
         ("disconnected-latin", disconnected_latin(12 * scale)?),
-        ("unbalanced-cycle", unbalanced_cycle(96 * scale, 48 * scale, 12 * scale)?),
+        (
+            "unbalanced-cycle",
+            unbalanced_cycle(96 * scale, 48 * scale, 12 * scale)?,
+        ),
     ];
     problems
         .into_iter()
@@ -617,7 +618,11 @@ mod tests {
         assert!(counts[0] > counts[1] && counts[1] > counts[2]);
         for case in cases {
             assert_eq!(case.targets.len(), RHS_COUNT);
-            assert!(case.targets.iter().all(|target| target.len() == case.problem.tuple_count()));
+            assert!(
+                case.targets
+                    .iter()
+                    .all(|target| target.len() == case.problem.tuple_count())
+            );
         }
     }
 
