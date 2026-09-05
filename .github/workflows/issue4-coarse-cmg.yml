@@ -35,163 +35,178 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
+          import textwrap
+
           path = Path("crates/multiway-mg/examples/issue4_coarse_cmg.rs")
           text = path.read_text()
 
-          marker = "enum Smoother {"
-          mode = '''#[derive(Clone, Copy, Debug)]
-          enum MapMode {
-              Automatic,
-              Oracle,
-          }
+          if "enum MapMode" not in text:
+              marker = "enum Smoother {"
+              mode = textwrap.dedent('''
+              #[derive(Clone, Copy, Debug)]
+              enum MapMode {
+                  Automatic,
+                  Oracle,
+              }
 
-          impl MapMode {
-              fn parse(value: Option<String>) -> Result<Self> {
-                  match value.as_deref() {
-                      None | Some("automatic") => Ok(Self::Automatic),
-                      Some("oracle") => Ok(Self::Oracle),
-                      Some(other) => Err(format!("unknown map mode: {other}").into()),
+              impl MapMode {
+                  fn parse(value: Option<String>) -> Result<Self> {
+                      match value.as_deref() {
+                          None | Some("automatic") => Ok(Self::Automatic),
+                          Some("oracle") => Ok(Self::Oracle),
+                          Some(other) => Err(format!("unknown map mode: {other}").into()),
+                      }
                   }
               }
-          }
 
-          '''
-          if "enum MapMode" not in text:
+              ''')
               if marker not in text:
                   raise SystemExit("smoother marker not found")
               text = text.replace(marker, mode + marker, 1)
 
-          old_main = '''    if args.next().is_some() {
-              return Err("usage: issue4_coarse_cmg [output-directory]".into());
-          }
-          fs::create_dir_all(&output)?;'''
-          new_main = '''    let map_mode = MapMode::parse(args.next())?;
-          if args.next().is_some() {
-              return Err("usage: issue4_coarse_cmg [output-directory] [automatic|oracle]".into());
-          }
-          fs::create_dir_all(&output)?;'''
-          if new_main not in text:
-              if old_main not in text:
-                  raise SystemExit("main argument block not found")
-              text = text.replace(old_main, new_main, 1)
+          if "let map_mode = MapMode::parse" not in text:
+              pattern = re.compile(
+                  r'    if args\.next\(\)\.is_some\(\) \{\n'
+                  r'        return Err\("usage: issue4_coarse_cmg \[output-directory\]"\.into\(\)\);\n'
+                  r'    \}\n'
+                  r'    fs::create_dir_all\(&output\)\?;'
+              )
+              replacement = (
+                  '    let map_mode = MapMode::parse(args.next())?;\n'
+                  '    if args.next().is_some() {\n'
+                  '        return Err("usage: issue4_coarse_cmg [output-directory] [automatic|oracle]".into());\n'
+                  '    }\n'
+                  '    fs::create_dir_all(&output)?;'
+              )
+              text, count = pattern.subn(replacement, text, count=1)
+              if count != 1:
+                  raise SystemExit(f"main argument block replacement count={count}")
 
-          old_call = "        run_fixture(case_index, fixture, &mut writer)?;"
-          new_call = "        run_fixture(case_index, fixture, map_mode, &mut writer)?;"
-          if new_call not in text:
-              if old_call not in text:
-                  raise SystemExit("run_fixture call not found")
-              text = text.replace(old_call, new_call, 1)
+          text = text.replace(
+              "        run_fixture(case_index, fixture, &mut writer)?;",
+              "        run_fixture(case_index, fixture, map_mode, &mut writer)?;",
+              1,
+          )
 
-          old_sig = '''fn run_fixture(
-              case_index: usize,
-              fixture: &RecursiveHoldoutFixture,
-              writer: &mut BufWriter<File>,
-          ) -> Result<()> {'''
-          new_sig = '''fn run_fixture(
-              case_index: usize,
-              fixture: &RecursiveHoldoutFixture,
-              map_mode: MapMode,
-              writer: &mut BufWriter<File>,
-          ) -> Result<()> {'''
-          if new_sig not in text:
-              if old_sig not in text:
+          if "    map_mode: MapMode," not in text:
+              signature = (
+                  "fn run_fixture(\n"
+                  "    case_index: usize,\n"
+                  "    fixture: &RecursiveHoldoutFixture,\n"
+                  "    writer: &mut BufWriter<File>,\n"
+                  ") -> Result<()> {"
+              )
+              replacement = (
+                  "fn run_fixture(\n"
+                  "    case_index: usize,\n"
+                  "    fixture: &RecursiveHoldoutFixture,\n"
+                  "    map_mode: MapMode,\n"
+                  "    writer: &mut BufWriter<File>,\n"
+                  ") -> Result<()> {"
+              )
+              if signature not in text:
                   raise SystemExit("run_fixture signature not found")
-              text = text.replace(old_sig, new_sig, 1)
+              text = text.replace(signature, replacement, 1)
 
-          start = text.index("    let plan_start = Instant::now();", text.index("fn run_fixture("))
+          run_start = text.index("fn run_fixture(")
+          plan_start = text.index("    let plan_start = Instant::now();", run_start)
           end_marker = "    let maps = plan.aggregations();\n"
-          end = text.index(end_marker, start) + len(end_marker)
-          if "let (maps, plan_depth" not in text[start:end]:
-              replacement = '''    let (maps, plan_depth, plan_seconds, dimension_complexity, tuple_complexity) =
-                  match map_mode {
-                      MapMode::Automatic => {
-                          let plan_start = Instant::now();
-                          let plan = CycleScreenedHierarchyPlan::build(
-                              fixture.problem.clone(),
-                              hierarchy_options(fixture.terminal_dimension),
-                          )?;
-                          let plan_seconds = plan_start.elapsed().as_secs_f64();
-                          if !plan.accepted() || plan.depth() != fixture.depth {
-                              writeln!(
-                                  writer,
-                                  "{}\\t{}\\t{}\\t{}\\t{}\\t{:.9e}\\t{:.9e}\\t{:.9e}\\tNA\\t0\\tNA\\t0\\t{}\\t{}\\tNA\\tNA\\t0\\t0\\t0\\t0\\t0\\t0\\tNA\\t0\\t0\\tinf\\tfalse\\tfalse\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\tplan rejected: {:?}",
-                                  fixture.name,
-                                  fixture.family,
-                                  fixture.depth,
-                                  plan.accepted(),
+          plan_end = text.index(end_marker, plan_start) + len(end_marker)
+          if "let (maps, plan_depth" not in text[plan_start:plan_end]:
+              replacement = textwrap.dedent('''
+                  let (maps, plan_depth, plan_seconds, dimension_complexity, tuple_complexity) =
+                      match map_mode {
+                          MapMode::Automatic => {
+                              let plan_start = Instant::now();
+                              let plan = CycleScreenedHierarchyPlan::build(
+                                  fixture.problem.clone(),
+                                  hierarchy_options(fixture.terminal_dimension),
+                              )?;
+                              let plan_seconds = plan_start.elapsed().as_secs_f64();
+                              if !plan.accepted() || plan.depth() != fixture.depth {
+                                  writeln!(
+                                      writer,
+                                      "{}\\t{}\\t{}\\t{}\\t{}\\t{:.9e}\\t{:.9e}\\t{:.9e}\\tNA\\t0\\tNA\\t0\\t{}\\t{}\\tNA\\tNA\\t0\\t0\\t0\\t0\\t0\\t0\\tNA\\t0\\t0\\tinf\\tfalse\\tfalse\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\t0\\tplan rejected: {:?}",
+                                      fixture.name,
+                                      fixture.family,
+                                      fixture.depth,
+                                      plan.accepted(),
+                                      plan.depth(),
+                                      plan_seconds,
+                                      plan.dimension_complexity(),
+                                      plan.tuple_complexity(),
+                                      fixture.problem.dimension(),
+                                      fixture.problem.tuple_count(),
+                                      plan.stop_reason(),
+                                  )?;
+                                  return Ok(());
+                              }
+                              (
+                                  plan.aggregations().to_vec(),
                                   plan.depth(),
                                   plan_seconds,
                                   plan.dimension_complexity(),
                                   plan.tuple_complexity(),
-                                  fixture.problem.dimension(),
-                                  fixture.problem.tuple_count(),
-                                  plan.stop_reason(),
-                              )?;
-                              return Ok(());
+                              )
                           }
-                          (
-                              plan.aggregations().to_vec(),
-                              plan.depth(),
-                              plan_seconds,
-                              plan.dimension_complexity(),
-                              plan.tuple_complexity(),
-                          )
-                      }
-                      MapMode::Oracle => {
-                          let complexity = map_complexity(&fixture.problem, &fixture.oracle_maps)?;
-                          (
-                              fixture.oracle_maps.clone(),
-                              fixture.depth,
-                              0.0,
-                              complexity.0,
-                              complexity.1,
-                          )
-                      }
-                  };
-          '''
-              text = text[:start] + replacement + text[end:]
+                          MapMode::Oracle => {
+                              let complexity = map_complexity(&fixture.problem, &fixture.oracle_maps)?;
+                              (
+                                  fixture.oracle_maps.clone(),
+                                  fixture.depth,
+                                  0.0,
+                                  complexity.0,
+                                  complexity.1,
+                              )
+                          }
+                      };
+              ''').lstrip("\n")
+              text = text[:plan_start] + replacement + text[plan_end:]
 
-          text = text.replace(
-              "ExperimentalHierarchy::build(fixture.problem.clone(), maps, method)?",
-              "ExperimentalHierarchy::build(fixture.problem.clone(), &maps, method)?",
-          )
-          text = text.replace(
-              '''                        plan.depth(),
-                                  plan_seconds,
-                                  plan.dimension_complexity(),
-                                  plan.tuple_complexity(),''',
-              '''                        plan_depth,
-                                  plan_seconds,
-                                  dimension_complexity,
-                                  tuple_complexity,''',
-          )
+          target_build = "ExperimentalHierarchy::build(fixture.problem.clone(), maps, method)?"
+          if target_build in text:
+              text = text.replace(
+                  target_build,
+                  "ExperimentalHierarchy::build(fixture.problem.clone(), &maps, method)?",
+                  1,
+              )
 
-          helper_marker = "fn hierarchy_options(terminal_dimension: usize) -> CycleScreenedHierarchyOptions {"
-          helper = '''fn map_complexity(
-              problem: &ThreeWayProblem,
-              maps: &[FactorAggregation],
-          ) -> Result<(f64, f64)> {
-              let finest_dimension = problem.dimension();
-              let finest_tuples = problem.tuple_count();
-              let mut dimension_sum = finest_dimension;
-              let mut tuple_sum = finest_tuples;
-              let mut current = problem.clone();
-              for map in maps {
-                  current = map.coarsen(&current)?;
-                  dimension_sum += current.dimension();
-                  tuple_sum += current.tuple_count();
-              }
-              Ok((
-                  dimension_sum as f64 / finest_dimension as f64,
-                  tuple_sum as f64 / finest_tuples as f64,
-              ))
-          }
+          targets_start = text.index("    let targets =", run_start)
+          prefix = text[:targets_start]
+          tail = text[targets_start:]
+          tail = tail.replace("                        plan.depth(),", "                        plan_depth,", 1)
+          tail = tail.replace("                        plan.dimension_complexity(),", "                        dimension_complexity,", 1)
+          tail = tail.replace("                        plan.tuple_complexity(),", "                        tuple_complexity,", 1)
+          text = prefix + tail
 
-          '''
           if "fn map_complexity(" not in text:
-              if helper_marker not in text:
+              marker = "fn hierarchy_options(terminal_dimension: usize) -> CycleScreenedHierarchyOptions {"
+              helper = textwrap.dedent('''
+              fn map_complexity(
+                  problem: &ThreeWayProblem,
+                  maps: &[FactorAggregation],
+              ) -> Result<(f64, f64)> {
+                  let finest_dimension = problem.dimension();
+                  let finest_tuples = problem.tuple_count();
+                  let mut dimension_sum = finest_dimension;
+                  let mut tuple_sum = finest_tuples;
+                  let mut current = problem.clone();
+                  for map in maps {
+                      current = map.coarsen(&current)?;
+                      dimension_sum += current.dimension();
+                      tuple_sum += current.tuple_count();
+                  }
+                  Ok((
+                      dimension_sum as f64 / finest_dimension as f64,
+                      tuple_sum as f64 / finest_tuples as f64,
+                  ))
+              }
+
+              ''')
+              if marker not in text:
                   raise SystemExit("hierarchy options marker not found")
-              text = text.replace(helper_marker, helper + helper_marker, 1)
+              text = text.replace(marker, helper + marker, 1)
 
           path.write_text(text)
           PY
