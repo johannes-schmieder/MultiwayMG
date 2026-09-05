@@ -32,7 +32,7 @@ pub enum WeightFrameInputKind {
     UnitTuples,
 }
 
-impl WeightFrameInput<'_> {
+impl<'a> WeightFrameInput<'a> {
     /// Explicit input provenance.
     #[must_use]
     pub const fn kind(self) -> WeightFrameInputKind {
@@ -48,7 +48,7 @@ impl WeightFrameInput<'_> {
         matches!(self, Self::Observations(_) | Self::UnitObservations)
     }
 
-    fn values(self) -> Option<&[f64]> {
+    fn values(self) -> Option<&'a [f64]> {
         match self {
             Self::Observations(values) | Self::Tuples(values) => Some(values),
             Self::UnitObservations | Self::UnitTuples => None,
@@ -166,6 +166,16 @@ pub struct WeightFrameSetupReport {
 /// or map-quality admission is supplied by this type. Existing solvers are not
 /// retroactively generation-checked. Getter slices are read-only inspection views,
 /// not evidence that a downstream factorization was built for this generation.
+///
+/// A frame cannot outlive its symbolic owner:
+/// ```compile_fail
+/// use multiway_incidence::{PreparedThreeWayTopology, ThreeWayWeightFrame, WeightFrameInput};
+/// let frame = {
+///     let topology = PreparedThreeWayTopology::try_from_collapsed([1; 3], &[[0; 3]]).unwrap();
+///     ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::UnitTuples).unwrap()
+/// };
+/// assert_eq!(frame.weights(), &[1.0]);
+/// ```
 #[derive(Debug)]
 pub struct ThreeWayWeightFrame<'topology> {
     topology: &'topology PreparedThreeWayTopology,
@@ -237,10 +247,14 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
         topology: &'topology PreparedThreeWayTopology,
         input: WeightFrameInput<'_>,
     ) -> Result<Self, IncidenceError> {
-        Self::try_new_with_budget(topology, input, WeightFramePayloadBudget {
-            maximum_payload_bytes: usize::MAX,
-            additional_live_payload_bytes: 0,
-        })
+        Self::try_new_with_budget(
+            topology,
+            input,
+            WeightFramePayloadBudget {
+                maximum_payload_bytes: usize::MAX,
+                additional_live_payload_bytes: 0,
+            },
+        )
     }
 
     /// Build after checking the live requested-array budget, before any reservation.
@@ -306,7 +320,8 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
     where
         F: FnMut(&'static str) -> Result<(), IncidenceError>,
     {
-        let report = Self::setup_payload_report(topology, input, budget.additional_live_payload_bytes)?;
+        let report =
+            Self::setup_payload_report(topology, input, budget.additional_live_payload_bytes)?;
         if report.total_payload_bytes > budget.maximum_payload_bytes {
             return Err(IncidenceError::WeightFrameBudgetExceeded {
                 required: report.total_payload_bytes,
@@ -317,7 +332,10 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
             // Validate in submitted order so the reported index names the input row.
             for (tuple_index, &weight) in values.iter().enumerate() {
                 if !weight.is_finite() || weight <= 0.0 {
-                    return Err(IncidenceError::InvalidWeight { tuple_index, weight });
+                    return Err(IncidenceError::InvalidWeight {
+                        tuple_index,
+                        weight,
+                    });
                 }
             }
         }
@@ -325,7 +343,9 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
         let count = shape.tuple_count();
         let mut weights = reserve_frame(count, "frame tuple weights", before)?;
         if input.is_observations() {
-            let groups = topology.observation_groups().ok_or(IncidenceError::WeightFrameObservationLayoutRequired)?;
+            let groups = topology
+                .observation_groups()
+                .ok_or(IncidenceError::WeightFrameObservationLayoutRequired)?;
             for (index, range) in groups.offsets().windows(2).enumerate() {
                 let mut sum = CompensatedSum::default();
                 for &row in &groups.grouped_observations()[range[0]..range[1]] {
@@ -333,7 +353,10 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
                 }
                 let weight = sum.total();
                 if !weight.is_finite() || weight <= 0.0 {
-                    return Err(IncidenceError::InvalidCollapsedWeight { tuple: shape.tuples()[index], weight });
+                    return Err(IncidenceError::InvalidCollapsedWeight {
+                        tuple: shape.tuples()[index],
+                        weight,
+                    });
                 }
                 weights.push(weight);
             }
@@ -346,7 +369,11 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
         for (index, &weight) in weights.iter().enumerate() {
             let value = weight.sqrt();
             if !value.is_finite() || value <= 0.0 {
-                return Err(IncidenceError::InvalidWeightFrameDerivedValue { context: "square root", index, value });
+                return Err(IncidenceError::InvalidWeightFrameDerivedValue {
+                    context: "square root",
+                    index,
+                    value,
+                });
             }
             square_root_weights.push(value);
         }
@@ -360,7 +387,11 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
         for factor in 0..3 {
             for (level, &value) in diagonal[shape.factor_range(factor)].iter().enumerate() {
                 if !value.is_finite() || value <= 0.0 {
-                    return Err(IncidenceError::InvalidWeightedDegree { factor, level, value });
+                    return Err(IncidenceError::InvalidWeightedDegree {
+                        factor,
+                        level,
+                        value,
+                    });
                 }
             }
         }
@@ -379,9 +410,18 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
             range.maximum_degree = range.maximum_degree.max(value);
         }
         for (index, range) in ranges.iter().enumerate() {
-            for value in [range.minimum_tuple_weight, range.maximum_tuple_weight, range.minimum_degree, range.maximum_degree] {
+            for value in [
+                range.minimum_tuple_weight,
+                range.maximum_tuple_weight,
+                range.minimum_degree,
+                range.maximum_degree,
+            ] {
                 if !value.is_finite() || value <= 0.0 {
-                    return Err(IncidenceError::InvalidWeightFrameDerivedValue { context: "component range", index, value });
+                    return Err(IncidenceError::InvalidWeightFrameDerivedValue {
+                        context: "component range",
+                        index,
+                        value,
+                    });
                 }
             }
         }
@@ -405,15 +445,21 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
 
     /// Exact borrowed symbolic owner; never implicitly cloned or rebuilt.
     #[must_use]
-    pub const fn topology(&self) -> &'topology PreparedThreeWayTopology { self.topology }
+    pub const fn topology(&self) -> &'topology PreparedThreeWayTopology {
+        self.topology
+    }
 
     /// Identity of the symbolic owner, distinct from this frame's numerical binding.
     #[must_use]
-    pub fn topology_binding(&self) -> PreparedTopologyBinding<'topology> { self.topology.binding() }
+    pub fn topology_binding(&self) -> PreparedTopologyBinding<'topology> {
+        self.topology.binding()
+    }
 
     /// Borrow this exact immutable numerical generation without allocation.
     #[must_use]
-    pub const fn binding(&self) -> WeightFrameBinding<'_, 'topology> { WeightFrameBinding { owner: self } }
+    pub const fn binding(&self) -> WeightFrameBinding<'_, 'topology> {
+        WeightFrameBinding { owner: self }
+    }
 
     /// Reject a different prepared topology owner, even if its contents match.
     pub fn validate_for(&self, topology: &PreparedThreeWayTopology) -> Result<(), IncidenceError> {
@@ -422,23 +468,33 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
 
     /// Positive finite weights in canonical unique-tuple order.
     #[must_use]
-    pub fn weights(&self) -> &[f64] { &self.weights }
+    pub fn weights(&self) -> &[f64] {
+        &self.weights
+    }
 
     /// Positive finite square roots in canonical unique-tuple order.
     #[must_use]
-    pub fn square_root_weights(&self) -> &[f64] { &self.square_root_weights }
+    pub fn square_root_weights(&self) -> &[f64] {
+        &self.square_root_weights
+    }
 
     /// Positive finite weighted degrees in global factor-block order.
     #[must_use]
-    pub fn diagonal(&self) -> &[f64] { &self.diagonal }
+    pub fn diagonal(&self) -> &[f64] {
+        &self.diagonal
+    }
 
     /// Component extrema, in the exact symbolic owner's component order.
     #[must_use]
-    pub fn component_ranges(&self) -> &[ComponentWeightRange] { &self.component_ranges }
+    pub fn component_ranges(&self) -> &[ComponentWeightRange] {
+        &self.component_ranges
+    }
 
     /// Validated counts and input interpretation; not an outer-solver certificate.
     #[must_use]
-    pub const fn validation_report(&self) -> WeightFrameValidationReport { self.validation }
+    pub const fn validation_report(&self) -> WeightFrameValidationReport {
+        self.validation
+    }
 
     /// Copy weights after exact topology/frame identity and output-length checks.
     ///
@@ -453,7 +509,11 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
         self.validate_for(topology)?;
         binding.validate_for(self)?;
         if output.len() != self.weights.len() {
-            return Err(crate::error::dimension("frame weight copy", self.weights.len(), output.len()));
+            return Err(crate::error::dimension(
+                "frame weight copy",
+                self.weights.len(),
+                output.len(),
+            ));
         }
         output.copy_from_slice(&self.weights);
         Ok(())
@@ -475,11 +535,18 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
     }
 }
 
-fn reserve_frame<T, F>(count: usize, context: &'static str, before: &mut F) -> Result<Vec<T>, IncidenceError>
-where F: FnMut(&'static str) -> Result<(), IncidenceError>,
+fn reserve_frame<T, F>(
+    count: usize,
+    context: &'static str,
+    before: &mut F,
+) -> Result<Vec<T>, IncidenceError>
+where
+    F: FnMut(&'static str) -> Result<(), IncidenceError>,
 {
     reserve(count, context, before).map_err(|error| match error {
-        IncidenceError::TopologyAllocation { context } => IncidenceError::WeightFrameAllocation { context },
+        IncidenceError::TopologyAllocation { context } => {
+            IncidenceError::WeightFrameAllocation { context }
+        }
         other => other,
     })
 }
