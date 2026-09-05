@@ -88,19 +88,8 @@ impl ThreeWayProblem {
 
         let mut diagonal = vec![0.0; topology.total_levels()];
         let mut diagonal_correction = vec![0.0; topology.total_levels()];
-        for (&tuple, &weight) in topology.tuples().iter().zip(&weights) {
-            for factor in 0..3 {
-                let index = topology.global_index(factor, tuple[factor]);
-                neumaier_add(
-                    &mut diagonal[index],
-                    &mut diagonal_correction[index],
-                    weight,
-                );
-            }
-        }
-        for (value, correction) in diagonal.iter_mut().zip(diagonal_correction) {
-            *value += correction;
-        }
+        fill_weighted_degrees(&topology, &weights, &mut diagonal, &mut diagonal_correction);
+        drop(diagonal_correction);
         for factor in 0..3 {
             for (level, &value) in diagonal[topology.factor_range(factor)].iter().enumerate() {
                 if value == 0.0 {
@@ -379,6 +368,30 @@ impl ThreeWayProblem {
             }
         }
         matrix
+    }
+}
+
+// Both owned problems and prepared frames use the original degree recurrence.
+// Internal callers validate all dimensions and numerical inputs before entry.
+pub(crate) fn fill_weighted_degrees(
+    topology: &ThreeWayTopology,
+    weights: &[f64],
+    diagonal: &mut [f64],
+    correction: &mut [f64],
+) {
+    debug_assert_eq!(weights.len(), topology.tuple_count());
+    debug_assert_eq!(diagonal.len(), topology.total_levels());
+    debug_assert_eq!(correction.len(), diagonal.len());
+    diagonal.fill(0.0);
+    correction.fill(0.0);
+    for (&tuple, &weight) in topology.tuples().iter().zip(weights) {
+        for factor in 0..3 {
+            let index = topology.global_index(factor, tuple[factor]);
+            neumaier_add(&mut diagonal[index], &mut correction[index], weight);
+        }
+    }
+    for (value, &adjustment) in diagonal.iter_mut().zip(correction.iter()) {
+        *value += adjustment;
     }
 }
 

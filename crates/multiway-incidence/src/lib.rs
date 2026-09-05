@@ -14,6 +14,7 @@ mod prepared;
 mod problem;
 mod symbolic;
 mod topology;
+mod weight_frame;
 
 pub use aggregation::FactorAggregation;
 pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
@@ -25,6 +26,11 @@ pub use prepared::{
 pub use problem::ThreeWayProblem;
 pub use symbolic::{PreparedCoarseTupleMap, PreparedPairEdgeMap, TupleMergeGroups};
 pub use topology::ThreeWayTopology;
+pub use weight_frame::{
+    ComponentWeightRange, ThreeWayWeightFrame, WeightFrameBinding, WeightFrameInput,
+    WeightFrameInputKind, WeightFramePayloadBudget, WeightFrameSetupReport,
+    WeightFrameValidationReport,
+};
 
 #[cfg(test)]
 mod tests;
