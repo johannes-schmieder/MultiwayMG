@@ -1,0 +1,30 @@
+name: Assemble permanent payload admission source
+on:
+  push:
+    branches: [implementation/issue-5-payload-assembly]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          ref: ${{ github.ref_name }}
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.85.0
+          components: rustfmt
+      - name: Assemble, format and remove one-time machinery
+        run: |
+          set -euo pipefail
+          python3 scripts/issue5_payload_source_assembly.py
+          python3 scripts/issue5_payload_test_assembly.py
+          rm scripts/issue5_payload_source_assembly.py scripts/issue5_payload_test_assembly.py .github/workflows/issue5-payload-assembly.yml
+          cargo fmt --all
+          git diff --check
+          git add -A
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Assemble permanent payload admission source; not a validation receipt'
+          git push origin HEAD:${{ github.ref_name }}
