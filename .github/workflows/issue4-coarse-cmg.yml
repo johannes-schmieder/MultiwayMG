@@ -1,4 +1,5 @@
 # One-time calibration workflow; remove before merge.
+# Rerun after restoring the repository manifest exactly.
 name: Issue 4 coarse-CMG calibration
 
 on:
