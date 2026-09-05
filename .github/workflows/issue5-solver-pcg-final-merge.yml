@@ -1,0 +1,127 @@
+# One-time exact-head gate for the traced-PCG hierarchy-workspace slice.
+name: Issue 5 traced-PCG workspace final merge
+
+on:
+  push:
+    branches: [codex/issue-5-solver-workspace-v4]
+    paths: [.github/workflows/issue5-solver-pcg-final-merge.yml]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  review-test-merge:
+    name: Review, validate, clean, and merge shared PCG core
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-solver-workspace-v4
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Audit exact permanent scope and shared-core architecture
+        run: |
+          git fetch origin main
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+
+          gate = ".github/workflows/issue5-solver-pcg-final-merge.yml"
+          changed = set(subprocess.check_output(
+              ["git", "diff", "--name-only", "origin/main...HEAD"], text=True
+          ).splitlines())
+          solver_files = [
+              path for path in changed
+              if path.startswith("crates/multiway-mg/src/")
+              and path.endswith(".rs")
+              and path != "crates/multiway-mg/src/lib.rs"
+          ]
+          if len(solver_files) != 1:
+              raise SystemExit(f"expected one solver source file, got {solver_files}")
+          expected = {
+              "CHANGELOG.md",
+              "crates/multiway-mg/src/lib.rs",
+              "crates/multiway-mg/tests/hierarchy_pcg_workspace.rs",
+              solver_files[0],
+              gate,
+          }
+          if changed != expected:
+              raise SystemExit(f"unexpected final scope: {sorted(changed)}")
+          source = Path(solver_files[0]).read_text()
+          test = Path("crates/multiway-mg/tests/hierarchy_pcg_workspace.rs").read_text()
+          for needle in (
+              "fn solve_projected_pcg_traced_with_apply<F>",
+              "pub fn solve_projected_pcg_traced_with_hierarchy_workspace(",
+              "preconditioner.apply(input, output)",
+              "hierarchy.apply_with_workspace(input, output, workspace)",
+          ):
+              if needle not in source:
+                  raise SystemExit(f"missing shared-core contract: {needle}")
+          if source.count("solve_projected_pcg_traced_with_apply(") < 2:
+              raise SystemExit("both public paths do not delegate to the shared core")
+          for forbidden in ("RefCell", "Mutex<", "RwLock<", "unsafe {"):
+              if forbidden in source:
+                  raise SystemExit(f"forbidden adapter mechanism: {forbidden}")
+          for needle in (
+              "traced_pcg_reuses_one_hierarchy_workspace_without_changing_trace",
+              "assert_eq!(reused.iterations(), baseline.iterations())",
+              "assert_eq!(reused.final_relative_residual(), baseline.final_relative_residual())",
+              "assert_eq!(workspace.retained_bytes(), warm_bytes)",
+              "assert_eq!(workspace.retained_buffer_count(), warm_buffers)",
+          ):
+              if needle not in test:
+                  raise SystemExit(f"missing exact regression contract: {needle}")
+          PY
+          test ! -e .github/workflows/issue5-solver-pcg-workspace-v4.yml
+          git diff --check origin/main...HEAD
+      - name: Run full validation matrix
+        run: |
+          cargo fmt --all -- --check
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_pcg_workspace
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+      - name: Remove final gate from tested tree
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm .github/workflows/issue5-solver-pcg-final-merge.yml
+          git commit -m "Remove temporary traced-PCG merge gate"
+          git push origin HEAD:codex/issue-5-solver-workspace-v4
+      - name: Ensure PR, mark ready, and exact-head squash merge
+        run: |
+          if ! gh pr view --repo johannes-schmieder/MultiwayMG \
+            codex/issue-5-solver-workspace-v4 >/dev/null 2>&1; then
+            gh pr create \
+              --repo johannes-schmieder/MultiwayMG \
+              --base main \
+              --head codex/issue-5-solver-workspace-v4 \
+              --draft \
+              --title 'Issue #5: reuse hierarchy workspace throughout traced PCG' \
+              --body 'Refactors traced PCG through one private mutable-apply core. The existing generic API delegates through Preconditioner::apply; a new concrete hierarchy API delegates through apply_with_workspace and retains one caller-owned workspace across all iterations. Exact trace and post-warmup storage stability are tested. Part of #5.'
+          fi
+          number=$(gh pr view --repo johannes-schmieder/MultiwayMG \
+            codex/issue-5-solver-workspace-v4 --json number --jq .number)
+          if [ "$(gh pr view "$number" --repo johannes-schmieder/MultiwayMG --json isDraft --jq .isDraft)" = true ]; then
+            gh pr ready "$number" --repo johannes-schmieder/MultiwayMG
+          fi
+          head_sha=$(git rev-parse HEAD)
+          gh api \
+            --method PUT \
+            "repos/johannes-schmieder/MultiwayMG/pulls/$number/merge" \
+            -f merge_method=squash \
+            -f sha="$head_sha" \
+            -f commit_title="Reuse hierarchy workspace throughout traced PCG (#$number)" \
+            -f commit_message='Continue issue #5 by sharing one traced-PCG solver core between the ordinary preconditioner path and a caller-owned hierarchy-workspace path, with exact trace-equivalence tests.'
