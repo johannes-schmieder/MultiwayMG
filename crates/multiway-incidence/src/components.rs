@@ -231,7 +231,7 @@ impl IncidenceComponents {
         )?;
         self.accumulate_factor_sums(values, workspace);
 
-        let mut maximum = 0.0;
+        let mut maximum: f64 = 0.0;
         for scratch in &workspace.scratch {
             let [a, b, c] = scratch.sums;
             maximum = maximum.max((a - b).abs()).max((a - c).abs());
