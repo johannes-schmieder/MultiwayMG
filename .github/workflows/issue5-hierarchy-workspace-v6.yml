@@ -1,0 +1,56 @@
+# One-time executor for the checked source-transform script; removes every temporary file.
+name: Issue 5 hierarchy workspace v6
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace-v6.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  implement:
+    name: Apply and verify reusable hierarchy workspace
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Transform source
+        run: python3 scripts/issue5_hierarchy_workspace_refactor.py
+      - name: Validate targeted implementation
+        run: |
+          cargo fmt --all
+          cargo clippy --locked -p multiway-mg --all-features --all-targets -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_workspace
+          cargo test --locked -p multiway-mg --all-features
+          cargo test --locked -p multiway-mg --no-default-features
+          cargo doc --locked -p multiway-mg --all-features --no-deps
+      - name: Commit permanent diff and remove temporary machinery
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates/multiway-mg/src/hierarchy.rs crates/multiway-mg/src/lib.rs \
+            crates/multiway-mg/tests/hierarchy_workspace.rs CHANGELOG.md
+          git rm -f scripts/issue5_hierarchy_workspace_refactor.py \
+            .github/workflows/issue5-hierarchy-workspace.yml \
+            .github/workflows/issue5-hierarchy-workspace-cleanup.yml \
+            .github/workflows/issue5-hierarchy-workspace-v2.yml \
+            .github/workflows/issue5-hierarchy-workspace-v3.yml \
+            .github/workflows/issue5-hierarchy-workspace-v4.yml \
+            .github/workflows/issue5-hierarchy-workspace-v5.yml \
+            .github/workflows/issue5-hierarchy-workspace-v6.yml
+          git commit -m "Add reusable hierarchy application workspace"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
