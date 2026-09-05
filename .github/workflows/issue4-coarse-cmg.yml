@@ -1,4 +1,5 @@
 # One-time calibration workflow; remove before merge.
+# Temporary write permission is only to commit pinned rustfmt output on this branch.
 name: Issue 4 coarse-CMG calibration
 
 on:
@@ -7,7 +8,7 @@ on:
     paths: [.github/workflows/issue4-coarse-cmg.yml]
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   CARGO_TERM_COLOR: always
@@ -23,17 +24,29 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-4-coarse-cmg
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: "1.85.0"
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
+      - name: Apply and commit pinned rustfmt
+        run: |
+          cargo fmt --all
+          if ! git diff --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add crates/multiway-mg/examples/issue4_coarse_cmg.rs
+            git commit -m "Apply pinned rustfmt to coarse-CMG harness"
+            git push origin HEAD:codex/issue-4-coarse-cmg
+          fi
       - name: Record reproducibility metadata
         run: |
           mkdir -p issue4-coarse-cmg-output
           {
             git rev-parse HEAD
-            echo "event=$GITHUB_EVENT_NAME sha=$GITHUB_SHA run=$GITHUB_RUN_ID"
+            echo "event=$GITHUB_EVENT_NAME sha=$(git rev-parse HEAD) run=$GITHUB_RUN_ID"
             rustc --version --verbose
             uname -a
             lscpu
