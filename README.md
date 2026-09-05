@@ -243,8 +243,9 @@ The issue-4 decision is therefore:
   plus-economics advancement gate.
 
 The frozen issue-3 MAP/CMG research portfolio remains reproducible, but its CMG
-fallback is not a downstream production endorsement. A materially redesigned
-CMG candidate must create a new calibration signal before a fresh holdout.
+fallback is not a downstream production endorsement. A materially redesigned or
+re-engineered CMG candidate must create a new calibration signal before a fresh
+holdout.
 
 See `docs/ISSUE4_FINAL_RESULTS.md` and
 `docs/ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`.
@@ -280,8 +281,10 @@ The next primary milestone is
 It will separate immutable topology from numerical generations, remove steady-
 state allocations, fuse repeated-RHS kernels, report complete memory lifetimes,
 and replay all weight-dependent hierarchy state exactly. This work should use
-`within`/MAP as the local baseline while retaining CMG as a controlled
-comparator.
+`within` as the pair-local baseline and MAP as the preferred cheap smoother,
+while retaining CMG as a controlled comparator. A material improvement in CMG
+setup or application economics should return to issue-4-style calibration under
+ADR 0002 before any routing policy changes.
 
 A private, certified fereg integration remains tracked by
 [#6](https://github.com/johannes-schmieder/MultiwayMG/issues/6). It must preserve

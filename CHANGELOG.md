@@ -66,8 +66,9 @@
 - Archived issue-4 size-ladder and coarse-level summaries, raw-evidence hashes,
   dependency pins, run identifiers, artifact digests, and preserved negative
   results.
-- Final issue #4 synthesis and ADR selecting `within`/MAP as the pair-local
-  baseline while retaining CMG as an explicit research comparator.
+- Final issue #4 synthesis and ADR selecting `within` as the pair-local baseline
+  and MAP as the preferred cheap smoother while retaining CMG as an explicit
+  research comparator.
 
 ### Fixed
 
@@ -112,14 +113,16 @@
 - Replacing only non-finest `within` pair solvers with CMG produced no material
   outer-work reduction on the controlled recursive oracle-map calibration; two
   timing wins both used more outer work.
-- Issue #4 is complete with no current CMG advancement: `within` remains the
-  pair-local production-shaped baseline, MAP remains the preferred cheap
-  smoother where admitted, and CMG remains an explicit research/control route.
+- Issue #4 is complete for the current implementation with no CMG advancement:
+  `within` remains the pair-local production-shaped baseline, MAP remains the
+  preferred cheap smoother where admitted, and CMG remains an explicit research/
+  control route.
 - A fresh issue-4 holdout was deliberately not spent because no calibrated
   candidate met the joint material-work and fully-charged-economics gate.
-- Complete lifetime memory, thread scaling, allocation-free workspaces, and
-  changing-weight replay belong to issue #5 and do not reopen the completed
-  pair-solver selection without a materially new CMG algorithm.
+- Complete lifetime memory, thread scaling, allocation-free workspaces, fused
+  kernels, and changing-weight replay belong to issue #5. A material CMG
+  economic improvement from that work must re-enter calibration under ADR 0002
+  before it changes routing policy.
 
 ### Validation
 

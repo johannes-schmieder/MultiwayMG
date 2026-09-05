@@ -96,8 +96,9 @@ The selected pair-local policy is therefore:
    declared gate passes;
 3. keep component-local CMG, exact terminal metadata, and all comparison
    harnesses as explicit research controls; and
-4. require a materially redesigned CMG candidate to create a new calibration
-   signal and pass a fresh frozen holdout before any automatic route is added.
+4. require a materially redesigned or re-engineered CMG candidate to create a
+   new calibration signal and pass a fresh frozen holdout before any automatic
+   route is added.
 
 No current production path should route by elapsed time, by the observed
 calibration fixture label, or by a post hoc size/terminal threshold. See
@@ -106,9 +107,14 @@ calibration fixture label, or by a post hoc size/terminal threshold. See
 The surrounding three-way apply path still has production-engineering work:
 shared immutable state, caller-owned scratch, fused multiple RHS, exact lifetime
 memory, parallel traversal, and changing-weight replay. Those concerns now
-belong to issue #5. They should be optimized around the `within`/MAP baseline
-while retaining CMG as a controlled comparator; they do not reopen the completed
-issue-4 selection decision without a materially new CMG algorithm.
+belong to issue #5. The default engineering baseline is `within` for pair
+corrections and MAP as the preferred cheap smoother where admitted, with CMG
+retained as a controlled comparator.
+
+Allocation-free workspaces, fused kernels, parallel execution, or a changed CMG
+algorithm could materially alter relative economics. Any such improvement must
+be treated as a new candidate and return to issue-4-style calibration under ADR
+0002 before it changes production routing.
 
 ## Iterative drivers
 
@@ -143,15 +149,16 @@ workspaces, and algebraic diagnostics. `fereg` should continue to own sample
 policy, finite-regressor algebra, normalization, covariance estimation, memory
 admission for the full command, user-visible routing, and final certification.
 
-The initial private adapter should use the issue-4 `within`/MAP local policy and
-must not expose current pair-CMG as an automatic user route. CMG may remain an
-explicit benchmark/control option during qualification.
+The initial private adapter should use `within` for pair corrections and MAP as
+the preferred cheap smoother where admitted. It must not expose current pair-CMG
+as an automatic user route. CMG may remain an explicit benchmark/control option
+during qualification.
 
 ## Current milestone boundary
 
 - Issue #4 is complete: the current fixed CMG remains an explicit research
-  control rather than the selected local pair solver; `within`/MAP form the
-  baseline policy.
+  control rather than the selected local pair solver; `within` is the pair-local
+  baseline and MAP is the preferred cheap smoother where admitted.
 - Issue #5 is the current primary milestone: prepared topology, allocation-free
   caller-owned workspaces, repeated-RHS execution, exact memory accounting,
   thread scaling, and changing-weight numerical replay.

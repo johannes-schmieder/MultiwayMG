@@ -20,7 +20,8 @@ The public pinned `within` approximate-Cholesky/block-elimination route remains
 the pair-local comparison baseline. Symmetric MAP remains the preferred cheap
 three-way smoother where the complete-cycle gate admits it. The component-local
 CMG adapter, reports, and benchmark harnesses remain valuable research controls
-and make a future redesigned CMG candidate directly comparable.
+and make a future redesigned or materially re-engineered CMG candidate directly
+comparable.
 
 A fresh issue-4 holdout was deliberately **not spent**. No calibrated candidate
 met the joint advancement rule strongly enough to justify freezing a routing
@@ -160,13 +161,21 @@ See the
 | Positive fully charged economics at measured RHS widths | **FAIL** | No finest-level ladder win through 32 RHS; coarse timing wins lacked lower work. |
 | Deterministic pre-solve routing rule | **FAIL** | Size, terminal reason, and simple difficulty controls do not separate outcomes. |
 | Fresh holdout qualification | **NOT SPENT** | No calibrated candidate met the joint advancement rule. |
-| Production memory/thread/reweighting qualification | **TRANSFERRED** | Owned by issue #5; it cannot rescue the current failed work-plus-time candidate. |
+| Production memory/thread/reweighting qualification | **DEFERRED TO #5** | Required for a production implementation; a material change in CMG economics would create a new candidate requiring requalification. |
 
-The negative decision is stronger than “more benchmarking is needed.” The
-current fixed CMG local action was tested in the roles that could plausibly
-matter for this architecture: alone on identical pair domains, assembled on the
-whole three-way system, across a repeated-RHS size ladder, and only on coarse
-hierarchy levels. None yielded a stable candidate satisfying the joint gate.
+The negative decision is stronger than “more benchmarking is needed” for the
+**current measured implementation and routing candidates**. The fixed CMG local
+action was tested in the roles that could plausibly matter for this architecture:
+alone on identical pair domains, assembled on the whole three-way system, across
+a repeated-RHS size ladder, and only on coarse hierarchy levels. None yielded a
+stable candidate satisfying the joint gate.
+
+This does not prejudge a materially re-engineered implementation. Allocation-
+free workspaces, fused kernels, parallel execution, or a changed CMG algorithm
+could alter relative economics. Such a change must be treated as a new
+candidate: recalibrated on identical domains, assigned a deterministic policy
+before qualification, and tested on a fresh holdout only after it passes the
+joint work-plus-economics gate.
 
 ## Architectural consequences
 
@@ -183,8 +192,9 @@ hierarchy levels. None yielded a stable candidate satisfying the joint gate.
    cycle research. A downstream automatic route must be requalified under the
    policy in ADR 0002.
 5. **Do not spend a holdout after a failed calibration.** Any materially changed
-   CMG algorithm must first create a new, predeclared calibration candidate;
-   only then should its policy be frozen and evaluated on fresh fixtures.
+   CMG algorithm or implementation must first create a new, predeclared
+   calibration candidate; only then should its policy be frozen and evaluated
+   on fresh fixtures.
 
 The decision is recorded in
 [`ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`](ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md).
@@ -220,7 +230,9 @@ Key preserved evidence:
 Issue #5 is now the primary development milestone: prepared immutable topology,
 caller-owned allocation-free workspaces, exact memory accounting, repeated-RHS
 kernels, and generation-safe numerical replay under changing positive weights.
-That work should use the current `within`/MAP local baseline while retaining CMG
-as an explicit comparator. A future private fereg integration remains issue #6
-and must preserve fereg's original observation-space certification and fallback
-contracts.
+That work should use `within` as the pair-local baseline and MAP as the preferred
+cheap smoother while retaining CMG as an explicit comparator. A material
+improvement in CMG setup or application economics should re-enter calibration
+under ADR 0002 rather than silently changing production routing. A future
+private fereg integration remains issue #6 and must preserve fereg's original
+observation-space certification and fallback contracts.

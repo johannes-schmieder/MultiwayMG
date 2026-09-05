@@ -79,8 +79,9 @@ MAP-first / CMG-after-MAP-rejection portfolio remains available for reproducible
 complete-cycle research. Downstream production integration must not treat that
 historical fallback as evidence that CMG passed issue #4.
 
-A future production cycle should use `within`/MAP local actions unless a new CMG
-implementation independently passes the requalification rule below.
+A future production cycle should use `within` for pair corrections and MAP as
+the preferred cheap complete-cycle smoother where admitted, unless a new CMG
+candidate independently passes the requalification rule below.
 
 ### Holdout policy
 
@@ -93,20 +94,28 @@ negative advancement decision.
 
 Move prepared topology, allocation-free workspaces, exact retained/peak memory,
 thread scaling, repeated-RHS kernels, and changing-weight numerical replay to
-issue #5. These are important production-engineering requirements, but they do
-not reopen the current pair-solver selection: they cannot by themselves turn a
-method with no stable work-plus-time candidate into a qualified route.
+issue #5. These are important production-engineering requirements outside the
+completed comparison of the current implementation.
 
-Issue #5 should retain CMG as a comparator while optimizing around the
-`within`/MAP local baseline. Issue #6 may integrate MultiwayMG privately into
-fereg only after generation safety, memory admission, and original-space
-certification interfaces are ready.
+Such engineering could materially alter relative setup or application
+performance. If issue #5 creates a meaningful CMG economic change, that result
+must be treated as a new candidate: returned to identical-domain and whole-
+system calibration, assigned a deterministic policy before qualification, and
+evaluated on a fresh holdout only after it passes the joint gate. It must not
+silently change the production route established by this ADR.
+
+Issue #5 should retain CMG as a comparator while optimizing around the `within`
+pair-correction baseline and MAP smoother. Issue #6 may integrate MultiwayMG
+privately into fereg only after generation safety, memory admission, and
+original-space certification interfaces are ready.
 
 ## Requalification rule
 
-A future materially changed CMG local solver may supersede this ADR only after:
+A future materially changed CMG local solver or implementation may supersede
+this ADR only after:
 
-1. defining the algorithm and all routing inputs before a new comparison;
+1. defining the algorithm, implementation boundary, and all routing inputs
+   before a new comparison;
 2. comparing it with the pinned `within` baseline on identical domains and
    complete three-way systems;
 3. charging setup, workspaces, failed routes, certification, and relevant

@@ -94,10 +94,12 @@ no material work reduction on the controlled recursive calibration. The pinned
 smoother where the complete-cycle gate admits it; CMG remains an explicit
 research comparator.
 
-Complete lifetime memory, thread scaling, caller-owned workspaces, and changing-
-weight replay are not unfinished pair-selection gates. They are production-
-engineering work owned by milestone 5 and cannot rescue the current failed
-work-plus-time candidate.
+Complete lifetime memory, thread scaling, caller-owned workspaces, fused
+repeated-RHS kernels, and changing-weight replay are production-engineering work
+owned by milestone 5 rather than unfinished measurements of the current issue-4
+candidate. They may materially change future economics. Any such CMG improvement
+must be treated as a new candidate and re-enter calibration before routing or
+holdout qualification.
 
 See `ISSUE4_FINAL_RESULTS.md` and
 `ADR_0002_ISSUE4_PAIR_SOLVER_POLICY.md`.
@@ -116,8 +118,10 @@ Tracked by issue #5. **Current primary milestone.**
 - [ ] Exact numerical replay under changing positive weights.
 - [ ] Hierarchy quality invalidation and deterministic rebuild policy.
 - [ ] Generation-safe caches that cannot silently mix incompatible weights.
-- [ ] Preserve `within`/MAP as the local baseline while retaining CMG as an
-      explicit comparator.
+- [ ] Preserve `within` as the pair-local baseline and MAP as the preferred cheap
+      smoother while retaining CMG as an explicit comparator.
+- [ ] Return any materially improved CMG implementation to issue-4-style
+      calibration before changing routing policy.
 
 ## Milestone 6 — certified fereg integration
 
