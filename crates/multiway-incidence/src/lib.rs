@@ -12,7 +12,7 @@ mod problem;
 mod topology;
 
 pub use aggregation::FactorAggregation;
-pub use components::IncidenceComponents;
+pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
 pub use error::IncidenceError;
 pub use problem::ThreeWayProblem;
 pub use topology::ThreeWayTopology;

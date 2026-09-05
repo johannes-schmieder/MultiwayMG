@@ -69,6 +69,10 @@
 - Final issue #4 synthesis and ADR selecting `within` as the pair-local baseline
   and MAP as the preferred cheap smoother while retaining CMG as an explicit
   research comparator.
+- Reusable `StructuralProjectionWorkspace` scratch with allocation-free
+  structural-range projection and defect evaluation entry points.
+- Caller-owned `rhs_from_targets_into` and `residual_into` incidence kernels;
+  the existing allocating convenience methods now delegate to these primitives.
 
 ### Fixed
 

@@ -1,0 +1,246 @@
+# One-time branch hardening workflow; remove before merge.
+name: Issue 5 workspace binding hardening
+
+on:
+  push:
+    branches: [codex/issue-5-incidence-workspace]
+    paths: [.github/workflows/issue5-workspace-binding.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  harden:
+    name: Bind projection workspaces to exact component layouts
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-incidence-workspace
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Patch exact workspace binding and regression coverage
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          error_path = Path("crates/multiway-incidence/src/error.rs")
+          error_text = error_path.read_text()
+          if "WorkspaceMismatch" not in error_text:
+              enum_start = error_text.index("pub enum IncidenceError")
+              brace_start = error_text.index("{", enum_start)
+              depth = 0
+              enum_end = None
+              for index in range(brace_start, len(error_text)):
+                  char = error_text[index]
+                  if char == "{":
+                      depth += 1
+                  elif char == "}":
+                      depth -= 1
+                      if depth == 0:
+                          enum_end = index
+                          break
+              if enum_end is None:
+                  raise SystemExit("IncidenceError closing brace not found")
+              variant = '''
+              
+                  #[error("structural projection workspace is incompatible with {context}")]
+                  WorkspaceMismatch { context: &'static str },
+              '''
+              error_text = error_text[:enum_end] + variant + error_text[enum_end:]
+              error_path.write_text(error_text)
+
+          components_path = Path("crates/multiway-incidence/src/components.rs")
+          text = components_path.read_text()
+
+          if "use std::sync::Arc;" not in text:
+              marker = "/// One connected component of the tripartite incidence graph."
+              if marker not in text:
+                  raise SystemExit("components import marker not found")
+              text = text.replace(marker, "use std::sync::Arc;\n\n" + marker, 1)
+
+          binding_type = '''
+          #[derive(Debug, Default, PartialEq, Eq)]
+          struct StructuralProjectionBinding;
+
+          '''
+          workspace_marker = "/// Reusable scratch for structural-range projection and defect evaluation."
+          if "struct StructuralProjectionBinding;" not in text:
+              if workspace_marker not in text:
+                  raise SystemExit("workspace marker not found")
+              text = text.replace(workspace_marker, binding_type + workspace_marker, 1)
+
+          old_components = '''pub struct IncidenceComponents {
+              labels: Vec<usize>,
+              factor_sizes: Vec<[usize; 3]>,
+              offsets: [usize; 4],
+          }'''
+          new_components = '''pub struct IncidenceComponents {
+              labels: Vec<usize>,
+              factor_sizes: Vec<[usize; 3]>,
+              offsets: [usize; 4],
+              workspace_binding: Arc<StructuralProjectionBinding>,
+          }'''
+          if "workspace_binding: Arc<StructuralProjectionBinding>" not in text:
+              if old_components not in text:
+                  raise SystemExit("IncidenceComponents field block not found")
+              text = text.replace(old_components, new_components, 1)
+
+          old_workspace = '''pub struct StructuralProjectionWorkspace {
+              coefficient_dimension: usize,
+              component_scratch: Vec<StructuralProjectionScratch>,
+          }'''
+          new_workspace = '''pub struct StructuralProjectionWorkspace {
+              binding: Arc<StructuralProjectionBinding>,
+              coefficient_dimension: usize,
+              component_scratch: Vec<StructuralProjectionScratch>,
+          }'''
+          if "binding: Arc<StructuralProjectionBinding>" not in text:
+              if old_workspace not in text:
+                  raise SystemExit("StructuralProjectionWorkspace field block not found")
+              text = text.replace(old_workspace, new_workspace, 1)
+
+          old_workspace_docs = "Reuse one workspace with any compatible `IncidenceComponents`: the same coefficient\n/// dimension and number of incidence components."
+          new_workspace_docs = "A workspace is bound to the exact `IncidenceComponents` decomposition that created it.\n/// Clones share that binding; independently constructed decompositions are rejected before\n/// caller-owned output is modified, even when dimensions and component counts coincide."
+          if old_workspace_docs in text:
+              text = text.replace(old_workspace_docs, new_workspace_docs, 1)
+
+          old_projection_init = '''        StructuralProjectionWorkspace {
+              coefficient_dimension: self.coefficient_dimension(),'''
+          new_projection_init = '''        StructuralProjectionWorkspace {
+              binding: Arc::clone(&self.workspace_binding),
+              coefficient_dimension: self.coefficient_dimension(),'''
+          if "binding: Arc::clone(&self.workspace_binding)" not in text:
+              if old_projection_init not in text:
+                  raise SystemExit("workspace constructor block not found")
+              text = text.replace(old_projection_init, new_projection_init, 1)
+
+          old_components_init = '''        Ok(Self {
+              labels,
+              factor_sizes,
+              offsets,
+          })'''
+          new_components_init = '''        Ok(Self {
+              labels,
+              factor_sizes,
+              offsets,
+              workspace_binding: Arc::new(StructuralProjectionBinding),
+          })'''
+          if "workspace_binding: Arc::new(StructuralProjectionBinding)" not in text:
+              if old_components_init not in text:
+                  raise SystemExit("IncidenceComponents constructor block not found")
+              text = text.replace(old_components_init, new_components_init, 1)
+
+          validate_marker = '''    fn validate_workspace(
+              &self,
+              workspace: &StructuralProjectionWorkspace,
+              context: &'static str,
+          ) -> Result<(), IncidenceError> {
+          '''
+          binding_check = '''    fn validate_workspace(
+              &self,
+              workspace: &StructuralProjectionWorkspace,
+              context: &'static str,
+          ) -> Result<(), IncidenceError> {
+              if !Arc::ptr_eq(&self.workspace_binding, &workspace.binding) {
+                  return Err(IncidenceError::WorkspaceMismatch { context });
+              }
+          '''
+          if "Arc::ptr_eq(&self.workspace_binding, &workspace.binding)" not in text:
+              if validate_marker not in text:
+                  raise SystemExit("validate_workspace marker not found")
+              text = text.replace(validate_marker, binding_check, 1)
+
+          test_module = '''
+          
+          #[cfg(test)]
+          mod workspace_binding_tests {
+              use super::*;
+
+              fn same_size_components(
+                  labels: Vec<usize>,
+              ) -> IncidenceComponents {
+                  IncidenceComponents {
+                      labels,
+                      factor_sizes: vec![[1, 1, 1], [1, 1, 1]],
+                      offsets: [0, 2, 4, 6],
+                      workspace_binding: Arc::new(StructuralProjectionBinding),
+                  }
+              }
+
+              #[test]
+              fn same_size_distinct_partition_is_rejected_before_output_mutation() {
+                  let left = same_size_components(vec![0, 1, 0, 1, 0, 1]);
+                  let right = same_size_components(vec![0, 1, 0, 1, 1, 0]);
+                  assert_eq!(left.coefficient_dimension(), right.coefficient_dimension());
+                  assert_eq!(left.component_count(), right.component_count());
+                  assert_ne!(left.labels(), right.labels());
+
+                  let input = vec![1.0, -2.0, 3.0, -4.0, 5.0, -6.0];
+                  let mut output = vec![17.0; input.len()];
+                  let untouched = output.clone();
+                  let mut workspace = left.projection_workspace();
+
+                  let error = right
+                      .project_structural_range_with_workspace(
+                          &input,
+                          &mut output,
+                          &mut workspace,
+                      )
+                      .expect_err("a workspace from another partition must be rejected");
+                  assert!(matches!(error, IncidenceError::WorkspaceMismatch { .. }));
+                  assert_eq!(output, untouched);
+
+                  let mut reused = vec![0.0; input.len()];
+                  left.project_structural_range_with_workspace(
+                      &input,
+                      &mut reused,
+                      &mut workspace,
+                  )
+                  .expect("the rejected workspace remains reusable with its owner");
+                  let mut allocating_reference = vec![0.0; input.len()];
+                  left.project_structural_range(&input, &mut allocating_reference)
+                      .expect("allocating reference projection must succeed");
+                  assert_eq!(reused, allocating_reference);
+              }
+
+              #[test]
+              fn cloned_components_share_workspace_binding() {
+                  let original = same_size_components(vec![0, 1, 0, 1, 0, 1]);
+                  let cloned = original.clone();
+                  let input = vec![1.0, -2.0, 3.0, -4.0, 5.0, -6.0];
+                  let mut output = vec![0.0; input.len()];
+                  let mut workspace = original.projection_workspace();
+                  cloned
+                      .project_structural_range_with_workspace(
+                          &input,
+                          &mut output,
+                          &mut workspace,
+                      )
+                      .expect("ordinary clones must share the exact binding");
+              }
+          }
+          '''
+          if "same_size_distinct_partition_is_rejected_before_output_mutation" not in text:
+              text = text.rstrip() + "\n" + test_module
+
+          components_path.write_text(text)
+          PY
+          cargo fmt --all
+          cargo clippy --locked -p multiway-incidence --all-features -- -D warnings
+          cargo test --locked -p multiway-incidence --all-features
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add crates/multiway-incidence/src/error.rs crates/multiway-incidence/src/components.rs
+            git commit -m "Bind incidence workspaces to exact component layouts"
+            git push origin HEAD:codex/issue-5-incidence-workspace
+          fi

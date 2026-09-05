@@ -2,6 +2,49 @@
 
 use crate::{IncidenceError, ThreeWayTopology};
 
+#[derive(Debug, Clone, Copy, Default, PartialEq)]
+struct StructuralProjectionScratch {
+    sums: [f64; 3],
+    corrections: [f64; 3],
+    projection: [f64; 3],
+}
+
+/// Reusable scratch for structural-range projection and defect evaluation.
+///
+/// Construct this workspace from [`IncidenceComponents::projection_workspace`]
+/// and reuse it only with a component decomposition having the same coefficient
+/// dimension and number of incidence components. The workspace owns all heap
+/// storage needed by the allocation-free projection and defect methods.
+#[derive(Debug, Clone, PartialEq)]
+pub struct StructuralProjectionWorkspace {
+    dimension: usize,
+    scratch: Vec<StructuralProjectionScratch>,
+}
+
+impl StructuralProjectionWorkspace {
+    /// Coefficient dimension for which this workspace was prepared.
+    #[must_use]
+    pub const fn dimension(&self) -> usize {
+        self.dimension
+    }
+
+    /// Number of incidence components for which this workspace was prepared.
+    #[must_use]
+    pub fn component_count(&self) -> usize {
+        self.scratch.len()
+    }
+
+    /// Retained heap bytes in the reusable component scratch array.
+    #[must_use]
+    pub fn retained_bytes(&self) -> usize {
+        self.scratch.capacity() * core::mem::size_of::<StructuralProjectionScratch>()
+    }
+
+    fn clear(&mut self) {
+        self.scratch.fill(StructuralProjectionScratch::default());
+    }
+}
+
 /// Connected components of the level--tuple incidence graph.
 ///
 /// Every component carries the two structural shift directions
@@ -88,42 +131,50 @@ impl IncidenceComponents {
         self.labels[self.offsets[factor] + level]
     }
 
+    /// Allocate reusable scratch for structural projection and defect checks.
+    #[must_use]
+    pub fn projection_workspace(&self) -> StructuralProjectionWorkspace {
+        StructuralProjectionWorkspace {
+            dimension: self.labels.len(),
+            scratch: vec![StructuralProjectionScratch::default(); self.count()],
+        }
+    }
+
     /// Orthogonally remove the two known factor-shift directions per component.
     ///
-    /// The returned value is the Euclidean norm of the removed projection.
+    /// The returned value is the Euclidean norm of the removed projection. This
+    /// convenience method allocates one temporary workspace; repeated callers
+    /// should use [`Self::project_structural_range_with_workspace`].
     pub fn project_structural_range(&self, values: &mut [f64]) -> Result<f64, IncidenceError> {
-        if values.len() != self.labels.len() {
-            return Err(crate::error::dimension(
-                "IncidenceComponents::project_structural_range",
-                self.labels.len(),
-                values.len(),
-            ));
-        }
+        let mut workspace = self.projection_workspace();
+        self.project_structural_range_with_workspace(values, &mut workspace)
+    }
 
-        let mut sums = vec![[0.0; 3]; self.count()];
-        let mut corrections = vec![[0.0; 3]; self.count()];
-        for factor in 0..3 {
-            for vertex in self.offsets[factor]..self.offsets[factor + 1] {
-                let component = self.labels[vertex];
-                neumaier_add(
-                    &mut sums[component][factor],
-                    &mut corrections[component][factor],
-                    values[vertex],
-                );
-            }
-        }
-        for component in 0..self.count() {
-            for factor in 0..3 {
-                sums[component][factor] += corrections[component][factor];
-            }
-        }
+    /// Orthogonally remove structural shift directions without allocating.
+    ///
+    /// `workspace` must have been prepared for a component decomposition with
+    /// the same coefficient dimension and component count. Dimensions are
+    /// checked before `values` is modified.
+    pub fn project_structural_range_with_workspace(
+        &self,
+        values: &mut [f64],
+        workspace: &mut StructuralProjectionWorkspace,
+    ) -> Result<f64, IncidenceError> {
+        self.validate_values(
+            "IncidenceComponents::project_structural_range_with_workspace values",
+            values,
+        )?;
+        self.validate_workspace(
+            "IncidenceComponents::project_structural_range_with_workspace",
+            workspace,
+        )?;
+        self.accumulate_factor_sums(values, workspace);
 
-        let mut projections = vec![[0.0; 3]; self.count()];
         let mut removed_squared = 0.0;
-        for component in 0..self.count() {
+        for (component, scratch) in workspace.scratch.iter_mut().enumerate() {
             let [n1, n2, n3] = self.factor_sizes[component];
             debug_assert!(n1 > 0 && n2 > 0 && n3 > 0);
-            let [s1, s2, s3] = sums[component];
+            let [s1, s2, s3] = scratch.sums;
             let g1 = s1 - s2;
             let g2 = s1 - s3;
             let a11 = (n1 + n2) as f64;
@@ -134,7 +185,7 @@ impl IncidenceComponents {
             let alpha = (a22.mul_add(g1, -(a12 * g2))) / determinant;
             let beta = (a11.mul_add(g2, -(a12 * g1))) / determinant;
             let projection = [alpha + beta, -alpha, -beta];
-            projections[component] = projection;
+            scratch.projection = projection;
             removed_squared += (n1 as f64).mul_add(
                 projection[0] * projection[0],
                 (n2 as f64).mul_add(
@@ -146,31 +197,101 @@ impl IncidenceComponents {
 
         for factor in 0..3 {
             for vertex in self.offsets[factor]..self.offsets[factor + 1] {
-                values[vertex] -= projections[self.labels[vertex]][factor];
+                values[vertex] -= workspace.scratch[self.labels[vertex]].projection[factor];
             }
         }
         Ok(removed_squared.sqrt())
     }
 
     /// Maximum absolute dot product with either known structural kernel vector.
+    ///
+    /// This convenience method allocates one temporary workspace; repeated
+    /// callers should use [`Self::maximum_structural_defect_with_workspace`].
     pub fn maximum_structural_defect(&self, values: &[f64]) -> Result<f64, IncidenceError> {
+        let mut workspace = self.projection_workspace();
+        self.maximum_structural_defect_with_workspace(values, &mut workspace)
+    }
+
+    /// Evaluate the maximum structural defect without allocating.
+    ///
+    /// `workspace` must have been prepared for a component decomposition with
+    /// the same coefficient dimension and component count.
+    pub fn maximum_structural_defect_with_workspace(
+        &self,
+        values: &[f64],
+        workspace: &mut StructuralProjectionWorkspace,
+    ) -> Result<f64, IncidenceError> {
+        self.validate_values(
+            "IncidenceComponents::maximum_structural_defect_with_workspace values",
+            values,
+        )?;
+        self.validate_workspace(
+            "IncidenceComponents::maximum_structural_defect_with_workspace",
+            workspace,
+        )?;
+        self.accumulate_factor_sums(values, workspace);
+
+        let mut maximum: f64 = 0.0;
+        for scratch in &workspace.scratch {
+            let [a, b, c] = scratch.sums;
+            maximum = maximum.max((a - b).abs()).max((a - c).abs());
+        }
+        Ok(maximum)
+    }
+
+    fn validate_values(&self, context: &'static str, values: &[f64]) -> Result<(), IncidenceError> {
         if values.len() != self.labels.len() {
             return Err(crate::error::dimension(
-                "IncidenceComponents::maximum_structural_defect",
+                context,
                 self.labels.len(),
                 values.len(),
             ));
         }
-        let mut sums = vec![[0.0; 3]; self.count()];
+        Ok(())
+    }
+
+    fn validate_workspace(
+        &self,
+        context: &'static str,
+        workspace: &StructuralProjectionWorkspace,
+    ) -> Result<(), IncidenceError> {
+        if workspace.dimension != self.labels.len() {
+            return Err(crate::error::dimension(
+                context,
+                self.labels.len(),
+                workspace.dimension,
+            ));
+        }
+        if workspace.scratch.len() != self.count() {
+            return Err(crate::error::dimension(
+                context,
+                self.count(),
+                workspace.scratch.len(),
+            ));
+        }
+        Ok(())
+    }
+
+    fn accumulate_factor_sums(
+        &self,
+        values: &[f64],
+        workspace: &mut StructuralProjectionWorkspace,
+    ) {
+        workspace.clear();
         for factor in 0..3 {
             for vertex in self.offsets[factor]..self.offsets[factor + 1] {
-                sums[self.labels[vertex]][factor] += values[vertex];
+                let component = self.labels[vertex];
+                let StructuralProjectionScratch {
+                    sums, corrections, ..
+                } = &mut workspace.scratch[component];
+                neumaier_add(&mut sums[factor], &mut corrections[factor], values[vertex]);
             }
         }
-        Ok(sums
-            .into_iter()
-            .flat_map(|[a, b, c]| [(a - b).abs(), (a - c).abs()])
-            .fold(0.0, f64::max))
+        for scratch in &mut workspace.scratch {
+            for factor in 0..3 {
+                scratch.sums[factor] += scratch.corrections[factor];
+            }
+        }
     }
 }
 

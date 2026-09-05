@@ -16,6 +16,26 @@ fn sample_problem() -> ThreeWayProblem {
     .expect("valid sample problem")
 }
 
+fn disconnected_problem() -> ThreeWayProblem {
+    ThreeWayProblem::from_observations([2, 2, 2], &[[0, 0, 0], [1, 1, 1]], &[1.0, 2.0])
+        .expect("valid disconnected problem")
+}
+
+fn assert_close(left: f64, right: f64, tolerance: f64) {
+    let scale = left.abs().max(right.abs()).max(1.0);
+    assert!(
+        (left - right).abs() <= tolerance * scale,
+        "{left:.16e} differs from {right:.16e}"
+    );
+}
+
+fn assert_slices_close(left: &[f64], right: &[f64], tolerance: f64) {
+    assert_eq!(left.len(), right.len());
+    for (&left_value, &right_value) in left.iter().zip(right) {
+        assert_close(left_value, right_value, tolerance);
+    }
+}
+
 #[test]
 fn duplicate_tuples_are_collapsed_deterministically() {
     let problem = sample_problem();
@@ -56,6 +76,133 @@ fn structural_projection_removes_known_shift_modes() {
         .maximum_structural_defect(&values)
         .expect("defect computation succeeds");
     assert!(defect < 1.0e-12);
+}
+
+#[test]
+fn reusable_projection_workspace_matches_allocating_projection() {
+    let problem = disconnected_problem();
+    let components = problem.components();
+    let base = [1.0, -2.0, 3.0, -4.0, 5.0, -6.0];
+    let mut workspace = components.projection_workspace();
+    let retained_bytes = workspace.retained_bytes();
+
+    assert_eq!(workspace.dimension(), problem.dimension());
+    assert_eq!(workspace.component_count(), components.count());
+    assert!(retained_bytes > 0);
+
+    for scale in [1.0, -2.5, 0.125] {
+        let mut expected: Vec<f64> = base.iter().map(|value| scale * value).collect();
+        let expected_removed = components
+            .project_structural_range(&mut expected)
+            .expect("allocating projection");
+
+        let mut actual: Vec<f64> = base.iter().map(|value| scale * value).collect();
+        let actual_removed = components
+            .project_structural_range_with_workspace(&mut actual, &mut workspace)
+            .expect("workspace projection");
+
+        assert_close(actual_removed, expected_removed, 1.0e-13);
+        assert_slices_close(&actual, &expected, 1.0e-13);
+        assert_eq!(workspace.retained_bytes(), retained_bytes);
+
+        let defect = components
+            .maximum_structural_defect_with_workspace(&actual, &mut workspace)
+            .expect("workspace defect");
+        assert!(defect < 1.0e-12);
+        assert_eq!(workspace.retained_bytes(), retained_bytes);
+    }
+}
+
+#[test]
+fn projection_workspace_mismatch_fails_before_mutating_output() {
+    let connected = sample_problem();
+    let disconnected = disconnected_problem();
+    let mut workspace = connected.components().projection_workspace();
+    let mut values = vec![1.0, -2.0, 3.0, -4.0, 5.0, -6.0];
+    let original = values.clone();
+
+    let error = disconnected
+        .components()
+        .project_structural_range_with_workspace(&mut values, &mut workspace)
+        .expect_err("component-count mismatch must fail");
+    assert!(matches!(error, IncidenceError::DimensionMismatch { .. }));
+    assert_eq!(values, original);
+
+    connected
+        .components()
+        .project_structural_range_with_workspace(&mut values, &mut workspace)
+        .expect("workspace remains reusable after rejection");
+    let defect = connected
+        .components()
+        .maximum_structural_defect_with_workspace(&values, &mut workspace)
+        .expect("defect after valid reuse");
+    assert!(defect < 1.0e-12);
+}
+
+#[test]
+fn rhs_and_residual_into_match_allocating_convenience_methods() {
+    let problem = sample_problem();
+    let targets = [0.5, -1.0, 0.25, 2.0, -0.75];
+    let expected_rhs = problem
+        .rhs_from_targets(&targets)
+        .expect("allocating right-hand side");
+    let mut actual_rhs = vec![f64::NAN; problem.dimension()];
+    let rhs_pointer = actual_rhs.as_ptr();
+    let rhs_capacity = actual_rhs.capacity();
+    problem
+        .rhs_from_targets_into(&targets, &mut actual_rhs)
+        .expect("caller-owned right-hand side");
+    assert_slices_close(&actual_rhs, &expected_rhs, 1.0e-14);
+    assert_eq!(actual_rhs.as_ptr(), rhs_pointer);
+    assert_eq!(actual_rhs.capacity(), rhs_capacity);
+
+    let second_targets = [-0.25, 0.75, 1.5, -2.0, 0.125];
+    let second_expected = problem
+        .rhs_from_targets(&second_targets)
+        .expect("second allocating right-hand side");
+    problem
+        .rhs_from_targets_into(&second_targets, &mut actual_rhs)
+        .expect("reused caller-owned right-hand side");
+    assert_slices_close(&actual_rhs, &second_expected, 1.0e-14);
+    assert_eq!(actual_rhs.as_ptr(), rhs_pointer);
+    assert_eq!(actual_rhs.capacity(), rhs_capacity);
+
+    let x = [0.25, -0.5, 1.0, -0.75, 0.1, 0.6];
+    let expected_residual = problem
+        .residual(&actual_rhs, &x)
+        .expect("allocating residual");
+    let mut actual_residual = vec![f64::NAN; problem.dimension()];
+    let residual_pointer = actual_residual.as_ptr();
+    let residual_capacity = actual_residual.capacity();
+    problem
+        .residual_into(&actual_rhs, &x, &mut actual_residual)
+        .expect("caller-owned residual");
+    assert_slices_close(&actual_residual, &expected_residual, 1.0e-14);
+    assert_eq!(actual_residual.as_ptr(), residual_pointer);
+    assert_eq!(actual_residual.capacity(), residual_capacity);
+}
+
+#[test]
+fn into_kernels_reject_dimensions_before_mutating_output() {
+    let problem = sample_problem();
+    let targets = [0.5, -1.0, 0.25, 2.0];
+    let mut rhs = vec![7.0; problem.dimension()];
+    let rhs_before = rhs.clone();
+    let error = problem
+        .rhs_from_targets_into(&targets, &mut rhs)
+        .expect_err("short targets must fail");
+    assert!(matches!(error, IncidenceError::DimensionMismatch { .. }));
+    assert_eq!(rhs, rhs_before);
+
+    let valid_rhs = vec![1.0; problem.dimension()];
+    let short_x = vec![0.0; problem.dimension() - 1];
+    let mut residual = vec![9.0; problem.dimension()];
+    let residual_before = residual.clone();
+    let error = problem
+        .residual_into(&valid_rhs, &short_x, &mut residual)
+        .expect_err("short iterate must fail");
+    assert!(matches!(error, IncidenceError::DimensionMismatch { .. }));
+    assert_eq!(residual, residual_before);
 }
 
 #[test]
