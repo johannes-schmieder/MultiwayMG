@@ -87,6 +87,20 @@ pub enum MultiwayError {
         /// Numerical breakdown description.
         message: String,
     },
+    /// A caller-owned workspace size or byte count overflowed.
+    #[error("workspace size overflow in {context}")]
+    WorkspaceSizeOverflow {
+        /// Operation whose checked size calculation failed.
+        context: &'static str,
+    },
+    /// A caller-owned workspace could not reserve requested storage.
+    #[error("workspace allocation failed in {context}: {source}")]
+    WorkspaceAllocation {
+        /// Operation that attempted the reservation.
+        context: &'static str,
+        /// Allocation or capacity-overflow error from the standard library.
+        source: std::collections::TryReserveError,
+    },
     /// A CMG pair solver failed.
     #[cfg(feature = "cmg")]
     #[error("CMG pair solver failed: {0}")]
