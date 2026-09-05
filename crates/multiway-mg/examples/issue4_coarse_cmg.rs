@@ -54,6 +54,22 @@ impl Method {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
+enum MapMode {
+    Automatic,
+    Oracle,
+}
+
+impl MapMode {
+    fn parse(value: Option<String>) -> Result<Self> {
+        match value.as_deref() {
+            None | Some("automatic") => Ok(Self::Automatic),
+            Some("oracle") => Ok(Self::Oracle),
+            Some(other) => Err(format!("unknown map mode: {other}").into()),
+        }
+    }
+}
+
 enum Smoother {
     Within(WithinApproxCholPreconditioner),
     PairCmg(PairCmgSchwarzPreconditioner),
@@ -334,8 +350,9 @@ fn main() -> Result<()> {
         args.next()
             .unwrap_or_else(|| "issue4-coarse-cmg-output".to_owned()),
     );
+    let map_mode = MapMode::parse(args.next())?;
     if args.next().is_some() {
-        return Err("usage: issue4_coarse_cmg [output-directory]".into());
+        return Err("usage: issue4_coarse_cmg [output-directory] [automatic|oracle]".into());
     }
     fs::create_dir_all(&output)?;
     let mut writer = BufWriter::new(File::create(output.join("coarse-cmg.tsv"))?);
@@ -345,7 +362,7 @@ fn main() -> Result<()> {
     )?;
 
     for (case_index, fixture) in recursive_holdout_fixtures()?.iter().enumerate() {
-        run_fixture(case_index, fixture, &mut writer)?;
+        run_fixture(case_index, fixture, map_mode, &mut writer)?;
     }
     Ok(())
 }
@@ -353,41 +370,61 @@ fn main() -> Result<()> {
 fn run_fixture(
     case_index: usize,
     fixture: &RecursiveHoldoutFixture,
+    map_mode: MapMode,
     writer: &mut BufWriter<File>,
 ) -> Result<()> {
-    let plan_start = Instant::now();
-    let plan = CycleScreenedHierarchyPlan::build(
-        fixture.problem.clone(),
-        hierarchy_options(fixture.terminal_dimension),
-    )?;
-    let plan_seconds = plan_start.elapsed().as_secs_f64();
-    if !plan.accepted() || plan.depth() != fixture.depth {
-        writeln!(
-            writer,
-            "{}\t{}\t{}\t{}\t{}\t{:.9e}\t{:.9e}\t{:.9e}\tNA\t0\tNA\t0\t{}\t{}\tNA\tNA\t0\t0\t0\t0\t0\t0\tNA\t0\t0\tinf\tfalse\tfalse\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\tplan rejected: {:?}",
-            fixture.name,
-            fixture.family,
-            fixture.depth,
-            plan.accepted(),
-            plan.depth(),
-            plan_seconds,
-            plan.dimension_complexity(),
-            plan.tuple_complexity(),
-            fixture.problem.dimension(),
-            fixture.problem.tuple_count(),
-            plan.stop_reason(),
-        )?;
-        return Ok(());
-    }
-
-    let maps = plan.aggregations();
+    let (maps, plan_depth, plan_seconds, dimension_complexity, tuple_complexity) = match map_mode {
+        MapMode::Automatic => {
+            let plan_start = Instant::now();
+            let plan = CycleScreenedHierarchyPlan::build(
+                fixture.problem.clone(),
+                hierarchy_options(fixture.terminal_dimension),
+            )?;
+            let plan_seconds = plan_start.elapsed().as_secs_f64();
+            if !plan.accepted() || plan.depth() != fixture.depth {
+                writeln!(
+                    writer,
+                    "{}\t{}\t{}\t{}\t{}\t{:.9e}\t{:.9e}\t{:.9e}\tNA\t0\tNA\t0\t{}\t{}\tNA\tNA\t0\t0\t0\t0\t0\t0\tNA\t0\t0\tinf\tfalse\tfalse\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\t0\tplan rejected: {:?}",
+                    fixture.name,
+                    fixture.family,
+                    fixture.depth,
+                    plan.accepted(),
+                    plan.depth(),
+                    plan_seconds,
+                    plan.dimension_complexity(),
+                    plan.tuple_complexity(),
+                    fixture.problem.dimension(),
+                    fixture.problem.tuple_count(),
+                    plan.stop_reason(),
+                )?;
+                return Ok(());
+            }
+            (
+                plan.aggregations().to_vec(),
+                plan.depth(),
+                plan_seconds,
+                plan.dimension_complexity(),
+                plan.tuple_complexity(),
+            )
+        }
+        MapMode::Oracle => {
+            let complexity = map_complexity(&fixture.problem, &fixture.oracle_maps)?;
+            (
+                fixture.oracle_maps.clone(),
+                fixture.depth,
+                0.0,
+                complexity.0,
+                complexity.1,
+            )
+        }
+    };
     let targets = (0..MAX_RHS)
         .map(|rhs| exact_targets(&fixture.problem, rhs))
         .collect::<Result<Vec<_>>>()?;
     for repeat in 0..2 {
         for method_index in 0..Method::ALL.len() {
             let method = Method::ALL[(method_index + repeat + case_index) % Method::ALL.len()];
-            let hierarchy = ExperimentalHierarchy::build(fixture.problem.clone(), maps, method)?;
+            let hierarchy = ExperimentalHierarchy::build(fixture.problem.clone(), &maps, method)?;
             let rhs = fixture.problem.rhs_from_targets(&targets[0])?;
             let mut initialized = vec![0.0; fixture.problem.dimension()];
             let init_start = Instant::now();
@@ -426,10 +463,10 @@ fn run_fixture(
                         fixture.name,
                         fixture.family,
                         fixture.depth,
-                        plan.depth(),
+                        plan_depth,
                         plan_seconds,
-                        plan.dimension_complexity(),
-                        plan.tuple_complexity(),
+                        dimension_complexity,
+                        tuple_complexity,
                         method.label(),
                         repeat,
                         solver,
@@ -586,6 +623,23 @@ fn exact_targets(problem: &ThreeWayProblem, rhs: usize) -> Result<Vec<f64>> {
     let mut targets = vec![0.0; problem.tuple_count()];
     problem.apply_incidence(&coefficients, &mut targets)?;
     Ok(targets)
+}
+
+fn map_complexity(problem: &ThreeWayProblem, maps: &[FactorAggregation]) -> Result<(f64, f64)> {
+    let finest_dimension = problem.dimension();
+    let finest_tuples = problem.tuple_count();
+    let mut dimension_sum = finest_dimension;
+    let mut tuple_sum = finest_tuples;
+    let mut current = problem.clone();
+    for map in maps {
+        current = map.coarsen(&current)?;
+        dimension_sum += current.dimension();
+        tuple_sum += current.tuple_count();
+    }
+    Ok((
+        dimension_sum as f64 / finest_dimension as f64,
+        tuple_sum as f64 / finest_tuples as f64,
+    ))
 }
 
 fn hierarchy_options(terminal_dimension: usize) -> CycleScreenedHierarchyOptions {
