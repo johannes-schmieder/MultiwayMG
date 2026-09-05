@@ -16,7 +16,7 @@ use std::{
     time::{Duration, Instant},
 };
 
-use cmg::{CmgOptions, CmgPreconditioner, CmgWorkspace, Components, Laplacian};
+use cmg::{CmgOptions, CmgPreconditioner, CmgWorkspace, Components, Laplacian, TerminalReason};
 use schwarz_precond::{
     LocalSolveError, LocalSolver, PartitionWeights, ReductionStrategy, SchwarzPreconditioner,
     SubdomainCore, SubdomainEntry,
@@ -124,6 +124,8 @@ pub struct PairComponentReport {
     edges: usize,
     cycle_excess: usize,
     cmg_levels: usize,
+    cmg_terminal: TerminalReason,
+    cmg_direct_factor: bool,
     cmg_retained_bytes: usize,
     cmg_workspace_bytes: usize,
     local_scratch_values: usize,
@@ -164,6 +166,18 @@ impl PairComponentReport {
     #[must_use]
     pub const fn cmg_levels(self) -> usize {
         self.cmg_levels
+    }
+
+    /// Reason hierarchy construction terminated for this component.
+    #[must_use]
+    pub const fn cmg_terminal(self) -> TerminalReason {
+        self.cmg_terminal
+    }
+
+    /// Whether the terminal action owns a direct grounded factorization.
+    #[must_use]
+    pub const fn cmg_direct_factor(self) -> bool {
+        self.cmg_direct_factor
     }
 
     /// Principal immutable bytes reported by CMG.
@@ -334,6 +348,8 @@ impl PairCmgSchwarzPreconditioner {
                 maximum_local_scratch_values =
                     maximum_local_scratch_values.max(local_scratch_values);
                 let retained_bytes = preconditioner.retained_bytes();
+                let cmg_terminal = preconditioner.hierarchy().report().terminal_reason();
+                let cmg_direct_factor = preconditioner.terminal_factor().is_some();
                 cmg_preconditioner_bytes = cmg_preconditioner_bytes.saturating_add(retained_bytes);
                 cmg_workspace_pool_bytes = cmg_workspace_pool_bytes.saturating_add(workspace_bytes);
                 subdomain_metadata_bytes_estimate = subdomain_metadata_bytes_estimate
@@ -349,6 +365,8 @@ impl PairCmgSchwarzPreconditioner {
                         .edge_count()
                         .saturating_sub(component.graph.vertex_count().saturating_sub(1)),
                     cmg_levels: preconditioner.hierarchy().levels().len(),
+                    cmg_terminal,
+                    cmg_direct_factor,
                     cmg_retained_bytes: retained_bytes,
                     cmg_workspace_bytes: workspace_bytes,
                     local_scratch_values,
@@ -811,5 +829,36 @@ mod tests {
         assert_eq!(components.len(), 1);
         assert_eq!(components[0].graph.edge_count(), 1);
         assert_eq!(components[0].graph.edges()[0].weight(), 1e16 + 2.0);
+    }
+
+    #[test]
+    fn component_reports_expose_terminal_reason_and_factorization_state() {
+        let problem = ThreeWayProblem::from_observations(
+            [8, 8, 8],
+            &(0..8)
+                .flat_map(|a| (0..8).map(move |b| [a, b, (a + b) % 8]))
+                .collect::<Vec<_>>(),
+            &vec![1.0; 64],
+        )
+        .unwrap();
+        let preconditioner = PairCmgSchwarzPreconditioner::build_all(
+            problem,
+            PairCmgSchwarzOptions {
+                cmg: CmgOptions {
+                    direct_threshold: 8,
+                    ..CmgOptions::default()
+                },
+                ..PairCmgSchwarzOptions::default()
+            },
+        )
+        .unwrap();
+        assert!(!preconditioner.component_reports().is_empty());
+        for report in preconditioner.component_reports() {
+            assert_eq!(
+                report.cmg_direct_factor(),
+                report.cmg_terminal() == TerminalReason::Direct
+            );
+            assert!(report.cmg_levels() >= 1);
+        }
     }
 }
