@@ -6,6 +6,46 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// Observation weights require a prepared source with original row groups.
+    #[error("observation weight input requires an observation-prepared topology")]
+    WeightFrameObservationLayoutRequired,
+    /// A numerical token names another immutable weight frame.
+    #[error("weight binding belongs to a different numerical frame")]
+    WeightFrameBindingMismatch,
+    /// Checked frame-array reservation failed.
+    #[error("weight frame array allocation failed in {context}")]
+    WeightFrameAllocation {
+        /// Array reservation boundary.
+        context: &'static str,
+    },
+    /// The declared live requested-array payload budget is insufficient.
+    #[error("weight frame setup requires {required} payload bytes, budget is {budget}")]
+    WeightFrameBudgetExceeded {
+        /// Sum of requested new arrays and declared live payload, not process memory.
+        required: usize,
+        /// Caller-declared payload budget.
+        budget: usize,
+    },
+    /// A weighted degree is not representable as a finite strictly positive value.
+    #[error("factor {factor} level {level} has invalid weighted degree {value}")]
+    InvalidWeightedDegree {
+        /// Zero-based factor index.
+        factor: usize,
+        /// Factor-local level.
+        level: usize,
+        /// Rejected accumulated value.
+        value: f64,
+    },
+    /// Another derived frame value is not finite and strictly positive.
+    #[error("invalid weight frame {context} at index {index}: {value}")]
+    InvalidWeightFrameDerivedValue {
+        /// Derived quantity being checked.
+        context: &'static str,
+        /// Zero-based tuple or component index, as named by context.
+        index: usize,
+        /// Rejected numerical value.
+        value: f64,
+    },
     /// A symbolic map was built from a different factor aggregation owner.
     #[error("symbolic map belongs to a different factor aggregation owner")]
     AggregationBindingMismatch,

@@ -4,6 +4,10 @@
 
 ### Added
 
+- Immutable validated weight frames with explicit input layouts, numerical-owner
+  bindings, compensated duplicate weights/degrees, component diagnostics and
+  checked live setup-payload accounting; see `docs/ISSUE5_WEIGHT_FRAMES.md`.
+
 - Owner-bound symbolic coarse-tuple and pair-edge maps with deterministic merge
   groups, component correspondence and checked fallible setup; see
   `docs/ISSUE5_SYMBOLIC_MAPS.md`.

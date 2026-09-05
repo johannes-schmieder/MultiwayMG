@@ -11,6 +11,8 @@ mod pcg_allocations;
 mod prepared_topology_allocations;
 #[path = "support/symbolic_map_allocations.rs"]
 mod symbolic_map_allocations;
+#[path = "support/weight_frame_allocations.rs"]
+mod weight_frame_allocations;
 
 use multiway_mg::{
     CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, DensePseudoinverse,
@@ -216,6 +218,7 @@ fn main() -> Result<()> {
     operator_checks()?;
     prepared_topology_allocations::run()?;
     symbolic_map_allocations::run()?;
+    weight_frame_allocations::run()?;
     pcg_allocations::run()?;
     let fixtures = fixtures::recursive_holdout_fixtures()?;
     assert_eq!(fixtures.len(), 8);
