@@ -161,8 +161,15 @@ impl CycleScreenedMapHierarchy {
         }
 
         let (frame, child_scratch) = scratch.split_at_mut(FRAME_BUFFERS);
-        let [compatible_rhs, residual, coarse_rhs, coarse_solution, prolonged, post_residual, post] =
-            frame
+        let [
+            compatible_rhs,
+            residual,
+            coarse_rhs,
+            coarse_solution,
+            prolonged,
+            post_residual,
+            post,
+        ] = frame
         else {
             unreachable!("a prepared nonterminal frame has seven buffers");
         };
@@ -243,12 +250,8 @@ mod tests {
         let tuples: Vec<_> = (0..4)
             .flat_map(|i| (0..4).flat_map(move |j| (0..4).map(move |k| [i, j, k])))
             .collect();
-        let problem = ThreeWayProblem::from_observations(
-            [4; 3],
-            &tuples,
-            &vec![1.0; tuples.len()],
-        )
-        .unwrap();
+        let problem =
+            ThreeWayProblem::from_observations([4; 3], &tuples, &vec![1.0; tuples.len()]).unwrap();
         let maps = vec![
             FactorAggregation::consecutive_halving([4; 3]).unwrap(),
             FactorAggregation::consecutive_halving([2; 3]).unwrap(),
@@ -261,7 +264,11 @@ mod tests {
         let hierarchy = hierarchy();
         let workspace = hierarchy.application_workspace().unwrap();
         let expected = workspace.buffers.capacity() * core::mem::size_of::<Vec<f64>>()
-            + workspace.buffers.iter().map(|v| v.capacity() * 8).sum::<usize>();
+            + workspace
+                .buffers
+                .iter()
+                .map(|v| v.capacity() * 8)
+                .sum::<usize>();
         assert_eq!(workspace.retained_bytes().unwrap(), expected);
         assert_eq!(workspace.retained_buffer_count(), 1 + 2 * FRAME_BUFFERS);
         assert!(required_buffer_count(usize::MAX).is_err());
@@ -298,7 +305,21 @@ mod tests {
             .apply_with_workspace(&rhs, &mut actual, &mut workspace)
             .unwrap();
         assert_eq!(actual, expected);
-        assert_eq!(workspace.buffers.iter().map(Vec::capacity).collect::<Vec<_>>(), capacities);
-        assert_eq!(workspace.buffers.iter().map(Vec::as_ptr).collect::<Vec<_>>(), pointers);
+        assert_eq!(
+            workspace
+                .buffers
+                .iter()
+                .map(Vec::capacity)
+                .collect::<Vec<_>>(),
+            capacities
+        );
+        assert_eq!(
+            workspace
+                .buffers
+                .iter()
+                .map(Vec::as_ptr)
+                .collect::<Vec<_>>(),
+            pointers
+        );
     }
 }

@@ -31,7 +31,12 @@ impl AllocatingReference {
             .map(SymmetricMapPreconditioner::new)
             .collect();
         let terminal = DensePseudoinverse::from_problem(problems.last().unwrap(), 1.0e-12)?;
-        Ok(Self { problems, maps, smoothers, terminal })
+        Ok(Self {
+            problems,
+            maps,
+            smoothers,
+            terminal,
+        })
     }
 
     fn apply_level(&self, level: usize, rhs: &[f64]) -> Result<Vec<f64>, MultiwayError> {
@@ -39,18 +44,24 @@ impl AllocatingReference {
         if level == self.maps.len() {
             let mut solution = vec![0.0; problem.dimension()];
             self.terminal.solve_into(rhs, &mut solution)?;
-            problem.components().project_structural_range(&mut solution)?;
+            problem
+                .components()
+                .project_structural_range(&mut solution)?;
             return Ok(solution);
         }
         let mut compatible_rhs = rhs.to_vec();
-        problem.components().project_structural_range(&mut compatible_rhs)?;
+        problem
+            .components()
+            .project_structural_range(&mut compatible_rhs)?;
         let mut solution = vec![0.0; problem.dimension()];
         self.smoothers[level].apply(&compatible_rhs, &mut solution)?;
         let residual = problem.residual(&compatible_rhs, &solution)?;
         let coarse_problem = &self.problems[level + 1];
         let mut coarse_rhs = vec![0.0; coarse_problem.dimension()];
         self.maps[level].restrict(&residual, &mut coarse_rhs)?;
-        coarse_problem.components().project_structural_range(&mut coarse_rhs)?;
+        coarse_problem
+            .components()
+            .project_structural_range(&mut coarse_rhs)?;
         let coarse_solution = self.apply_level(level + 1, &coarse_rhs)?;
         let mut prolonged = vec![0.0; problem.dimension()];
         self.maps[level].prolong(&coarse_solution, &mut prolonged)?;
@@ -59,7 +70,9 @@ impl AllocatingReference {
         let mut post = vec![0.0; problem.dimension()];
         self.smoothers[level].apply(&post_residual, &mut post)?;
         add_assign(&mut solution, &post);
-        problem.components().project_structural_range(&mut solution)?;
+        problem
+            .components()
+            .project_structural_range(&mut solution)?;
         Ok(solution)
     }
 }
@@ -84,17 +97,20 @@ fn assert_bits_equal(actual: &[f64], expected: &[f64]) {
 }
 
 #[test]
-fn matches_prechange_recurrence_on_all_revealed_recursive_fixtures() -> Result<(), fixtures::DynError> {
+fn matches_prechange_recurrence_on_all_revealed_recursive_fixtures()
+-> Result<(), fixtures::DynError> {
     let fixtures = fixtures::recursive_holdout_fixtures()?;
     assert_eq!(fixtures.len(), 8);
     for fixture in fixtures {
-        let reference = AllocatingReference::new(fixture.problem.clone(), fixture.oracle_maps.clone())?;
+        let reference =
+            AllocatingReference::new(fixture.problem.clone(), fixture.oracle_maps.clone())?;
         let hierarchy = CycleScreenedMapHierarchy::from_maps(
-            fixture.problem.clone(), fixture.oracle_maps.clone(), 1.0e-12,
+            fixture.problem.clone(),
+            fixture.oracle_maps.clone(),
+            1.0e-12,
         )?;
-        let independent = CycleScreenedMapHierarchy::from_maps(
-            fixture.problem, fixture.oracle_maps, 1.0e-12,
-        )?;
+        let independent =
+            CycleScreenedMapHierarchy::from_maps(fixture.problem, fixture.oracle_maps, 1.0e-12)?;
         let mut workspace = hierarchy.application_workspace()?;
         let bytes = workspace.retained_bytes()?;
         let buffers = workspace.retained_buffer_count();
@@ -157,11 +173,15 @@ fn anonymous_workspace_reuses_across_sizes_depths_weights_and_terminal_only() {
             let rhs = rhs(hierarchy.dimension(), -1.25);
             let expected = reference.apply_level(0, &rhs).unwrap();
             let mut out = vec![f64::NAN; rhs.len()];
-            hierarchy.apply_with_workspace(&rhs, &mut out, &mut workspace).unwrap();
+            hierarchy
+                .apply_with_workspace(&rhs, &mut out, &mut workspace)
+                .unwrap();
             assert_bits_equal(&out, &expected);
             let bytes = workspace.retained_bytes().unwrap();
             let buffers = workspace.retained_buffer_count();
-            hierarchy.apply_with_workspace(&rhs, &mut out, &mut workspace).unwrap();
+            hierarchy
+                .apply_with_workspace(&rhs, &mut out, &mut workspace)
+                .unwrap();
             assert_bits_equal(&out, &expected);
             assert_eq!(workspace.retained_bytes().unwrap(), bytes);
             assert_eq!(workspace.retained_buffer_count(), buffers);
@@ -207,7 +227,9 @@ fn dimension_errors_preserve_output_and_workspace_then_allow_reuse() {
     let mut expected = vec![0.0; rhs.len()];
     hierarchy.apply(&rhs, &mut expected).unwrap();
     let mut actual = vec![f64::NAN; rhs.len()];
-    hierarchy.apply_with_workspace(&rhs, &mut actual, &mut workspace).unwrap();
+    hierarchy
+        .apply_with_workspace(&rhs, &mut actual, &mut workspace)
+        .unwrap();
     assert_bits_equal(&actual, &expected);
 }
 
@@ -228,7 +250,9 @@ fn independent_workspaces_can_use_one_immutable_hierarchy_concurrently() {
                 hierarchy.apply(&rhs, &mut expected).unwrap();
                 let mut workspace = hierarchy.application_workspace().unwrap();
                 let mut actual = vec![0.0; rhs.len()];
-                hierarchy.apply_with_workspace(&rhs, &mut actual, &mut workspace).unwrap();
+                hierarchy
+                    .apply_with_workspace(&rhs, &mut actual, &mut workspace)
+                    .unwrap();
                 assert_bits_equal(&actual, &expected);
             });
         }

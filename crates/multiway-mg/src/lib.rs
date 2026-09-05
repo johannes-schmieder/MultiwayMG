@@ -78,6 +78,7 @@ pub use compatible_gate::{
 pub use cycle_hierarchy::{
     CycleScreenedHierarchyLevelReport, CycleScreenedHierarchyOptions, CycleScreenedHierarchyPlan,
     CycleScreenedHierarchyStopReason, CycleScreenedMapHierarchy,
+    CycleScreenedMapHierarchyWorkspace,
 };
 pub use cycle_portfolio::{
     CyclePortfolioBuildTiming, CyclePortfolioCandidateSource, CyclePortfolioEvaluation,
