@@ -1,0 +1,53 @@
+# One-time cleanup for the workspace-binding hardening workflow; removes itself.
+name: Issue 5 workspace binding cleanup
+
+on:
+  push:
+    branches: [codex/issue-5-incidence-workspace]
+    paths: [.github/workflows/issue5-workspace-binding-cleanup.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  cleanup:
+    name: Verify hardening and remove temporary workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-incidence-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Wait for exact-binding commit, verify, and clean up
+        run: |
+          found=false
+          for attempt in $(seq 1 60); do
+            git fetch origin codex/issue-5-incidence-workspace
+            git reset --hard origin/codex/issue-5-incidence-workspace
+            if grep -q 'Arc::ptr_eq(&self.workspace_binding, &workspace.binding)' crates/multiway-incidence/src/components.rs \
+              && grep -q 'WorkspaceMismatch' crates/multiway-incidence/src/error.rs; then
+              found=true
+              break
+            fi
+            sleep 5
+          done
+          test "$found" = true
+          cargo fmt --all -- --check
+          cargo clippy --locked -p multiway-incidence --all-features -- -D warnings
+          cargo test --locked -p multiway-incidence --all-features
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/issue5-workspace-binding.yml \
+            .github/workflows/issue5-workspace-binding-cleanup.yml
+          git commit -m "Remove temporary issue 5 hardening workflows"
+          git push origin HEAD:codex/issue-5-incidence-workspace
