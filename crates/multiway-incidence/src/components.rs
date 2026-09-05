@@ -4,6 +4,7 @@ use std::sync::Arc;
 
 use crate::{IncidenceError, ThreeWayTopology};
 
+pub(crate) mod partition;
 mod workspace;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
@@ -86,48 +87,15 @@ impl IncidenceComponents {
     /// Construct deterministic component labels in first-global-vertex order.
     #[must_use]
     pub fn from_topology(topology: &ThreeWayTopology) -> Self {
-        let n = topology.total_levels();
-        let mut parent: Vec<usize> = (0..n).collect();
-        for tuple in topology.tuples() {
-            let a = topology.global_index(0, tuple[0]);
-            let b = topology.global_index(1, tuple[1]);
-            let c = topology.global_index(2, tuple[2]);
-            union_min_root(&mut parent, a, b);
-            union_min_root(&mut parent, a, c);
-        }
-        for vertex in 0..n {
-            parent[vertex] = find_root(&mut parent, vertex);
-        }
-
-        let mut root_to_label = vec![usize::MAX; n];
-        let mut labels = vec![0; n];
-        let mut factor_sizes: Vec<[usize; 3]> = Vec::new();
-        let offsets = topology.offsets();
-        for vertex in 0..n {
-            let root = parent[vertex];
-            let label = if root_to_label[root] == usize::MAX {
-                let next = factor_sizes.len();
-                root_to_label[root] = next;
-                factor_sizes.push([0; 3]);
-                next
-            } else {
-                root_to_label[root]
-            };
-            labels[vertex] = label;
-            let factor = if vertex < offsets[1] {
-                0
-            } else if vertex < offsets[2] {
-                1
-            } else {
-                2
-            };
-            factor_sizes[label][factor] += 1;
-        }
-
+        let partition::Partition {
+            labels,
+            factor_sizes,
+        } = partition::build(topology, &mut |_| Ok(()))
+            .expect("incidence component array reservation failed");
         Self {
             labels,
             factor_sizes,
-            offsets,
+            offsets: topology.offsets(),
             binding: Arc::new(()),
         }
     }

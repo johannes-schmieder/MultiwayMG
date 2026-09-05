@@ -4,6 +4,10 @@
 
 ### Added
 
+- Weights-free prepared incidence topology with deterministic observation groups,
+  borrowed owner bindings, fallible arrays and checked setup-payload admission;
+  see `docs/ISSUE5_PREPARED_TOPOLOGY.md`.
+
 - Checked fixed-MAP hierarchy payload inventories and strict prepared traced-PCG
   payload-budget admission; see `docs/ISSUE5_PAYLOAD_ADMISSION.md`.
 
