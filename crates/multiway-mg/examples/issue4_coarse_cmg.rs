@@ -5,6 +5,7 @@
 //! issue-3 fixtures and their numerical outcomes are already known. Any policy
 //! suggested by this experiment must be frozen before a fresh issue-4 holdout.
 
+#[allow(dead_code)]
 #[path = "support/issue3_recursive_fixtures.rs"]
 mod issue3_recursive_fixtures;
 
