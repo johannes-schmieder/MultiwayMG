@@ -69,8 +69,10 @@ the submitted original Gramian.
 The hierarchy traversal workspace and its checked retained-byte accounting are
 documented in [ISSUE5_WORKSPACES.md](ISSUE5_WORKSPACES.md). This slice retains
 that scratch throughout the solve but does not yet reuse outer PCG vectors or
-trace storage. The existing MAP and structural projection internals also still
-allocate. It is not a claim of allocation-free complete solves, full peak-memory
+trace storage. The complete prepared MAP hierarchy now retains its nested
+operator scratch; see `ISSUE5_WORKSPACES.md` for the allocation gate. Outer PCG
+vectors, projection calls and trace storage still allocate. This is not a claim
+of allocation-free complete solves, full peak-memory
 admission, numerical generation safety, or improved CMG routing economics.
 
 Rust 1.85 GitHub Actions and the unchanged scientific gates are the authoritative
