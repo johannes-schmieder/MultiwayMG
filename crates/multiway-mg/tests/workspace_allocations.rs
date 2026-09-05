@@ -141,9 +141,25 @@ fn check_hierarchy(
     })?);
     equal_bits(&out, &reference);
     assert_eq!(workspace.retained_bytes()?, retained);
+    let mut varied_rhs = rhs.clone();
+    for scale in [0.0, -2.0, 0.5] {
+        for (value, original) in varied_rhs.iter_mut().zip(&rhs) {
+            *value = scale * original;
+        }
+        hierarchy.apply(&varied_rhs, &mut reference)?;
+        no_events(measure(|| {
+            hierarchy.apply_with_workspace(
+                black_box(&varied_rhs),
+                black_box(&mut out),
+                &mut workspace,
+            )
+        })?);
+        equal_bits(&out, &reference);
+    }
+    hierarchy.apply(&rhs, &mut reference)?;
     no_events(measure(|| workspace.try_prepare_for(hierarchy))?);
     // Explicit reprepare for a different hierarchy may grow; charge it outside apply.
-    reuse.try_prepare_for(hierarchy)?;
+    let reprepare = measure(|| reuse.try_prepare_for(hierarchy))?;
     no_events(measure(|| {
         hierarchy.apply_with_workspace(black_box(&rhs), black_box(&mut out), reuse)
     })?);
@@ -160,6 +176,21 @@ fn check_hierarchy(
     no_events(invalid);
     assert!(bad.iter().all(|&x| x == 23.0));
     assert_eq!(reuse.retained_bytes()?, bytes);
+    // Fresh workspace owns no unique identity token; dropping it must release
+    // precisely its exclusive payload while the immutable hierarchy lives.
+    let before = GLOBAL.stats();
+    drop(workspace);
+    let released = GLOBAL.stats() - before;
+    assert_eq!(released.allocations, 0);
+    assert_eq!(released.reallocations, 0);
+    assert_eq!(released.bytes_deallocated, retained);
+    println!(
+        "reprepare {name} allocations={} reallocations={} bytes_allocated={} bytes_deallocated={}",
+        reprepare.allocations,
+        reprepare.reallocations,
+        reprepare.bytes_allocated,
+        reprepare.bytes_deallocated
+    );
     println!(
         "{name}\tdimension={}\tdepth={}\tsetup_allocations={}\tretained_bytes={}\tordinary_allocations={}\tfirst_allocations=0\trepeat64_allocations=0\treallocations=0\tdeallocations=0",
         hierarchy.dimension(),
