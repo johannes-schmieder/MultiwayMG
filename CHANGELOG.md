@@ -9,7 +9,7 @@
   boundaries with isolated allocator regression gates on three platforms.
 - Caller-owned recursive MAP hierarchy traversal workspace with checked
   retained-heap accounting, transactional output, and cross-instance reuse.
-  MAP/projection internals still allocate; see `docs/ISSUE5_WORKSPACES.md`.
+  Extended to nested operator scratch below; see `docs/ISSUE5_WORKSPACES.md`.
 - Initial `multiway-incidence` matrix class and exact hard coarsening.
 - Matrix-free incidence, adjoint, weighted incidence, Gramian, energy, and dense
   reference kernels.

@@ -95,7 +95,10 @@ reallocation and deallocation for direct prepared MAP/terminal operations and
 complete hierarchy first, 64-repeat, and explicitly reprepared applications.
 The 17 hierarchy cases cover eight revealed fixtures, independently reconstructed
 nonuniform weight variants, and a disconnected terminal-only control. All fresh
-workspace setup bytes must match the reported exclusive retained payload.
+workspace setup bytes must match the reported exclusive retained payload;
+dropping that workspace while its hierarchy lives must release exactly that
+payload. Reprepare allocator traffic is reported separately, and signed/scaled
+and zero RHS checks run outside the fixture-construction boundary.
 
 The permanent read-only Actions workflow runs minimal/all features, debug/release,
 on Linux, macOS and Windows with Rust 1.85 and archives exact-head metadata and

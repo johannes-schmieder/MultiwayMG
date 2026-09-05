@@ -146,9 +146,10 @@ impl CycleScreenedMapHierarchy {
         let vectors = values
             .checked_mul(core::mem::size_of::<f64>())
             .ok_or_else(size_overflow)?;
+        let operator_bytes = operators::required_bytes(self)?;
         descriptors
             .checked_add(vectors)
-            .and_then(|n| n.checked_add(operators::required_bytes(self).ok()?))
+            .and_then(|n| n.checked_add(operator_bytes))
             .ok_or_else(size_overflow)
     }
 
