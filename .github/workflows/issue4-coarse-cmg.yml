@@ -1,5 +1,5 @@
 # One-time calibration workflow; remove before merge.
-# Temporary write permission is only to commit the scoped fixture-lint annotation.
+# Temporary write permission is only to commit the scoped test correction.
 name: Issue 4 coarse-CMG calibration
 
 on:
@@ -31,25 +31,25 @@ jobs:
           toolchain: "1.85.0"
           components: rustfmt, clippy
       - uses: Swatinem/rust-cache@v2
-      - name: Scope fixture dead-code allowance and commit
+      - name: Correct structural-test planner assumption and commit
         run: |
           python3 - <<'PY'
           from pathlib import Path
           path = Path("crates/multiway-mg/examples/issue4_coarse_cmg.rs")
           text = path.read_text()
-          needle = '#[path = "support/issue3_recursive_fixtures.rs"]\nmod issue3_recursive_fixtures;'
-          replacement = '#[allow(dead_code)]\n#[path = "support/issue3_recursive_fixtures.rs"]\nmod issue3_recursive_fixtures;'
-          if replacement not in text:
-              if needle not in text:
-                  raise SystemExit("fixture module declaration not found")
-              path.write_text(text.replace(needle, replacement, 1))
+          old = "        assert!(plan.accepted());\n        let within = ExperimentalHierarchy::build("
+          new = "        assert!(!plan.aggregations().is_empty());\n        let within = ExperimentalHierarchy::build("
+          if new not in text:
+              if old not in text:
+                  raise SystemExit("structural test assertion not found")
+              path.write_text(text.replace(old, new, 1))
           PY
           cargo fmt --all
           if ! git diff --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add crates/multiway-mg/examples/issue4_coarse_cmg.rs
-            git commit -m "Scope fixture dead-code allowance in coarse-CMG harness"
+            git commit -m "Correct coarse-CMG structural test planner assumption"
             git push origin HEAD:codex/issue-4-coarse-cmg
           fi
       - name: Record reproducibility metadata
