@@ -1,0 +1,645 @@
+# One-time branch implementation workflow; remove before merge.
+name: Issue 5 hierarchy workspace
+
+on:
+  push:
+    branches: [codex/issue-5-hierarchy-workspace]
+    paths: [.github/workflows/issue5-hierarchy-workspace.yml]
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  implement:
+    name: Add reusable hierarchy application workspace
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-hierarchy-workspace
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Refactor recursive hierarchy scratch
+        run: |
+          python3 - <<'PY'
+          from __future__ import annotations
+
+          import re
+          from dataclasses import dataclass
+          from pathlib import Path
+
+          hierarchy_path = Path("crates/multiway-mg/src/hierarchy.rs")
+          lib_path = Path("crates/multiway-mg/src/lib.rs")
+          changelog_path = Path("CHANGELOG.md")
+          test_path = Path("crates/multiway-mg/tests/hierarchy_workspace.rs")
+          text = hierarchy_path.read_text()
+
+          def matching_brace(source: str, opening: int) -> int:
+              depth = 0
+              in_string = False
+              in_char = False
+              escaped = False
+              line_comment = False
+              block_depth = 0
+              i = opening
+              while i < len(source):
+                  ch = source[i]
+                  nxt = source[i + 1] if i + 1 < len(source) else ""
+                  if line_comment:
+                      if ch == "\n":
+                          line_comment = False
+                      i += 1
+                      continue
+                  if block_depth:
+                      if ch == "/" and nxt == "*":
+                          block_depth += 1
+                          i += 2
+                          continue
+                      if ch == "*" and nxt == "/":
+                          block_depth -= 1
+                          i += 2
+                          continue
+                      i += 1
+                      continue
+                  if in_string:
+                      if escaped:
+                          escaped = False
+                      elif ch == "\\":
+                          escaped = True
+                      elif ch == '"':
+                          in_string = False
+                      i += 1
+                      continue
+                  if in_char:
+                      if escaped:
+                          escaped = False
+                      elif ch == "\\":
+                          escaped = True
+                      elif ch == "'":
+                          in_char = False
+                      i += 1
+                      continue
+                  if ch == "/" and nxt == "/":
+                      line_comment = True
+                      i += 2
+                      continue
+                  if ch == "/" and nxt == "*":
+                      block_depth = 1
+                      i += 2
+                      continue
+                  if ch == '"':
+                      in_string = True
+                      i += 1
+                      continue
+                  if ch == "'":
+                      # Lifetimes are much more common than character literals in signatures.
+                      # Treat a quote as a character literal only when a closing quote is near.
+                      closing = source.find("'", i + 1, min(len(source), i + 5))
+                      if closing != -1:
+                          in_char = True
+                      i += 1
+                      continue
+                  if ch == "{":
+                      depth += 1
+                  elif ch == "}":
+                      depth -= 1
+                      if depth == 0:
+                          return i
+                  i += 1
+              raise RuntimeError("unmatched brace")
+
+          def block_after(source: str, marker: str, start: int = 0) -> tuple[int, int]:
+              at = source.index(marker, start)
+              opening = source.index("{", at)
+              return opening, matching_brace(source, opening)
+
+          binding_code = r'''
+          #[derive(Debug, Default, PartialEq, Eq)]
+          struct HierarchyWorkspaceBinding;
+
+          /// Caller-owned reusable scratch for recursive hierarchy application.
+          ///
+          /// A workspace is bound to the exact hierarchy lineage that created it. Clones share
+          /// that binding; independently constructed hierarchies are rejected before output is
+          /// modified, even when their dimensions and level shapes coincide.
+          #[derive(Debug)]
+          pub struct CycleScreenedMapHierarchyWorkspace {
+              binding: std::sync::Arc<HierarchyWorkspaceBinding>,
+              buffers: Vec<Vec<f64>>,
+          }
+
+          impl CycleScreenedMapHierarchyWorkspace {
+              /// Heap bytes retained by zero-filled scratch buffers after warm-up.
+              #[must_use]
+              pub fn retained_bytes(&self) -> usize {
+                  self.buffers
+                      .iter()
+                      .map(|buffer| buffer.capacity() * std::mem::size_of::<f64>())
+                      .sum()
+              }
+
+              /// Number of retained scratch buffers, useful for diagnostics and regression tests.
+              #[must_use]
+              pub fn retained_buffer_count(&self) -> usize {
+                  self.buffers.len()
+              }
+          }
+
+          #[derive(Default)]
+          struct ActiveHierarchyScratchPool {
+              id: u64,
+              buffers: Vec<Vec<f64>>,
+          }
+
+          std::thread_local! {
+              static ACTIVE_HIERARCHY_SCRATCH: std::cell::RefCell<Vec<ActiveHierarchyScratchPool>> =
+                  const { std::cell::RefCell::new(Vec::new()) };
+          }
+
+          static NEXT_HIERARCHY_SCRATCH_ID: std::sync::atomic::AtomicU64 =
+              std::sync::atomic::AtomicU64::new(1);
+
+          struct HierarchyScratchVector {
+              values: Vec<f64>,
+              pool_id: Option<u64>,
+          }
+
+          impl std::ops::Deref for HierarchyScratchVector {
+              type Target = Vec<f64>;
+
+              fn deref(&self) -> &Self::Target {
+                  &self.values
+              }
+          }
+
+          impl std::ops::DerefMut for HierarchyScratchVector {
+              fn deref_mut(&mut self) -> &mut Self::Target {
+                  &mut self.values
+              }
+          }
+
+          impl Drop for HierarchyScratchVector {
+              fn drop(&mut self) {
+                  let Some(pool_id) = self.pool_id else {
+                      return;
+                  };
+                  ACTIVE_HIERARCHY_SCRATCH.with(|stack| {
+                      let mut stack = stack.borrow_mut();
+                      if let Some(pool) = stack.last_mut().filter(|pool| pool.id == pool_id) {
+                          pool.buffers.push(std::mem::take(&mut self.values));
+                      }
+                  });
+              }
+          }
+
+          fn hierarchy_scratch_zeroed(length: usize) -> HierarchyScratchVector {
+              let (mut values, pool_id) = ACTIVE_HIERARCHY_SCRATCH.with(|stack| {
+                  let mut stack = stack.borrow_mut();
+                  let Some(pool) = stack.last_mut() else {
+                      return (Vec::new(), None);
+                  };
+                  (pool.buffers.pop().unwrap_or_default(), Some(pool.id))
+              });
+              values.resize(length, 0.0);
+              values.fill(0.0);
+              HierarchyScratchVector { values, pool_id }
+          }
+
+          struct HierarchyScratchScope<'a> {
+              destination: &'a mut Vec<Vec<f64>>,
+              id: u64,
+          }
+
+          impl Drop for HierarchyScratchScope<'_> {
+              fn drop(&mut self) {
+                  let restored = ACTIVE_HIERARCHY_SCRATCH.with(|stack| {
+                      let mut stack = stack.borrow_mut();
+                      let pool = stack
+                          .pop()
+                          .expect("hierarchy scratch scope stack underflow");
+                      assert_eq!(pool.id, self.id, "hierarchy scratch scope order changed");
+                      pool.buffers
+                  });
+                  *self.destination = restored;
+              }
+          }
+
+          fn with_hierarchy_scratch<T>(
+              destination: &mut Vec<Vec<f64>>,
+              operation: impl FnOnce() -> T,
+          ) -> T {
+              let id = NEXT_HIERARCHY_SCRATCH_ID.fetch_add(
+                  1,
+                  std::sync::atomic::Ordering::Relaxed,
+              );
+              ACTIVE_HIERARCHY_SCRATCH.with(|stack| {
+                  stack.borrow_mut().push(ActiveHierarchyScratchPool {
+                      id,
+                      buffers: std::mem::take(destination),
+                  });
+              });
+              let scope = HierarchyScratchScope { destination, id };
+              let result = operation();
+              drop(scope);
+              result
+          }
+
+          '''
+
+          struct_marker = "pub struct CycleScreenedMapHierarchy"
+          if "struct HierarchyWorkspaceBinding;" not in text:
+              marker_at = text.index(struct_marker)
+              text = text[:marker_at] + binding_code + text[marker_at:]
+
+          # Bind the hierarchy itself. Derive(Clone) then deliberately shares the identity.
+          struct_at = text.index(struct_marker)
+          struct_open = text.index("{", struct_at)
+          struct_close = matching_brace(text, struct_open)
+          struct_body = text[struct_open + 1 : struct_close]
+          if "workspace_binding:" not in struct_body:
+              text = (
+                  text[: struct_open + 1]
+                  + "\n    workspace_binding: std::sync::Arc<HierarchyWorkspaceBinding>,"
+                  + text[struct_open + 1 :]
+              )
+
+          # Recompute blocks after insertion and add the binding to every hierarchy struct literal.
+          def impl_ranges(source: str, header_pattern: str) -> list[tuple[int, int]]:
+              ranges = []
+              for match in re.finditer(header_pattern, source):
+                  opening = source.index("{", match.start())
+                  ranges.append((opening, matching_brace(source, opening)))
+              return ranges
+
+          ranges = impl_ranges(text, r"impl(?:\s+[^\{]+\s+for)?\s+CycleScreenedMapHierarchy\s*\{")
+          replacements: list[tuple[int, str]] = []
+          for opening, closing in ranges:
+              region = text[opening + 1 : closing]
+              base = opening + 1
+              for match in re.finditer(r"\bSelf\s*\{", region):
+                  literal_open = base + match.end() - 1
+                  literal_close = matching_brace(text, literal_open)
+                  body = text[literal_open + 1 : literal_close]
+                  if "workspace_binding:" in body:
+                      continue
+                  # Distinguish a hierarchy literal from unrelated local `Self` literals by
+                  # requiring several actual hierarchy field names.
+                  hierarchy_fields = [
+                      name
+                      for name in ("problem", "levels", "terminal", "terminal_solver", "maps")
+                      if re.search(rf"\b{name}\s*[:,]", body)
+                  ]
+                  if len(hierarchy_fields) >= 2:
+                      replacements.append(
+                          (
+                              literal_open + 1,
+                              "\n            workspace_binding: std::sync::Arc::new(HierarchyWorkspaceBinding),",
+                          )
+                      )
+          for at, insertion in sorted(replacements, reverse=True):
+              text = text[:at] + insertion + text[at:]
+
+          # Locate the trait apply method and its exact return signature.
+          trait_match = re.search(
+              r"impl\s+Preconditioner\s+for\s+CycleScreenedMapHierarchy\s*\{",
+              text,
+          )
+          if not trait_match:
+              raise SystemExit("CycleScreenedMapHierarchy Preconditioner impl not found")
+          trait_open = text.index("{", trait_match.start())
+          trait_close = matching_brace(text, trait_open)
+          trait_region = text[trait_open + 1 : trait_close]
+          apply_match = re.search(r"\bfn\s+apply\s*\(", trait_region)
+          if not apply_match:
+              raise SystemExit("hierarchy apply method not found")
+          apply_start = trait_open + 1 + apply_match.start()
+          apply_open = text.index("{", apply_start)
+          apply_close = matching_brace(text, apply_open)
+          apply_signature = text[apply_start:apply_open]
+          return_match = re.search(r"->\s*(Result\s*<.*>)\s*$", apply_signature, re.S)
+          if not return_match:
+              raise SystemExit(f"unable to parse apply return type: {apply_signature!r}")
+          return_type = " ".join(return_match.group(1).split())
+
+          # Follow self-method calls from trait apply into inherent hierarchy methods and replace
+          # only zero-filled temporaries on that call graph. This leaves setup-time allocations
+          # and unrelated diagnostics untouched.
+          @dataclass
+          class Function:
+              name: str
+              start: int
+              opening: int
+              closing: int
+              owner: str
+
+          functions: list[Function] = []
+          impls: list[tuple[int, int, str]] = []
+          for match in re.finditer(r"impl\s+([^\{]+)\{", text):
+              opening = text.index("{", match.start())
+              try:
+                  closing = matching_brace(text, opening)
+              except RuntimeError:
+                  continue
+              impls.append((opening, closing, " ".join(match.group(1).split())))
+          for opening, closing, owner in impls:
+              region = text[opening + 1 : closing]
+              cursor = 0
+              while True:
+                  match = re.search(r"\bfn\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?:<[^\{;]*?>)?\s*\(", region[cursor:])
+                  if not match:
+                      break
+                  start = opening + 1 + cursor + match.start()
+                  try:
+                      body_open = text.index("{", start)
+                      body_close = matching_brace(text, body_open)
+                  except (ValueError, RuntimeError):
+                      cursor += match.end()
+                      continue
+                  if body_close > closing:
+                      cursor += match.end()
+                      continue
+                  functions.append(Function(match.group(1), start, body_open, body_close, owner))
+                  cursor = body_close - (opening + 1) + 1
+
+          root = next(
+              function
+              for function in functions
+              if function.name == "apply"
+              and "Preconditioner for CycleScreenedMapHierarchy" in function.owner
+          )
+          hierarchy_methods = {
+              function.name: function
+              for function in functions
+              if function.owner == "CycleScreenedMapHierarchy"
+          }
+          reachable: dict[str, Function] = {"<trait-apply>": root}
+          queue = [root]
+          while queue:
+              function = queue.pop()
+              body = text[function.opening + 1 : function.closing]
+              for name in re.findall(r"\bself\.([A-Za-z_][A-Za-z0-9_]*)\s*\(", body):
+                  candidate = hierarchy_methods.get(name)
+                  if candidate is not None and name not in reachable:
+                      reachable[name] = candidate
+                      queue.append(candidate)
+
+          def zero_vec_replacements(source: str, start: int, end: int) -> list[tuple[int, int, str]]:
+              output = []
+              cursor = start
+              prefix_re = re.compile(r"vec!\s*\[\s*(?:0(?:\.0*)?|0_f64|0\.0_f64)\s*;")
+              while cursor < end:
+                  match = prefix_re.search(source, cursor, end)
+                  if not match:
+                      break
+                  bracket = source.find("[", match.start(), match.end())
+                  depth = 0
+                  i = bracket
+                  in_string = False
+                  escaped = False
+                  while i < end:
+                      ch = source[i]
+                      if in_string:
+                          if escaped:
+                              escaped = False
+                          elif ch == "\\":
+                              escaped = True
+                          elif ch == '"':
+                              in_string = False
+                      else:
+                          if ch == '"':
+                              in_string = True
+                          elif ch in "[({":
+                              depth += 1
+                          elif ch in "])}":
+                              depth -= 1
+                              if depth == 0:
+                                  close = i
+                                  break
+                      i += 1
+                  else:
+                      raise RuntimeError("unterminated vec macro")
+                  semicolon = source.find(";", bracket, close)
+                  if semicolon == -1:
+                      raise RuntimeError("zero vec macro lacks semicolon")
+                  length = source[semicolon + 1 : close].strip()
+                  output.append((match.start(), close + 1, f"hierarchy_scratch_zeroed({length})"))
+                  cursor = close + 1
+              return output
+
+          vector_replacements: list[tuple[int, int, str]] = []
+          for function in reachable.values():
+              vector_replacements.extend(
+                  zero_vec_replacements(text, function.opening + 1, function.closing)
+              )
+          if not vector_replacements:
+              # Some versions keep the recursion in free helpers. Fall back to the trait impl only
+              # rather than silently claiming an allocation refactor.
+              raise SystemExit(
+                  "no zero-filled hierarchy application temporaries found on the apply call graph"
+              )
+          for start, end, replacement in sorted(vector_replacements, reverse=True):
+              text = text[:start] + replacement + text[end:]
+
+          # Determine a fail-closed mismatch expression from the trait's concrete error type.
+          error_type_match = re.match(r"Result\s*<\s*\(\s*\)\s*,\s*(.+)\s*>", return_type)
+          if not error_type_match:
+              raise SystemExit(f"unsupported apply result type: {return_type}")
+          error_type = error_type_match.group(1).strip()
+          if "IncidenceError" in error_type:
+              mismatch = (
+                  'multiway_incidence::IncidenceError::WorkspaceMismatch { '
+                  'context: "CycleScreenedMapHierarchy::apply_with_workspace" }'
+              )
+          elif "Box<" in error_type or error_type.endswith("DynError"):
+              mismatch = (
+                  'HierarchyWorkspaceMismatch('
+                  '"CycleScreenedMapHierarchy::apply_with_workspace").into()'
+              )
+          else:
+              raise SystemExit(f"unrecognized hierarchy apply error type: {error_type}")
+
+          mismatch_type = r'''
+          #[derive(Debug)]
+          struct HierarchyWorkspaceMismatch(&'static str);
+
+          impl std::fmt::Display for HierarchyWorkspaceMismatch {
+              fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                  write!(formatter, "hierarchy application workspace is incompatible with {}", self.0)
+              }
+          }
+
+          impl std::error::Error for HierarchyWorkspaceMismatch {}
+
+          '''
+          if ("Box<" in error_type or error_type.endswith("DynError")) and "struct HierarchyWorkspaceMismatch" not in text:
+              marker_at = text.index(struct_marker)
+              text = text[:marker_at] + mismatch_type + text[marker_at:]
+
+          methods = f'''
+              /// Create reusable caller-owned scratch for repeated hierarchy applications.
+              #[must_use]
+              pub fn application_workspace(&self) -> CycleScreenedMapHierarchyWorkspace {{
+                  CycleScreenedMapHierarchyWorkspace {{
+                      binding: std::sync::Arc::clone(&self.workspace_binding),
+                      buffers: Vec::new(),
+                  }}
+              }}
+
+              /// Apply this hierarchy using caller-owned scratch retained across calls.
+              ///
+              /// Workspace compatibility is checked before the existing application path is
+              /// entered, so an incompatible workspace cannot partially modify `output`.
+              pub fn apply_with_workspace(
+                  &self,
+                  rhs: &[f64],
+                  output: &mut [f64],
+                  workspace: &mut CycleScreenedMapHierarchyWorkspace,
+              ) -> {return_type} {{
+                  if !std::sync::Arc::ptr_eq(&self.workspace_binding, &workspace.binding) {{
+                      return Err({mismatch});
+                  }}
+                  with_hierarchy_scratch(&mut workspace.buffers, ||
+                      <Self as Preconditioner>::apply(self, rhs, output)
+                  )
+              }}
+          '''
+          if "pub fn application_workspace(&self)" not in text:
+              ranges = impl_ranges(text, r"impl\s+CycleScreenedMapHierarchy\s*\{")
+              if not ranges:
+                  raise SystemExit("inherent hierarchy impl not found")
+              opening, closing = ranges[0]
+              text = text[:closing] + methods + text[closing:]
+
+          hierarchy_path.write_text(text)
+
+          lib_text = lib_path.read_text()
+          if "CycleScreenedMapHierarchyWorkspace" not in lib_text:
+              if "CycleScreenedMapHierarchy," in lib_text:
+                  lib_text = lib_text.replace(
+                      "CycleScreenedMapHierarchy,",
+                      "CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace,",
+                      1,
+                  )
+              elif "CycleScreenedMapHierarchy" in lib_text:
+                  lib_text = lib_text.replace(
+                      "CycleScreenedMapHierarchy",
+                      "CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace",
+                      1,
+                  )
+              else:
+                  raise SystemExit("hierarchy re-export not found")
+              lib_path.write_text(lib_text)
+
+          test_path.parent.mkdir(parents=True, exist_ok=True)
+          test_path.write_text(r'''//! Reusable-workspace contracts for recursive hierarchy application.
+
+          #[path = "../examples/support/issue2_fixtures.rs"]
+          mod issue2_fixtures;
+          #[path = "../examples/support/issue3_recursive_fixtures.rs"]
+          mod issue3_recursive_fixtures;
+
+          use issue2_fixtures::{DynError, deterministic_rhs};
+          use issue3_recursive_fixtures::recursive_holdout_fixtures;
+          use multiway_mg::{CycleScreenedMapHierarchy, Preconditioner};
+
+          #[test]
+          fn hierarchy_workspace_is_exact_reusable_and_fail_closed() -> Result<(), DynError> {
+              let fixture = recursive_holdout_fixtures()?
+                  .into_iter()
+                  .next()
+                  .expect("the frozen recursive fixture set is nonempty");
+              let hierarchy = CycleScreenedMapHierarchy::from_maps(
+                  fixture.problem.clone(),
+                  fixture.oracle_maps.clone(),
+                  1.0e-12,
+              )?;
+              let rhs = deterministic_rhs(&fixture.problem)?;
+
+              let mut reference = vec![0.0; fixture.problem.dimension()];
+              hierarchy.apply(&rhs, &mut reference)?;
+
+              let mut workspace = hierarchy.application_workspace();
+              assert_eq!(workspace.retained_bytes(), 0);
+              assert_eq!(workspace.retained_buffer_count(), 0);
+              let mut reused = vec![0.0; reference.len()];
+              hierarchy.apply_with_workspace(&rhs, &mut reused, &mut workspace)?;
+              assert_eq!(reused, reference);
+              let warm_bytes = workspace.retained_bytes();
+              let warm_buffers = workspace.retained_buffer_count();
+              assert!(warm_bytes > 0);
+              assert!(warm_buffers > 0);
+
+              for scale in [0.5, -2.0, 3.25] {
+                  let scaled_rhs = rhs.iter().map(|value| scale * value).collect::<Vec<_>>();
+                  let mut expected = vec![0.0; reference.len()];
+                  hierarchy.apply(&scaled_rhs, &mut expected)?;
+                  reused.fill(f64::NAN);
+                  hierarchy.apply_with_workspace(&scaled_rhs, &mut reused, &mut workspace)?;
+                  assert_eq!(reused, expected);
+                  assert_eq!(workspace.retained_bytes(), warm_bytes);
+                  assert_eq!(workspace.retained_buffer_count(), warm_buffers);
+              }
+
+              let cloned = hierarchy.clone();
+              reused.fill(0.0);
+              cloned.apply_with_workspace(&rhs, &mut reused, &mut workspace)?;
+              assert_eq!(reused, reference);
+
+              let independent = CycleScreenedMapHierarchy::from_maps(
+                  fixture.problem.clone(),
+                  fixture.oracle_maps.clone(),
+                  1.0e-12,
+              )?;
+              let sentinel = vec![19.0; reference.len()];
+              reused.copy_from_slice(&sentinel);
+              let retained_before_rejection = workspace.retained_bytes();
+              assert!(
+                  independent
+                      .apply_with_workspace(&rhs, &mut reused, &mut workspace)
+                      .is_err()
+              );
+              assert_eq!(reused, sentinel);
+              assert_eq!(workspace.retained_bytes(), retained_before_rejection);
+
+              reused.fill(0.0);
+              hierarchy.apply_with_workspace(&rhs, &mut reused, &mut workspace)?;
+              assert_eq!(reused, reference);
+              Ok(())
+          }
+          ''')
+
+          changelog = changelog_path.read_text()
+          entry = "- Add a hierarchy-bound reusable application workspace so recursive zero-filled scratch can be retained across calls without changing the existing `Preconditioner` interface or operation order.\n"
+          if entry not in changelog:
+              lines = changelog.splitlines(keepends=True)
+              insert_at = 1
+              for index, line in enumerate(lines):
+                  if line.startswith("## "):
+                      insert_at = index + 1
+                      while insert_at < len(lines) and not lines[insert_at].strip():
+                          insert_at += 1
+                      break
+              lines.insert(insert_at, entry)
+              changelog_path.write_text("".join(lines))
+          PY
+          cargo fmt --all
+          cargo clippy --locked -p multiway-mg --all-features --tests -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_workspace
+          cargo test --locked -p multiway-mg --all-features
+          cargo test --locked -p multiway-mg --no-default-features
+          cargo doc --locked -p multiway-mg --all-features --no-deps
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crates/multiway-mg/src/hierarchy.rs crates/multiway-mg/src/lib.rs \
+            crates/multiway-mg/tests/hierarchy_workspace.rs CHANGELOG.md
+          git commit -m "Add reusable hierarchy application workspace"
+          git push origin HEAD:codex/issue-5-hierarchy-workspace
