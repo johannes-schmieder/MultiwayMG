@@ -1,0 +1,30 @@
+name: Coarse-CMG evidence validator
+
+on:
+  push:
+    branches:
+      - main
+      - "codex/**"
+    paths:
+      - scripts/summarize_issue4_coarse_cmg.py
+      - scripts/test_issue4_coarse_cmg_summary.py
+      - .github/workflows/issue4-coarse-cmg-validator.yml
+  pull_request:
+    paths:
+      - scripts/summarize_issue4_coarse_cmg.py
+      - scripts/test_issue4_coarse_cmg_summary.py
+      - .github/workflows/issue4-coarse-cmg-validator.yml
+
+permissions:
+  contents: read
+
+jobs:
+  validator:
+    name: Frozen-fixture and accounting regression tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run fail-closed validator tests
+        run: >-
+          python3 -m unittest discover -s scripts
+          -p test_issue4_coarse_cmg_summary.py
