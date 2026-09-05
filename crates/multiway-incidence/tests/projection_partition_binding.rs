@@ -25,11 +25,14 @@ fn different_partition_rejects_projection_before_mutating_values_or_scratch() {
     let result = other
         .components()
         .project_structural_range_with_workspace(&mut values, &mut workspace);
-    assert!(result.is_err(), "different component partition was accepted");
+    assert!(result.is_err(), "incompatible partition accepted");
     assert_eq!(values, original);
     assert_eq!(workspace, before);
     let mut expected = original;
-    owner.components().project_structural_range(&mut expected).unwrap();
+    owner
+        .components()
+        .project_structural_range(&mut expected)
+        .unwrap();
     owner
         .components()
         .project_structural_range_with_workspace(&mut values, &mut workspace)
@@ -47,9 +50,12 @@ fn different_partition_rejects_defect_before_mutating_scratch() {
     let result = other
         .components()
         .maximum_structural_defect_with_workspace(&values, &mut workspace);
-    assert!(result.is_err(), "different component partition was accepted");
+    assert!(result.is_err(), "incompatible partition accepted");
     assert_eq!(workspace, before);
-    let expected = owner.components().maximum_structural_defect(&values).unwrap();
+    let expected = owner
+        .components()
+        .maximum_structural_defect(&values)
+        .unwrap();
     let actual = owner
         .components()
         .maximum_structural_defect_with_workspace(&values, &mut workspace)
