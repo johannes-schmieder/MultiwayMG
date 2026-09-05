@@ -5,6 +5,8 @@ use crate::{
     ThreeWayProblem,
 };
 
+mod finite;
+
 /// Options for the issue #2 traced PCG driver.
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct PcgTraceOptions {
@@ -119,6 +121,10 @@ impl PcgTraceResult {
 }
 
 /// Solve with residual replacement and recording after every iteration.
+///
+/// Non-finite projected inputs, residuals, returned solution values, or
+/// unrepresentable convergence diagnostics return [`MultiwayError::PcgBreakdown`]
+/// rather than being interpreted as a zero residual or a satisfied tolerance.
 pub fn solve_projected_pcg_traced<P: Preconditioner + ?Sized>(
     problem: &ThreeWayProblem,
     rhs: &[f64],
@@ -188,7 +194,8 @@ where
     let rhs_projection_norm = problem
         .components()
         .project_structural_range(&mut projected_rhs)?;
-    let rhs_norm = norm(&projected_rhs);
+    let rhs_norm = finite::checked_norm(&projected_rhs, "projected traced-PCG RHS", 0)?;
+    finite::require_finite(rhs_projection_norm, "traced-PCG RHS projection norm", 0)?;
     let mut samples = vec![PcgTraceSample {
         iteration: 0,
         residual_norm: rhs_norm,
@@ -208,6 +215,7 @@ where
     let tolerance = options
         .absolute_tolerance
         .max(options.relative_tolerance * rhs_norm);
+    finite::require_finite(tolerance, "traced-PCG stopping tolerance", 0)?;
     let mut solution = vec![0.0; dimension];
     let mut residual = projected_rhs.clone();
     let mut preconditioned = vec![0.0; dimension];
@@ -240,16 +248,22 @@ where
         problem
             .components()
             .project_structural_range(&mut residual)?;
-        let residual_norm = norm(&residual);
+        let residual_norm = finite::checked_norm(&residual, "traced-PCG residual", iteration)?;
+        let relative_residual = finite::require_finite(
+            residual_norm / rhs_norm,
+            "traced-PCG relative residual",
+            iteration,
+        )?;
         samples.push(PcgTraceSample {
             iteration,
             residual_norm,
-            relative_residual: residual_norm / rhs_norm,
+            relative_residual,
         });
         if residual_norm <= tolerance {
             problem
                 .components()
                 .project_structural_range(&mut solution)?;
+            finite::ensure_values(&solution, "traced-PCG solution", iteration)?;
             return Ok(PcgTraceResult {
                 solution,
                 iterations: iteration,
@@ -279,6 +293,7 @@ where
     problem
         .components()
         .project_structural_range(&mut solution)?;
+    finite::ensure_values(&solution, "traced-PCG solution", options.max_iterations)?;
     Ok(PcgTraceResult {
         solution,
         iterations: options.max_iterations,
