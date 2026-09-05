@@ -17,12 +17,8 @@ fn sample_problem() -> ThreeWayProblem {
 }
 
 fn disconnected_problem() -> ThreeWayProblem {
-    ThreeWayProblem::from_observations(
-        [2, 2, 2],
-        &[[0, 0, 0], [1, 1, 1]],
-        &[1.0, 2.0],
-    )
-    .expect("valid disconnected problem")
+    ThreeWayProblem::from_observations([2, 2, 2], &[[0, 0, 0], [1, 1, 1]], &[1.0, 2.0])
+        .expect("valid disconnected problem")
 }
 
 fn assert_close(left: f64, right: f64, tolerance: f64) {

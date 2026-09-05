@@ -197,8 +197,7 @@ impl IncidenceComponents {
 
         for factor in 0..3 {
             for vertex in self.offsets[factor]..self.offsets[factor + 1] {
-                values[vertex] -=
-                    workspace.scratch[self.labels[vertex]].projection[factor];
+                values[vertex] -= workspace.scratch[self.labels[vertex]].projection[factor];
             }
         }
         Ok(removed_squared.sqrt())
@@ -240,11 +239,7 @@ impl IncidenceComponents {
         Ok(maximum)
     }
 
-    fn validate_values(
-        &self,
-        context: &'static str,
-        values: &[f64],
-    ) -> Result<(), IncidenceError> {
+    fn validate_values(&self, context: &'static str, values: &[f64]) -> Result<(), IncidenceError> {
         if values.len() != self.labels.len() {
             return Err(crate::error::dimension(
                 context,
