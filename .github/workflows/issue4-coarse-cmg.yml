@@ -48,7 +48,7 @@ jobs:
           cargo fmt --all -- --check
           cargo clippy --locked -p multiway-mg --all-features --example issue4_coarse_cmg -- -D warnings
           cargo test --locked -p multiway-mg --all-features --example issue4_coarse_cmg
-          python3 -m unittest scripts/test_issue4_coarse_cmg_summary.py
+          python3 -m unittest discover -s scripts -p test_issue4_coarse_cmg_summary.py
       - name: Build release benchmark
         run: cargo build --locked --release -p multiway-mg --all-features --example issue4_coarse_cmg
       - name: Run automatic calibration
