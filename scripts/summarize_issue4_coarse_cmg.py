@@ -7,7 +7,6 @@ import csv
 import math
 import statistics
 import sys
-from collections import defaultdict
 from pathlib import Path
 
 METHODS = ("within-all-levels", "within-fine-cmg-coarse")
@@ -26,7 +25,16 @@ def median(values: list[float]) -> float:
     return statistics.median(values)
 
 
-def validate(rows: list[dict[str, str]]) -> tuple[list[dict[str, str]], list[str]]:
+def row_is_certified(row: dict[str, str]) -> bool:
+    if row["converged"] != "true" or row["certified"] != "true" or row["error"]:
+        return False
+    residual = float(row["max_true_residual"])
+    return math.isfinite(residual) and residual <= 1.0e-8
+
+
+def validate(
+    rows: list[dict[str, str]],
+) -> tuple[list[dict[str, str]], list[str], list[str]]:
     if not rows:
         raise ValueError("coarse-CMG evidence is empty")
     rejected = [row for row in rows if row["plan_accepted"] != "true"]
@@ -49,24 +57,53 @@ def validate(rows: list[dict[str, str]]) -> tuple[list[dict[str, str]], list[str
         if key in seen:
             raise ValueError(f"duplicate row {key}")
         seen.add(key)
-        if method not in METHODS or solver not in SOLVERS or repeat not in (0, 1) or rhs not in PREFIXES:
+        if (
+            method not in METHODS
+            or solver not in SOLVERS
+            or repeat not in (0, 1)
+            or rhs not in PREFIXES
+        ):
             raise ValueError(f"unexpected comparison cell {key}")
-        if row["converged"] != "true" or row["certified"] != "true":
-            raise ValueError(f"uncertified solve batch {key}: {row['error']}")
-        residual = float(row["max_true_residual"])
-        if not math.isfinite(residual) or residual > 1.0e-8:
-            raise ValueError(f"residual gate failed for {key}: {residual}")
         if int(row["fallback_allocations"]) != 0:
             raise ValueError(f"sequential fallback allocation in {key}")
-        if row["error"]:
-            raise ValueError(f"recorded solver error in {key}: {row['error']}")
         if int(row["plan_depth"]) != int(row["requested_depth"]):
             raise ValueError(f"accepted plan depth mismatch in {key}")
         if method == "within-all-levels" and int(row["cmg_components"]) != 0:
             raise ValueError(f"within-only comparator unexpectedly contains CMG in {key}")
-        if method == "within-fine-cmg-coarse" and int(row["requested_depth"]) > 1 and int(row["cmg_components"]) == 0:
+        if (
+            method == "within-fine-cmg-coarse"
+            and int(row["requested_depth"]) > 1
+            and int(row["cmg_components"]) == 0
+        ):
             raise ValueError(f"hybrid comparator lacks coarse CMG components in {key}")
-    return accepted, [row["case"] for row in rejected]
+
+    baseline_bad_cases = sorted(
+        {
+            row["case"]
+            for row in accepted
+            if row["method"] == "within-all-levels" and not row_is_certified(row)
+        }
+    )
+    comparable = [row for row in accepted if row["case"] not in baseline_bad_cases]
+    if not comparable:
+        raise ValueError("all accepted hierarchies fail the all-within baseline admission gate")
+
+    for row in comparable:
+        key = (
+            row["case"],
+            row["method"],
+            int(row["repeat"]),
+            row["solver"],
+            int(row["rhs_count"]),
+        )
+        if not row_is_certified(row):
+            raise ValueError(f"uncertified comparison batch {key}: {row['error']}")
+
+    return (
+        comparable,
+        sorted({row["case"] for row in rejected}),
+        baseline_bad_cases,
+    )
 
 
 def ratios(rows: list[dict[str, str]], rhs: int = 32) -> list[dict[str, object]]:
@@ -87,9 +124,18 @@ def ratios(rows: list[dict[str, str]], rhs: int = 32) -> list[dict[str, object]]
             for repeat in (0, 1):
                 baseline = cells[(case, solver, repeat, "within-all-levels")]
                 hybrid = cells[(case, solver, repeat, "within-fine-cmg-coarse")]
-                work_ratios.append(float(hybrid["cumulative_outer_work"]) / float(baseline["cumulative_outer_work"]))
-                time_ratios.append(float(hybrid["setup_plus_solve_seconds"]) / float(baseline["setup_plus_solve_seconds"]))
-                solve_time_ratios.append(float(hybrid["cumulative_solve_seconds"]) / float(baseline["cumulative_solve_seconds"]))
+                work_ratios.append(
+                    float(hybrid["cumulative_outer_work"])
+                    / float(baseline["cumulative_outer_work"])
+                )
+                time_ratios.append(
+                    float(hybrid["setup_plus_solve_seconds"])
+                    / float(baseline["setup_plus_solve_seconds"])
+                )
+                solve_time_ratios.append(
+                    float(hybrid["cumulative_solve_seconds"])
+                    / float(baseline["cumulative_solve_seconds"])
+                )
             sample = cells[(case, solver, 0, "within-fine-cmg-coarse")]
             output.append(
                 {
@@ -113,29 +159,52 @@ def first_timing_win(rows: list[dict[str, str]], case: str, solver: str) -> str:
         cells = {
             (int(row["repeat"]), row["method"]): row
             for row in rows
-            if row["case"] == case and row["solver"] == solver and int(row["rhs_count"]) == rhs
+            if row["case"] == case
+            and row["solver"] == solver
+            and int(row["rhs_count"]) == rhs
         }
         ratios_at_rhs = []
         for repeat in (0, 1):
             baseline = cells[(repeat, "within-all-levels")]
             hybrid = cells[(repeat, "within-fine-cmg-coarse")]
-            ratios_at_rhs.append(float(hybrid["setup_plus_solve_seconds"]) / float(baseline["setup_plus_solve_seconds"]))
+            ratios_at_rhs.append(
+                float(hybrid["setup_plus_solve_seconds"])
+                / float(baseline["setup_plus_solve_seconds"])
+            )
         if median(ratios_at_rhs) < 1.0:
             return str(rhs)
     return "none-through-32"
 
 
-def write_summary(rows: list[dict[str, str]], rejected: list[str], output: Path) -> None:
+def write_summary(
+    rows: list[dict[str, str]],
+    rejected: list[str],
+    baseline_bad: list[str],
+    output: Path,
+    mode: str,
+) -> None:
     summary = ratios(rows)
     maximum_residual = max(float(row["max_true_residual"]) for row in rows)
+    if mode == "oracle":
+        title = "# Issue 4 coarse-only CMG oracle-map calibration"
+        map_statement = (
+            "The revealed issue-3 oracle map sequence and the fine `within` smoother "
+            "are identical across methods; only non-finest smoothers change."
+        )
+    else:
+        title = "# Issue 4 coarse-only CMG automatic-map calibration"
+        map_statement = (
+            "The automatic map plan and the fine `within` smoother are identical "
+            "across methods; only non-finest smoothers change."
+        )
     lines = [
-        "# Issue 4 coarse-only CMG calibration",
+        title,
         "",
-        f"Accepted comparison rows: {len(rows)}. Numerical/accounting gate: PASS.",
-        f"Maximum true relative residual: {maximum_residual:.6e}.",
+        f"Comparable certified rows: {len(rows)}. Numerical/accounting gate: PASS.",
+        f"Maximum true relative residual among comparable rows: {maximum_residual:.6e}.",
         "",
         "This is calibration on the already-revealed recursive issue-3 fixtures, not an issue-4 holdout.",
-        "The automatic map plan and the fine `within` smoother are identical across methods; only non-finest smoothers change.",
+        map_statement,
         "Ratios below one favor coarse CMG.",
         "",
         "| Case | Depth | Solver | Hybrid/within outer work | Hybrid/within solve time | Hybrid/within fully charged time | First measured charged win | Coarse CMG components | Max pair vertices | Max CMG levels |",
@@ -149,7 +218,23 @@ def write_summary(rows: list[dict[str, str]], rejected: list[str], output: Path)
             )
         )
     if rejected:
-        lines.extend(["", "Rejected automatic plans (not compared): " + ", ".join(sorted(set(rejected))) + "."])
+        lines.extend(
+            [
+                "",
+                "Rejected automatic plans (not compared): "
+                + ", ".join(sorted(set(rejected)))
+                + ".",
+            ]
+        )
+    if baseline_bad:
+        lines.extend(
+            [
+                "",
+                "Baseline-inadmissible hierarchies (excluded from solver ratios because the all-`within` hierarchy itself failed the outer SPD/certification gate): "
+                + ", ".join(sorted(set(baseline_bad)))
+                + ".",
+            ]
+        )
     work_wins = [row for row in summary if float(row["work_ratio"]) <= 0.80]
     charged_wins = [row for row in summary if float(row["charged_time_ratio"]) < 1.0]
     lines.extend(
@@ -166,11 +251,16 @@ def write_summary(rows: list[dict[str, str]], rejected: list[str], output: Path)
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 3:
-        raise SystemExit("usage: summarize_issue4_coarse_cmg.py INPUT.tsv SUMMARY.md")
+    if len(argv) not in (3, 4):
+        raise SystemExit(
+            "usage: summarize_issue4_coarse_cmg.py INPUT.tsv SUMMARY.md [automatic|oracle]"
+        )
+    mode = argv[3] if len(argv) == 4 else "automatic"
+    if mode not in ("automatic", "oracle"):
+        raise SystemExit(f"unknown calibration mode: {mode}")
     rows = read_rows(Path(argv[1]))
-    accepted, rejected = validate(rows)
-    write_summary(accepted, rejected, Path(argv[2]))
+    comparable, rejected, baseline_bad = validate(rows)
+    write_summary(comparable, rejected, baseline_bad, Path(argv[2]), mode)
     return 0
 
 
