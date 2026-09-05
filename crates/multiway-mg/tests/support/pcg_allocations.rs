@@ -75,7 +75,7 @@ fn instance(
     assert_eq!(setup.deallocations, 0);
     assert_eq!(setup.bytes_allocated, retained);
     assert!(retained >= PcgTraceWorkspace::required_bytes(problem, options)?);
-    assert!(outer.trace_capacity() >= options.max_iterations + 1);
+    assert!(outer.trace_capacity() > options.max_iterations);
     assert_eq!(
         outer.trace_retained_bytes()?,
         outer.trace_capacity() * core::mem::size_of::<PcgTraceSample>()
@@ -102,7 +102,7 @@ fn instance(
     assert_eq!(copy.allocations, 2);
     assert_eq!(
         copy.bytes_allocated,
-        rhs.len() * 8 + owned.samples().len() * core::mem::size_of::<PcgTraceSample>()
+        core::mem::size_of_val(owned.solution()) + core::mem::size_of_val(owned.samples())
     );
     assert_eq!(owned, expected);
     drop(owned);
