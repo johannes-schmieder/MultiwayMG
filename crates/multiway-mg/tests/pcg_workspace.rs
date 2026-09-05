@@ -43,7 +43,10 @@ fn rhs(problem: &ThreeWayProblem, scale: f64) -> Vec<f64> {
 fn assert_bits_equal(actual: &PcgTraceResult, expected: &PcgTraceResult) {
     assert_eq!(actual.iterations(), expected.iterations());
     assert_eq!(actual.converged(), expected.converged());
-    assert_eq!(actual.gramian_applications(), expected.gramian_applications());
+    assert_eq!(
+        actual.gramian_applications(),
+        expected.gramian_applications()
+    );
     assert_eq!(
         actual.preconditioner_applications(),
         expected.preconditioner_applications()
@@ -63,7 +66,10 @@ fn assert_bits_equal(actual: &PcgTraceResult, expected: &PcgTraceResult) {
     assert_eq!(actual.samples().len(), expected.samples().len());
     for (actual, expected) in actual.samples().iter().zip(expected.samples()) {
         assert_eq!(actual.iteration(), expected.iteration());
-        assert_eq!(actual.residual_norm().to_bits(), expected.residual_norm().to_bits());
+        assert_eq!(
+            actual.residual_norm().to_bits(),
+            expected.residual_norm().to_bits()
+        );
         assert_eq!(
             actual.relative_residual().to_bits(),
             expected.relative_residual().to_bits()
@@ -83,7 +89,11 @@ fn repeated_solves_preserve_every_trace_bit_counter_and_workspace_capacity() {
         let options = PcgTraceOptions::default();
         let expected = solve_projected_pcg_traced(&problem, &rhs, &hierarchy, options).unwrap();
         let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-            &problem, &rhs, &hierarchy, options, &mut workspace,
+            &problem,
+            &rhs,
+            &hierarchy,
+            options,
+            &mut workspace,
         )
         .unwrap();
         assert_bits_equal(&actual, &expected);
@@ -108,7 +118,11 @@ fn iteration_limit_and_zero_rhs_preserve_exact_outcomes() {
     let options = PcgTraceOptions::default();
     let expected = solve_projected_pcg_traced(&problem, &zero, &hierarchy, options).unwrap();
     let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-        &problem, &zero, &hierarchy, options, &mut workspace,
+        &problem,
+        &zero,
+        &hierarchy,
+        options,
+        &mut workspace,
     )
     .unwrap();
     assert_bits_equal(&actual, &expected);
@@ -125,7 +139,11 @@ fn iteration_limit_and_zero_rhs_preserve_exact_outcomes() {
     };
     let expected = solve_projected_pcg_traced(&problem, &rhs, &hierarchy, options).unwrap();
     let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-        &problem, &rhs, &hierarchy, options, &mut workspace,
+        &problem,
+        &rhs,
+        &hierarchy,
+        options,
+        &mut workspace,
     )
     .unwrap();
     assert_bits_equal(&actual, &expected);
@@ -143,18 +161,31 @@ fn invalid_inputs_fail_in_the_same_order_without_touching_workspace() {
     let rhs = rhs(&problem, 1.0);
     let mut workspace = CycleScreenedMapHierarchyWorkspace::new();
     for options in [
-        PcgTraceOptions { relative_tolerance: f64::NAN, ..PcgTraceOptions::default() },
-        PcgTraceOptions { absolute_tolerance: -1.0, ..PcgTraceOptions::default() },
+        PcgTraceOptions {
+            relative_tolerance: f64::NAN,
+            ..PcgTraceOptions::default()
+        },
+        PcgTraceOptions {
+            absolute_tolerance: -1.0,
+            ..PcgTraceOptions::default()
+        },
         PcgTraceOptions {
             relative_tolerance: 0.0,
             absolute_tolerance: 0.0,
             ..PcgTraceOptions::default()
         },
-        PcgTraceOptions { max_iterations: 0, ..PcgTraceOptions::default() },
+        PcgTraceOptions {
+            max_iterations: 0,
+            ..PcgTraceOptions::default()
+        },
     ] {
         let expected = solve_projected_pcg_traced(&problem, &rhs, &hierarchy, options).unwrap_err();
         let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-            &problem, &rhs, &hierarchy, options, &mut workspace,
+            &problem,
+            &rhs,
+            &hierarchy,
+            options,
+            &mut workspace,
         )
         .unwrap_err();
         assert_eq!(actual.to_string(), expected.to_string());
@@ -162,20 +193,28 @@ fn invalid_inputs_fail_in_the_same_order_without_touching_workspace() {
     let options = PcgTraceOptions::default();
     for length in [rhs.len() - 1, rhs.len() + 1] {
         let bad_rhs = vec![1.0; length];
-        let expected = solve_projected_pcg_traced(&problem, &bad_rhs, &hierarchy, options)
-            .unwrap_err();
+        let expected =
+            solve_projected_pcg_traced(&problem, &bad_rhs, &hierarchy, options).unwrap_err();
         let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-            &problem, &bad_rhs, &hierarchy, options, &mut workspace,
+            &problem,
+            &bad_rhs,
+            &hierarchy,
+            options,
+            &mut workspace,
         )
         .unwrap_err();
         assert_eq!(actual.to_string(), expected.to_string());
     }
     let other_problem = self::problem(2);
     let other_hierarchy = self::hierarchy(&other_problem);
-    let expected = solve_projected_pcg_traced(&problem, &rhs, &other_hierarchy, options)
-        .unwrap_err();
+    let expected =
+        solve_projected_pcg_traced(&problem, &rhs, &other_hierarchy, options).unwrap_err();
     let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-        &problem, &rhs, &other_hierarchy, options, &mut workspace,
+        &problem,
+        &rhs,
+        &other_hierarchy,
+        options,
+        &mut workspace,
     )
     .unwrap_err();
     assert_eq!(actual.to_string(), expected.to_string());
@@ -194,7 +233,11 @@ fn numerical_breakdown_propagates_and_scratch_remains_reusable() {
     let mut workspace = CycleScreenedMapHierarchyWorkspace::new();
     let expected = solve_projected_pcg_traced(&problem, &huge, &hierarchy, options).unwrap_err();
     let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-        &problem, &huge, &hierarchy, options, &mut workspace,
+        &problem,
+        &huge,
+        &hierarchy,
+        options,
+        &mut workspace,
     )
     .unwrap_err();
     assert!(matches!(actual, MultiwayError::PcgBreakdown { .. }));
@@ -203,7 +246,11 @@ fn numerical_breakdown_propagates_and_scratch_remains_reusable() {
     let buffers = workspace.retained_buffer_count();
     let expected = solve_projected_pcg_traced(&problem, &rhs, &hierarchy, options).unwrap();
     let actual = solve_projected_pcg_traced_with_hierarchy_workspace(
-        &problem, &rhs, &hierarchy, options, &mut workspace,
+        &problem,
+        &rhs,
+        &hierarchy,
+        options,
+        &mut workspace,
     )
     .unwrap();
     assert_bits_equal(&actual, &expected);
