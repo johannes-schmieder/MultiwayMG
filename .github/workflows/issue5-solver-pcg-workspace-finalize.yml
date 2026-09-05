@@ -1,0 +1,123 @@
+# One-time exact-head finalizer for the traced-PCG workspace slice.
+name: Issue 5 traced-PCG workspace finalizer
+
+on:
+  push:
+    branches: [codex/issue-5-solver-workspace-v2]
+    paths: [.github/workflows/issue5-solver-pcg-workspace-finalize.yml]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  GH_TOKEN: ${{ github.token }}
+
+jobs:
+  finalize:
+    name: Harden and validate traced-PCG workspace API
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: codex/issue-5-solver-workspace-v2
+          fetch-depth: 0
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Require completed source implementation
+        run: |
+          git fetch origin main
+          grep -q 'pub struct CycleScreenedMapHierarchyWorkspace' crates/multiway-mg/src/hierarchy.rs
+          test -f crates/multiway-mg/src/hierarchy_pcg_workspace.rs
+          test -f crates/multiway-mg/tests/hierarchy_pcg_workspace.rs
+      - name: Remove options-copy assumption from regression
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path("crates/multiway-mg/tests/hierarchy_pcg_workspace.rs")
+          text = path.read_text()
+          old = '''    let options = PcgTraceOptions {
+                  relative_tolerance: 1.0e-10,
+                  absolute_tolerance: 0.0,
+                  max_iterations: 2_000,
+              };
+          '''
+          helper = '''    fn options() -> PcgTraceOptions {
+                  PcgTraceOptions {
+                      relative_tolerance: 1.0e-10,
+                      absolute_tolerance: 0.0,
+                      max_iterations: 2_000,
+                  }
+              }
+          '''
+          if old in text:
+              text = text.replace(old, helper, 1)
+              text = text.replace(",\n        options,\n    )?;", ",\n        options(),\n    )?;")
+              path.write_text(text)
+          PY
+      - name: Audit exact adapter semantics
+        run: |
+          grep -q 'RefCell<&' crates/multiway-mg/src/hierarchy_pcg_workspace.rs
+          grep -q 'apply_with_workspace' crates/multiway-mg/src/hierarchy_pcg_workspace.rs
+          grep -q 'solve_projected_pcg_traced(problem, rhs, &adapter, options)' \
+            crates/multiway-mg/src/hierarchy_pcg_workspace.rs
+          ! grep -q 'Mutex<' crates/multiway-mg/src/hierarchy_pcg_workspace.rs
+          ! grep -q 'unsafe {' crates/multiway-mg/src/hierarchy_pcg_workspace.rs
+          grep -q 'assert_eq!(workspace.retained_bytes(), warm_bytes)' \
+            crates/multiway-mg/tests/hierarchy_pcg_workspace.rs
+      - name: Run exact and complete validation matrices
+        run: |
+          cargo fmt --all
+          cargo clippy --locked --workspace --all-targets --all-features -- -D warnings
+          cargo test --locked -p multiway-mg --all-features --test hierarchy_pcg_workspace
+          cargo test --locked --workspace --all-features
+          cargo test --locked --workspace --no-default-features
+          cargo doc --locked --workspace --all-features --no-deps
+          git diff --check
+      - name: Commit clean permanent head
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md crates/multiway-mg/src/lib.rs \
+            crates/multiway-mg/src/hierarchy_pcg_workspace.rs \
+            crates/multiway-mg/tests/hierarchy_pcg_workspace.rs
+          git rm -f --ignore-unmatch .github/workflows/issue5-solver-pcg-workspace.yml \
+            .github/workflows/issue5-solver-pcg-workspace-finalize.yml
+          if ! git diff --cached --quiet; then
+            git diff --cached --check
+            git commit -m "Harden traced-PCG hierarchy workspace regression"
+            git push origin HEAD:codex/issue-5-solver-workspace-v2
+          fi
+          git fetch origin main
+          python3 - <<'PY'
+          import subprocess
+          expected = {
+              "CHANGELOG.md",
+              "crates/multiway-mg/src/lib.rs",
+              "crates/multiway-mg/src/hierarchy_pcg_workspace.rs",
+              "crates/multiway-mg/tests/hierarchy_pcg_workspace.rs",
+          }
+          changed = set(subprocess.check_output(
+              ["git", "diff", "--name-only", "origin/main...HEAD"], text=True
+          ).splitlines())
+          if changed != expected:
+              raise SystemExit(f"unexpected final scope: {sorted(changed)}")
+          PY
+      - name: Ensure draft PR exists
+        run: |
+          if ! gh pr view --repo johannes-schmieder/MultiwayMG \
+            codex/issue-5-solver-workspace-v2 >/dev/null 2>&1; then
+            gh pr create \
+              --repo johannes-schmieder/MultiwayMG \
+              --base main \
+              --head codex/issue-5-solver-workspace-v2 \
+              --draft \
+              --title 'Issue #5: reuse hierarchy workspace throughout traced PCG' \
+              --body 'Adds a concrete traced-PCG entry point that retains one caller-owned recursive hierarchy workspace across all preconditioner applications. Existing solver APIs and stopping rules remain unchanged. Exact trace equivalence and stable post-warmup retained storage are regression-tested. Part of #5.'
+          fi
