@@ -20,7 +20,8 @@ import time
 
 ROOT = Path(__file__).resolve().parents[1]
 POLICY = 'benchmarks/policies/prepared-serial-v1.json'
-SOURCE_FILES = [POLICY, 'Cargo.lock', 'Cargo.toml', 'scripts/prepared_serial.py',
+POLICY_GATED = 'benchmarks/policies/prepared-serial-gated-v2.json'
+SOURCE_FILES = [POLICY, POLICY_GATED, 'Cargo.lock', 'Cargo.toml', 'scripts/prepared_serial.py',
                 'scripts/validate_prepared_serial.py',
                 'crates/multiway-mg/examples/prepared_serial_benchmark.rs']
 THREAD_ENV = {key: '1' for key in ['RAYON_NUM_THREADS', 'OMP_NUM_THREADS',
@@ -32,6 +33,8 @@ PAYLOAD = ['fine_topology', 'coarse_topology', 'fine_frame', 'coarse_frames',
            'terminal', 'hierarchy_workspace', 'outer_workspace', 'caller_arrays', 'total']
 WORK = ['weighted_incidence', 'weighted_adjoint', 'gramian', 'rhs_adjoint',
         'hierarchy', 'projection', 'certificate_incidence', 'certificate_adjoint']
+GATE_KEYS = ['candidate_checks', 'candidate_vetoes', 'projection_applications',
+             'certificate_incidence', 'certificate_adjoint']
 MASK = (1 << 64) - 1
 MEMORY_SCOPES = {'reserved_live_array_capacity': 'measured per direct owner, including caller input/output and workspace', 'logical_live_array_lengths': 'unavailable: capacity reports do not expose all lengths separately', 'construction_peak_live_allocations': 'unavailable: allocator high-water instrumentation is separate from this timing run', 'workspace_pool': 'one serial workspace; hierarchy_workspace plus outer_workspace are measured capacities', 'old_new_generation_overlap': 'not applicable: fresh fixed-weight single generation per process', 'opaque_dependency_memory': 'transient terminal factorization not separately observed; retained dense/workspace arrays included', 'process_peak_rss': 'isolated process including runtime, input decode, setup, solve, output and destruction'}
 
@@ -122,7 +125,7 @@ def parse_output(text):
     for line in text.splitlines():
         f = line.split('\t')
         tag = f[0]
-        if tag not in ('phase', 'column'):
+        if tag not in ('phase', 'column', 'gate'):
             if tag in seen:
                 raise ValueError(f'duplicate {tag}')
             seen.add(tag)
@@ -150,6 +153,13 @@ def parse_output(text):
                 iterations=int(f[7]), certificate=float(f[8]), native_residual=float(f[9]),
                 native_secondary=float(f[10]), native_projection=None if f[11] == 'NA' else float(f[11]),
                 coefficient_fnv1a64=f[12], work=dict(zip(WORK, map(int, f[13:])))))
+        elif tag == 'gate' and len(f) == 7:
+            index = int(f[1])
+            if index != len(record['columns']) - 1 or index < 0 or 'gate' in record['columns'][index]:
+                raise ValueError('misplaced or duplicate gate work')
+            record['columns'][index]['gate'] = dict(zip(GATE_KEYS, map(int, f[2:])))
+        elif tag == 'failed_gate' and len(f) == 6:
+            record['failed_gate'] = dict(zip(GATE_KEYS, map(int, f[1:])))
         elif tag == 'failed_work' and len(f) == 10:
             record['failed_action_ns'] = int(f[1])
             record['failed_work'] = dict(zip(WORK, map(int, f[2:])))
@@ -266,6 +276,7 @@ def run_one(binary, data, policy, system, out, name, env):
         evidence['status'] = 'returned'
         try:
             evidence['probe'] = parse_output(stdout.decode())
+            json.dumps(evidence['probe'], allow_nan=False)  # Malformed nonfinite output remains a retained protocol error.
             evidence['resources'] = resources(stderr.decode(), system)
             evidence['resource_status'] = 'measured'
         except (ValueError, UnicodeError) as error:
@@ -277,11 +288,13 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=Path)
     parser.add_argument('--profile', choices=['smoke', 'development'], default='smoke')
+    parser.add_argument('--policy', choices=['native', 'gated'], default='native')
     args = parser.parse_args()
     out = args.output.resolve()
     if out.exists():
         raise ValueError('use a fresh output directory; existing evidence is never overwritten')
-    policy = json.loads((ROOT / POLICY).read_text())
+    policy_path = POLICY if args.policy == 'native' else POLICY_GATED
+    policy = json.loads((ROOT / policy_path).read_text())
     env = os.environ.copy()
     env.update(THREAD_ENV, LC_ALL='C', PYTHONDONTWRITEBYTECODE='1')
     # Build locally in this invocation, retaining its actual log and binary identity.
@@ -299,15 +312,15 @@ def main():
     # Keep the exact executable for later engineering comparisons, outside source Git.
     (out / 'prepared_serial_benchmark').write_bytes(binary.read_bytes())
     (out / 'prepared_serial_benchmark').chmod(0o755)
-    manifest = dict(schema=1, scope=policy['scope'], profile=args.profile, policy=policy,
-                    policy_sha256=meta['source_hashes'][POLICY], provenance=meta,
+    manifest = dict(schema=1, scope=policy['scope'], profile=args.profile, policy=policy, policy_path=policy_path,
+                    policy_sha256=meta['source_hashes'][policy_path], provenance=meta,
                     build_log_sha256=sha(build.stdout), memory_scopes=MEMORY_SCOPES, runs=[])
     for case in cases(policy):
         data, dimensions = generate(policy, args.profile, case)
         # Warmups are separate processes. No per-process allocator or numerical state is reused.
         for kind, reps in [('warmup', policy['warmups']), ('measured', policy['repetitions'])]:
             for repeat in range(reps):
-                order = policy['routes'][repeat % 2:] + policy['routes'][:repeat % 2]
+                order = policy['routes'][repeat % len(policy['routes']):] + policy['routes'][:repeat % len(policy['routes'])]
                 for position, route in enumerate(order):
                     name = dict(case_id=case_id(case), case=case, dimensions=dimensions,
                                 route=route, kind=kind, repeat=repeat, position=position)

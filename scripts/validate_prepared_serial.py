@@ -8,7 +8,7 @@ import re
 import statistics
 import subprocess
 
-from prepared_serial import (ROOT, POLICY, SOURCE_FILES, THREAD_ENV, PHASES, PAYLOAD, WORK, MEMORY_SCOPES,
+from prepared_serial import (ROOT, POLICY, POLICY_GATED, SOURCE_FILES, THREAD_ENV, PHASES, PAYLOAD, WORK, GATE_KEYS, MEMORY_SCOPES,
                              cases, case_id, generate, sha, parse_output, resources)
 
 
@@ -40,19 +40,45 @@ def hash_string(value, size=64):
     require(isinstance(value, str) and re.fullmatch('[0-9a-f]{' + str(size) + '}', value), 'invalid hash')
 
 
-def check_work(work, route, certified=False):
+def check_work(work, route, certified=False, gate=None):
     require(set(work) == set(WORK), 'missing/extra work scopes')
     for name, count in work.items():
         integer(count, f'work {name}')
-    unused = ['weighted_incidence', 'weighted_adjoint'] if route == 'pcg' else ['gramian', 'rhs_adjoint', 'projection']
+    unused = ['weighted_incidence', 'weighted_adjoint'] if route == 'pcg' else ['gramian', 'rhs_adjoint']
     require(all(work[key] == 0 for key in unused), 'inconsistent route work')
     if certified:
-        require(work['certificate_incidence'] == 1 and work['certificate_adjoint'] == 2,
-                'missing independent certificate work')
+        extra_inc = 0 if gate is None else gate['certificate_incidence']
+        extra_adj = 0 if gate is None else gate['certificate_adjoint']
+        require(work['certificate_incidence'] == 1 + extra_inc and work['certificate_adjoint'] == 2 + extra_adj,
+                'missing independent or candidate certificate work')
+        require(work['projection'] >= 1, 'missing outer projection work')
+    if gate is not None:
+        require(work['projection'] == gate['projection_applications'], 'missing candidate/final projections')
+        remaining_inc = work['certificate_incidence'] - gate['certificate_incidence']
+        remaining_adj = work['certificate_adjoint'] - gate['certificate_adjoint']
+        require(0 <= remaining_inc <= 1 and 0 <= remaining_adj <= 2*remaining_inc,
+                'omitted or inconsistent candidate/final certificate work')
+
+
+def check_gate(gate, route, complete):
+    if route == 'pcg':
+        require(gate is None, 'PCG cannot contain LSMR gate work')
+        return
+    require(isinstance(gate, dict) and set(gate) == set(GATE_KEYS), 'missing candidate gate work')
+    for key, value in gate.items(): integer(value, f'gate {key}')
+    checks, vetoes = gate['candidate_checks'], gate['candidate_vetoes']
+    require(0 <= checks-vetoes <= 1, 'invalid candidate/veto accounting')
+    if route == 'lsmr': require(checks == 0, 'native LSMR cannot use a continuation gate')
+    if complete:
+        require(gate['projection_applications'] == checks+1 and gate['certificate_incidence'] == checks
+                and gate['certificate_adjoint'] == 2*checks, 'incomplete candidate certificate/projection work')
+    else:
+        require(gate['projection_applications'] <= checks+1 and gate['certificate_incidence'] <= checks
+                and gate['certificate_adjoint'] <= 2*gate['certificate_incidence'], 'impossible failed gate work')
 
 
 def check_probe(probe, run, policy):
-    require(probe['schema'] == 1 and probe['route'] == run['route'], 'wrong probe provenance')
+    require(probe['schema'] == 2 and probe['route'] == run['route'], 'wrong probe provenance')
     require(probe['status'] in ('complete', 'error'), 'invalid probe status')
     require(probe['config'] == {key: policy[key] for key in ['native_tolerance', 'certificate_tolerance',
         'max_iterations', 'local_window', 'pcg_recompute_interval', 'terminal_relative_tolerance', 'process_budget_bytes']},
@@ -104,7 +130,10 @@ def check_probe(probe, run, policy):
         require(column['accepted'] == (column['certificate'] <= policy['certificate_tolerance']),
                 'uncertified success or inconsistent independent acceptance')
         hash_string(column['coefficient_fnv1a64'], 16)
-        check_work(column['work'], run['route'], certified=True)
+        check_gate(column.get('gate'), run['route'], complete=True)
+        check_work(column['work'], run['route'], certified=True, gate=column.get('gate'))
+        if run['route'] == 'lsmr-gated' and column['gate']['candidate_checks'] > column['gate']['candidate_vetoes']:
+            require(column['accepted'], 'passing gate disagrees with immutable final certificate')
         elapsed += column['elapsed_ns']
         require(column['prefix_ns'] >= last_prefix + column['elapsed_ns'], 'invalid prefix increment')
         require(elapsed <= column['prefix_ns'] <= probe['total_ns'], 'prefix omits charged setup/solve')
@@ -117,7 +146,7 @@ def check_probe(probe, run, policy):
     if probe['status'] == 'complete':
         require(run['exit_code'] == 0 and dims is not None and payload is not None, 'missing completed solve scope')
         require(all(v > 0 for v in probe['phases_ns'].values()), 'uncharged setup phase')
-        require(len(columns) == run['case']['width'] and not failed and 'failed_work' not in probe,
+        require(len(columns) == run['case']['width'] and not failed and 'failed_work' not in probe and 'failed_gate' not in probe,
                 'incomplete or failed successful batch')
         require('error' not in probe and 'error_stage' not in probe, 'contradictory success')
     else:
@@ -126,9 +155,11 @@ def check_probe(probe, run, policy):
         require(stage in PHASES + ['solve_certificate_output'], 'missing failed route stage')
         if stage == 'solve_certificate_output':
             require(failed > 0 and len(columns) < run['case']['width'], 'uncharged failed RHS action')
-            check_work(probe['failed_work'], run['route'])
+            check_gate(probe.get('failed_gate'), run['route'], complete=False)
+            check_work(probe['failed_work'], run['route'], gate=probe.get('failed_gate'))
         else:
-            require(not columns and not failed and stage in PHASES and probe['phases_ns'][stage] > 0,
+            require(not columns and not failed and 'failed_gate' not in probe and 'failed_work' not in probe
+                    and stage in PHASES and probe['phases_ns'][stage] > 0,
                     'uncharged failed preparation')
             require(all(probe['phases_ns'][p] == 0 for p in PHASES[PHASES.index(stage)+1:]),
                     'work after failed setup')
@@ -137,7 +168,7 @@ def check_probe(probe, run, policy):
 
 def numerical_signature(probe):
     return {key: value for key, value in probe.items() if key in
-            ('status', 'dimensions', 'payload_bytes', 'error_stage', 'error', 'failed_work')} | {
+            ('status', 'dimensions', 'payload_bytes', 'error_stage', 'error', 'failed_work', 'failed_gate')} | {
         'columns': [{k: v for k, v in column.items() if k not in ('elapsed_ns', 'prefix_ns')}
                     for column in probe['columns']]}
 
@@ -148,7 +179,9 @@ def _validate_manifest(manifest, expected_policy, expected_hashes):
     require(manifest['memory_scopes'] == MEMORY_SCOPES, 'missing or misleading memory scopes')
     policy = manifest['policy']
     require(policy == expected_policy, 'policy mismatch')
-    require(manifest['policy_sha256'] == expected_hashes[POLICY], 'policy hash mismatch')
+    policy_path = manifest.get('policy_path', POLICY)
+    require(policy_path in (POLICY, POLICY_GATED), 'unknown frozen policy')
+    require(manifest['policy_sha256'] == expected_hashes[policy_path], 'policy hash mismatch')
     meta = manifest['provenance']
     require(meta['source_clean'] is True and meta['source_hashes'] == expected_hashes, 'source provenance mismatch')
     for key in ('source_commit', 'source_tree'):
@@ -175,11 +208,12 @@ def _validate_manifest(manifest, expected_policy, expected_hashes):
         data_hashes[case_id(case)] = sha(data)
         for kind, reps in [('warmup', policy['warmups']), ('measured', policy['repetitions'])]:
             for repeat in range(reps):
-                routes = policy['routes'][repeat % 2:] + policy['routes'][:repeat % 2]
+                routes = policy['routes'][repeat % len(policy['routes']):] + policy['routes'][:repeat % len(policy['routes'])]
                 for pos, route in enumerate(routes):
                     expected[(case_id(case), route, kind, repeat)] = (case, dimensions, pos)
     seen, signatures, metrics = set(), {}, {}
     certified, total_columns, failed_runs, rejected_columns = 0, 0, 0, 0
+    route_coverage = {route: dict(columns=0, certified=0, rejected=0, failed_runs=0) for route in policy['routes']}
     for run in manifest['runs']:
         key = (run['case_id'], run['route'], run['kind'], run['repeat'])
         require(key in expected and key not in seen, 'missing/duplicate/unexpected matrix cell')
@@ -194,12 +228,14 @@ def _validate_manifest(manifest, expected_policy, expected_hashes):
         measured = run['kind'] == 'measured'
         if measured:
             total_columns += case['width']
+            route_coverage[run['route']]['columns'] += case['width']
         if run['status'] == 'timeout':
             require(run['exit_code'] != 0 and run['process_wall_ns'] >= policy['timeout_seconds'] * 1_000_000_000,
                     'uncharged timeout')
             require(run['resource_status'] == 'unavailable' and run.get('resource_reason'), 'missing timeout memory scope')
             require('probe' not in run and 'resources' not in run, 'invented timeout results')
             failed_runs += int(measured)
+            if measured: route_coverage[run['route']]['failed_runs'] += 1
             continue
         require(run['status'] == 'returned' and run['resource_status'] == 'measured', 'invalid or missing process evidence')
         resource = run['resources']
@@ -218,12 +254,19 @@ def _validate_manifest(manifest, expected_policy, expected_hashes):
         if measured:
             successful_columns = sum(c['accepted'] for c in run['probe']['columns'])
             certified += successful_columns
+            route_coverage[run['route']]['certified'] += successful_columns
+            route_coverage[run['route']]['rejected'] += sum(not c['accepted'] for c in run['probe']['columns'])
+            route_coverage[run['route']]['failed_runs'] += int(not passed or not within_budget)
             rejected_columns += sum(not c['accepted'] for c in run['probe']['columns'])
             failed_runs += int(not passed or not within_budget)
             metrics.setdefault(signature_key, []).append(run)
     require(seen == set(expected), 'missing matrix cells including warmups or failures')
     require([(r['case_id'], r['route'], r['kind'], r['repeat']) for r in manifest['runs']] == list(expected),
             'actual paired execution order mismatch')
+    eligible = policy.get('eligible_routes', policy['routes'])
+    require(eligible and len(set(eligible)) == len(eligible) and set(eligible) <= set(policy['routes']), 'invalid eligible routes')
+    eligible_certified = all(route_coverage[r]['certified'] == route_coverage[r]['columns']
+                             and route_coverage[r]['failed_runs'] == 0 for r in eligible)
     timing = []
     for (cid, route), runs in sorted(metrics.items()):
         complete = [r for r in runs if r['probe']['status'] == 'complete']
@@ -231,13 +274,16 @@ def _validate_manifest(manifest, expected_policy, expected_hashes):
             times = [r['process_wall_ns']/1e9 for r in complete]
             phases = {name: statistics.median(r['probe']['phases_ns'][name]/1e9 for r in complete) for name in PHASES}
             timing.append(dict(case_id=cid, route=route, complete_repetitions=len(complete),
+                inner_seconds_median=statistics.median(r['probe']['total_ns']/1e9 for r in complete),
+                solve_certificate_output_seconds_median=statistics.median(sum(c['elapsed_ns'] for c in r['probe']['columns'])/1e9 for r in complete),
                 process_seconds_median=statistics.median(times), process_seconds_min=min(times), process_seconds_max=max(times),
                 phase_seconds_median=phases, peak_rss_bytes_max=max(r['resources']['peak_rss_bytes'] for r in complete),
                 retained_capacity_bytes=complete[0]['probe']['payload_bytes']['total']))
     return dict(scope=manifest['scope'], profile=profile, expected_runs=len(expected), measured_columns=total_columns,
         certified_columns=certified, rejected_columns=rejected_columns, failed_measured_runs=failed_runs,
         all_measured_columns_certified=certified == total_columns and failed_runs == 0,
-        competitive_qualification=False, timings=timing,
+        competitive_qualification=False, route_coverage=route_coverage, eligible_routes=eligible,
+        eligible_routes_certified=eligible_certified, timings=timing,
         memory_scopes=MEMORY_SCOPES)
 
 
@@ -272,7 +318,9 @@ def validate_directory(directory):
     require(manifest['provenance']['source_tree'] == expected_tree, 'source tree mismatch')
     source = {name: git('show', f'{commit}:{name}') for name in SOURCE_FILES}
     hashes = {name: sha(value) for name, value in source.items()}
-    policy = json.loads(source[POLICY])
+    policy_path = manifest.get('policy_path', POLICY)
+    require(policy_path in (POLICY, POLICY_GATED), 'unknown policy source')
+    policy = json.loads(source[policy_path])
     # The validator uses this recipe to regenerate bytes. Refuse to validate a different generator silently.
     require(hashes['scripts/prepared_serial.py'] == sha((ROOT / 'scripts/prepared_serial.py').read_bytes()),
             'use the measured source version of the input generator')
@@ -297,4 +345,4 @@ if __name__ == '__main__':
     args = parser.parse_args()
     result = validate_directory(args.directory)
     print(json.dumps(result, indent=2, allow_nan=False))
-    raise SystemExit(1 if args.require_certification and not result['all_measured_columns_certified'] else 0)
+    raise SystemExit(1 if args.require_certification and not result['eligible_routes_certified'] else 0)

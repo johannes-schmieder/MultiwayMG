@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG merged PR #42; serial evidence merged PR #43; certificate-aware LSMR integration in qualification |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG merged PR #42; serial evidence merged PR #43; certificate-gated LSMR merged PR #44; v2 complete-cost coverage in qualification |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -90,6 +90,13 @@ representation, not a replacement for the original tuple operator/certificate.
 Flatten reusable scratch after a liveness audit: share pre/post residual storage,
 fuse prolongation with addition, avoid duplicate compatible RHS buffers and
 unneeded fills, and retain temporary transactional output only where necessary.
+For repeated candidate certificates, evaluate computing the original `B'Wy`
+reference and its norm once per exact RHS/weight-frame scope. It must preserve
+reference arithmetic and fail closed on any owner/target change; all preparation
+and failed certificate work remains charged. Reusing a passing final candidate
+certificate is a separate lifetime/immutability question, not an assumed free
+optimization. Both are M5 hypotheses prompted by the new continuation route.
+
 Build terminal matrices directly in the dense library's native layout instead
 of row vectors plus flattened and transposed copies. Account for LSMR's local
 reorthogonalization history explicitly (two windows of eight coefficient vectors
@@ -280,3 +287,28 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   three-route comparison (PCG, native LSMR, gated LSMR) on the unchanged v1
   development inputs, with five rotated repetitions and all candidate work.
   Record full gated coverage before closing M4 or moving to M5 optimization.
+
+- M4d prepared certificate gate PR #44 merged as
+  `ebd9dd6ef25a7a8d24de90682ce333089ae7601f` after source workflows
+  `34061787307`/`34061787345` and PR workflows `34061788640`/`34061788626` passed.
+- M4e [gated serial comparison v2](ISSUE5_GATED_SERIAL_COMPARISON.md) adds the
+  gated route on unchanged v1 inputs/tolerances. Keep the native negative
+  control in full coverage, require complete PCG/gated coverage separately,
+  and charge all candidate/final certificate/projection work in probe schema 2.
+  Policy/source must be committed before Mac smoke/development collection.
+
+- M4d post-merge workflows `34062454335` and `34062454329` passed. The v2
+  comparison code passes the required local Rust 1.85 checks and the extended
+  evidence suite before its recipe/source commit. No v2 timings have been
+  collected at this checkpoint.
+
+- M4e measured source `3c1273eb00698c59b27eb79d1539c137fe3632a9` passes the
+  [frozen v2 coverage gate](../benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md):
+  PCG and gated LSMR each certify 2,400/2,400 columns on Mac smoke/development
+  and Linux smoke. Native control retains 560 smoke and 935 development rejects.
+  All fixed-config numerical/work/payload repeats pass, with no process errors,
+  timeouts or RSS-budget failures. Original Mac native/PCG numerical results
+  match v1 in all 504 corresponding processes per profile. Gated/native LSMR
+  retain identical array capacities. Source workflows `34063265592`/`34063265572`
+  and PR workflows `34063297969`/`34063297964` passed. Final evidence-head CI and
+  merge are the remaining M4 boundary; no competitive qualification is claimed.

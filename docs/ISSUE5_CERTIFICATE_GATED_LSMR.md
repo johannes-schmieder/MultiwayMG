@@ -97,7 +97,7 @@ completed batch prefixes; iteration limits still allow explicit rejection.
 The permanent allocator executable covers first/repeated complete gated solves,
 multiple vetoes, zero/mixed columns, selected failures and recovery without
 allocations, and unchanged exact release. All local pinned Rust 1.85 checks and 46 Python validator tests passed.
-Source/PR CI must pass before merging this increment. Then freeze a distinct
-benchmark comparison including the new gated route and rerun the development
-matrix with all extra checks charged. M4 remains open until that gated coverage
+Source/PR CI passed and PR #44 merged as `ebd9dd6`. The separately frozen
+[three-route comparison](ISSUE5_GATED_SERIAL_COMPARISON.md) now qualifies
+development coverage with all extra checks charged. M4 remains open until that gated coverage
 is recorded. No v1 results, calibration seeds or campaign holdout are retuned.
