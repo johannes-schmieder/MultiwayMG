@@ -52,3 +52,10 @@ forked serial LSMR and an independent certificate for 32 RHS inside the same
 isolated allocation executable (when `lsmr` is enabled). Both dependency pins
 move together; immutable performance baselines remain separately identified in
 `PERFORMANCE_PROTOCOL.md` and `ISSUE5_LSMR_DEPENDENCY.md`.
+
+M4a adds complete supplied-map structural/replay ownership to the permanent
+allocation executable: exact retained/released payload (including heap descriptor
+arrays), zero-allocation budget rejection, first/repeated level actions, and
+balanced changed-frame construction/destruction. Unit tests inject errors and
+unwinds at all 21 structural and 11 numerical reservations of a two-transition
+case. This does not yet qualify a complete prepared hierarchy solve.

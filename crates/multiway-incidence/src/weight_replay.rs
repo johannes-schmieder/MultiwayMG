@@ -105,7 +105,7 @@ impl WeightReplaySetupReport {
 
 // Both replay kinds use the original compensated accumulator and the same group
 // traversal. Internal callers have checked exact source identity, hence lengths.
-fn reduce_groups<F>(
+pub(crate) fn reduce_groups<F>(
     groups: &TupleMergeGroups,
     weights: &[f64],
     context: &'static str,

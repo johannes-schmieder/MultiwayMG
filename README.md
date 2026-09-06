@@ -18,6 +18,8 @@ for fail-closed driver certification and extreme-scale limitations.
 allocation-free actions from immutable numerical frames; complete prepared
 solver integration remains in progress. The [pinned LSMR workspace dependency](docs/ISSUE5_LSMR_DEPENDENCY.md)
 now supports caller-owned recurrence and mutable MAP/hierarchy scratch.
+[Owning supplied-map hierarchy replay](docs/ISSUE5_PREPARED_HIERARCHY.md) supplies
+the next structural and numerical ownership boundary for the serial solver.
 
 ## The problem
 

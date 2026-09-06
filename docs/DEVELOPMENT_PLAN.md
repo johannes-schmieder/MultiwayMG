@@ -27,8 +27,8 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M0 | Commit this plan, performance protocol, immutable baseline identity, resource limits and evidence contract before optimization. | Complete: PR #34, main `1702699` |
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
-| M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Fork PR #1 qualified; joint pin and integration gates in progress |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Planned |
+| M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a owning structure/replay; M4b projection/MAP; M4c hierarchy/drivers |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -189,3 +189,14 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   reviewed source `e8a3561463018762e16396e3ee0f8af8699e40ff` passed exact-source
   workspace CI 34053279313, PR workspace CI 34053282380 and inherited full CI
   34053282377. See [`ISSUE5_LSMR_DEPENDENCY.md`](ISSUE5_LSMR_DEPENDENCY.md).
+
+- M3: PR #37 merged as `1ca043dfbaacb7f1ec25d919b17d1e8850f6dba0`.
+  Reviewed source `fa2b39ff5ef94b5aec5e5c63ea6a1c3fb88c19ff`; source workflows
+  34054067320/34054067276 and PR workflows 34054069461/34054069466 passed.
+  Post-merge workflows 34054356919/34054356938 passed on the identical tree.
+  The fork's merged pin also passed post-merge workflow 34053690619.
+- M4 is split into reviewable increments without changing its completion gate:
+  M4a owns supplied-map topology and complete current-frame numerical replay;
+  M4b shares projection/MAP arithmetic with frame-based caller scratch; M4c
+  integrates the fixed serial cycle, PCG/LSMR, certification and repeated RHS.
+  The complete M4 milestone remains open until the entire vertical slice passes.

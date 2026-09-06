@@ -122,7 +122,9 @@ prepared-operator integration; these are correctness improvements, not speed cla
 Standalone M2 adds [frame-bound operator views](ISSUE5_OPERATOR_VIEWS.md) sharing
 the scalar kernels. [M3 pins reusable LSMR and mutable actions](ISSUE5_LSMR_DEPENDENCY.md)
 from a narrowly qualified owner-controlled within fork. Complete current-frame
-solver integration remains M4 work.
+solver integration remains M4 work. Its [owning structural hierarchy and complete
+weight replay](ISSUE5_PREPARED_HIERARCHY.md) now preserve one exact fine generation
+across all supplied levels. Numerical MAP/cycle/driver integration is still open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

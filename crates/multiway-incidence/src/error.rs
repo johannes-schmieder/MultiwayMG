@@ -6,6 +6,17 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A numerical hierarchy names another supplied-map structural owner.
+    #[error("prepared hierarchy binding belongs to a different owner")]
+    HierarchyBindingMismatch,
+    /// Complete structural/replay live payload exceeds its declared budget.
+    #[error("prepared hierarchy requires {required} payload bytes, budget is {budget}")]
+    HierarchyBudgetExceeded {
+        /// Checked live array payload, not process memory.
+        required: usize,
+        /// Declared maximum live array payload.
+        budget: usize,
+    },
     /// A replay was supplied with a different symbolic map owner.
     #[error("numerical replay belongs to a different symbolic map owner")]
     WeightReplayMapMismatch,

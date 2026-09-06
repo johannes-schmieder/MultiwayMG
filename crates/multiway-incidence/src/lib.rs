@@ -10,6 +10,7 @@ mod components;
 mod construction;
 mod error;
 mod factor_pair;
+mod hierarchy;
 mod kernels;
 mod operator_view;
 mod prepared;
@@ -23,6 +24,7 @@ pub use aggregation::FactorAggregation;
 pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
 pub use error::IncidenceError;
 pub use factor_pair::FactorPair;
+pub use hierarchy::{HierarchyWeightFrames, PreparedHierarchyBudget, PreparedHierarchyTopology};
 pub use operator_view::ThreeWayOperatorView;
 pub use prepared::{
     ObservationGroups, PreparedThreeWayTopology, PreparedTopologyBinding, PreparedTopologySource,

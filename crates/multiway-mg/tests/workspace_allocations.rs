@@ -3,6 +3,8 @@
 #[allow(dead_code)]
 #[path = "../examples/support/issue3_recursive_fixtures.rs"]
 mod fixtures;
+#[path = "support/hierarchy_owner_allocations.rs"]
+mod hierarchy_owner_allocations;
 #[cfg(feature = "lsmr")]
 #[path = "support/lsmr_workspace_integration.rs"]
 mod lsmr_workspace_integration;
@@ -228,6 +230,7 @@ fn main() -> Result<()> {
     weight_frame_allocations::run()?;
     weight_replay_allocations::run()?;
     operator_view_allocations::run()?;
+    hierarchy_owner_allocations::run()?;
     #[cfg(feature = "lsmr")]
     lsmr_workspace_integration::run()?;
     pcg_allocations::run()?;
