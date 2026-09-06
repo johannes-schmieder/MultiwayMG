@@ -26,8 +26,8 @@ V-cycle](docs/ISSUE5_PREPARED_CYCLE.md) now applies all levels with a bounded de
 terminal. [Complete prepared LSMR](docs/ISSUE5_PREPARED_LSMR.md) adds independent
 original-operator certification and bounded scalar reuse across 1–32 RHS.
 [Prepared PCG](docs/ISSUE5_PREPARED_PCG.md) now shares the ordinary untraced
-recurrence and independent certificate. Complete-cost benchmark integration
-remains in progress.
+recurrence and independent certificate. The [complete-cost serial
+benchmark](docs/ISSUE5_SERIAL_BENCHMARK.md) is in qualification.
 
 ## The problem
 

@@ -124,3 +124,7 @@ stats_alloc = "=0.1.10"
 name = "workspace_allocations"
 path = "tests/workspace_allocations.rs"
 harness = false
+
+[[example]]
+name = "prepared_serial_benchmark"
+required-features = ["lsmr"]
