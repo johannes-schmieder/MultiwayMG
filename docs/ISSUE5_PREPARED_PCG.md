@@ -63,7 +63,7 @@ The permanent scientific/platform CI continues to qualify supported configuratio
 
 The permanent allocation executable verifies first solve and every declared RHS
 count without allocation, one-byte-short budget rejection, exact complete payload
-and release of 42 arrays in a two-transition case. Native/independent stopping
+and release of 34 arrays (42 before M5a scratch reuse) in a two-transition case. Native/independent stopping
 remain distinct and no performance qualification is claimed.
 
 M4 still requires a reproducible complete-cost serial benchmark/evidence surface.

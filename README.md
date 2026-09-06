@@ -33,7 +33,11 @@ route](docs/ISSUE5_CERTIFICATE_GATED_LSMR.md) continues early native stops using
 the same workspace. The [three-route development comparison](docs/ISSUE5_GATED_SERIAL_COMPARISON.md)
 has complete PCG/gated-LSMR certification on Mac smoke/development and Linux
 smoke, with native-control negatives retained. See [the evidence](benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md)
-for complete costs and limits. Final evidence CI/merge precedes M5 optimization.
+for complete costs and limits. M4 is complete through PR #45; M5 starts with
+[serial pass removal and scratch reuse](docs/ISSUE5_SERIAL_SCRATCH.md).
+Its frozen paired Mac evidence preserves numerical/work identity, reduces exact
+scratch capacity and measures about 1.06x inner improvement on the small development
+matrix. M5 remains open for larger-layout and kernel profiling work.
 
 ## The problem
 

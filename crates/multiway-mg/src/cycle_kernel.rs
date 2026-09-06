@@ -1,7 +1,7 @@
 //! One fixed symmetric V-cycle recurrence for ordinary and prepared owners.
 use crate::{DensePseudoinverseWorkspace, MultiwayError};
 
-pub(crate) const FRAME_BUFFERS: usize = 7;
+pub(crate) const FRAME_BUFFERS: usize = 4;
 
 pub(crate) trait CycleActions {
     type LevelScratch;
@@ -58,32 +58,19 @@ pub(crate) fn apply_level<A: CycleActions>(
     let (state, children) = operator_levels
         .split_first_mut()
         .expect("prepared operator level");
-    solution.fill(0.0);
     if level + 1 == actions.level_count() {
         actions.terminal(rhs, solution, terminal)?;
         actions.project(level, solution, state)?;
         return Ok(());
     }
     let (frame, child_scratch) = scratch.split_at_mut(FRAME_BUFFERS);
-    let [
-        compatible_rhs,
-        residual,
-        coarse_rhs,
-        coarse_solution,
-        prolonged,
-        post_residual,
-        post,
-    ] = frame
-    else {
-        unreachable!("a prepared nonterminal frame has seven buffers");
+    let [compatible_rhs, residual, coarse_rhs, coarse_solution] = frame else {
+        unreachable!("a prepared nonterminal frame has four buffers");
     };
-    compatible_rhs.fill(0.0);
     compatible_rhs.copy_from_slice(rhs);
     actions.project(level, compatible_rhs, state)?;
     actions.smooth(level, compatible_rhs, solution, state)?;
-    residual.fill(0.0);
     actions.residual(level, compatible_rhs, solution, residual)?;
-    coarse_rhs.fill(0.0);
     actions.restrict(level, residual, coarse_rhs)?;
     actions.project(level + 1, coarse_rhs, &mut children[0])?;
     apply_level(
@@ -95,14 +82,15 @@ pub(crate) fn apply_level<A: CycleActions>(
         children,
         terminal,
     )?;
-    prolonged.fill(0.0);
-    actions.prolong(level, coarse_solution, prolonged)?;
-    add_assign(solution, prolonged);
-    post_residual.fill(0.0);
-    actions.residual(level, compatible_rhs, solution, post_residual)?;
-    post.fill(0.0);
-    actions.smooth(level, post_residual, post, state)?;
-    add_assign(solution, post);
+    // The pre-residual is dead after restriction. Reuse its storage for the
+    // prolongated correction, then overwrite it with the post-residual.
+    actions.prolong(level, coarse_solution, residual)?;
+    add_assign(solution, residual);
+    actions.residual(level, compatible_rhs, solution, residual)?;
+    // The compatible RHS dies after that residual. The post smoother copies
+    // its input into private scratch before publishing its correction here.
+    actions.smooth(level, residual, compatible_rhs, state)?;
+    add_assign(solution, compatible_rhs);
     actions.project(level, solution, state)?;
     Ok(())
 }

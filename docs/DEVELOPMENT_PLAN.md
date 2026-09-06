@@ -28,8 +28,8 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG merged PR #42; serial evidence merged PR #43; certificate-gated LSMR merged PR #44; v2 complete-cost coverage in qualification |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a pass removal and scratch liveness |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -312,3 +312,39 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   retain identical array capacities. Source workflows `34063265592`/`34063265572`
   and PR workflows `34063297969`/`34063297964` passed. Final evidence-head CI and
   merge are the remaining M4 boundary; no competitive qualification is claimed.
+
+- M4e PR #45 merged as `4fa6401c3421bd61173e047291ca4e534940f1e7` after
+  final-source workflows `34063604680`/`34063604715` and PR workflows
+  `34063606533`/`34063606524` passed. Post-merge `34063748407`/`34063748392`
+  also passed. M4 is complete. M5a begins with empty MAP scan removal and
+  proven scratch reuse, preserving the M4 executable for paired comparisons.
+
+- M5a [serial scratch audit](ISSUE5_SERIAL_SCRATCH.md) removes two empty MAP
+  tuple scans, reuses forward storage for rounded middle values, and reduces
+  each cycle transition from seven traversal vectors to four. The fixed cycle,
+  factor/tuple/projection order and every gate/certificate remain unchanged.
+  Frozen-loop signed-zero/subnormal/poisoned-scratch tests pass alongside all
+  required Rust 1.85 checks, numerical gates and exact allocation/release.
+  A two-transition solve now reserves 40 LSMR or 34 PCG arrays (previously
+  48/42); no first/repeated RHS action allocates. All 61 Python validators pass.
+  The separate paired protocol fixes original v2 inputs and baseline binaries,
+  retains native negatives, verifies exact numerical/work equivalence and
+  the derived capacity savings, and reports all paired time/RSS ratios. Commit
+  this source and recipe before collecting; no M5 timing exists at this checkpoint.
+
+- M5a source `754f6d622d6040c968dd931d7e52973fa42c517a` passes the
+  [frozen paired smoke/development gates](../benchmarks/results/2026-09-06/prepared-serial-m5a/README.md):
+  complete numerical/work/fingerprint agreement and exact 1,656/21,816-byte
+  hierarchy-workspace savings. Every candidate-route development cell has
+  inner median speedup above one; balanced PCG/gated geomeans are 1.0610x/1.0629x.
+  Linux source smoke also passes candidate coverage; all native negatives persist.
+  Source workflows `34064382081`/`34064382036` and PR workflows
+  `34064411985`/`34064412162` passed. Final evidence-head CI/merge remains.
+  Next profile individual kernels and enlarged development dimensions before
+  choosing grouped indices; continue flat scratch/fused transfer/certificate
+  reference work as separately reviewed increments. No competitive claim.
+
+The next [grouped-layout experiment design](ISSUE5_GROUPED_LAYOUT_DESIGN.md) specifies
+exact owner binding, stable counting placement, u32/checked-wide indices, construction
+cursors, three traffic alternatives and later thread/panel ownership. It is a design
+for measurement, not an implemented layout or selected default.

@@ -46,21 +46,22 @@ application-workspace arrays are fallible. The retained report does not claim an
 exact factorization peak or an allocator quota. End-to-end benchmarks must charge
 and measure setup, including these temporary allocations and peak RSS.
 
-## Qualification and remaining M4 work
+## Qualification and memory follow-up
 
 All eight existing recursive fixtures match ordinary V-cycle output bit for bit
 with original and changed weights, across multiple RHS. Tests cover symmetry,
 nonnegative quadratic forms, terminal-only and extra-nullity references, exact
 hierarchy/frame provenance, numerical failure/recovery and execution limits.
-Errors and unwinds are injected at all 31 application-workspace reservation
+Errors and unwinds are injected at all 23 application-workspace reservation
 boundaries of a two-transition case; poisoned traversal arrays are overwritten.
 
 The permanent allocation executable measures terminal retained/released bytes,
-all 31 workspace arrays, exact complete workspace payload, zero-allocation
+all 23 workspace arrays, exact complete workspace payload, zero-allocation
 first/repeat32 calls, static/numerical failures and recovery. Existing research
 scientific gates continue to exercise the shared ordinary recurrence.
 
-M4 remains open: integrate caller-owned outer PCG/LSMR, the independent original-
-operator certificate, scalar reuse across bounded 1–32 RHS and complete solve
-payload/economics reporting. Later memory, automatic construction, parallelism
-and competitive qualification gates remain unchanged.
+M4 is complete through PR #45. M5a now reuses dead pre-residual and compatible-RHS
+storage, reducing each transition from seven traversal vectors to four; see
+[the liveness audit](ISSUE5_SERIAL_SCRATCH.md). Complete driver/certificate and
+all RHS widths retain transactional output and allocation-free application.
+Automatic construction, parallelism and competitive qualification remain open.

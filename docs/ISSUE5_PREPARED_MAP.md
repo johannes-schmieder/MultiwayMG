@@ -8,10 +8,11 @@ rejected. Both the ordinary and prepared interfaces call the same scalar
 projection and defect kernels, preserving compensated accumulation and ordering.
 
 `PreparedSymmetricMap` borrows one exact immutable weight frame without owning
-any additional numerical arrays. Its workspace owns four coefficient vectors and
+any additional numerical arrays. Its workspace owns three coefficient vectors and
 one component-projection array. The forward/reverse factor sweeps share the
 ordinary MAP kernel, including factor barriers and floating-point association.
-Removing empty passes and reorganizing memory traffic remain measured M5 work.
+M5a removes empty factor scans and stores the rounded middle values in dead
+forward storage; see [the liveness audit](ISSUE5_SERIAL_SCRATCH.md).
 
 MAP applications validate both vector dimensions, the exact frame binding and
 finite input before scratch mutation. Every active scratch vector is initialized
@@ -28,10 +29,10 @@ insufficient.
 
 ## Memory and verification
 
-MAP requested scratch is `32*V + 72*C` bytes for V coefficient coordinates and C
-exact incidence components. Retained-capacity queries charge all five arrays;
+MAP requested scratch is `24*V + 72*C` bytes for V coefficient coordinates and C
+exact incidence components. Retained-capacity queries charge all four arrays;
 borrowed topology/frame, inline descriptors, allocator metadata and process RSS
-are separate. Constructors reserve fallibly. Tests inject failure at all five
+are separate. Constructors reserve fallibly. Tests inject failure at all four
 MAP setup boundaries while a previous workspace remains usable.
 
 Ordinary/prepared projection and MAP match bits on connected, disconnected,
@@ -39,9 +40,9 @@ unequal-factor and extra-rank-deficient cases with multiple weights/RHS. Tests
 also check symmetry, nonnegative quadratic forms, repeatability, exact-owner and
 dimension rejection before mutation, nonfinite and finite-overflow failures, and
 valid recovery. The permanent isolated allocation executable covers first/repeat
-32 applications, static/numerical failures and exact five-array release on every
+32 applications, static/numerical failures and exact four-array release on every
 supported platform/build/feature configuration.
 
-This increment completes M4b. M4 remains open pending the fixed serial hierarchy,
-PCG/LSMR drivers, original-operator certificate and repeated-RHS integration.
+M4 is now complete through PR #45, including both drivers, original-operator
+certification, bounded scalar RHS reuse and frozen complete-cost development evidence.
 No performance qualification is claimed.
