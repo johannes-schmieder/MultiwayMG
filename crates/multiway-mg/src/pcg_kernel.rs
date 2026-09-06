@@ -83,6 +83,10 @@ pub(crate) fn solve<A: PcgActions>(
     options: PcgOptions,
     storage: &mut PcgStorage,
 ) -> Result<PcgDiagnostics, MultiwayError> {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::PcgRecurrence);
+
     let PcgStorage {
         projected_rhs,
         solution,

@@ -294,3 +294,27 @@ jobs:
           name: prepared-serial-${{ matrix.policy }}-smoke
           path: ${{ runner.temp }}/prepared-serial-${{ matrix.policy }}-smoke/
           if-no-files-found: error
+
+
+  prepared-kernel-profile:
+    name: Prepared serial diagnostic kernel profile
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Collect the explicit diagnostic smoke
+        run: python3 scripts/prepared_kernel_profile.py "$RUNNER_TEMP/prepared-kernel-profile-smoke" --profile smoke
+      - name: Validate complete profiles and independent certificates
+        run: python3 scripts/validate_prepared_kernel_profile.py "$RUNNER_TEMP/prepared-kernel-profile-smoke" --require-diagnostics
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prepared-kernel-profile-smoke
+          path: ${{ runner.temp }}/prepared-kernel-profile-smoke/
+          if-no-files-found: error

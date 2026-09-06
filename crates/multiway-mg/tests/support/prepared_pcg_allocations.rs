@@ -71,6 +71,57 @@ pub fn run() -> Result<()> {
     assert!(solve_prepared_pcg_least_squares(&hierarchy, &targets[..63], &mut workspace).is_err());
     assert!(solve_prepared_pcg_least_squares(&hierarchy, &[f64::NAN; 64], &mut workspace).is_err());
     no_events(GLOBAL.stats() - before);
+    #[cfg(feature = "profiling")]
+    {
+        use multiway_incidence::profiling::{Phase, collect};
+        let mut expected = [0.0; 12];
+        let reference =
+            solve_prepared_pcg_least_squares(&hierarchy, &targets[..64], &mut workspace)?;
+        expected.copy_from_slice(reference.coefficients);
+        let expected_report = reference.report;
+        let mut actual = [0.0; 12];
+        let before = GLOBAL.stats();
+        for _ in 0..4 {
+            let (result, profile) = collect(|| {
+                solve_prepared_pcg_least_squares(&hierarchy, &targets[..64], &mut workspace).map(
+                    |r| {
+                        actual.copy_from_slice(r.coefficients);
+                        r.report
+                    },
+                )
+            })?;
+            let report = result?;
+            assert_eq!(report, expected_report);
+            super::equal_bits(&actual, &expected);
+            assert!(profile.valid);
+            let calls = |p: Phase| profile.phases[p as usize].calls as usize;
+            assert_eq!(calls(Phase::PreparedPcg), 1);
+            assert_eq!(calls(Phase::PcgRecurrence), 1);
+            assert_eq!(calls(Phase::Certificate), 1);
+            assert_eq!(calls(Phase::Incidence), 1);
+            assert_eq!(calls(Phase::Rhs), 2 + report.work.rhs_adjoint_applications);
+            assert_eq!(
+                calls(Phase::Projection),
+                report.work.projection_applications + 15 * report.work.hierarchy_applications
+            );
+            assert_eq!(
+                calls(Phase::MapSweep),
+                4 * report.work.hierarchy_applications
+            );
+            assert_eq!(
+                calls(Phase::Gramian),
+                report.work.gramian_applications + 4 * report.work.hierarchy_applications
+            );
+            assert_eq!(
+                calls(Phase::DenseTerminal),
+                report.work.hierarchy_applications
+            );
+            assert!(
+                profile.phases.iter().map(|p| p.exclusive_ns).sum::<u128>() <= profile.elapsed_ns
+            );
+        }
+        no_events(GLOBAL.stats() - before);
+    }
     let before = GLOBAL.stats();
     drop(workspace);
     let released = GLOBAL.stats() - before;

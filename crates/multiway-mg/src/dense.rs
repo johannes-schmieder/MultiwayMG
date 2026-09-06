@@ -198,6 +198,11 @@ impl DensePseudoinverse {
         out: &mut [f64],
         workspace: &mut DensePseudoinverseWorkspace,
     ) -> Result<(), MultiwayError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = multiway_incidence::profiling::span(
+            multiway_incidence::profiling::Phase::DenseTerminal,
+        );
+
         let dimension = self.dimension();
         if rhs.len() != dimension {
             return Err(crate::error::dimension(

@@ -28,6 +28,20 @@ const PHASES: [&str; 7] = [
     "workspace_output",
 ];
 
+#[cfg(feature = "profiling")]
+type CapturedProfile = multiway_incidence::profiling::ProfileReport;
+#[cfg(not(feature = "profiling"))]
+type CapturedProfile = ();
+fn profiled<T>(f: impl FnOnce() -> T) -> Result<(T, CapturedProfile)> {
+    #[cfg(feature = "profiling")]
+    {
+        Ok(multiway_incidence::profiling::collect(f)?)
+    }
+    #[cfg(not(feature = "profiling"))]
+    {
+        Ok((f(), ()))
+    }
+}
 struct Input {
     counts: [usize; 3],
     tuples: Vec<[u32; 3]>,
@@ -144,6 +158,8 @@ struct Column {
     work: [usize; 8],
     fingerprint: u64,
     gate: Option<PreparedLsmrGateWorkReport>,
+    #[cfg(feature = "profiling")]
+    profile: CapturedProfile,
 }
 struct Record {
     start: Instant,
@@ -153,6 +169,10 @@ struct Record {
     failed_work: Option<[usize; 8]>,
     failed_nanos: u128,
     failed_gate: Option<PreparedLsmrGateWorkReport>,
+    #[cfg(feature = "profiling")]
+    failed_profile: Option<CapturedProfile>,
+    #[cfg(feature = "profiling")]
+    profile_levels: [Option<[usize; 2]>; 9],
     dimensions: Option<[usize; 5]>,
     payload: Option<[usize; 9]>,
     total: u128,
@@ -167,6 +187,10 @@ impl Record {
             failed_work: None,
             failed_nanos: 0,
             failed_gate: None,
+            #[cfg(feature = "profiling")]
+            failed_profile: None,
+            #[cfg(feature = "profiling")]
+            profile_levels: [None; 9],
             dimensions: None,
             payload: None,
             total: 0,
@@ -249,6 +273,25 @@ fn emit_gate(tag: &str, prefix: &str, gate: PreparedLsmrGateWorkReport) {
         gate.candidate_certificate.adjoint_applications
     );
 }
+#[cfg(feature = "profiling")]
+fn emit_profile(tag: &str, index: usize, profile: CapturedProfile) {
+    println!(
+        "{tag}\t{index}\t{}\t{}\t{}",
+        profile.valid, profile.elapsed_ns, profile.maximum_depth
+    );
+    for (phase, record) in multiway_incidence::profiling::PHASES
+        .iter()
+        .zip(profile.phases)
+    {
+        println!(
+            "{tag}_phase\t{index}\t{}\t{}\t{}\t{}",
+            phase.name(),
+            record.calls,
+            record.inclusive_ns,
+            record.exclusive_ns
+        );
+    }
+}
 fn run(route: &str, r: &mut Record) -> Result<()> {
     let input = phase!(
         r,
@@ -299,6 +342,11 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
             }
         )
     );
+    #[cfg(feature = "profiling")]
+    for level in 0..frames.level_count() {
+        let frame = frames.frame(level).expect("prepared level");
+        r.profile_levels[level] = Some([frame.weights().len(), frame.diagonal().len()]);
+    }
     let hierarchy = phase!(r, 5, PreparedMapHierarchy::try_new(&frames, 1e-12));
     r.dimensions = Some([e, n, input.rhs, input.depth, hierarchy.terminal_rank()]);
     let mut output: Vec<f64> = phase!(r, 6, vector(n * input.rhs));
@@ -320,16 +368,19 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
         for j in 0..input.rhs {
             r.stage = "solve_certificate_output";
             let start = Instant::now();
-            let solved = solve_prepared_pcg_least_squares(
-                &hierarchy,
-                &input.targets[j * e..(j + 1) * e],
-                &mut workspace,
-            );
-            match solved {
-                Ok(result) => {
+            let (solved, _profile) = profiled(|| {
+                solve_prepared_pcg_least_squares(
+                    &hierarchy,
+                    &input.targets[j * e..(j + 1) * e],
+                    &mut workspace,
+                )
+                .map(|result| {
                     output[j * n..(j + 1) * n].copy_from_slice(result.coefficients);
-                    let fingerprint = fingerprint(&output[j * n..(j + 1) * n]);
-                    let p = result.report;
+                    (result.report, fingerprint(&output[j * n..(j + 1) * n]))
+                })
+            })?;
+            match solved {
+                Ok((p, fingerprint)) => {
                     r.columns[j] = Some(Column {
                         nanos: start.elapsed().as_nanos(),
                         prefix_nanos: r.start.elapsed().as_nanos(),
@@ -344,10 +395,16 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
                         work: pcg_work(p.work),
                         fingerprint,
                         gate: None,
+                        #[cfg(feature = "profiling")]
+                        profile: _profile,
                     });
                 }
                 Err(error) => {
                     r.failed_nanos = start.elapsed().as_nanos();
+                    #[cfg(feature = "profiling")]
+                    {
+                        r.failed_profile = Some(_profile);
+                    }
                     r.failed_work = Some(pcg_work(workspace.last_work()));
                     return Err(error.into());
                 }
@@ -370,25 +427,29 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
         for j in 0..input.rhs {
             r.stage = "solve_certificate_output";
             let start = Instant::now();
-            let solved = if route == "lsmr-gated" {
-                solve_prepared_least_squares_with_certificate_gate(
-                    &hierarchy,
-                    &input.targets[j * e..(j + 1) * e],
-                    &mut workspace,
-                )
-                .map(|r| (r.coefficients, r.report.solve))
-            } else {
-                solve_prepared_least_squares(
-                    &hierarchy,
-                    &input.targets[j * e..(j + 1) * e],
-                    &mut workspace,
-                )
-                .map(|r| (r.coefficients, r.report))
-            };
-            match solved {
-                Ok((coefficients, p)) => {
+            let (solved, _profile) = profiled(|| {
+                let solved = if route == "lsmr-gated" {
+                    solve_prepared_least_squares_with_certificate_gate(
+                        &hierarchy,
+                        &input.targets[j * e..(j + 1) * e],
+                        &mut workspace,
+                    )
+                    .map(|r| (r.coefficients, r.report.solve))
+                } else {
+                    solve_prepared_least_squares(
+                        &hierarchy,
+                        &input.targets[j * e..(j + 1) * e],
+                        &mut workspace,
+                    )
+                    .map(|r| (r.coefficients, r.report))
+                };
+                solved.map(|(coefficients, p)| {
                     output[j * n..(j + 1) * n].copy_from_slice(coefficients);
-                    let fingerprint = fingerprint(&output[j * n..(j + 1) * n]);
+                    (p, fingerprint(&output[j * n..(j + 1) * n]))
+                })
+            })?;
+            match solved {
+                Ok((p, fingerprint)) => {
                     let gate = workspace.last_gate_work();
                     r.columns[j] = Some(Column {
                         nanos: start.elapsed().as_nanos(),
@@ -404,10 +465,16 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
                         work: lsmr_full_work(p.work, gate),
                         fingerprint,
                         gate: Some(gate),
+                        #[cfg(feature = "profiling")]
+                        profile: _profile,
                     });
                 }
                 Err(error) => {
                     r.failed_nanos = start.elapsed().as_nanos();
+                    #[cfg(feature = "profiling")]
+                    {
+                        r.failed_profile = Some(_profile);
+                    }
                     r.failed_gate = Some(workspace.last_gate_work());
                     r.failed_work = Some(lsmr_full_work(
                         workspace.last_work(),
@@ -431,6 +498,19 @@ fn main() {
     let outcome = run(&route, &mut r);
     r.total = r.start.elapsed().as_nanos(); // Includes failure unwind and all owned-state destruction.
     println!("schema\t2");
+    #[cfg(feature = "profiling")]
+    println!(
+        "profiling_metadata\t1\t{}\t{}\t{}",
+        multiway_incidence::profiling::thread_local_payload_bytes(),
+        size_of::<Record>(),
+        size_of::<CapturedProfile>()
+    );
+    #[cfg(feature = "profiling")]
+    for (index, dimensions) in r.profile_levels.iter().enumerate() {
+        if let Some([e, n]) = dimensions {
+            println!("profile_level\t{index}\t{e}\t{n}");
+        }
+    }
     println!("route\t{route}");
     let pcg = PreparedPcgOptions::default();
     let lsmr = PreparedLsmrOptions::default();
@@ -498,6 +578,8 @@ fn main() {
             print!("\t{count}");
         }
         println!();
+        #[cfg(feature = "profiling")]
+        emit_profile("profile", index, c.profile);
         if let Some(gate) = c.gate {
             emit_gate("gate", &format!("\t{index}"), gate);
         }
@@ -508,6 +590,14 @@ fn main() {
             print!("\t{count}");
         }
         println!();
+    }
+    #[cfg(feature = "profiling")]
+    if let Some(profile) = r.failed_profile {
+        emit_profile(
+            "failed_profile",
+            r.columns.iter().flatten().count(),
+            profile,
+        );
     }
     if let Some(gate) = r.failed_gate {
         emit_gate("failed_gate", "", gate);

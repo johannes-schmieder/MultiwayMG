@@ -146,6 +146,84 @@ pub fn run() -> Result<()> {
             .accepted
     );
     no_events(GLOBAL.stats() - before);
+    #[cfg(feature = "profiling")]
+    {
+        use multiway_incidence::profiling::{Phase, collect};
+        let mut expected = [0.0; 12];
+        let reference = solve_prepared_least_squares_with_certificate_gate(
+            &hierarchy,
+            &targets[..64],
+            &mut gated,
+        )?;
+        expected.copy_from_slice(reference.coefficients);
+        let expected_report = reference.report;
+        let mut actual = [0.0; 12];
+        let before = GLOBAL.stats();
+        for _ in 0..4 {
+            let (result, profile) = collect(|| {
+                solve_prepared_least_squares_with_certificate_gate(
+                    &hierarchy,
+                    &targets[..64],
+                    &mut gated,
+                )
+                .map(|r| {
+                    actual.copy_from_slice(r.coefficients);
+                    r.report
+                })
+            })?;
+            let report = result?;
+            assert_eq!(report, expected_report);
+            super::equal_bits(&actual, &expected);
+            assert!(profile.valid);
+            let calls = |p: Phase| profile.phases[p as usize].calls as usize;
+            assert_eq!(calls(Phase::PreparedLsmr), 1);
+            assert_eq!(calls(Phase::Certificate), report.gate.candidate_checks + 1);
+            assert_eq!(
+                calls(Phase::WeightedIncidence),
+                report.solve.work.weighted_incidence_applications
+            );
+            assert_eq!(
+                calls(Phase::WeightedAdjoint),
+                report.solve.work.weighted_adjoint_applications
+            );
+            assert_eq!(
+                calls(Phase::Incidence),
+                report.solve.work.weighted_incidence_applications
+                    + report.gate.candidate_checks
+                    + 1
+            );
+            assert_eq!(calls(Phase::Rhs), 2 * (report.gate.candidate_checks + 1));
+            assert_eq!(
+                calls(Phase::Projection),
+                report.gate.projection_applications + 15 * report.solve.work.hierarchy_applications
+            );
+            assert_eq!(
+                calls(Phase::MapSweep),
+                4 * report.solve.work.hierarchy_applications
+            );
+            assert_eq!(
+                calls(Phase::Gramian),
+                4 * report.solve.work.hierarchy_applications
+            );
+            assert_eq!(
+                calls(Phase::DenseTerminal),
+                report.solve.work.hierarchy_applications
+            );
+            assert!(
+                profile.phases.iter().map(|p| p.exclusive_ns).sum::<u128>() <= profile.elapsed_ns
+            );
+        }
+        let (failed, profile) = collect(|| {
+            solve_prepared_least_squares_with_certificate_gate(
+                &hierarchy,
+                &[f64::NAN; 64],
+                &mut gated,
+            )
+        })?;
+        assert!(failed.is_err());
+        assert!(profile.valid);
+        no_events(GLOBAL.stats() - before);
+    }
     let before = GLOBAL.stats();
     drop(gated);
     let released = GLOBAL.stats() - before;

@@ -152,6 +152,10 @@ pub(crate) fn certify<O: CertificateOperator>(
     coefficients: &[f64],
     scratch: &mut CertificateScratch,
 ) -> Result<f64, MultiwayError> {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::Certificate);
+
     if targets.len() != operator.rows() {
         return Err(crate::error::dimension(
             "certificate targets",

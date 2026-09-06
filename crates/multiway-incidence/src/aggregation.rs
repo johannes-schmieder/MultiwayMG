@@ -100,6 +100,9 @@ impl FactorAggregation {
 
     /// Apply piecewise-constant prolongation `fine = P coarse`.
     pub fn prolong(&self, coarse: &[f64], fine: &mut [f64]) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Prolongation);
+
         let fine_dimension: usize = self.fine_counts.iter().sum();
         let coarse_dimension: usize = self.coarse_counts.iter().sum();
         if coarse.len() != coarse_dimension {
@@ -131,6 +134,9 @@ impl FactorAggregation {
 
     /// Apply transpose restriction `coarse = P^T fine`.
     pub fn restrict(&self, fine: &[f64], coarse: &mut [f64]) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Restriction);
+
         let fine_dimension: usize = self.fine_counts.iter().sum();
         let coarse_dimension: usize = self.coarse_counts.iter().sum();
         if fine.len() != fine_dimension {

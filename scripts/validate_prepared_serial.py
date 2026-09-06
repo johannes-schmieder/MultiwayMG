@@ -173,14 +173,16 @@ def numerical_signature(probe):
                     for column in probe['columns']]}
 
 
-def _validate_manifest(manifest, expected_policy, expected_hashes):
+def _validate_manifest(manifest, expected_policy, expected_hashes, *,
+                       evidence_scope='prepared_serial_development_only',
+                       policy_paths=(POLICY, POLICY_GATED), memory_scopes=MEMORY_SCOPES):
     no_nonfinite(manifest)
-    require(manifest['schema'] == 1 and manifest['scope'] == 'prepared_serial_development_only', 'wrong evidence scope')
-    require(manifest['memory_scopes'] == MEMORY_SCOPES, 'missing or misleading memory scopes')
+    require(manifest['schema'] == 1 and manifest['scope'] == evidence_scope, 'wrong evidence scope')
+    require(manifest['memory_scopes'] == memory_scopes, 'missing or misleading memory scopes')
     policy = manifest['policy']
     require(policy == expected_policy, 'policy mismatch')
     policy_path = manifest.get('policy_path', POLICY)
-    require(policy_path in (POLICY, POLICY_GATED), 'unknown frozen policy')
+    require(policy_path in policy_paths, 'unknown frozen policy')
     require(manifest['policy_sha256'] == expected_hashes[policy_path], 'policy hash mismatch')
     meta = manifest['provenance']
     require(meta['source_clean'] is True and meta['source_hashes'] == expected_hashes, 'source provenance mismatch')
@@ -284,12 +286,15 @@ def _validate_manifest(manifest, expected_policy, expected_hashes):
         all_measured_columns_certified=certified == total_columns and failed_runs == 0,
         competitive_qualification=False, route_coverage=route_coverage, eligible_routes=eligible,
         eligible_routes_certified=eligible_certified, timings=timing,
-        memory_scopes=MEMORY_SCOPES)
+        memory_scopes=memory_scopes)
 
 
-def validate_manifest(manifest, expected_policy, expected_hashes):
+def validate_manifest(manifest, expected_policy, expected_hashes, *,
+                      evidence_scope='prepared_serial_development_only',
+                      policy_paths=(POLICY, POLICY_GATED), memory_scopes=MEMORY_SCOPES):
     try:
-        return _validate_manifest(manifest, expected_policy, expected_hashes)
+        return _validate_manifest(manifest, expected_policy, expected_hashes,
+            evidence_scope=evidence_scope, policy_paths=policy_paths, memory_scopes=memory_scopes)
     except (KeyError, TypeError, IndexError) as error:
         raise ValueError(f'malformed evidence: {error}') from error
 

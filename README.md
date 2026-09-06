@@ -37,7 +37,9 @@ for complete costs and limits. M4 is complete through PR #45; M5 starts with
 [serial pass removal and scratch reuse](docs/ISSUE5_SERIAL_SCRATCH.md).
 Its frozen paired Mac evidence preserves numerical/work identity, reduces exact
 scratch capacity and measures about 1.06x inner improvement on the small development
-matrix. M5 remains open for larger-layout and kernel profiling work.
+matrix. [Opt-in kernel profiling](docs/ISSUE5_KERNEL_PROFILING.md) now supplies
+validated attribution and level inventory for larger development inputs. Its
+instrumented times are diagnostic; M5 remains open for measured layout work.
 
 ## The problem
 

@@ -48,6 +48,10 @@ pub(crate) fn apply_level<A: CycleActions>(
     operator_levels: &mut [A::LevelScratch],
     terminal: &mut DensePseudoinverseWorkspace,
 ) -> Result<(), MultiwayError> {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::Cycle);
+
     if rhs.len() != actions.dimension_at(level) {
         return Err(crate::error::dimension(
             "CycleScreenedMapHierarchy::apply_level",
