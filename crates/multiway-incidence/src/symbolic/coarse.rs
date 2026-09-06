@@ -89,7 +89,7 @@ impl<'a> PreparedCoarseTupleMap<'a> {
         ])
     }
 
-    pub(super) fn build_with<F>(
+    pub(crate) fn build_with<F>(
         source: &'a PreparedThreeWayTopology,
         aggregation: &'a FactorAggregation,
         budget: usize,
@@ -161,6 +161,17 @@ impl<'a> PreparedCoarseTupleMap<'a> {
         };
         map.retained_payload_bytes()?;
         Ok(map)
+    }
+
+    // Consume structural parts only inside the owning hierarchy builder. Public
+    // single-map and numerical replay APIs keep their original owner contracts.
+    pub(crate) fn into_hierarchy_parts(self) -> crate::hierarchy::Transition {
+        crate::hierarchy::Transition {
+            coarse: self.coarse,
+            groups: self.groups,
+            coarse_to_fine: self.coarse_to_fine_components,
+            fine_to_coarse: self.fine_to_coarse_components,
+        }
     }
 
     /// Exact borrowed source owner; its observation groups are not duplicated.
