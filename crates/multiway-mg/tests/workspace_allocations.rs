@@ -3,6 +3,8 @@
 #[allow(dead_code)]
 #[path = "../examples/support/issue3_recursive_fixtures.rs"]
 mod fixtures;
+#[path = "support/operator_view_allocations.rs"]
+mod operator_view_allocations;
 #[path = "support/payload_allocations.rs"]
 mod payload_allocations;
 #[path = "support/pcg_allocations.rs"]
@@ -222,6 +224,7 @@ fn main() -> Result<()> {
     symbolic_map_allocations::run()?;
     weight_frame_allocations::run()?;
     weight_replay_allocations::run()?;
+    operator_view_allocations::run()?;
     pcg_allocations::run()?;
     let fixtures = fixtures::recursive_holdout_fixtures()?;
     assert_eq!(fixtures.len(), 8);

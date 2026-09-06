@@ -157,45 +157,22 @@ impl ThreeWayProblem {
         self.topology.tuple_count()
     }
 
+    fn operator_data(&self) -> crate::kernels::OperatorData<'_> {
+        crate::kernels::OperatorData {
+            topology: &self.topology,
+            weights: &self.weights,
+            square_root_weights: &self.square_root_weights,
+        }
+    }
+
     /// Compute `out = B x`.
     pub fn apply_incidence(&self, x: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
-        validate_len(
-            "ThreeWayProblem::apply_incidence input",
-            self.dimension(),
-            x.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::apply_incidence output",
-            self.tuple_count(),
-            out.len(),
-        )?;
-        for (value, tuple) in out.iter_mut().zip(self.topology.tuples()) {
-            *value = x[self.topology.global_index(0, tuple[0])]
-                + x[self.topology.global_index(1, tuple[1])]
-                + x[self.topology.global_index(2, tuple[2])];
-        }
-        Ok(())
+        self.operator_data().apply_incidence(x, out)
     }
 
     /// Compute `out = B^T y`.
     pub fn apply_adjoint(&self, y: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
-        validate_len(
-            "ThreeWayProblem::apply_adjoint input",
-            self.tuple_count(),
-            y.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::apply_adjoint output",
-            self.dimension(),
-            out.len(),
-        )?;
-        out.fill(0.0);
-        for (tuple, &value) in self.topology.tuples().iter().zip(y) {
-            for factor in 0..3 {
-                out[self.topology.global_index(factor, tuple[factor])] += value;
-            }
-        }
-        Ok(())
+        self.operator_data().apply_adjoint(y, out)
     }
 
     /// Compute `out = sqrt(W) B x`.
@@ -204,80 +181,22 @@ impl ThreeWayProblem {
         x: &[f64],
         out: &mut [f64],
     ) -> Result<(), IncidenceError> {
-        self.apply_incidence(x, out)?;
-        for (value, &sqrt_weight) in out.iter_mut().zip(self.square_root_weights.iter()) {
-            *value *= sqrt_weight;
-        }
-        Ok(())
+        self.operator_data().apply_weighted_incidence(x, out)
     }
 
     /// Compute `out = B^T sqrt(W) y`.
     pub fn apply_weighted_adjoint(&self, y: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
-        validate_len(
-            "ThreeWayProblem::apply_weighted_adjoint input",
-            self.tuple_count(),
-            y.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::apply_weighted_adjoint output",
-            self.dimension(),
-            out.len(),
-        )?;
-        out.fill(0.0);
-        for ((tuple, &value), &sqrt_weight) in self
-            .topology
-            .tuples()
-            .iter()
-            .zip(y)
-            .zip(self.square_root_weights.iter())
-        {
-            let contribution = sqrt_weight * value;
-            for factor in 0..3 {
-                out[self.topology.global_index(factor, tuple[factor])] += contribution;
-            }
-        }
-        Ok(())
+        self.operator_data().apply_weighted_adjoint(y, out)
     }
 
     /// Compute `out = G x`, where `G = B^T W B`.
     pub fn apply_gramian(&self, x: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
-        validate_len(
-            "ThreeWayProblem::apply_gramian input",
-            self.dimension(),
-            x.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::apply_gramian output",
-            self.dimension(),
-            out.len(),
-        )?;
-        out.fill(0.0);
-        for (&tuple, &weight) in self.topology.tuples().iter().zip(self.weights.iter()) {
-            let indices = [
-                self.topology.global_index(0, tuple[0]),
-                self.topology.global_index(1, tuple[1]),
-                self.topology.global_index(2, tuple[2]),
-            ];
-            let value = weight * (x[indices[0]] + x[indices[1]] + x[indices[2]]);
-            for index in indices {
-                out[index] += value;
-            }
-        }
-        Ok(())
+        self.operator_data().apply_gramian(x, out)
     }
 
     /// Compute the quadratic energy `x^T G x` from tuple contributions.
     pub fn energy(&self, x: &[f64]) -> Result<f64, IncidenceError> {
-        validate_len("ThreeWayProblem::energy", self.dimension(), x.len())?;
-        let mut sum = 0.0;
-        let mut correction = 0.0;
-        for (&tuple, &weight) in self.topology.tuples().iter().zip(self.weights.iter()) {
-            let value = x[self.topology.global_index(0, tuple[0])]
-                + x[self.topology.global_index(1, tuple[1])]
-                + x[self.topology.global_index(2, tuple[2])];
-            neumaier_add(&mut sum, &mut correction, weight * value * value);
-        }
-        Ok(sum + correction)
+        self.operator_data().energy(x)
     }
 
     /// Form `rhs = B^T W targets` in caller-owned storage.
@@ -288,37 +207,12 @@ impl ThreeWayProblem {
         targets: &[f64],
         rhs: &mut [f64],
     ) -> Result<(), IncidenceError> {
-        validate_len(
-            "ThreeWayProblem::rhs_from_targets_into targets",
-            self.tuple_count(),
-            targets.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::rhs_from_targets_into rhs",
-            self.dimension(),
-            rhs.len(),
-        )?;
-        rhs.fill(0.0);
-        for ((&tuple, &weight), &target) in self
-            .topology
-            .tuples()
-            .iter()
-            .zip(self.weights.iter())
-            .zip(targets)
-        {
-            let value = weight * target;
-            for factor in 0..3 {
-                rhs[self.topology.global_index(factor, tuple[factor])] += value;
-            }
-        }
-        Ok(())
+        self.operator_data().rhs_from_targets_into(targets, rhs)
     }
 
     /// Form the normal-equation right-hand side `B^T W targets`.
     pub fn rhs_from_targets(&self, targets: &[f64]) -> Result<Vec<f64>, IncidenceError> {
-        let mut rhs = vec![0.0; self.dimension()];
-        self.rhs_from_targets_into(targets, &mut rhs)?;
-        Ok(rhs)
+        self.operator_data().rhs_from_targets(targets)
     }
 
     /// Compute `out = rhs - G x` in caller-owned storage.
@@ -330,51 +224,17 @@ impl ThreeWayProblem {
         x: &[f64],
         out: &mut [f64],
     ) -> Result<(), IncidenceError> {
-        validate_len(
-            "ThreeWayProblem::residual_into rhs",
-            self.dimension(),
-            rhs.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::residual_into x",
-            self.dimension(),
-            x.len(),
-        )?;
-        validate_len(
-            "ThreeWayProblem::residual_into output",
-            self.dimension(),
-            out.len(),
-        )?;
-        self.apply_gramian(x, out)?;
-        for (value, &right) in out.iter_mut().zip(rhs) {
-            *value = right - *value;
-        }
-        Ok(())
+        self.operator_data().residual_into(rhs, x, out)
     }
 
     /// Compute `rhs - G x` into a newly allocated vector.
     pub fn residual(&self, rhs: &[f64], x: &[f64]) -> Result<Vec<f64>, IncidenceError> {
-        let mut residual = vec![0.0; self.dimension()];
-        self.residual_into(rhs, x, &mut residual)?;
-        Ok(residual)
+        self.operator_data().residual(rhs, x)
     }
 
     /// Materialize the dense Gramian for reference tests and small terminals.
     pub fn dense_gramian(&self) -> Vec<Vec<f64>> {
-        let mut matrix = vec![vec![0.0; self.dimension()]; self.dimension()];
-        for (&tuple, &weight) in self.topology.tuples().iter().zip(self.weights.iter()) {
-            let indices = [
-                self.topology.global_index(0, tuple[0]),
-                self.topology.global_index(1, tuple[1]),
-                self.topology.global_index(2, tuple[2]),
-            ];
-            for &row in &indices {
-                for &column in &indices {
-                    matrix[row][column] += weight;
-                }
-            }
-        }
-        matrix
+        self.operator_data().dense_gramian()
     }
 }
 
@@ -418,18 +278,7 @@ impl CompensatedSum {
     }
 }
 
-fn validate_len(
-    context: &'static str,
-    expected: usize,
-    actual: usize,
-) -> Result<(), IncidenceError> {
-    if expected != actual {
-        return Err(crate::error::dimension(context, expected, actual));
-    }
-    Ok(())
-}
-
-fn neumaier_add(sum: &mut f64, correction: &mut f64, value: f64) {
+pub(crate) fn neumaier_add(sum: &mut f64, correction: &mut f64, value: f64) {
     let updated = *sum + value;
     if sum.abs() >= value.abs() {
         *correction += (*sum - updated) + value;
