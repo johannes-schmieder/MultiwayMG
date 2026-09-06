@@ -86,8 +86,14 @@ impl<'map, 'frame, 'topology> CoarseWeightReplay<'map, 'frame, 'topology> {
     where
         F: FnMut(&'static str) -> Result<(), IncidenceError>,
     {
-        Self::setup_payload_report(map, parent, budget.additional_live_payload_bytes)?.admit(budget)?;
-        let weights = reduce_groups(map.merge_groups(), parent.weights(), "coarse tuple total", before)?;
+        Self::setup_payload_report(map, parent, budget.additional_live_payload_bytes)?
+            .admit(budget)?;
+        let weights = reduce_groups(
+            map.merge_groups(),
+            parent.weights(),
+            "coarse tuple total",
+            before,
+        )?;
         let frame = ThreeWayWeightFrame::finish_with(
             map.coarse(),
             weights,

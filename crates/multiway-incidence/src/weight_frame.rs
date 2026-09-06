@@ -365,6 +365,44 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
                 weights.push(input.value(index));
             }
         }
+        Self::finish_with(
+            topology,
+            weights,
+            input.kind(),
+            input.validate_layout(topology)?,
+            before,
+        )
+    }
+
+    // Both submitted weights and replayed coarse weights finish through this
+    // checked path. Ownership transfers without an extra numerical-array copy.
+    pub(crate) fn finish_with<F>(
+        topology: &'topology PreparedThreeWayTopology,
+        weights: Vec<f64>,
+        input_kind: WeightFrameInputKind,
+        input_count: usize,
+        before: &mut F,
+    ) -> Result<Self, IncidenceError>
+    where
+        F: FnMut(&'static str) -> Result<(), IncidenceError>,
+    {
+        let shape = topology.topology();
+        let count = shape.tuple_count();
+        if weights.len() != count {
+            return Err(crate::error::dimension(
+                "frame finishing weights",
+                count,
+                weights.len(),
+            ));
+        }
+        for (tuple_index, &weight) in weights.iter().enumerate() {
+            if !weight.is_finite() || weight <= 0.0 {
+                return Err(IncidenceError::InvalidWeight {
+                    tuple_index,
+                    weight,
+                });
+            }
+        }
         let mut square_root_weights = reserve_frame(count, "frame square roots", before)?;
         for (index, &weight) in weights.iter().enumerate() {
             let value = weight.sqrt();
@@ -432,8 +470,8 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
             diagonal,
             component_ranges: ranges,
             validation: WeightFrameValidationReport {
-                input_kind: input.kind(),
-                input_count: input.validate_layout(topology)?,
+                input_kind,
+                input_count,
                 tuple_count: count,
                 dimension,
                 component_count,
@@ -535,7 +573,7 @@ impl<'topology> ThreeWayWeightFrame<'topology> {
     }
 }
 
-fn reserve_frame<T, F>(
+pub(crate) fn reserve_frame<T, F>(
     count: usize,
     context: &'static str,
     before: &mut F,

@@ -15,6 +15,7 @@ mod problem;
 mod symbolic;
 mod topology;
 mod weight_frame;
+mod weight_replay;
 
 pub use aggregation::FactorAggregation;
 pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
@@ -30,6 +31,10 @@ pub use weight_frame::{
     ComponentWeightRange, ThreeWayWeightFrame, WeightFrameBinding, WeightFrameInput,
     WeightFrameInputKind, WeightFramePayloadBudget, WeightFrameSetupReport,
     WeightFrameValidationReport,
+};
+
+pub use weight_replay::{
+    CoarseWeightReplay, PairConductanceReplay, WeightReplayPayloadBudget, WeightReplaySetupReport,
 };
 
 #[cfg(test)]

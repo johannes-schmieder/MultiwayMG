@@ -90,8 +90,14 @@ impl<'map, 'frame, 'topology> PairConductanceReplay<'map, 'frame, 'topology> {
     where
         F: FnMut(&'static str) -> Result<(), IncidenceError>,
     {
-        Self::setup_payload_report(map, parent, budget.additional_live_payload_bytes)?.admit(budget)?;
-        let conductances = reduce_groups(map.merge_groups(), parent.weights(), "pair conductance", before)?;
+        Self::setup_payload_report(map, parent, budget.additional_live_payload_bytes)?
+            .admit(budget)?;
+        let conductances = reduce_groups(
+            map.merge_groups(),
+            parent.weights(),
+            "pair conductance",
+            before,
+        )?;
         let dimension = map.local_dimension();
         let mut sums = reserve_frame(dimension, "pair degree accumulators", before)?;
         sums.resize(dimension, CompensatedSum::default());
@@ -113,7 +119,12 @@ impl<'map, 'frame, 'topology> PairConductanceReplay<'map, 'frame, 'topology> {
         let mut diagonal = reserve_frame(dimension, "pair weighted degrees", before)?;
         diagonal.extend(sums.iter().map(|sum| sum.total()));
         drop(sums);
-        let replay = Self { map, parent, conductances, diagonal };
+        let replay = Self {
+            map,
+            parent,
+            conductances,
+            diagonal,
+        };
         replay.retained_payload_bytes()?;
         Ok(replay)
     }
@@ -186,7 +197,11 @@ impl<'map, 'frame, 'topology> PairConductanceReplay<'map, 'frame, 'topology> {
         self.validate_for(map, parent)?;
         validate_output(self.conductances.len(), output.len())?;
         let left_count = self.map.level_counts()[0];
-        for ((out, &[left, right]), &value) in output.iter_mut().zip(self.map.edges()).zip(&self.conductances) {
+        for ((out, &[left, right]), &value) in output
+            .iter_mut()
+            .zip(self.map.edges())
+            .zip(&self.conductances)
+        {
             *out = (left as usize, left_count + right as usize, value);
         }
         Ok(())

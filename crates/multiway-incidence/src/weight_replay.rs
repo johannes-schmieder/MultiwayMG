@@ -8,9 +8,7 @@ pub use pair::PairConductanceReplay;
 
 use crate::{
     IncidenceError, PreparedThreeWayTopology, ThreeWayWeightFrame, TupleMergeGroups,
-    construction::sum_bytes,
-    problem::CompensatedSum,
-    weight_frame::reserve_frame,
+    construction::sum_bytes, problem::CompensatedSum, weight_frame::reserve_frame,
 };
 
 /// Declared live requested-array payload budget for one replay construction.
@@ -138,7 +136,11 @@ where
 
 fn validate_output(expected: usize, actual: usize) -> Result<(), IncidenceError> {
     if expected != actual {
-        return Err(crate::error::dimension("numerical replay output", expected, actual));
+        return Err(crate::error::dimension(
+            "numerical replay output",
+            expected,
+            actual,
+        ));
     }
     Ok(())
 }
