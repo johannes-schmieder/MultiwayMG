@@ -8,6 +8,7 @@ mod aggregation;
 mod bootstrap;
 mod bootstrap_hierarchy;
 mod bootstrap_portfolio;
+mod certificate;
 mod combine;
 mod compatible;
 mod compatible_gate;
@@ -37,6 +38,8 @@ mod pcg;
 mod pcg_trace;
 mod preconditioner;
 mod prepared_hierarchy;
+#[cfg(feature = "lsmr")]
+mod prepared_lsmr;
 mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
@@ -67,6 +70,9 @@ pub use bootstrap_portfolio::{
     SecondaryScreenCandidateSource, SecondaryScreenEvaluation, SecondaryScreenStructuralMetrics,
     SecondaryScreenStructuralRejection, SecondaryScreenWorkReport,
     build_screened_bootstrap_aggregation, build_screened_bootstrap_aggregation_with_timing,
+};
+pub use certificate::{
+    CertificateWorkReport, PreparedCertificateWorkspace, certify_prepared_normal_equations,
 };
 pub use combine::WeightedSumPreconditioner;
 pub use compatible::{
@@ -165,6 +171,13 @@ pub use within_comparator::{
 
 pub use multiway_incidence::{
     FactorAggregation, IncidenceComponents, IncidenceError, ThreeWayProblem, ThreeWayTopology,
+};
+
+#[cfg(feature = "lsmr")]
+pub use prepared_lsmr::{
+    PreparedLsmrOptions, PreparedLsmrPayloadReport, PreparedLsmrReport, PreparedLsmrResult,
+    PreparedLsmrWorkReport, PreparedLsmrWorkspace, solve_prepared_least_squares,
+    solve_prepared_least_squares_batch_into,
 };
 
 #[cfg(test)]

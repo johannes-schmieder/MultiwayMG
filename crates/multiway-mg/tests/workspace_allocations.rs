@@ -14,8 +14,13 @@ mod operator_view_allocations;
 mod payload_allocations;
 #[path = "support/pcg_allocations.rs"]
 mod pcg_allocations;
+#[path = "support/prepared_certificate_allocations.rs"]
+mod prepared_certificate_allocations;
 #[path = "support/prepared_cycle_allocations.rs"]
 mod prepared_cycle_allocations;
+#[cfg(feature = "lsmr")]
+#[path = "support/prepared_lsmr_allocations.rs"]
+mod prepared_lsmr_allocations;
 #[path = "support/prepared_map_allocations.rs"]
 mod prepared_map_allocations;
 #[path = "support/prepared_topology_allocations.rs"]
@@ -237,6 +242,9 @@ fn main() -> Result<()> {
     hierarchy_owner_allocations::run()?;
     prepared_map_allocations::run()?;
     prepared_cycle_allocations::run()?;
+    prepared_certificate_allocations::run()?;
+    #[cfg(feature = "lsmr")]
+    prepared_lsmr_allocations::run()?;
     #[cfg(feature = "lsmr")]
     lsmr_workspace_integration::run()?;
     pcg_allocations::run()?;
