@@ -331,3 +331,20 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   retains native negatives, verifies exact numerical/work equivalence and
   the derived capacity savings, and reports all paired time/RSS ratios. Commit
   this source and recipe before collecting; no M5 timing exists at this checkpoint.
+
+- M5a source `754f6d622d6040c968dd931d7e52973fa42c517a` passes the
+  [frozen paired smoke/development gates](../benchmarks/results/2026-09-06/prepared-serial-m5a/README.md):
+  complete numerical/work/fingerprint agreement and exact 1,656/21,816-byte
+  hierarchy-workspace savings. Every candidate-route development cell has
+  inner median speedup above one; balanced PCG/gated geomeans are 1.0610x/1.0629x.
+  Linux source smoke also passes candidate coverage; all native negatives persist.
+  Source workflows `34064382081`/`34064382036` and PR workflows
+  `34064411985`/`34064412162` passed. Final evidence-head CI/merge remains.
+  Next profile individual kernels and enlarged development dimensions before
+  choosing grouped indices; continue flat scratch/fused transfer/certificate
+  reference work as separately reviewed increments. No competitive claim.
+
+The next [grouped-layout experiment design](ISSUE5_GROUPED_LAYOUT_DESIGN.md) specifies
+exact owner binding, stable counting placement, u32/checked-wide indices, construction
+cursors, three traffic alternatives and later thread/panel ownership. It is a design
+for measurement, not an implemented layout or selected default.

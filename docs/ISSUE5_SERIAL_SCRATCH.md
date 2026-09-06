@@ -45,3 +45,13 @@ Repeat with `--profile development` on the Mac from the same committed source.
 The regular Linux native/gated smoke and three-platform allocation CI remain
 required. Hosted Linux timings are not a substitute for SCC qualification.
 No paired M5 timing was collected before the recipe/source commit.
+
+## Recorded evidence
+
+[The frozen paired results](../benchmarks/results/2026-09-06/prepared-serial-m5a/README.md)
+from source `754f6d6` pass every Mac smoke/development correctness/memory gate,
+including exact numerical/work identity. Linux candidate smoke also certifies
+all PCG/gated columns. Payload falls by exactly 1,656/21,816 bytes per smoke/dev
+workspace with other owners unchanged. Balanced inner-time geomeans improve
+about 1.05x in smoke and 1.06x in development; all raw ratios/dispersion and native
+negatives are retained. Final evidence CI/merge remains; M5 is not complete.

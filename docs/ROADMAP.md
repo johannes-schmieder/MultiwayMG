@@ -138,6 +138,9 @@ has complete PCG/gated-LSMR certification on Mac smoke/development and Linux
 smoke, with native-control negatives retained. See [the evidence](../benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md)
 for complete costs and limits. M4 is complete through PR #45; M5 starts with
 [serial pass removal and scratch reuse](ISSUE5_SERIAL_SCRATCH.md).
+Its frozen paired Mac evidence preserves numerical/work identity, reduces exact
+scratch capacity and measures about 1.06x inner improvement on the small development
+matrix. M5 remains open for larger-layout and kernel profiling work.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
