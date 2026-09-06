@@ -2,7 +2,8 @@
 
 Both `within` and `schwarz-precond` now name the owner-controlled fork
 `https://github.com/johannes-schmieder/within` at
-`2e7d5ec935b4846b369430ff00deb59f90e7d2d5` (fork PR #1). Its dedicated
+`cb20b27a7137804202be39976415618686a144de` (fork PR #2). The M3 base
+was `2e7d5ec935b4846b369430ff00deb59f90e7d2d5` (fork PR #1). Its dedicated
 `multiwaymg` branch begins at frozen upstream b7779cb; upstream main and its
 later statistical-screen changes are preserved separately and not imported.
 
@@ -67,3 +68,8 @@ results do not establish unchanged complete setup or memory costs.
 
 No copied elimination/Cholesky implementation, statistical-screen changes,
 release publication, or fereg integration is included.
+
+The current pin also adds an optional [M4 candidate gate](ISSUE5_CERTIFICATE_GATED_LSMR.md)
+before the destructive terminal audit. Ungated recurrence/stopping behavior and
+workspace arrays remain unchanged. The new prepared route owns the original-
+operator gate and still independently certifies every final candidate.

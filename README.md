@@ -28,8 +28,9 @@ original-operator certification and bounded scalar reuse across 1–32 RHS.
 [Prepared PCG](docs/ISSUE5_PREPARED_PCG.md) now shares the ordinary untraced
 recurrence and independent certificate. The [complete-cost serial
 benchmark](docs/ISSUE5_SERIAL_BENCHMARK.md) preserves repeatable Mac/Linux
-development evidence. Its native LSMR certificate rejections require a
-certificate-aware stopping increment before M4 closes.
+development evidence. A separate [certificate-gated LSMR
+route](docs/ISSUE5_CERTIFICATE_GATED_LSMR.md) continues early native stops using
+the same workspace; its qualification and charged development coverage remain M4 work.
 
 ## The problem
 
