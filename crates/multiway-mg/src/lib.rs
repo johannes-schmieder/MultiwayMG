@@ -35,11 +35,13 @@ mod pair_cmg;
 #[cfg(all(feature = "cmg", feature = "lsmr"))]
 mod pair_schwarz;
 mod pcg;
+mod pcg_kernel;
 mod pcg_trace;
 mod preconditioner;
 mod prepared_hierarchy;
 #[cfg(feature = "lsmr")]
 mod prepared_lsmr;
+mod prepared_pcg;
 mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
@@ -147,6 +149,11 @@ pub use preconditioner::Preconditioner;
 pub use prepared_hierarchy::{
     PREPARED_DENSE_TERMINAL_LIMIT, PREPARED_HIERARCHY_LEVEL_LIMIT, PreparedHierarchyPayloadReport,
     PreparedHierarchyWorkspace, PreparedMapHierarchy,
+};
+pub use prepared_pcg::{
+    PreparedPcgOptions, PreparedPcgPayloadReport, PreparedPcgReport, PreparedPcgResult,
+    PreparedPcgWorkReport, PreparedPcgWorkspace, solve_prepared_pcg_batch_into,
+    solve_prepared_pcg_least_squares,
 };
 pub use repair::{
     AggregateSplit, AggregationRepairOptions, AggregationRepairResult, AggregationRepairRound,

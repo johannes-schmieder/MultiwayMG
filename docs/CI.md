@@ -79,3 +79,9 @@ and action counts. Permanent allocation tests cover complete first/RHS1,2,4,8,16
 17,32 solves, exact 48-array release and zero-allocation budget rejection. The
 feature-independent original-operator certificate has separate allocation/failure
 coverage and shares its implementation with the existing ordinary driver.
+
+M4c prepared PCG shares the ordinary untraced recurrence and passes complete
+recursive/acceptance/RHS tests. The permanent allocator gate measures first and
+RHS1,2,4,8,16,17,32 solves, complete payload, zero-allocation budget rejection and
+exact 42-array release. A separate local 144-case frozen-source comparison is
+recorded in `ISSUE5_PREPARED_PCG.md`; it is not a cross-platform bitwise gate.

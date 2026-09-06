@@ -27,7 +27,7 @@ impl Default for PcgOptions {
 }
 
 impl PcgOptions {
-    fn validate(self) -> Result<Self, MultiwayError> {
+    pub(crate) fn validate(self) -> Result<Self, MultiwayError> {
         if !self.relative_tolerance.is_finite() || self.relative_tolerance < 0.0 {
             return Err(MultiwayError::InvalidOption {
                 name: "relative_tolerance",
@@ -169,192 +169,46 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
         ));
     }
 
-    ensure_finite("PCG right-hand side", rhs)?;
-    let mut projected_rhs = rhs.to_vec();
-    let rhs_projection_norm = problem
-        .components()
-        .project_structural_range(&mut projected_rhs)?;
-    ensure_finite("projected PCG right-hand side", &projected_rhs)?;
-    ensure_finite("PCG projection norm", &[rhs_projection_norm])?;
-    let rhs_norm = checked_norm(&projected_rhs)?;
-    if rhs_norm == 0.0 {
-        return Ok(PcgResult {
-            solution: vec![0.0; dimension],
-            iterations: 0,
-            converged: true,
-            residual_norm: 0.0,
-            relative_residual: 0.0,
-            rhs_projection_norm,
-            stop_reason: PcgStopReason::ZeroRightHandSide,
-        });
-    }
-    let tolerance = options
-        .absolute_tolerance
-        .max(options.relative_tolerance * rhs_norm);
-
-    ensure_finite("PCG tolerance", &[tolerance])?;
-
-    let mut solution = vec![0.0; dimension];
-    let mut residual = projected_rhs.clone();
-    let mut preconditioned = vec![0.0; dimension];
-    preconditioner.apply(&residual, &mut preconditioned)?;
-    problem
-        .components()
-        .project_structural_range(&mut preconditioned)?;
-    ensure_finite("initial preconditioned residual", &preconditioned)?;
-    let mut rho = dot(&residual, &preconditioned);
-    if !rho.is_finite() || rho <= 0.0 {
-        return Err(MultiwayError::PcgBreakdown {
-            iteration: 0,
-            message: format!("initial preconditioned metric is {rho}"),
-        });
-    }
-    let mut direction = preconditioned.clone();
-    let mut applied = vec![0.0; dimension];
-
-    for iteration in 1..=options.max_iterations {
-        problem.apply_gramian(&direction, &mut applied)?;
-        let curvature = dot(&direction, &applied);
-        if !curvature.is_finite() || curvature <= 0.0 {
-            return Err(MultiwayError::PcgBreakdown {
-                iteration: iteration - 1,
-                message: format!("search-direction curvature is {curvature}"),
-            });
-        }
-        let alpha = rho / curvature;
-        if !alpha.is_finite() {
-            return Err(MultiwayError::PcgBreakdown {
-                iteration: iteration - 1,
-                message: format!("step length is {alpha}"),
-            });
-        }
-        axpy(alpha, &direction, &mut solution);
-        axpy(-alpha, &applied, &mut residual);
-        problem
-            .components()
-            .project_structural_range(&mut residual)?;
-
-        if iteration % options.residual_recompute_interval == 0
-            || checked_norm(&residual)? <= tolerance
-        {
-            residual = problem.residual(&projected_rhs, &solution)?;
-            problem
-                .components()
-                .project_structural_range(&mut residual)?;
-            let residual_norm = checked_norm(&residual)?;
-            if residual_norm <= tolerance {
-                problem
-                    .components()
-                    .project_structural_range(&mut solution)?;
-                ensure_finite("PCG solution", &solution)?;
-                return Ok(PcgResult {
-                    solution,
-                    iterations: iteration,
-                    converged: true,
-                    residual_norm,
-                    relative_residual: residual_norm / rhs_norm,
-                    rhs_projection_norm,
-                    stop_reason: PcgStopReason::Converged,
-                });
-            }
-        }
-
-        preconditioner.apply(&residual, &mut preconditioned)?;
-        problem
-            .components()
-            .project_structural_range(&mut preconditioned)?;
-        ensure_finite("preconditioned residual", &preconditioned)?;
-        let new_rho = dot(&residual, &preconditioned);
-        if !new_rho.is_finite() || new_rho <= 0.0 {
-            return Err(MultiwayError::PcgBreakdown {
-                iteration,
-                message: format!("preconditioned metric is {new_rho}"),
-            });
-        }
-        let beta = new_rho / rho;
-        ensure_finite("PCG recurrence beta", &[beta])?;
-        for (search, &z) in direction.iter_mut().zip(&preconditioned) {
-            *search = beta.mul_add(*search, z);
-        }
-        problem
-            .components()
-            .project_structural_range(&mut direction)?;
-        rho = new_rho;
-    }
-
-    residual = problem.residual(&projected_rhs, &solution)?;
-    problem
-        .components()
-        .project_structural_range(&mut residual)?;
-    problem
-        .components()
-        .project_structural_range(&mut solution)?;
-    let residual_norm = checked_norm(&residual)?;
-    ensure_finite("PCG solution", &solution)?;
+    crate::pcg_kernel::ensure_finite("PCG right-hand side", rhs)?;
+    let mut storage = crate::pcg_kernel::PcgStorage::try_new(dimension)?;
+    let mut actions = OrdinaryPcgActions {
+        problem,
+        preconditioner,
+        projection: problem.components().try_projection_workspace()?,
+    };
+    let diagnostics = crate::pcg_kernel::solve(&mut actions, rhs, options, &mut storage)?;
     Ok(PcgResult {
-        solution,
-        iterations: options.max_iterations,
-        converged: false,
-        residual_norm,
-        relative_residual: residual_norm / rhs_norm,
-        rhs_projection_norm,
-        stop_reason: PcgStopReason::MaximumIterations,
+        solution: storage.solution,
+        iterations: diagnostics.iterations,
+        converged: diagnostics.converged,
+        residual_norm: diagnostics.residual_norm,
+        relative_residual: diagnostics.relative_residual,
+        rhs_projection_norm: diagnostics.rhs_projection_norm,
+        stop_reason: diagnostics.stop_reason,
     })
 }
 
-fn axpy(alpha: f64, x: &[f64], y: &mut [f64]) {
-    for (destination, &source) in y.iter_mut().zip(x) {
-        *destination = alpha.mul_add(source, *destination);
-    }
+struct OrdinaryPcgActions<'a, P: Preconditioner + ?Sized> {
+    problem: &'a ThreeWayProblem,
+    preconditioner: &'a P,
+    projection: multiway_incidence::StructuralProjectionWorkspace,
 }
-
-fn dot(left: &[f64], right: &[f64]) -> f64 {
-    let mut sum = 0.0;
-    let mut correction = 0.0;
-    for (&a, &b) in left.iter().zip(right) {
-        let value = a * b;
-        let updated = sum + value;
-        if sum.abs() >= value.abs() {
-            correction += (sum - updated) + value;
-        } else {
-            correction += (value - updated) + sum;
-        }
-        sum = updated;
+impl<P: Preconditioner + ?Sized> crate::pcg_kernel::PcgActions for OrdinaryPcgActions<'_, P> {
+    fn project(&mut self, values: &mut [f64]) -> Result<f64, MultiwayError> {
+        Ok(self
+            .problem
+            .components()
+            .project_structural_range_with_workspace(values, &mut self.projection)?)
     }
-    sum + correction
-}
-
-fn norm(values: &[f64]) -> f64 {
-    let scale = values.iter().copied().map(f64::abs).fold(0.0, f64::max);
-    if scale == 0.0 {
-        return 0.0;
+    fn precondition(&mut self, rhs: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+        self.preconditioner.apply(rhs, out)
     }
-    scale
-        * values
-            .iter()
-            .map(|value| (value / scale) * (value / scale))
-            .sum::<f64>()
-            .sqrt()
-}
-
-fn ensure_finite(context: &'static str, values: &[f64]) -> Result<(), MultiwayError> {
-    if let Some((index, value)) = values
-        .iter()
-        .copied()
-        .enumerate()
-        .find(|(_, value)| !value.is_finite())
-    {
-        return Err(MultiwayError::PcgBreakdown {
-            iteration: 0,
-            message: format!("{context} entry {index} is non-finite: {value}"),
-        });
+    fn gramian(&mut self, x: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+        self.problem.apply_gramian(x, out)?;
+        Ok(())
     }
-    Ok(())
-}
-
-fn checked_norm(values: &[f64]) -> Result<f64, MultiwayError> {
-    ensure_finite("PCG norm input", values)?;
-    let value = norm(values);
-    ensure_finite("PCG norm", &[value])?;
-    Ok(value)
+    fn residual(&mut self, rhs: &[f64], x: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+        self.problem.residual_into(rhs, x, out)?;
+        Ok(())
+    }
 }
