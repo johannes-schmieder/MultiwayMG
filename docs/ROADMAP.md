@@ -120,7 +120,9 @@ The checkboxes below describe complete integrated outcomes.
 Standalone M1 adds [numerical acceptance guards](NUMERICAL_BOUNDARIES.md) before
 prepared-operator integration; these are correctness improvements, not speed claims.
 Standalone M2 adds [frame-bound operator views](ISSUE5_OPERATOR_VIEWS.md) sharing
-the scalar kernels. Complete current-frame solver integration remains pending.
+the scalar kernels. [M3 pins reusable LSMR and mutable actions](ISSUE5_LSMR_DEPENDENCY.md)
+from a narrowly qualified owner-controlled within fork. Complete current-frame
+solver integration remains M4 work.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

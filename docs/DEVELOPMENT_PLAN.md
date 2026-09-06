@@ -26,8 +26,8 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | --- | --- | --- |
 | M0 | Commit this plan, performance protocol, immutable baseline identity, resource limits and evidence contract before optimization. | Complete: PR #34, main `1702699` |
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
-| M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Implemented; PR qualification pending |
-| M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Planned |
+| M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
+| M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Fork PR #1 qualified; joint pin and integration gates in progress |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Planned |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
@@ -174,3 +174,18 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
 - M2: shared scalar operators and exact numerical ownership are documented in
   [`ISSUE5_OPERATOR_VIEWS.md`](ISSUE5_OPERATOR_VIEWS.md). Complete solver and
   numerical hierarchy integration remain M3/M4 work.
+
+- M2: PR #36 merged as `f6a634af127f9f89b11606339cfd4f9aad8281e6`.
+  Source `a0bf566bdbdc976cd818c048a41fdc4e58649fd6`; push workflows
+  34051783143/34051783162, PR workflows 34051806535/34051806542 and
+  post-merge workflows 34051949685/34051949697 all passed.
+- M3: owner-controlled `johannes-schmieder/within` PR #1 targets its dedicated
+  `multiwaymg` branch at frozen upstream b7779cb, preserving upstream main.
+  The prepared path uses explicit serial internal execution; existing allocating
+  wrappers retain legacy Rayon thresholds. Controlled parallelism remains M7.
+  Joint dependency-pin integration requires qualified fork source.
+
+- M3 fork PR #1 merged as `2e7d5ec935b4846b369430ff00deb59f90e7d2d5` after
+  reviewed source `e8a3561463018762e16396e3ee0f8af8699e40ff` passed exact-source
+  workspace CI 34053279313, PR workspace CI 34053282380 and inherited full CI
+  34053282377. See [`ISSUE5_LSMR_DEPENDENCY.md`](ISSUE5_LSMR_DEPENDENCY.md).

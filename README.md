@@ -16,7 +16,8 @@ performance remains to be demonstrated. See the [numerical boundary contract](do
 for fail-closed driver certification and extreme-scale limitations.
 [Frame-bound operator views](docs/ISSUE5_OPERATOR_VIEWS.md) now provide
 allocation-free actions from immutable numerical frames; complete prepared
-solver integration remains in progress.
+solver integration remains in progress. The [pinned LSMR workspace dependency](docs/ISSUE5_LSMR_DEPENDENCY.md)
+now supports caller-owned recurrence and mutable MAP/hierarchy scratch.
 
 ## The problem
 
