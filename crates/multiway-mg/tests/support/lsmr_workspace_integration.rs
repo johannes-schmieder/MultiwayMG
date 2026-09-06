@@ -3,9 +3,7 @@ use super::{GLOBAL, Result, no_events};
 use multiway_incidence::{
     PreparedThreeWayTopology, ThreeWayOperatorView, ThreeWayWeightFrame, WeightFrameInput,
 };
-use multiway_mg::{
-    Preconditioner, SymmetricMapPreconditioner, SymmetricMapWorkspace, ThreeWayProblem,
-};
+use multiway_mg::{PreparedMapWorkspace, PreparedSymmetricMap};
 use schwarz_precond::{
     MlsmrWorkspace, MlsmrWorkspaceOptions, OperatorMut, SolveError, mlsmr_with_workspace,
 };
@@ -34,11 +32,11 @@ impl OperatorMut for WeightedAction<'_, '_> {
             })
     }
 }
-struct MapAction<'a> {
-    map: &'a SymmetricMapPreconditioner,
-    scratch: SymmetricMapWorkspace,
+struct MapAction<'frame, 'topology> {
+    map: PreparedSymmetricMap<'frame, 'topology>,
+    scratch: PreparedMapWorkspace<'frame, 'topology>,
 }
-impl OperatorMut for MapAction<'_> {
+impl OperatorMut for MapAction<'_, '_> {
     fn nrows(&self) -> usize {
         self.map.dimension()
     }
@@ -64,10 +62,9 @@ pub fn run() -> Result<()> {
     let topology = PreparedThreeWayTopology::try_from_collapsed([3, 4, 2], &tuples)?;
     let frame = ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::Tuples(&weights))?;
     let view = frame.operator_view();
-    let problem = ThreeWayProblem::from_observations([3, 4, 2], &tuples, &weights)?;
-    let map = SymmetricMapPreconditioner::new(problem);
+    let map = PreparedSymmetricMap::new(&frame);
     let mut preconditioner = MapAction {
-        map: &map,
+        map,
         scratch: map.application_workspace()?,
     };
     let mut operator = WeightedAction(view);

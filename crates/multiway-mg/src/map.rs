@@ -2,7 +2,10 @@
 
 use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
 
+mod kernel;
+mod prepared;
 mod workspace;
+pub use prepared::{PreparedMapWorkspace, PreparedSymmetricMap};
 pub use workspace::SymmetricMapWorkspace;
 
 /// One symmetric factor sweep, equivalent to a block symmetric
@@ -69,50 +72,17 @@ impl SymmetricMapPreconditioner {
         self.problem
             .components()
             .project_structural_range_with_workspace(compatible_rhs, projection)?;
-        let topology = self.problem.topology();
-        let offsets = topology.offsets();
-        let diagonal = self.problem.diagonal();
-        forward.fill(0.0);
-
-        for factor in 0..3 {
-            let start = offsets[factor];
-            let end = offsets[factor + 1];
-            forward[start..end].copy_from_slice(&compatible_rhs[start..end]);
-            for (&tuple, &weight) in topology.tuples().iter().zip(self.problem.weights()) {
-                let target = topology.global_index(factor, tuple[factor]);
-                let mut coupling = 0.0;
-                for previous in 0..factor {
-                    coupling = forward[topology.global_index(previous, tuple[previous])]
-                        .mul_add(weight, coupling);
-                }
-                forward[target] -= coupling;
-            }
-            for index in start..end {
-                forward[index] /= diagonal[index];
-            }
-        }
-
-        for ((middle, &value), &degree) in middle.iter_mut().zip(forward.iter()).zip(diagonal) {
-            *middle = value * degree;
-        }
-        solution.fill(0.0);
-        for factor in (0..3).rev() {
-            let start = offsets[factor];
-            let end = offsets[factor + 1];
-            solution[start..end].copy_from_slice(&middle[start..end]);
-            for (&tuple, &weight) in topology.tuples().iter().zip(self.problem.weights()) {
-                let target = topology.global_index(factor, tuple[factor]);
-                let mut coupling = 0.0;
-                for following in (factor + 1)..3 {
-                    coupling = solution[topology.global_index(following, tuple[following])]
-                        .mul_add(weight, coupling);
-                }
-                solution[target] -= coupling;
-            }
-            for index in start..end {
-                solution[index] /= diagonal[index];
-            }
-        }
+        kernel::sweep(
+            kernel::MapData {
+                topology: self.problem.topology(),
+                weights: self.problem.weights(),
+                diagonal: self.problem.diagonal(),
+            },
+            compatible_rhs,
+            forward,
+            middle,
+            solution,
+        );
         self.problem
             .components()
             .project_structural_range_with_workspace(solution, projection)?;

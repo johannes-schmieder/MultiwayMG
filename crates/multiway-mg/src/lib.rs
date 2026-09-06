@@ -112,7 +112,9 @@ pub use lsmr::{
     LeastSquaresOptions, LeastSquaresResult, LeastSquaresStopReason, LeastSquaresWorkReport,
     solve_weighted_least_squares,
 };
-pub use map::{SymmetricMapPreconditioner, SymmetricMapWorkspace};
+pub use map::{
+    PreparedMapWorkspace, PreparedSymmetricMap, SymmetricMapPreconditioner, SymmetricMapWorkspace,
+};
 #[cfg(feature = "cmg")]
 pub use oracle_schedule::{
     OracleLevelSmootherSpec, ScheduledOracleBuildTiming, ScheduledOracleHierarchy,
