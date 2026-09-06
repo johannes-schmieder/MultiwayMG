@@ -8,6 +8,12 @@ each observation selects one level from each factor.
 The project is motivated by high-dimensional regression, but its numerical
 object is more general: a weighted multipartite incidence Gramian.
 
+The current standalone CPU implementation campaign is documented in the
+[development plan](docs/DEVELOPMENT_PLAN.md) and
+[performance protocol](docs/PERFORMANCE_PROTOCOL.md). It targets complete
+1–32 RHS solves and changing-weight reuse on Mac and SCC CPUs. Competitive
+performance remains to be demonstrated.
+
 ## The problem
 
 Consider the weighted additive model

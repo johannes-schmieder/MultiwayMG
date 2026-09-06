@@ -108,6 +108,16 @@ See `ISSUE4_FINAL_RESULTS.md` and
 
 Tracked by issue #5. **Current primary milestone.**
 
+The accepted standalone CPU campaign is tracked incrementally in
+[`DEVELOPMENT_PLAN.md`](DEVELOPMENT_PLAN.md) (M0–M10), with predeclared complete-
+cost criteria in [`PERFORMANCE_PROTOCOL.md`](PERFORMANCE_PROTOCOL.md).
+
+Already implemented: prepared fine topology, one-transition symbolic coarse/pair
+maps, immutable numerical frames, compensated one-transition replay, complete
+MAP-cycle and traced-PCG workspace primitives, and scoped payload admission.
+These do not yet form a complete prepared solver or total lifetime memory report.
+The checkboxes below describe complete integrated outcomes.
+
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
 - [ ] Caller-owned allocation-free cycle and Krylov workspaces.
@@ -125,7 +135,7 @@ Tracked by issue #5. **Current primary milestone.**
 
 ## Milestone 6 — certified fereg integration
 
-Tracked by issue #6.
+Tracked by issue #6. Outside the current standalone M0–M10 campaign.
 
 - [ ] Private OLS route for exactly three categorical intercept fixed effects.
 - [ ] Exact tuple collapse and bounded RHS blocks.
