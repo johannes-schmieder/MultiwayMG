@@ -95,6 +95,13 @@ impl ThreeWayProblem {
                 if value == 0.0 {
                     return Err(IncidenceError::UnusedLevel { factor, level });
                 }
+                if !value.is_finite() || value < 0.0 {
+                    return Err(IncidenceError::InvalidWeightedDegree {
+                        factor,
+                        level,
+                        value,
+                    });
+                }
             }
         }
 

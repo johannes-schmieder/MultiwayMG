@@ -8,6 +8,12 @@ use multiway_incidence::IncidenceError;
 #[derive(Debug, Error)]
 #[non_exhaustive]
 pub enum MultiwayError {
+    /// A derived numerical quantity is non-finite or not representable as required.
+    #[error("unrepresentable numerical quantity in {context}")]
+    NumericalFailure {
+        /// Numerical boundary that failed closed.
+        context: &'static str,
+    },
     /// A prepared working-set payload exceeds the explicitly supplied budget.
     #[error("prepared payload requires {required} bytes, budget is {budget}")]
     PayloadBudgetExceeded {

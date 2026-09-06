@@ -15,7 +15,7 @@ impl DiagonalPreconditioner {
     /// The three-way bound `G <= 3 D` makes `0 < omega < 2/3` a conservative
     /// stable range for stationary Jacobi smoothing on the positive subspace.
     pub fn new(problem: &ThreeWayProblem, omega: f64) -> Result<Self, MultiwayError> {
-        if !omega.is_finite() || !(0.0..(2.0 / 3.0)).contains(&omega) {
+        if !omega.is_finite() || omega <= 0.0 || omega >= 2.0 / 3.0 {
             return Err(MultiwayError::InvalidOption {
                 name: "jacobi_omega",
                 message: format!("must lie in (0, 2/3), got {omega}"),
@@ -24,8 +24,16 @@ impl DiagonalPreconditioner {
         let scaled_inverse_diagonal = problem
             .diagonal()
             .iter()
-            .map(|&value| omega / value)
-            .collect();
+            .map(|&value| {
+                let inverse = omega / value;
+                if !value.is_finite() || value <= 0.0 || !inverse.is_finite() || inverse <= 0.0 {
+                    return Err(MultiwayError::NumericalFailure {
+                        context: "Jacobi scaled inverse diagonal",
+                    });
+                }
+                Ok(inverse)
+            })
+            .collect::<Result<Vec<_>, _>>()?;
         Ok(Self {
             scaled_inverse_diagonal,
             omega,
