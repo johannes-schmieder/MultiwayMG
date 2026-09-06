@@ -125,8 +125,9 @@ from a narrowly qualified owner-controlled within fork. Complete current-frame
 solver integration remains M4 work. Its [owning structural hierarchy and complete
 weight replay](ISSUE5_PREPARED_HIERARCHY.md) now preserve one exact fine generation
 across all supplied levels. [Prepared projection and MAP](ISSUE5_PREPARED_MAP.md)
-now share scalar kernels with ordinary owners. Complete cycle/driver integration
-is still open.
+now share scalar kernels with ordinary owners. The [prepared serial fixed
+cycle](ISSUE5_PREPARED_CYCLE.md) adds a bounded terminal and complete application
+scratch; outer-driver/certificate/RHS integration is still open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

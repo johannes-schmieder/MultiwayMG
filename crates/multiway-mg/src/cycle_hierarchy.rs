@@ -567,12 +567,6 @@ impl CycleScreenedMapHierarchy {
     }
 }
 
-fn add_assign(destination: &mut [f64], source: &[f64]) {
-    for (left, &right) in destination.iter_mut().zip(source) {
-        *left += right;
-    }
-}
-
 fn invalid(name: &'static str, message: impl Into<String>) -> MultiwayError {
     MultiwayError::InvalidOption {
         name,

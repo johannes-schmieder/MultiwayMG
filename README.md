@@ -21,7 +21,9 @@ now supports caller-owned recurrence and mutable MAP/hierarchy scratch.
 [Owning supplied-map hierarchy replay](docs/ISSUE5_PREPARED_HIERARCHY.md) supplies
 the structural and numerical ownership boundary for the serial solver.
 [Prepared projection and MAP](docs/ISSUE5_PREPARED_MAP.md) share the ordinary
-scalar arithmetic with exact current-frame scratch.
+scalar arithmetic with exact current-frame scratch. The [prepared serial
+V-cycle](docs/ISSUE5_PREPARED_CYCLE.md) now applies all levels with a bounded dense
+terminal; complete outer-driver integration remains in progress.
 
 ## The problem
 

@@ -83,7 +83,7 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
         self.workspace_with(&mut |_| Ok(()))
     }
 
-    fn workspace_with<F>(
+    pub(crate) fn workspace_with<F>(
         &self,
         before: &mut F,
     ) -> Result<PreparedMapWorkspace<'frame, 'topology>, MultiwayError>

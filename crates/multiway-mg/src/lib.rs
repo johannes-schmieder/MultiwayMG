@@ -12,6 +12,7 @@ mod combine;
 mod compatible;
 mod compatible_gate;
 mod cycle_hierarchy;
+mod cycle_kernel;
 mod cycle_portfolio;
 mod cycle_probe;
 mod cycle_repair;
@@ -35,6 +36,7 @@ mod pair_schwarz;
 mod pcg;
 mod pcg_trace;
 mod preconditioner;
+mod prepared_hierarchy;
 mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
@@ -136,6 +138,10 @@ pub use pcg_trace::{
     solve_projected_pcg_traced_with_workspaces,
 };
 pub use preconditioner::Preconditioner;
+pub use prepared_hierarchy::{
+    PREPARED_DENSE_TERMINAL_LIMIT, PREPARED_HIERARCHY_LEVEL_LIMIT, PreparedHierarchyPayloadReport,
+    PreparedHierarchyWorkspace, PreparedMapHierarchy,
+};
 pub use repair::{
     AggregateSplit, AggregationRepairOptions, AggregationRepairResult, AggregationRepairRound,
     AggregationRepairStopReason, repair_aggregation_by_splitting,

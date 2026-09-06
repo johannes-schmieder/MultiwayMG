@@ -6,7 +6,7 @@ use super::{CycleScreenedMapHierarchy, allocation_error, size_overflow};
 use crate::{DensePseudoinverseWorkspace, MultiwayError, SymmetricMapWorkspace};
 
 #[derive(Debug)]
-pub(super) struct LevelWorkspace {
+pub(crate) struct LevelWorkspace {
     pub(super) projection: StructuralProjectionWorkspace,
     pub(super) map: Option<SymmetricMapWorkspace>,
 }
