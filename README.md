@@ -27,7 +27,9 @@ terminal. [Complete prepared LSMR](docs/ISSUE5_PREPARED_LSMR.md) adds independen
 original-operator certification and bounded scalar reuse across 1–32 RHS.
 [Prepared PCG](docs/ISSUE5_PREPARED_PCG.md) now shares the ordinary untraced
 recurrence and independent certificate. The [complete-cost serial
-benchmark](docs/ISSUE5_SERIAL_BENCHMARK.md) is in qualification.
+benchmark](docs/ISSUE5_SERIAL_BENCHMARK.md) preserves repeatable Mac/Linux
+development evidence. Its native LSMR certificate rejections require a
+certificate-aware stopping increment before M4 closes.
 
 ## The problem
 

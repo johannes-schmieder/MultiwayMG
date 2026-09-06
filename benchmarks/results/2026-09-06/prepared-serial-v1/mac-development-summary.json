@@ -1,0 +1,1618 @@
+{
+  "all_measured_columns_certified": false,
+  "certified_columns": 3865,
+  "competitive_qualification": false,
+  "expected_runs": 504,
+  "failed_measured_runs": 130,
+  "measured_columns": 4800,
+  "memory_scopes": {
+    "construction_peak_live_allocations": "unavailable: allocator high-water instrumentation is separate from this timing run",
+    "logical_live_array_lengths": "unavailable: capacity reports do not expose all lengths separately",
+    "old_new_generation_overlap": "not applicable: fresh fixed-weight single generation per process",
+    "opaque_dependency_memory": "transient terminal factorization not separately observed; retained dense/workspace arrays included",
+    "process_peak_rss": "isolated process including runtime, input decode, setup, solve, output and destruction",
+    "reserved_live_array_capacity": "measured per direct owner, including caller input/output and workspace",
+    "workspace_pool": "one serial workspace; hierarchy_workspace plus outer_workspace are measured capacities"
+  },
+  "profile": "development",
+  "rejected_columns": 935,
+  "scope": "prepared_serial_development_only",
+  "timings": [
+    {
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3571712,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3209e-05,
+        "decode": 0.000993791,
+        "fine_frame": 0.00011975,
+        "fine_topology": 9.2542e-05,
+        "maps_topology": 0.00098825,
+        "terminal": 0.000111084,
+        "workspace_output": 3.7584e-05
+      },
+      "process_seconds_max": 0.014499292,
+      "process_seconds_median": 0.014145917,
+      "process_seconds_min": 0.013899917,
+      "retained_capacity_bytes": 1202392,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3194880,
+      "phase_seconds_median": {
+        "coarse_frames": 4.2459e-05,
+        "decode": 0.000974375,
+        "fine_frame": 0.00012175,
+        "fine_topology": 9.2458e-05,
+        "maps_topology": 0.000997,
+        "terminal": 0.000110125,
+        "workspace_output": 1.6416e-05
+      },
+      "process_seconds_max": 0.014696875,
+      "process_seconds_median": 0.013505792,
+      "process_seconds_min": 0.013257709,
+      "retained_capacity_bytes": 888568,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4587520,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3542e-05,
+        "decode": 0.005571459,
+        "fine_frame": 0.000122291,
+        "fine_topology": 9.6541e-05,
+        "maps_topology": 0.000990334,
+        "terminal": 0.000110708,
+        "workspace_output": 4.6458e-05
+      },
+      "process_seconds_max": 0.115716875,
+      "process_seconds_median": 0.115390708,
+      "process_seconds_min": 0.114635541,
+      "retained_capacity_bytes": 2240992,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4210688,
+      "phase_seconds_median": {
+        "coarse_frames": 4.2917e-05,
+        "decode": 0.005574167,
+        "fine_frame": 0.000123625,
+        "fine_topology": 9.3625e-05,
+        "maps_topology": 0.000989625,
+        "terminal": 0.000111,
+        "workspace_output": 2.4125e-05
+      },
+      "process_seconds_max": 0.106729834,
+      "process_seconds_median": 0.103822708,
+      "process_seconds_min": 0.103371375,
+      "retained_capacity_bytes": 1927168,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4669440,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3417e-05,
+        "decode": 0.005893833,
+        "fine_frame": 0.000114083,
+        "fine_topology": 9.3125e-05,
+        "maps_topology": 0.00098925,
+        "terminal": 0.0001115,
+        "workspace_output": 5.0167e-05
+      },
+      "process_seconds_max": 0.118794875,
+      "process_seconds_median": 0.11601375,
+      "process_seconds_min": 0.115395791,
+      "retained_capacity_bytes": 2310232,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4292608,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3666e-05,
+        "decode": 0.005928208,
+        "fine_frame": 0.000121583,
+        "fine_topology": 9.2458e-05,
+        "maps_topology": 0.000988542,
+        "terminal": 0.000110959,
+        "workspace_output": 2.5209e-05
+      },
+      "process_seconds_max": 0.104250917,
+      "process_seconds_median": 0.104079833,
+      "process_seconds_min": 0.103794792,
+      "retained_capacity_bytes": 1996408,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3653632,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3541e-05,
+        "decode": 0.001316042,
+        "fine_frame": 0.00012225,
+        "fine_topology": 9.3875e-05,
+        "maps_topology": 0.000990417,
+        "terminal": 0.000110541,
+        "workspace_output": 3.8916e-05
+      },
+      "process_seconds_max": 0.024414916,
+      "process_seconds_median": 0.02126525,
+      "process_seconds_min": 0.021195083,
+      "retained_capacity_bytes": 1271632,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3276800,
+      "phase_seconds_median": {
+        "coarse_frames": 4.2958e-05,
+        "decode": 0.001339208,
+        "fine_frame": 0.000115791,
+        "fine_topology": 9.4333e-05,
+        "maps_topology": 0.00098175,
+        "terminal": 0.000110458,
+        "workspace_output": 1.7584e-05
+      },
+      "process_seconds_max": 0.019461417,
+      "process_seconds_median": 0.01920275,
+      "process_seconds_min": 0.019036625,
+      "retained_capacity_bytes": 957808,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5750784,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3292e-05,
+        "decode": 0.010607875,
+        "fine_frame": 0.000120459,
+        "fine_topology": 9.2e-05,
+        "maps_topology": 0.0009905,
+        "terminal": 0.000112333,
+        "workspace_output": 4.7083e-05
+      },
+      "process_seconds_max": 0.211753875,
+      "process_seconds_median": 0.209555417,
+      "process_seconds_min": 0.208524959,
+      "retained_capacity_bytes": 3348832,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5373952,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3417e-05,
+        "decode": 0.010809166,
+        "fine_frame": 0.000124209,
+        "fine_topology": 9.8375e-05,
+        "maps_topology": 0.000995541,
+        "terminal": 0.000113125,
+        "workspace_output": 2.2041e-05
+      },
+      "process_seconds_max": 0.191570708,
+      "process_seconds_median": 0.188271959,
+      "process_seconds_min": 0.187167375,
+      "retained_capacity_bytes": 3035008,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3784704,
+      "phase_seconds_median": {
+        "coarse_frames": 4.25e-05,
+        "decode": 0.001902708,
+        "fine_frame": 0.000123958,
+        "fine_topology": 9.4333e-05,
+        "maps_topology": 0.000987834,
+        "terminal": 0.000110416,
+        "workspace_output": 3.8458e-05
+      },
+      "process_seconds_max": 0.0343095,
+      "process_seconds_median": 0.033882792,
+      "process_seconds_min": 0.033709625,
+      "retained_capacity_bytes": 1410112,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3407872,
+      "phase_seconds_median": {
+        "coarse_frames": 4.2833e-05,
+        "decode": 0.001921666,
+        "fine_frame": 0.0001225,
+        "fine_topology": 9.25e-05,
+        "maps_topology": 0.000993167,
+        "terminal": 0.000110958,
+        "workspace_output": 2.1333e-05
+      },
+      "process_seconds_max": 0.03158525,
+      "process_seconds_median": 0.031486958,
+      "process_seconds_min": 0.031146625,
+      "retained_capacity_bytes": 1096288,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4063232,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3083e-05,
+        "decode": 0.003169875,
+        "fine_frame": 0.000114625,
+        "fine_topology": 9.3792e-05,
+        "maps_topology": 0.0009895,
+        "terminal": 0.000111083,
+        "workspace_output": 4.2251e-05
+      },
+      "process_seconds_max": 0.06222325,
+      "process_seconds_median": 0.060912375,
+      "process_seconds_min": 0.060745625,
+      "retained_capacity_bytes": 1687072,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3686400,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3458e-05,
+        "decode": 0.003115125,
+        "fine_frame": 0.00012375,
+        "fine_topology": 9.4458e-05,
+        "maps_topology": 0.000986709,
+        "terminal": 0.000111,
+        "workspace_output": 1.8e-05
+      },
+      "process_seconds_max": 0.056776125,
+      "process_seconds_median": 0.055391333,
+      "process_seconds_min": 0.054962459,
+      "retained_capacity_bytes": 1373248,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3571712,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3375e-05,
+        "decode": 0.001005167,
+        "fine_frame": 0.000121542,
+        "fine_topology": 9.5e-05,
+        "maps_topology": 0.001003542,
+        "terminal": 0.000109042,
+        "workspace_output": 3.7458e-05
+      },
+      "process_seconds_max": 0.013369292,
+      "process_seconds_median": 0.012987208,
+      "process_seconds_min": 0.012917291,
+      "retained_capacity_bytes": 1202392,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3194880,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3208e-05,
+        "decode": 0.001031666,
+        "fine_frame": 0.000120375,
+        "fine_topology": 9.5708e-05,
+        "maps_topology": 0.001001208,
+        "terminal": 0.000109541,
+        "workspace_output": 1.6625e-05
+      },
+      "process_seconds_max": 0.013054833,
+      "process_seconds_median": 0.012809625,
+      "process_seconds_min": 0.012782,
+      "retained_capacity_bytes": 888568,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4587520,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3625e-05,
+        "decode": 0.005627083,
+        "fine_frame": 0.000124,
+        "fine_topology": 9.425e-05,
+        "maps_topology": 0.000999958,
+        "terminal": 0.000110084,
+        "workspace_output": 4.9084e-05
+      },
+      "process_seconds_max": 0.107210583,
+      "process_seconds_median": 0.102494625,
+      "process_seconds_min": 0.101161708,
+      "retained_capacity_bytes": 2240992,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4210688,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3e-05,
+        "decode": 0.00570475,
+        "fine_frame": 0.000123083,
+        "fine_topology": 9.6417e-05,
+        "maps_topology": 0.000995625,
+        "terminal": 0.000109875,
+        "workspace_output": 2.3458e-05
+      },
+      "process_seconds_max": 0.095782709,
+      "process_seconds_median": 0.092633542,
+      "process_seconds_min": 0.0917885,
+      "retained_capacity_bytes": 1927168,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4669440,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3542e-05,
+        "decode": 0.005848417,
+        "fine_frame": 0.00011725,
+        "fine_topology": 9.2417e-05,
+        "maps_topology": 0.000991167,
+        "terminal": 0.00011,
+        "workspace_output": 4.7875e-05
+      },
+      "process_seconds_max": 0.102727792,
+      "process_seconds_median": 0.101968542,
+      "process_seconds_min": 0.101509291,
+      "retained_capacity_bytes": 2310232,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4341760,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3417e-05,
+        "decode": 0.005847125,
+        "fine_frame": 0.000119125,
+        "fine_topology": 9.4333e-05,
+        "maps_topology": 0.000991833,
+        "terminal": 0.000109792,
+        "workspace_output": 2.3375e-05
+      },
+      "process_seconds_max": 0.09640025,
+      "process_seconds_median": 0.092550166,
+      "process_seconds_min": 0.092013458,
+      "retained_capacity_bytes": 1996408,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3653632,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3333e-05,
+        "decode": 0.001313209,
+        "fine_frame": 0.000124167,
+        "fine_topology": 9.4333e-05,
+        "maps_topology": 0.000996625,
+        "terminal": 0.000109375,
+        "workspace_output": 3.7875e-05
+      },
+      "process_seconds_max": 0.01994175,
+      "process_seconds_median": 0.0196295,
+      "process_seconds_min": 0.019221709,
+      "retained_capacity_bytes": 1271632,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3293184,
+      "phase_seconds_median": {
+        "coarse_frames": 4.2792e-05,
+        "decode": 0.001326083,
+        "fine_frame": 0.000119125,
+        "fine_topology": 9.5292e-05,
+        "maps_topology": 0.000998458,
+        "terminal": 0.000110292,
+        "workspace_output": 1.7709e-05
+      },
+      "process_seconds_max": 0.019631416,
+      "process_seconds_median": 0.018136917,
+      "process_seconds_min": 0.017672875,
+      "retained_capacity_bytes": 957808,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5750784,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3625e-05,
+        "decode": 0.010863667,
+        "fine_frame": 0.000120042,
+        "fine_topology": 9.575e-05,
+        "maps_topology": 0.00099325,
+        "terminal": 0.000109625,
+        "workspace_output": 4.5959e-05
+      },
+      "process_seconds_max": 0.191437959,
+      "process_seconds_median": 0.185684417,
+      "process_seconds_min": 0.184416542,
+      "retained_capacity_bytes": 3348832,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5373952,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3209e-05,
+        "decode": 0.010650709,
+        "fine_frame": 0.000120041,
+        "fine_topology": 9.35e-05,
+        "maps_topology": 0.0009925,
+        "terminal": 0.00010875,
+        "workspace_output": 2.3e-05
+      },
+      "process_seconds_max": 0.167551666,
+      "process_seconds_median": 0.165694708,
+      "process_seconds_min": 0.164954334,
+      "retained_capacity_bytes": 3035008,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3784704,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3125e-05,
+        "decode": 0.0019585,
+        "fine_frame": 0.000126291,
+        "fine_topology": 9.4375e-05,
+        "maps_topology": 0.001003209,
+        "terminal": 0.000109125,
+        "workspace_output": 3.8292e-05
+      },
+      "process_seconds_max": 0.0308085,
+      "process_seconds_median": 0.030672167,
+      "process_seconds_min": 0.030386583,
+      "retained_capacity_bytes": 1410112,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3407872,
+      "phase_seconds_median": {
+        "coarse_frames": 4.2916e-05,
+        "decode": 0.001926833,
+        "fine_frame": 0.000120417,
+        "fine_topology": 9.2958e-05,
+        "maps_topology": 0.000994625,
+        "terminal": 0.000109333,
+        "workspace_output": 1.7333e-05
+      },
+      "process_seconds_max": 0.028897166,
+      "process_seconds_median": 0.028354958,
+      "process_seconds_min": 0.027994375,
+      "retained_capacity_bytes": 1096288,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4063232,
+      "phase_seconds_median": {
+        "coarse_frames": 4.4875e-05,
+        "decode": 0.003357583,
+        "fine_frame": 0.000126208,
+        "fine_topology": 9.9292e-05,
+        "maps_topology": 0.001033291,
+        "terminal": 0.00011475,
+        "workspace_output": 4.4042e-05
+      },
+      "process_seconds_max": 0.062613125,
+      "process_seconds_median": 0.056266625,
+      "process_seconds_min": 0.054370292,
+      "retained_capacity_bytes": 1687072,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3686400,
+      "phase_seconds_median": {
+        "coarse_frames": 4.3083e-05,
+        "decode": 0.003168209,
+        "fine_frame": 0.000125417,
+        "fine_topology": 9.3166e-05,
+        "maps_topology": 0.000993084,
+        "terminal": 0.000112834,
+        "workspace_output": 1.8083e-05
+      },
+      "process_seconds_max": 0.053135208,
+      "process_seconds_median": 0.050030708,
+      "process_seconds_min": 0.049688042,
+      "retained_capacity_bytes": 1373248,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4947968,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000231791,
+        "decode": 0.002015667,
+        "fine_frame": 0.000237042,
+        "fine_topology": 0.000202459,
+        "maps_topology": 0.002925708,
+        "terminal": 0.000113417,
+        "workspace_output": 5.3167e-05
+      },
+      "process_seconds_max": 0.019334125,
+      "process_seconds_median": 0.01748275,
+      "process_seconds_min": 0.017169041,
+      "retained_capacity_bytes": 2588228,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4341760,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000237083,
+        "decode": 0.002033666,
+        "fine_frame": 0.000217917,
+        "fine_topology": 0.000200125,
+        "maps_topology": 0.002924875,
+        "terminal": 0.000118333,
+        "workspace_output": 2.4458e-05
+      },
+      "process_seconds_max": 0.016059916,
+      "process_seconds_median": 0.015762792,
+      "process_seconds_min": 0.014831375,
+      "retained_capacity_bytes": 2037508,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6864896,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000221208,
+        "decode": 0.010700292,
+        "fine_frame": 0.000218958,
+        "fine_topology": 0.000194541,
+        "maps_topology": 0.0028915,
+        "terminal": 0.000113333,
+        "workspace_output": 6.5249e-05
+      },
+      "process_seconds_max": 0.124575292,
+      "process_seconds_median": 0.124290875,
+      "process_seconds_min": 0.123797125,
+      "retained_capacity_bytes": 4515188,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6258688,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000220125,
+        "decode": 0.010706,
+        "fine_frame": 0.000224791,
+        "fine_topology": 0.00019375,
+        "maps_topology": 0.002891375,
+        "terminal": 0.000113709,
+        "workspace_output": 2.7125e-05
+      },
+      "process_seconds_max": 0.09036275,
+      "process_seconds_median": 0.090058792,
+      "process_seconds_min": 0.089519708,
+      "retained_capacity_bytes": 3964468,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7028736,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000226333,
+        "decode": 0.011384542,
+        "fine_frame": 0.000221458,
+        "fine_topology": 0.000194834,
+        "maps_topology": 0.00290225,
+        "terminal": 0.000114333,
+        "workspace_output": 6.5292e-05
+      },
+      "process_seconds_max": 0.126556084,
+      "process_seconds_median": 0.125379667,
+      "process_seconds_min": 0.124991292,
+      "retained_capacity_bytes": 4643652,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6438912,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000225709,
+        "decode": 0.011226417,
+        "fine_frame": 0.000208083,
+        "fine_topology": 0.000197916,
+        "maps_topology": 0.002898,
+        "terminal": 0.000113959,
+        "workspace_output": 2.7375e-05
+      },
+      "process_seconds_max": 0.094588917,
+      "process_seconds_median": 0.090839042,
+      "process_seconds_min": 0.090218083,
+      "retained_capacity_bytes": 4092932,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5062656,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000228458,
+        "decode": 0.002604875,
+        "fine_frame": 0.000227167,
+        "fine_topology": 0.000196125,
+        "maps_topology": 0.002906667,
+        "terminal": 0.000112875,
+        "workspace_output": 5.475e-05
+      },
+      "process_seconds_max": 0.025548292,
+      "process_seconds_median": 0.024962084,
+      "process_seconds_min": 0.024781291,
+      "retained_capacity_bytes": 2716692,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4489216,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000229542,
+        "decode": 0.002579292,
+        "fine_frame": 0.000228333,
+        "fine_topology": 0.000200209,
+        "maps_topology": 0.002933916,
+        "terminal": 0.000113708,
+        "workspace_output": 2.0417e-05
+      },
+      "process_seconds_max": 0.022007834,
+      "process_seconds_median": 0.020789667,
+      "process_seconds_min": 0.020234417,
+      "retained_capacity_bytes": 2165972,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8962048,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000229042,
+        "decode": 0.020153084,
+        "fine_frame": 0.000220125,
+        "fine_topology": 0.000195417,
+        "maps_topology": 0.002900542,
+        "terminal": 0.000114375,
+        "workspace_output": 6.425e-05
+      },
+      "process_seconds_max": 0.234453167,
+      "process_seconds_median": 0.226099875,
+      "process_seconds_min": 0.22565325,
+      "retained_capacity_bytes": 6570612,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8355840,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000225916,
+        "decode": 0.020021125,
+        "fine_frame": 0.000217375,
+        "fine_topology": 0.000204958,
+        "maps_topology": 0.00292725,
+        "terminal": 0.000118667,
+        "workspace_output": 2.5874e-05
+      },
+      "process_seconds_max": 0.165627041,
+      "process_seconds_median": 0.162456625,
+      "process_seconds_min": 0.160747709,
+      "retained_capacity_bytes": 6019892,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5324800,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000230917,
+        "decode": 0.00390025,
+        "fine_frame": 0.000233334,
+        "fine_topology": 0.000207625,
+        "maps_topology": 0.003024959,
+        "terminal": 0.000119375,
+        "workspace_output": 5.7917e-05
+      },
+      "process_seconds_max": 0.041831292,
+      "process_seconds_median": 0.040175417,
+      "process_seconds_min": 0.039353625,
+      "retained_capacity_bytes": 2973620,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4751360,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000231,
+        "decode": 0.003812042,
+        "fine_frame": 0.000229709,
+        "fine_topology": 0.000194583,
+        "maps_topology": 0.002936958,
+        "terminal": 0.0001125,
+        "workspace_output": 2.0251e-05
+      },
+      "process_seconds_max": 0.032705167,
+      "process_seconds_median": 0.030738208,
+      "process_seconds_min": 0.030327917,
+      "retained_capacity_bytes": 2422900,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5832704,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00022975,
+        "decode": 0.006188708,
+        "fine_frame": 0.000224084,
+        "fine_topology": 0.000196125,
+        "maps_topology": 0.002924417,
+        "terminal": 0.000113958,
+        "workspace_output": 6.15e-05
+      },
+      "process_seconds_max": 0.069772,
+      "process_seconds_median": 0.06831325,
+      "process_seconds_min": 0.067814417,
+      "retained_capacity_bytes": 3487476,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5259264,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000221375,
+        "decode": 0.006116834,
+        "fine_frame": 0.000228792,
+        "fine_topology": 0.000193958,
+        "maps_topology": 0.002913292,
+        "terminal": 0.000114541,
+        "workspace_output": 2.2709e-05
+      },
+      "process_seconds_max": 0.05092425,
+      "process_seconds_median": 0.050700208,
+      "process_seconds_min": 0.050518042,
+      "retained_capacity_bytes": 2936756,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4931584,
+      "phase_seconds_median": {
+        "coarse_frames": 0.0002505,
+        "decode": 0.002084709,
+        "fine_frame": 0.000237417,
+        "fine_topology": 0.000206541,
+        "maps_topology": 0.0030995,
+        "terminal": 0.000119625,
+        "workspace_output": 6.2834e-05
+      },
+      "process_seconds_max": 0.018699333,
+      "process_seconds_median": 0.0185595,
+      "process_seconds_min": 0.01801225,
+      "retained_capacity_bytes": 2588228,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4341760,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000263458,
+        "decode": 0.002058125,
+        "fine_frame": 0.000231708,
+        "fine_topology": 0.00020625,
+        "maps_topology": 0.003204292,
+        "terminal": 0.000131709,
+        "workspace_output": 2.4583e-05
+      },
+      "process_seconds_max": 0.016082375,
+      "process_seconds_median": 0.015993916,
+      "process_seconds_min": 0.015724125,
+      "retained_capacity_bytes": 2037508,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6881280,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00023425,
+        "decode": 0.011031,
+        "fine_frame": 0.000222667,
+        "fine_topology": 0.000197708,
+        "maps_topology": 0.002978291,
+        "terminal": 0.000114833,
+        "workspace_output": 6.3543e-05
+      },
+      "process_seconds_max": 0.112065125,
+      "process_seconds_median": 0.109046042,
+      "process_seconds_min": 0.108611334,
+      "retained_capacity_bytes": 4515188,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6275072,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000227625,
+        "decode": 0.010855167,
+        "fine_frame": 0.000221,
+        "fine_topology": 0.00019425,
+        "maps_topology": 0.002924875,
+        "terminal": 0.000111625,
+        "workspace_output": 2.6959e-05
+      },
+      "process_seconds_max": 0.08250025,
+      "process_seconds_median": 0.081544333,
+      "process_seconds_min": 0.080991291,
+      "retained_capacity_bytes": 3964468,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7012352,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000226292,
+        "decode": 0.011314875,
+        "fine_frame": 0.000221,
+        "fine_topology": 0.000200917,
+        "maps_topology": 0.002903791,
+        "terminal": 0.000110708,
+        "workspace_output": 6.3958e-05
+      },
+      "process_seconds_max": 0.112854041,
+      "process_seconds_median": 0.108635584,
+      "process_seconds_min": 0.107925792,
+      "retained_capacity_bytes": 4643652,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6455296,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000226167,
+        "decode": 0.011196417,
+        "fine_frame": 0.000218458,
+        "fine_topology": 0.000194125,
+        "maps_topology": 0.002895417,
+        "terminal": 0.000111042,
+        "workspace_output": 3.1e-05
+      },
+      "process_seconds_max": 0.082992375,
+      "process_seconds_median": 0.080954541,
+      "process_seconds_min": 0.080834083,
+      "retained_capacity_bytes": 4092932,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5079040,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000230042,
+        "decode": 0.002626708,
+        "fine_frame": 0.000225,
+        "fine_topology": 0.000201459,
+        "maps_topology": 0.002940833,
+        "terminal": 0.000111041,
+        "workspace_output": 5.425e-05
+      },
+      "process_seconds_max": 0.024691083,
+      "process_seconds_median": 0.02263675,
+      "process_seconds_min": 0.022155208,
+      "retained_capacity_bytes": 2716692,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4472832,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000226375,
+        "decode": 0.0025715,
+        "fine_frame": 0.000233083,
+        "fine_topology": 0.000204,
+        "maps_topology": 0.002890459,
+        "terminal": 0.000110334,
+        "workspace_output": 1.8666e-05
+      },
+      "process_seconds_max": 0.020499334,
+      "process_seconds_median": 0.018177,
+      "process_seconds_min": 0.017876708,
+      "retained_capacity_bytes": 2165972,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8945664,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000221542,
+        "decode": 0.020039833,
+        "fine_frame": 0.000219166,
+        "fine_topology": 0.000195166,
+        "maps_topology": 0.002913209,
+        "terminal": 0.000110916,
+        "workspace_output": 5.9542e-05
+      },
+      "process_seconds_max": 0.198494958,
+      "process_seconds_median": 0.194426083,
+      "process_seconds_min": 0.193581,
+      "retained_capacity_bytes": 6570612,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8372224,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000226708,
+        "decode": 0.020045458,
+        "fine_frame": 0.000216417,
+        "fine_topology": 0.000194417,
+        "maps_topology": 0.002900125,
+        "terminal": 0.000110917,
+        "workspace_output": 2.5374e-05
+      },
+      "process_seconds_max": 0.14724825,
+      "process_seconds_median": 0.1439365,
+      "process_seconds_min": 0.14335325,
+      "retained_capacity_bytes": 6019892,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5357568,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000247792,
+        "decode": 0.003908542,
+        "fine_frame": 0.0002335,
+        "fine_topology": 0.000210875,
+        "maps_topology": 0.003109542,
+        "terminal": 0.00011725,
+        "workspace_output": 5.9958e-05
+      },
+      "process_seconds_max": 0.038423958,
+      "process_seconds_median": 0.037051833,
+      "process_seconds_min": 0.03437475,
+      "retained_capacity_bytes": 2973620,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 4767744,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000227417,
+        "decode": 0.003792792,
+        "fine_frame": 0.000233417,
+        "fine_topology": 0.000200375,
+        "maps_topology": 0.002908292,
+        "terminal": 0.000111208,
+        "workspace_output": 2.0666e-05
+      },
+      "process_seconds_max": 0.030809167,
+      "process_seconds_median": 0.028629542,
+      "process_seconds_min": 0.028037667,
+      "retained_capacity_bytes": 2422900,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5849088,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00022975,
+        "decode": 0.0061685,
+        "fine_frame": 0.000228708,
+        "fine_topology": 0.000195375,
+        "maps_topology": 0.002913458,
+        "terminal": 0.000110208,
+        "workspace_output": 5.9959e-05
+      },
+      "process_seconds_max": 0.0612585,
+      "process_seconds_median": 0.059588041,
+      "process_seconds_min": 0.059492958,
+      "retained_capacity_bytes": 3487476,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5275648,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000227875,
+        "decode": 0.006372875,
+        "fine_frame": 0.000224541,
+        "fine_topology": 0.000202292,
+        "maps_topology": 0.002940292,
+        "terminal": 0.000110125,
+        "workspace_output": 2.225e-05
+      },
+      "process_seconds_max": 0.047157625,
+      "process_seconds_median": 0.045906958,
+      "process_seconds_min": 0.045268833,
+      "retained_capacity_bytes": 2936756,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6078464,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000505625,
+        "decode": 0.002132458,
+        "fine_frame": 0.000234292,
+        "fine_topology": 0.000228958,
+        "maps_topology": 0.004747167,
+        "terminal": 0.000131084,
+        "workspace_output": 5.8042e-05
+      },
+      "process_seconds_max": 0.022627083,
+      "process_seconds_median": 0.022421542,
+      "process_seconds_min": 0.022310708,
+      "retained_capacity_bytes": 3678524,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5423104,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000499333,
+        "decode": 0.002081541,
+        "fine_frame": 0.000236041,
+        "fine_topology": 0.0002285,
+        "maps_topology": 0.004738,
+        "terminal": 0.000131625,
+        "workspace_output": 2.0209e-05
+      },
+      "process_seconds_max": 0.019279333,
+      "process_seconds_median": 0.019140125,
+      "process_seconds_min": 0.019112958,
+      "retained_capacity_bytes": 3099100,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8126464,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000501458,
+        "decode": 0.011466541,
+        "fine_frame": 0.000236208,
+        "fine_topology": 0.000223375,
+        "maps_topology": 0.004761917,
+        "terminal": 0.000131791,
+        "workspace_output": 5.9583e-05
+      },
+      "process_seconds_max": 0.175993875,
+      "process_seconds_median": 0.173306625,
+      "process_seconds_min": 0.17283425,
+      "retained_capacity_bytes": 5713124,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7503872,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000510792,
+        "decode": 0.011350458,
+        "fine_frame": 0.000241667,
+        "fine_topology": 0.00022725,
+        "maps_topology": 0.004767834,
+        "terminal": 0.000130834,
+        "workspace_output": 2.4042e-05
+      },
+      "process_seconds_max": 0.127033625,
+      "process_seconds_median": 0.123349666,
+      "process_seconds_min": 0.123004916,
+      "retained_capacity_bytes": 5133700,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8290304,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000502166,
+        "decode": 0.011965125,
+        "fine_frame": 0.000234,
+        "fine_topology": 0.000224417,
+        "maps_topology": 0.004754584,
+        "terminal": 0.000133125,
+        "workspace_output": 6.3625e-05
+      },
+      "process_seconds_max": 0.175079458,
+      "process_seconds_median": 0.174230833,
+      "process_seconds_min": 0.173480416,
+      "retained_capacity_bytes": 5848764,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7634944,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000502792,
+        "decode": 0.012022625,
+        "fine_frame": 0.000231584,
+        "fine_topology": 0.000224125,
+        "maps_topology": 0.004754208,
+        "terminal": 0.000134292,
+        "workspace_output": 2.4291e-05
+      },
+      "process_seconds_max": 0.126228458,
+      "process_seconds_median": 0.124290125,
+      "process_seconds_min": 0.123631334,
+      "retained_capacity_bytes": 5269340,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6209536,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000502166,
+        "decode": 0.002622708,
+        "fine_frame": 0.000236875,
+        "fine_topology": 0.00022975,
+        "maps_topology": 0.004742166,
+        "terminal": 0.000131375,
+        "workspace_output": 5.9042e-05
+      },
+      "process_seconds_max": 0.033044708,
+      "process_seconds_median": 0.032304,
+      "process_seconds_min": 0.03221175,
+      "retained_capacity_bytes": 3814164,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5586944,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000509875,
+        "decode": 0.002687459,
+        "fine_frame": 0.000241209,
+        "fine_topology": 0.000228542,
+        "maps_topology": 0.004768666,
+        "terminal": 0.000131458,
+        "workspace_output": 2.2167e-05
+      },
+      "process_seconds_max": 0.028654666,
+      "process_seconds_median": 0.026259666,
+      "process_seconds_min": 0.026044667,
+      "retained_capacity_bytes": 3234740,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 10305536,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00051125,
+        "decode": 0.021344625,
+        "fine_frame": 0.0002335,
+        "fine_topology": 0.000226208,
+        "maps_topology": 0.004775958,
+        "terminal": 0.000135792,
+        "workspace_output": 7.2875e-05
+      },
+      "process_seconds_max": 0.383311833,
+      "process_seconds_median": 0.318794,
+      "process_seconds_min": 0.315644042,
+      "retained_capacity_bytes": 7883364,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 9666560,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000506959,
+        "decode": 0.02214675,
+        "fine_frame": 0.000243208,
+        "fine_topology": 0.000225583,
+        "maps_topology": 0.004756291,
+        "terminal": 0.000133834,
+        "workspace_output": 2.7458e-05
+      },
+      "process_seconds_max": 0.26283225,
+      "process_seconds_median": 0.223918291,
+      "process_seconds_min": 0.222055875,
+      "retained_capacity_bytes": 7303940,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6488064,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000501792,
+        "decode": 0.003905083,
+        "fine_frame": 0.000236791,
+        "fine_topology": 0.000229083,
+        "maps_topology": 0.004737542,
+        "terminal": 0.0001335,
+        "workspace_output": 5.6167e-05
+      },
+      "process_seconds_max": 0.053366041,
+      "process_seconds_median": 0.052364292,
+      "process_seconds_min": 0.052144834,
+      "retained_capacity_bytes": 4085444,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5832704,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000501583,
+        "decode": 0.003941125,
+        "fine_frame": 0.00023775,
+        "fine_topology": 0.0002295,
+        "maps_topology": 0.004744875,
+        "terminal": 0.000131209,
+        "workspace_output": 2.2083e-05
+      },
+      "process_seconds_max": 0.040276916,
+      "process_seconds_median": 0.039912542,
+      "process_seconds_min": 0.03981725,
+      "retained_capacity_bytes": 3506020,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7077888,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000499459,
+        "decode": 0.006641042,
+        "fine_frame": 0.000240542,
+        "fine_topology": 0.000231375,
+        "maps_topology": 0.004760417,
+        "terminal": 0.000136208,
+        "workspace_output": 7.1499e-05
+      },
+      "process_seconds_max": 0.099353,
+      "process_seconds_median": 0.09358175,
+      "process_seconds_min": 0.092644625,
+      "retained_capacity_bytes": 4628004,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6373376,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000503583,
+        "decode": 0.006360208,
+        "fine_frame": 0.000230708,
+        "fine_topology": 0.000229875,
+        "maps_topology": 0.00476125,
+        "terminal": 0.000132417,
+        "workspace_output": 2.5501e-05
+      },
+      "process_seconds_max": 0.069964959,
+      "process_seconds_median": 0.06773075,
+      "process_seconds_min": 0.067492542,
+      "retained_capacity_bytes": 4048580,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6062080,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000505209,
+        "decode": 0.002022291,
+        "fine_frame": 0.00023475,
+        "fine_topology": 0.000235125,
+        "maps_topology": 0.004767042,
+        "terminal": 0.000136334,
+        "workspace_output": 6.1417e-05
+      },
+      "process_seconds_max": 0.020495875,
+      "process_seconds_median": 0.019362959,
+      "process_seconds_min": 0.019033458,
+      "retained_capacity_bytes": 3678524,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5439488,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00051025,
+        "decode": 0.002139916,
+        "fine_frame": 0.000236917,
+        "fine_topology": 0.000232,
+        "maps_topology": 0.004787125,
+        "terminal": 0.0001365,
+        "workspace_output": 2.2958e-05
+      },
+      "process_seconds_max": 0.020648625,
+      "process_seconds_median": 0.017659292,
+      "process_seconds_min": 0.017388833,
+      "retained_capacity_bytes": 3099100,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8126464,
+      "phase_seconds_median": {
+        "coarse_frames": 0.0005075,
+        "decode": 0.011592542,
+        "fine_frame": 0.000230333,
+        "fine_topology": 0.000228542,
+        "maps_topology": 0.004773084,
+        "terminal": 0.000134833,
+        "workspace_output": 5.9917e-05
+      },
+      "process_seconds_max": 0.137447042,
+      "process_seconds_median": 0.134676583,
+      "process_seconds_min": 0.134450625,
+      "retained_capacity_bytes": 5713124,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7503872,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000501875,
+        "decode": 0.0113875,
+        "fine_frame": 0.000233209,
+        "fine_topology": 0.000222959,
+        "maps_topology": 0.004752708,
+        "terminal": 0.000133042,
+        "workspace_output": 2.6751e-05
+      },
+      "process_seconds_max": 0.099333166,
+      "process_seconds_median": 0.098801542,
+      "process_seconds_min": 0.098612167,
+      "retained_capacity_bytes": 5133700,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 8339456,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000507875,
+        "decode": 0.012192666,
+        "fine_frame": 0.000230084,
+        "fine_topology": 0.000229125,
+        "maps_topology": 0.004756292,
+        "terminal": 0.000133291,
+        "workspace_output": 6.6709e-05
+      },
+      "process_seconds_max": 0.142871875,
+      "process_seconds_median": 0.135928375,
+      "process_seconds_min": 0.135430458,
+      "retained_capacity_bytes": 5848764,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7700480,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000499708,
+        "decode": 0.011981917,
+        "fine_frame": 0.00023475,
+        "fine_topology": 0.000222167,
+        "maps_topology": 0.004772542,
+        "terminal": 0.000135917,
+        "workspace_output": 2.6416e-05
+      },
+      "process_seconds_max": 0.105482125,
+      "process_seconds_median": 0.100023667,
+      "process_seconds_min": 0.099356292,
+      "retained_capacity_bytes": 5269340,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6209536,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000509667,
+        "decode": 0.00272325,
+        "fine_frame": 0.000238666,
+        "fine_topology": 0.000229917,
+        "maps_topology": 0.004789459,
+        "terminal": 0.000135167,
+        "workspace_output": 5.9291e-05
+      },
+      "process_seconds_max": 0.028624958,
+      "process_seconds_median": 0.027873917,
+      "process_seconds_min": 0.027562042,
+      "retained_capacity_bytes": 3814164,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5570560,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000509708,
+        "decode": 0.002660875,
+        "fine_frame": 0.000235,
+        "fine_topology": 0.000230333,
+        "maps_topology": 0.004787083,
+        "terminal": 0.000135,
+        "workspace_output": 2.0916e-05
+      },
+      "process_seconds_max": 0.023842125,
+      "process_seconds_median": 0.02290125,
+      "process_seconds_min": 0.022776166,
+      "retained_capacity_bytes": 3234740,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 10305536,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000505,
+        "decode": 0.02113025,
+        "fine_frame": 0.000234291,
+        "fine_topology": 0.000224208,
+        "maps_topology": 0.004753209,
+        "terminal": 0.000133625,
+        "workspace_output": 6.4958e-05
+      },
+      "process_seconds_max": 0.248877708,
+      "process_seconds_median": 0.248295875,
+      "process_seconds_min": 0.24804325,
+      "retained_capacity_bytes": 7883364,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 9666560,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000505667,
+        "decode": 0.021291959,
+        "fine_frame": 0.000233875,
+        "fine_topology": 0.000222833,
+        "maps_topology": 0.004760542,
+        "terminal": 0.000134542,
+        "workspace_output": 2.9125e-05
+      },
+      "process_seconds_max": 0.185224833,
+      "process_seconds_median": 0.178463667,
+      "process_seconds_min": 0.176486333,
+      "retained_capacity_bytes": 7303940,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6488064,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000510875,
+        "decode": 0.003980917,
+        "fine_frame": 0.000236208,
+        "fine_topology": 0.000232875,
+        "maps_topology": 0.004756583,
+        "terminal": 0.000135166,
+        "workspace_output": 5.7875e-05
+      },
+      "process_seconds_max": 0.042178708,
+      "process_seconds_median": 0.041574667,
+      "process_seconds_min": 0.041231792,
+      "retained_capacity_bytes": 4085444,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 5849088,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000507417,
+        "decode": 0.003877,
+        "fine_frame": 0.000237625,
+        "fine_topology": 0.000230292,
+        "maps_topology": 0.004752875,
+        "terminal": 0.000134541,
+        "workspace_output": 2.1916e-05
+      },
+      "process_seconds_max": 0.033919875,
+      "process_seconds_median": 0.033730625,
+      "process_seconds_min": 0.03347,
+      "retained_capacity_bytes": 3506020,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 7045120,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000502042,
+        "decode": 0.006338791,
+        "fine_frame": 0.000233083,
+        "fine_topology": 0.000223666,
+        "maps_topology": 0.004760958,
+        "terminal": 0.000132584,
+        "workspace_output": 6.3417e-05
+      },
+      "process_seconds_max": 0.073563209,
+      "process_seconds_median": 0.071067625,
+      "process_seconds_min": 0.070806292,
+      "retained_capacity_bytes": 4628004,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 6389760,
+      "phase_seconds_median": {
+        "coarse_frames": 0.000501959,
+        "decode": 0.006308375,
+        "fine_frame": 0.000233417,
+        "fine_topology": 0.00022325,
+        "maps_topology": 0.004753875,
+        "terminal": 0.000133834,
+        "workspace_output": 2.2209e-05
+      },
+      "process_seconds_max": 0.055616625,
+      "process_seconds_median": 0.055382291,
+      "process_seconds_min": 0.055208167,
+      "retained_capacity_bytes": 4048580,
+      "route": "pcg"
+    }
+  ]
+}

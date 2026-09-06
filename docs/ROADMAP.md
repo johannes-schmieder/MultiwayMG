@@ -130,8 +130,9 @@ cycle](ISSUE5_PREPARED_CYCLE.md) adds a bounded terminal and complete applicatio
 scratch. [Prepared serial LSMR](ISSUE5_PREPARED_LSMR.md) now integrates the
 original-operator certificate and bounded 1–32 RHS scalar reuse.
 [Prepared PCG](ISSUE5_PREPARED_PCG.md) adds the same complete ownership/certificate
-boundary. The [complete-cost serial benchmark](ISSUE5_SERIAL_BENCHMARK.md) is now in
-qualification; M4 remains open pending validated evidence and merge.
+boundary. The [complete-cost serial benchmark](ISSUE5_SERIAL_BENCHMARK.md) now preserves
+validated Mac/Linux evidence. Native LSMR certificate rejections require a
+separate certificate-aware stopping increment before M4 closes.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

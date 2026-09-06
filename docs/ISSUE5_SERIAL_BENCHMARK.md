@@ -113,6 +113,8 @@ remain authoritative; this timing harness does not replace them.
 
 Raw local runs and exact executables live under
 `$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/`.
-Compact canonical summaries and archive checksums will be recorded under
-`benchmarks/results/2026-09-06/` after collection. Hosted-runner artifacts provide
+The [canonical v1 evidence](../benchmarks/results/2026-09-06/prepared-serial-v1/README.md)
+records the Mac smoke/development and Linux smoke, including reproducible native
+LSMR stops rejected by the original certificate. Their hashes and complete raw
+archives are preserved; certificate-aware continuation is the next M4 increment. Hosted-runner artifacts provide
 an additional temporary copy. No calibration or campaign holdout seeds are used.
