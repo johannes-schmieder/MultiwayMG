@@ -74,3 +74,13 @@ validated Mac smoke/development and Linux smoke, and the evidence PR have
 qualified and merged. Then use this source/executable as the engineering
 baseline for M5 memory/traffic changes; keep the original upstream baselines
 separate for the eventual full competitive campaign.
+
+## Recorded outcome
+
+The [canonical v2 evidence](../benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md)
+passes the predeclared PCG/gated-LSMR coverage gate on Mac smoke/development and
+Linux smoke. Each route certifies all 2,400 measured columns per profile; native
+LSMR preserves 560 smoke and 935 development rejections. Fixed-config numerical,
+work and capacity repeats pass; no process errors, timeouts or RSS-budget failures.
+Source `3c1273e` preceded collection. Gated/native LSMR retain the same arrays;
+all candidate/final work is charged. M4 awaits final evidence-head CI and merge.

@@ -31,7 +31,9 @@ benchmark](docs/ISSUE5_SERIAL_BENCHMARK.md) preserves repeatable Mac/Linux
 development evidence. A separate [certificate-gated LSMR
 route](docs/ISSUE5_CERTIFICATE_GATED_LSMR.md) continues early native stops using
 the same workspace. The [three-route development comparison](docs/ISSUE5_GATED_SERIAL_COMPARISON.md)
-now qualifies complete certified coverage before M4 closes.
+has complete PCG/gated-LSMR certification on Mac smoke/development and Linux
+smoke, with native-control negatives retained. See [the evidence](benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md)
+for complete costs and limits. Final evidence CI/merge precedes M5 optimization.
 
 ## The problem
 

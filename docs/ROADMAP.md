@@ -134,7 +134,9 @@ boundary. The [complete-cost serial benchmark](ISSUE5_SERIAL_BENCHMARK.md) now p
 validated Mac/Linux evidence. The [certificate-gated LSMR
 route](ISSUE5_CERTIFICATE_GATED_LSMR.md) addresses native stopping rejections
 without restarting. The [three-route development comparison](ISSUE5_GATED_SERIAL_COMPARISON.md)
-now qualifies complete certified coverage before M4 closes.
+has complete PCG/gated-LSMR certification on Mac smoke/development and Linux
+smoke, with native-control negatives retained. See [the evidence](../benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md)
+for complete costs and limits. Final evidence CI/merge precedes M5 optimization.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

@@ -301,3 +301,14 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   comparison code passes the required local Rust 1.85 checks and the extended
   evidence suite before its recipe/source commit. No v2 timings have been
   collected at this checkpoint.
+
+- M4e measured source `3c1273eb00698c59b27eb79d1539c137fe3632a9` passes the
+  [frozen v2 coverage gate](../benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md):
+  PCG and gated LSMR each certify 2,400/2,400 columns on Mac smoke/development
+  and Linux smoke. Native control retains 560 smoke and 935 development rejects.
+  All fixed-config numerical/work/payload repeats pass, with no process errors,
+  timeouts or RSS-budget failures. Original Mac native/PCG numerical results
+  match v1 in all 504 corresponding processes per profile. Gated/native LSMR
+  retain identical array capacities. Source workflows `34063265592`/`34063265572`
+  and PR workflows `34063297969`/`34063297964` passed. Final evidence-head CI and
+  merge are the remaining M4 boundary; no competitive qualification is claimed.

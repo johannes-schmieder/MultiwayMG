@@ -1,0 +1,44 @@
+[
+  {
+    "archive_bytes": 1325726,
+    "archive_sha256": "07024789df3da3f0e65bd36fc8ac9de088c38e3924d8d9672870394c7774e209",
+    "binary_sha256": "ba16853e5440b3146709e1b4384331258d3cca7104be4104c192bad119907f46",
+    "github_run": null,
+    "label": "mac-smoke",
+    "manifest_sha256": "4e47aaa4e2f1b44cdf541eff5266823fcd4068d147983df088832ede90896d7b",
+    "policy_sha256": "692cac2457499c812a2c2033501f2f7dfaa2fadb5929c800eabf5bc93774124a",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-gated-3c1273e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-gated-3c1273e.tar.gz",
+    "source_commit": "3c1273eb00698c59b27eb79d1539c137fe3632a9",
+    "source_tree": "c20fe869d6a9050b24cb5cc71e6601994f839060",
+    "summary_sha256": "30c0fc6f7d21a62a4a5cb60d2421cb4fab56451f0befb4139dfc8b7fd2830422"
+  },
+  {
+    "archive_bytes": 1395505,
+    "archive_sha256": "47c3f8d11f5930fd50a1574608ea8415824345adcd59d3f62f53dcd63fc6335e",
+    "binary_sha256": "ba16853e5440b3146709e1b4384331258d3cca7104be4104c192bad119907f46",
+    "github_run": null,
+    "label": "mac-development",
+    "manifest_sha256": "4ffcda297f4f5ca46d8947bc0b9aa39ba3d3c768ef22c4b9dd4be670396b1dca",
+    "policy_sha256": "692cac2457499c812a2c2033501f2f7dfaa2fadb5929c800eabf5bc93774124a",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-gated-3c1273e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-gated-3c1273e.tar.gz",
+    "source_commit": "3c1273eb00698c59b27eb79d1539c137fe3632a9",
+    "source_tree": "c20fe869d6a9050b24cb5cc71e6601994f839060",
+    "summary_sha256": "d3700feb5d3eb73e99ea61424b4957a844a06cf38973e1b43c686f7003990ef9"
+  },
+  {
+    "archive_bytes": 1358534,
+    "archive_sha256": "5f1050e6641de7231ac61197813ee6c8c484e2c2fee7ac4af0d8954f704da482",
+    "binary_sha256": "a15721d3df3cb64ab822eaccc0f84f8684e936a7565efac6fbdcb3b6ef24a941",
+    "github_run": 34063265592,
+    "label": "linux-smoke",
+    "manifest_sha256": "5c453b32f63fbbf268d47aef1622aaa41a543ff53c9116e93d6ecf550b840e8a",
+    "policy_sha256": "692cac2457499c812a2c2033501f2f7dfaa2fadb5929c800eabf5bc93774124a",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-gated-3c1273e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-gated-3c1273e.tar.gz",
+    "source_commit": "3c1273eb00698c59b27eb79d1539c137fe3632a9",
+    "source_tree": "c20fe869d6a9050b24cb5cc71e6601994f839060",
+    "summary_sha256": "7e41161c3524887d12be19d7c58882d6dcb154d45b44d932d9b2e5b54704bc9a"
+  }
+]
