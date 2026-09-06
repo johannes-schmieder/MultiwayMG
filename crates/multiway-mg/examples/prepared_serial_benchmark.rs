@@ -4,9 +4,10 @@ use multiway_incidence::{
     PreparedThreeWayTopology, ThreeWayWeightFrame, WeightFrameInput,
 };
 use multiway_mg::{
-    LeastSquaresStopReason, PcgStopReason, PreparedHierarchyPayloadReport, PreparedLsmrOptions,
-    PreparedLsmrWorkspace, PreparedMapHierarchy, PreparedPcgOptions, PreparedPcgWorkspace,
-    solve_prepared_least_squares, solve_prepared_pcg_least_squares,
+    LeastSquaresStopReason, PcgStopReason, PreparedHierarchyPayloadReport,
+    PreparedLsmrGateWorkReport, PreparedLsmrOptions, PreparedLsmrWorkspace, PreparedMapHierarchy,
+    PreparedPcgOptions, PreparedPcgWorkspace, solve_prepared_least_squares,
+    solve_prepared_least_squares_with_certificate_gate, solve_prepared_pcg_least_squares,
 };
 use std::{
     error::Error,
@@ -142,6 +143,7 @@ struct Column {
     projection: Option<f64>,
     work: [usize; 8],
     fingerprint: u64,
+    gate: Option<PreparedLsmrGateWorkReport>,
 }
 struct Record {
     start: Instant,
@@ -150,6 +152,7 @@ struct Record {
     columns: [Option<Column>; 32],
     failed_work: Option<[usize; 8]>,
     failed_nanos: u128,
+    failed_gate: Option<PreparedLsmrGateWorkReport>,
     dimensions: Option<[usize; 5]>,
     payload: Option<[usize; 9]>,
     total: u128,
@@ -163,6 +166,7 @@ impl Record {
             columns: [None; 32],
             failed_work: None,
             failed_nanos: 0,
+            failed_gate: None,
             dimensions: None,
             payload: None,
             total: 0,
@@ -224,6 +228,26 @@ fn lsmr_work(w: multiway_mg::PreparedLsmrWorkReport) -> [usize; 8] {
         w.certificate.incidence_applications,
         w.certificate.adjoint_applications,
     ]
+}
+fn lsmr_full_work(
+    w: multiway_mg::PreparedLsmrWorkReport,
+    gate: PreparedLsmrGateWorkReport,
+) -> [usize; 8] {
+    let mut result = lsmr_work(w);
+    result[5] = gate.projection_applications;
+    result[6] += gate.candidate_certificate.incidence_applications;
+    result[7] += gate.candidate_certificate.adjoint_applications;
+    result
+}
+fn emit_gate(tag: &str, prefix: &str, gate: PreparedLsmrGateWorkReport) {
+    println!(
+        "{tag}{prefix}\t{}\t{}\t{}\t{}\t{}",
+        gate.candidate_checks,
+        gate.candidate_vetoes,
+        gate.projection_applications,
+        gate.candidate_certificate.incidence_applications,
+        gate.candidate_certificate.adjoint_applications
+    );
 }
 fn run(route: &str, r: &mut Record) -> Result<()> {
     let input = phase!(
@@ -319,6 +343,7 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
                         projection: Some(p.rhs_projection_norm),
                         work: pcg_work(p.work),
                         fingerprint,
+                        gate: None,
                     });
                 }
                 Err(error) => {
@@ -345,16 +370,26 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
         for j in 0..input.rhs {
             r.stage = "solve_certificate_output";
             let start = Instant::now();
-            let solved = solve_prepared_least_squares(
-                &hierarchy,
-                &input.targets[j * e..(j + 1) * e],
-                &mut workspace,
-            );
+            let solved = if route == "lsmr-gated" {
+                solve_prepared_least_squares_with_certificate_gate(
+                    &hierarchy,
+                    &input.targets[j * e..(j + 1) * e],
+                    &mut workspace,
+                )
+                .map(|r| (r.coefficients, r.report.solve))
+            } else {
+                solve_prepared_least_squares(
+                    &hierarchy,
+                    &input.targets[j * e..(j + 1) * e],
+                    &mut workspace,
+                )
+                .map(|r| (r.coefficients, r.report))
+            };
             match solved {
-                Ok(result) => {
-                    output[j * n..(j + 1) * n].copy_from_slice(result.coefficients);
+                Ok((coefficients, p)) => {
+                    output[j * n..(j + 1) * n].copy_from_slice(coefficients);
                     let fingerprint = fingerprint(&output[j * n..(j + 1) * n]);
-                    let p = result.report;
+                    let gate = workspace.last_gate_work();
                     r.columns[j] = Some(Column {
                         nanos: start.elapsed().as_nanos(),
                         prefix_nanos: r.start.elapsed().as_nanos(),
@@ -366,13 +401,18 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
                         residual: p.native_residual_norm,
                         secondary: p.native_normal_equation_residual,
                         projection: None,
-                        work: lsmr_work(p.work),
+                        work: lsmr_full_work(p.work, gate),
                         fingerprint,
+                        gate: Some(gate),
                     });
                 }
                 Err(error) => {
                     r.failed_nanos = start.elapsed().as_nanos();
-                    r.failed_work = Some(lsmr_work(workspace.last_work()));
+                    r.failed_gate = Some(workspace.last_gate_work());
+                    r.failed_work = Some(lsmr_full_work(
+                        workspace.last_work(),
+                        workspace.last_gate_work(),
+                    ));
                     return Err(error.into());
                 }
             }
@@ -383,14 +423,14 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
 }
 fn main() {
     let route = std::env::args().nth(1).unwrap_or_default();
-    if route != "pcg" && route != "lsmr" {
-        eprintln!("usage: prepared_serial_benchmark pcg|lsmr < canonical-input.bin");
+    if route != "pcg" && route != "lsmr" && route != "lsmr-gated" {
+        eprintln!("usage: prepared_serial_benchmark pcg|lsmr|lsmr-gated < canonical-input.bin");
         std::process::exit(2);
     }
     let mut r = Record::new();
     let outcome = run(&route, &mut r);
     r.total = r.start.elapsed().as_nanos(); // Includes failure unwind and all owned-state destruction.
-    println!("schema\t1");
+    println!("schema\t2");
     println!("route\t{route}");
     let pcg = PreparedPcgOptions::default();
     let lsmr = PreparedLsmrOptions::default();
@@ -458,6 +498,9 @@ fn main() {
             print!("\t{count}");
         }
         println!();
+        if let Some(gate) = c.gate {
+            emit_gate("gate", &format!("\t{index}"), gate);
+        }
     }
     if let Some(work) = r.failed_work {
         print!("failed_work\t{}", r.failed_nanos);
@@ -465,6 +508,9 @@ fn main() {
             print!("\t{count}");
         }
         println!();
+    }
+    if let Some(gate) = r.failed_gate {
+        emit_gate("failed_gate", "", gate);
     }
     let measured: u128 = r.failed_nanos
         + r.phases.iter().sum::<u128>()

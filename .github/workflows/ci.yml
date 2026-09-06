@@ -266,9 +266,13 @@ jobs:
           if-no-files-found: error
 
   prepared-serial:
-    name: Prepared serial complete-cost evidence
+    name: Prepared serial evidence (${{ matrix.policy }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        policy: [native, gated]
     env:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
@@ -278,12 +282,15 @@ jobs:
           toolchain: "1.85.0"
       - uses: Swatinem/rust-cache@v2
       - name: Collect the frozen serial development smoke
-        run: python3 scripts/prepared_serial.py "$RUNNER_TEMP/prepared-serial-smoke" --profile smoke
+        run: python3 scripts/prepared_serial.py "$RUNNER_TEMP/prepared-serial-${{ matrix.policy }}-smoke" --profile smoke --policy "${{ matrix.policy }}"
       - name: Validate complete evidence, including scientific rejections
-        run: python3 scripts/validate_prepared_serial.py "$RUNNER_TEMP/prepared-serial-smoke"
+        run: python3 scripts/validate_prepared_serial.py "$RUNNER_TEMP/prepared-serial-${{ matrix.policy }}-smoke"
+      - name: Require complete candidate-route certification
+        if: matrix.policy == 'gated'
+        run: python3 scripts/validate_prepared_serial.py "$RUNNER_TEMP/prepared-serial-gated-smoke" --require-certification
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: prepared-serial-smoke
-          path: ${{ runner.temp }}/prepared-serial-smoke/
+          name: prepared-serial-${{ matrix.policy }}-smoke
+          path: ${{ runner.temp }}/prepared-serial-${{ matrix.policy }}-smoke/
           if-no-files-found: error

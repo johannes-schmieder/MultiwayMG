@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "scope": "prepared_serial_development_only",
+  "families": [
+    "uniform",
+    "communities",
+    "chain"
+  ],
+  "weights": [
+    "unit",
+    "heterogeneous"
+  ],
+  "widths": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    17,
+    32
+  ],
+  "routes": [
+    "pcg",
+    "lsmr",
+    "lsmr-gated"
+  ],
+  "repetitions": 5,
+  "warmups": 1,
+  "seeds": [
+    10001
+  ],
+  "profiles": {
+    "smoke": {
+      "levels": 16,
+      "draws": 512,
+      "depth": 1
+    },
+    "development": {
+      "levels": 128,
+      "draws": 16384,
+      "depth": 3
+    }
+  },
+  "certificate_tolerance": 1e-08,
+  "native_tolerance": 1e-08,
+  "max_iterations": 1000,
+  "local_window": 8,
+  "pcg_recompute_interval": 25,
+  "terminal_relative_tolerance": 1e-12,
+  "process_budget_bytes": 1073741824,
+  "timeout_seconds": 60,
+  "workers": 1,
+  "map": "contiguous_halving_supplied",
+  "input_boundary": "canonical_unique_tuples",
+  "warmup_scope": "separate_process_os_cache_only",
+  "build_args": [
+    "cargo",
+    "build",
+    "--locked",
+    "--release",
+    "-p",
+    "multiway-mg",
+    "--no-default-features",
+    "--features",
+    "lsmr",
+    "--example",
+    "prepared_serial_benchmark"
+  ],
+  "revision": 2,
+  "eligible_routes": [
+    "pcg",
+    "lsmr-gated"
+  ],
+  "comparison": "unchanged native controls plus original-certificate-gated LSMR; development only"
+}

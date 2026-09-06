@@ -118,3 +118,9 @@ records the Mac smoke/development and Linux smoke, including reproducible native
 LSMR stops rejected by the original certificate. Their hashes and complete raw
 archives are preserved; certificate-aware continuation is the next M4 increment. Hosted-runner artifacts provide
 an additional temporary copy. No calibration or campaign holdout seeds are used.
+
+The [separate gated comparison v2](ISSUE5_GATED_SERIAL_COMPARISON.md) adds a third
+route on the same scientific inputs. Current probe schema 2 also reports native
+LSMR final projection counts, absent from the older schema-1 work counter but
+already charged in its elapsed solve phase. Use the measured source tools for
+historical artifacts; do not reinterpret or overwrite their recorded schema.

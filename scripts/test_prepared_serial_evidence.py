@@ -4,14 +4,16 @@ import json
 from pathlib import Path
 import unittest
 
-from prepared_serial import (ROOT, POLICY, SOURCE_FILES, THREAD_ENV, PHASES, PAYLOAD, WORK,
+from prepared_serial import (ROOT, POLICY, POLICY_GATED, SOURCE_FILES, THREAD_ENV, PHASES, PAYLOAD, WORK, GATE_KEYS,
                              MEMORY_SCOPES, cases, case_id, generate, sha, resources, parse_output)
 from validate_prepared_serial import validate_manifest, unique_object
 
 
-def fixture():
+def fixture(gated=False):
     policy = json.loads((ROOT / POLICY).read_text())
     policy.update(families=['uniform'], weights=['unit'], widths=[1], repetitions=2)
+    if gated:
+        policy.update(routes=['pcg','lsmr','lsmr-gated'],eligible_routes=['pcg','lsmr-gated'],repetitions=3)
     hashes = {name: sha(name.encode()) for name in SOURCE_FILES}
     meta = dict(source_clean=True, source_commit='a'*40, source_tree='b'*40, binary_sha256='c'*64,
                 source_hashes=hashes, rustc='rustc 1.85.0 test\nhost: test', target='test',
@@ -25,22 +27,33 @@ def fixture():
     data, dims = generate(policy, 'smoke', case)
     config = {key: policy[key] for key in ['native_tolerance', 'certificate_tolerance', 'max_iterations',
               'local_window', 'pcg_recompute_interval', 'terminal_relative_tolerance', 'process_budget_bytes']}
-    for kind, reps in [('warmup',1), ('measured',2)]:
+    if gated:
+        manifest['policy_path'] = POLICY_GATED
+        manifest['policy_sha256'] = hashes[POLICY_GATED]
+    for kind, reps in [('warmup',1), ('measured',policy['repetitions'])]:
         for repeat in range(reps):
-            order = policy['routes'][repeat%2:] + policy['routes'][:repeat%2]
+            order = policy['routes'][repeat%len(policy['routes']):] + policy['routes'][:repeat%len(policy['routes'])]
             for pos, route in enumerate(order):
                 work = dict.fromkeys(WORK, 0)
-                work.update(certificate_incidence=1, certificate_adjoint=2, hierarchy=2)
+                work.update(certificate_incidence=1, certificate_adjoint=2, hierarchy=2, projection=1)
                 payload = dict.fromkeys(PAYLOAD, 1000)
                 payload['caller_arrays'] = 1000000
                 payload['total'] = sum(payload[k] for k in PAYLOAD[:-1])
-                probe = dict(schema=1, route=route, status='complete', config=config,
+                probe = dict(schema=2, route=route, status='complete', config=config,
                              dimensions=dims | {'terminal_rank':20}, payload_bytes=payload,
                              phases_ns=dict.fromkeys(PHASES,10), total_ns=100, overhead_ns=20,
                              columns=[dict(index=0, elapsed_ns=10, prefix_ns=80, accepted=True,
                                 native_converged=True, native_stop='Converged' if route=='pcg' else 'NormalEquationTolerance',
                                 iterations=2, certificate=1e-10, native_residual=1e-10, native_secondary=1e-10,
                                 native_projection=0.0 if route=='pcg' else None, coefficient_fnv1a64='d'*16, work=work)])
+                if route != 'pcg':
+                    gate = dict.fromkeys(GATE_KEYS, 0)
+                    gate['projection_applications'] = 1
+                    if route == 'lsmr-gated':
+                        gate.update(candidate_checks=2,candidate_vetoes=1,projection_applications=3,
+                                    certificate_incidence=2,certificate_adjoint=4)
+                        work.update(projection=3,certificate_incidence=3,certificate_adjoint=6)
+                    probe['columns'][0]['gate'] = gate
                 manifest['runs'].append(dict(case_id=case_id(case), case=case, dimensions=dims,
                     route=route, kind=kind, repeat=repeat, position=pos, input_sha256=sha(data),
                     process_wall_ns=1000000, exit_code=0, raw_stdout_sha256='e'*64, raw_stderr_sha256='f'*64,
@@ -166,6 +179,7 @@ class EvidenceTests(unittest.TestCase):
             p = run['probe']
             p.update(status='error', error_stage='solve_certificate_output', error='breakdown', columns=[],
                      failed_action_ns=10, failed_work=dict.fromkeys(WORK,0))
+            if run['route'] != 'pcg': p['failed_gate'] = dict.fromkeys(GATE_KEYS,0)
         self.assertEqual(self.validate()['failed_measured_runs'],4)
         p = self.manifest['runs'][0]['probe']
         p['failed_action_ns'] = 0; p['overhead_ns'] = 30
@@ -207,6 +221,63 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(first, generate(self.policy, 'smoke', case)[0])
         self.assertEqual(sha(first), 'cf7ead4d18d3790b0a81d5e5331cf15eee918e453fb272e3295237ff53aafbf8')
         self.assertEqual(second[-dims['tuples']*8:], b'\0'*(dims['tuples']*8))
+
+    def test_gated_policy_preserves_native_negatives_and_requires_both_candidate_routes(self):
+        manifest, policy, hashes = fixture(gated=True)
+        for run in manifest['runs']:
+            if run['route'] == 'lsmr':
+                run['probe']['columns'][0].update(certificate=2e-8, accepted=False)
+        result = validate_manifest(manifest,policy,hashes)
+        self.assertFalse(result['all_measured_columns_certified'])
+        self.assertTrue(result['eligible_routes_certified'])
+        self.assertEqual(result['measured_columns'],9)
+        self.assertEqual(result['route_coverage']['lsmr']['rejected'],3)
+        self.assertEqual(result['route_coverage']['lsmr-gated']['certified'],3)
+        self.assertFalse(result['competitive_qualification'])
+        for run in manifest['runs']:
+            if run['route']=='lsmr-gated':
+                column=run['probe']['columns'][0]
+                column.update(certificate=2e-8,accepted=False)
+                column['gate'].update(candidate_checks=1,candidate_vetoes=1,projection_applications=2,
+                                      certificate_incidence=1,certificate_adjoint=2)
+                column['work'].update(projection=2,certificate_incidence=2,certificate_adjoint=4)
+        self.assertFalse(validate_manifest(manifest,policy,hashes)['eligible_routes_certified'])
+
+    def test_missing_gate_and_omitted_veto_or_projection_work_are_rejected(self):
+        manifest,policy,hashes=fixture(gated=True)
+        alterations=[lambda c:c.pop('gate'), lambda c:c['gate'].update(candidate_vetoes=3),
+                     lambda c:c['gate'].update(certificate_incidence=0),
+                     lambda c:c['work'].update(certificate_incidence=1),
+                     lambda c:c['work'].update(projection=1)]
+        for alter in alterations:
+            changed=copy.deepcopy(manifest)
+            for run in changed['runs']:
+                if run['route']=='lsmr-gated': alter(run['probe']['columns'][0])
+            with self.assertRaises(ValueError):validate_manifest(changed,policy,hashes)
+
+    def test_native_route_cannot_hide_candidate_checks(self):
+        for run in self.manifest['runs']:
+            if run['route']=='lsmr':
+                run['probe']['columns'][0]['gate'].update(candidate_checks=1,candidate_vetoes=1)
+        with self.assertRaises(ValueError):self.validate()
+
+    def test_changed_eligible_routes_and_wrong_three_route_rotation_fail(self):
+        manifest,policy,hashes=fixture(gated=True)
+        changed=copy.deepcopy(manifest)
+        changed['policy']['eligible_routes']=['pcg']
+        with self.assertRaises(ValueError):validate_manifest(changed,policy,hashes)
+        manifest['runs'][-1],manifest['runs'][-2]=manifest['runs'][-2],manifest['runs'][-1]
+        with self.assertRaises(ValueError):validate_manifest(manifest,policy,hashes)
+
+    def test_contradictory_failed_gate_and_passing_gate_rejection_are_invalid(self):
+        manifest,policy,hashes=fixture(gated=True)
+        for run in manifest['runs']:
+            if run['route']=='lsmr-gated':run['probe']['failed_gate']=dict.fromkeys(GATE_KEYS,0)
+        with self.assertRaises(ValueError):validate_manifest(manifest,policy,hashes)
+        manifest,policy,hashes=fixture(gated=True)
+        for run in manifest['runs']:
+            if run['route']=='lsmr-gated':run['probe']['columns'][0].update(certificate=2e-8,accepted=False)
+        with self.assertRaises(ValueError):validate_manifest(manifest,policy,hashes)
 
 
 if __name__ == '__main__': unittest.main()

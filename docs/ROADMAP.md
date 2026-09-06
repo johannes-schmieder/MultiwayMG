@@ -133,7 +133,8 @@ original-operator certificate and bounded 1–32 RHS scalar reuse.
 boundary. The [complete-cost serial benchmark](ISSUE5_SERIAL_BENCHMARK.md) now preserves
 validated Mac/Linux evidence. The [certificate-gated LSMR
 route](ISSUE5_CERTIFICATE_GATED_LSMR.md) addresses native stopping rejections
-without restarting; its qualification and charged development coverage remain M4 work.
+without restarting. The [three-route development comparison](ISSUE5_GATED_SERIAL_COMPARISON.md)
+now qualifies complete certified coverage before M4 closes.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

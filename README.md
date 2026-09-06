@@ -30,7 +30,8 @@ recurrence and independent certificate. The [complete-cost serial
 benchmark](docs/ISSUE5_SERIAL_BENCHMARK.md) preserves repeatable Mac/Linux
 development evidence. A separate [certificate-gated LSMR
 route](docs/ISSUE5_CERTIFICATE_GATED_LSMR.md) continues early native stops using
-the same workspace; its qualification and charged development coverage remain M4 work.
+the same workspace. The [three-route development comparison](docs/ISSUE5_GATED_SERIAL_COMPARISON.md)
+now qualifies complete certified coverage before M4 closes.
 
 ## The problem
 
