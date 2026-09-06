@@ -4,6 +4,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 
 use schwarz_precond::{LsmrStopReason, MlsmrOptions, Operator, SolveError, mlsmr};
 
+use crate::certificate::{self, CertificateScratch, ensure_finite};
 use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
 
 /// Options for the rectangular weighted least-squares solve.
@@ -352,61 +353,11 @@ fn certify_normal_equations(
 ) -> Result<f64, MultiwayError> {
     ensure_finite(targets, "certificate targets")?;
     ensure_finite(coefficients, "certificate coefficients")?;
-    let mut fitted = vec![0.0; problem.tuple_count()];
-    problem.apply_incidence(coefficients, &mut fitted)?;
-    for (value, &target) in fitted.iter_mut().zip(targets) {
-        *value = target - *value;
-    }
-    ensure_finite(&fitted, "certificate residual")?;
-    // Reject overflow and a nonzero product rounding to zero before reduction.
-    // A finite input alone does not imply B' W y is representable in f64.
-    validate_weighted_products(problem, &fitted)?;
-    validate_weighted_products(problem, targets)?;
-    let gradient = problem.rhs_from_targets(&fitted)?;
-    let reference = problem.rhs_from_targets(targets)?;
-    ensure_finite(&gradient, "certificate gradient")?;
-    ensure_finite(&reference, "certificate reference")?;
-    let numerator = norm(&gradient);
-    let denominator = norm(&reference);
-    ensure_finite(&[numerator, denominator], "certificate norms")?;
-    let residual = if denominator == 0.0 && numerator == 0.0 {
-        0.0
-    } else {
-        numerator / denominator
-    };
-    ensure_finite(&[residual], "certificate relative residual")?;
-    if numerator != 0.0 && residual == 0.0 {
-        return Err(MultiwayError::NumericalFailure {
-            context: "certificate ratio underflow",
-        });
-    }
-    Ok(residual)
+    let mut scratch = CertificateScratch::try_new(problem.tuple_count(), problem.dimension())?;
+    certificate::certify(problem, targets, coefficients, &mut scratch)
 }
 
-fn ensure_finite(values: &[f64], context: &'static str) -> Result<(), MultiwayError> {
-    if values.iter().all(|value| value.is_finite()) {
-        Ok(())
-    } else {
-        Err(MultiwayError::NumericalFailure { context })
-    }
-}
-
-fn validate_weighted_products(
-    problem: &ThreeWayProblem,
-    values: &[f64],
-) -> Result<(), MultiwayError> {
-    for (&weight, &value) in problem.weights().iter().zip(values) {
-        let product = weight * value;
-        if !product.is_finite() || (value != 0.0 && product == 0.0) {
-            return Err(MultiwayError::NumericalFailure {
-                context: "certificate weighted product",
-            });
-        }
-    }
-    Ok(())
-}
-
-fn convert_stop_reason(reason: LsmrStopReason) -> LeastSquaresStopReason {
+pub(crate) fn convert_stop_reason(reason: LsmrStopReason) -> LeastSquaresStopReason {
     match reason {
         LsmrStopReason::ZeroRhs => LeastSquaresStopReason::ZeroRightHandSide,
         LsmrStopReason::InitialNormalEquationResidualZero => {
@@ -426,19 +377,6 @@ fn external_error(context: &'static str, error: impl std::fmt::Display) -> Solve
         context,
         message: error.to_string(),
     }
-}
-
-fn norm(values: &[f64]) -> f64 {
-    let scale = values.iter().copied().map(f64::abs).fold(0.0, f64::max);
-    if scale == 0.0 {
-        return 0.0;
-    }
-    scale
-        * values
-            .iter()
-            .map(|value| (value / scale) * (value / scale))
-            .sum::<f64>()
-            .sqrt()
 }
 
 #[cfg(test)]

@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c fixed-cycle qualification, drivers next |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; complete LSMR/certificate/RHS qualification; PCG/economics next |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -222,3 +222,13 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   avoid manufacturing an ordinary problem just to factor the terminal. M4 remains
   open for outer drivers, certificate, bounded RHS reuse and complete economics.
   See [`ISSUE5_PREPARED_CYCLE.md`](ISSUE5_PREPARED_CYCLE.md).
+
+- M4c cycle PR #40 merged as `347210d612b3b374c5b52bc7d2f30d41ef244447`.
+  Reviewed source `aa98a53bc376665c14a24c7d561f1250b76596d9` passed source workflows
+  34055873544/34055873557 and PR workflows 34055875700/34055875819;
+  post-merge workflows 34056313663/34056313711 passed on the identical tree.
+- M4c complete LSMR increment integrates the exact current-frame cycle, shared
+  original-operator certificate, native/accepted diagnostic separation, complete
+  payload admission/work counts and bounded scalar RHS1–32 reuse. PCG and a
+  complete-cost serial benchmark surface remain required before M4 closes.
+  See [`ISSUE5_PREPARED_LSMR.md`](ISSUE5_PREPARED_LSMR.md).

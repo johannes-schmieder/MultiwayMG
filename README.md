@@ -23,7 +23,9 @@ the structural and numerical ownership boundary for the serial solver.
 [Prepared projection and MAP](docs/ISSUE5_PREPARED_MAP.md) share the ordinary
 scalar arithmetic with exact current-frame scratch. The [prepared serial
 V-cycle](docs/ISSUE5_PREPARED_CYCLE.md) now applies all levels with a bounded dense
-terminal; complete outer-driver integration remains in progress.
+terminal. [Complete prepared LSMR](docs/ISSUE5_PREPARED_LSMR.md) adds independent
+original-operator certification and bounded scalar reuse across 1–32 RHS.
+Prepared PCG and complete-cost benchmark integration remain in progress.
 
 ## The problem
 

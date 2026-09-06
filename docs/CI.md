@@ -72,3 +72,10 @@ executable measures complete first/repeat32 calls, failure/recovery and exact
 terminal/workspace release; unit tests inject errors/unwinds at all 31 workspace
 reservation boundaries of a two-transition case. The ordinary path continues to
 run all existing scientific gates through the same shared recurrence.
+
+M4c's complete prepared LSMR increment matches the ordinary driver on all eight
+recursive fixtures, including bitwise coefficients/certificates, native diagnostics
+and action counts. Permanent allocation tests cover complete first/RHS1,2,4,8,16,
+17,32 solves, exact 48-array release and zero-allocation budget rejection. The
+feature-independent original-operator certificate has separate allocation/failure
+coverage and shares its implementation with the existing ordinary driver.

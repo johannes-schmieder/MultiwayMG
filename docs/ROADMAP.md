@@ -127,7 +127,9 @@ weight replay](ISSUE5_PREPARED_HIERARCHY.md) now preserve one exact fine generat
 across all supplied levels. [Prepared projection and MAP](ISSUE5_PREPARED_MAP.md)
 now share scalar kernels with ordinary owners. The [prepared serial fixed
 cycle](ISSUE5_PREPARED_CYCLE.md) adds a bounded terminal and complete application
-scratch; outer-driver/certificate/RHS integration is still open.
+scratch. [Prepared serial LSMR](ISSUE5_PREPARED_LSMR.md) now integrates the
+original-operator certificate and bounded 1–32 RHS scalar reuse; prepared PCG
+and complete-cost benchmark integration remain open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

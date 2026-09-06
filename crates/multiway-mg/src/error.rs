@@ -8,6 +8,10 @@ use multiway_incidence::IncidenceError;
 #[derive(Debug, Error)]
 #[non_exhaustive]
 pub enum MultiwayError {
+    /// Structured failure from the reusable modified-LSMR driver.
+    #[cfg(feature = "lsmr")]
+    #[error("prepared modified LSMR failed: {0}")]
+    PreparedLsmr(schwarz_precond::SolveError),
     /// A derived numerical quantity is non-finite or not representable as required.
     #[error("unrepresentable numerical quantity in {context}")]
     NumericalFailure {
