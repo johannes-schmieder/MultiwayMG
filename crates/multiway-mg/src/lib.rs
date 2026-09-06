@@ -182,9 +182,11 @@ pub use multiway_incidence::{
 
 #[cfg(feature = "lsmr")]
 pub use prepared_lsmr::{
+    PreparedGatedLsmrReport, PreparedGatedLsmrResult, PreparedLsmrGateWorkReport,
     PreparedLsmrOptions, PreparedLsmrPayloadReport, PreparedLsmrReport, PreparedLsmrResult,
     PreparedLsmrWorkReport, PreparedLsmrWorkspace, solve_prepared_least_squares,
-    solve_prepared_least_squares_batch_into,
+    solve_prepared_least_squares_batch_into, solve_prepared_least_squares_with_certificate_gate,
+    solve_prepared_least_squares_with_certificate_gate_batch_into,
 };
 
 #[cfg(test)]

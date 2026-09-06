@@ -7,7 +7,8 @@ use crate::{
 };
 use multiway_incidence::{PreparedStructuralProjectionWorkspace, ThreeWayOperatorView};
 use schwarz_precond::{
-    MlsmrWorkspace, MlsmrWorkspaceOptions, OperatorMut, SolveError, mlsmr_with_workspace,
+    LsmrCandidateGate, MlsmrWorkspace, MlsmrWorkspaceOptions, OperatorMut, SolveError,
+    mlsmr_with_workspace, mlsmr_with_workspace_and_candidate_gate,
 };
 
 /// Fixed configuration of one prepared serial LSMR workspace.
@@ -92,6 +93,40 @@ pub struct PreparedLsmrResult<'workspace> {
     pub report: PreparedLsmrReport,
 }
 
+/// Additional original-operator gate work, including admitted failed attempts.
+///
+/// Native operator/hierarchy actions and the final certificate remain in
+/// [`PreparedLsmrWorkReport`]. Add this candidate certificate work to that final
+/// certificate inventory. Projection counts include candidate and final outer
+/// projections, excluding projections inside the fixed hierarchy.
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub struct PreparedLsmrGateWorkReport {
+    /// Resumable native tolerance candidates checked by the original certificate.
+    pub candidate_checks: usize,
+    /// Candidates whose finite certificate required continuing the same recurrence.
+    pub candidate_vetoes: usize,
+    /// All attempted outer structural projections, including the final candidate.
+    pub projection_applications: usize,
+    /// Additional candidate certificates; the final certificate is counted separately.
+    pub candidate_certificate: CertificateWorkReport,
+}
+/// Complete native diagnostics, independent final acceptance and continuation work.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct PreparedGatedLsmrReport {
+    /// Native solve/final original certificate; inspect `solve.accepted` before use.
+    pub solve: PreparedLsmrReport,
+    /// Extra gate work and outer projections, including all candidate vetoes.
+    pub gate: PreparedLsmrGateWorkReport,
+}
+/// Borrowed result from original-certificate-gated serial LSMR.
+#[derive(Debug)]
+pub struct PreparedGatedLsmrResult<'workspace> {
+    /// Structurally projected coefficients; final acceptance is separate.
+    pub coefficients: &'workspace [f64],
+    /// Complete diagnostics, acceptance and gate work.
+    pub report: PreparedGatedLsmrReport,
+}
+
 /// Complete retained payload for a prepared LSMR solve and declared caller state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PreparedLsmrPayloadReport {
@@ -121,6 +156,7 @@ pub struct PreparedLsmrWorkspace<'owner> {
     coefficients: Vec<f64>,
     options: PreparedLsmrOptions,
     last_work: PreparedLsmrWorkReport,
+    last_gate_work: PreparedLsmrGateWorkReport,
 }
 impl std::fmt::Debug for PreparedLsmrWorkspace<'_> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -175,6 +211,7 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
             coefficients: vector(fine.diagonal().len())?,
             options,
             last_work: PreparedLsmrWorkReport::default(),
+            last_gate_work: PreparedLsmrGateWorkReport::default(),
         })
     }
     /// Complete requested construction payload including exact immutable owners.
@@ -219,6 +256,15 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
     pub const fn last_work(&self) -> PreparedLsmrWorkReport {
         self.last_work
     }
+    /// Extra gate/candidate work and outer projections from the last admitted solve.
+    ///
+    /// Native solves perform no candidate checks but still record their final
+    /// outer projection here. Static rejection preserves both work inventories.
+    #[must_use]
+    pub const fn last_gate_work(&self) -> PreparedLsmrGateWorkReport {
+        self.last_gate_work
+    }
+
     /// Exact hierarchy validation, without preparation or allocation.
     pub fn validate_for(&self, hierarchy: &PreparedMapHierarchy<'_>) -> Result<(), MultiwayError> {
         if !core::ptr::eq(self.hierarchy, hierarchy) {
@@ -281,6 +327,45 @@ pub fn solve_prepared_least_squares<'workspace>(
     targets: &[f64],
     workspace: &'workspace mut PreparedLsmrWorkspace<'_>,
 ) -> Result<PreparedLsmrResult<'workspace>, MultiwayError> {
+    let report = solve_impl(hierarchy, targets, workspace, false)?;
+    Ok(PreparedLsmrResult {
+        coefficients: &workspace.coefficients,
+        report,
+    })
+}
+
+/// Continue resumable native LSMR stops until the original certificate allows stopping.
+///
+/// Uses exactly the same native recurrence, tolerances, history and workspace.
+/// A veto preserves the current Krylov state; it does not restart or reprepare.
+/// Each gate projects into existing candidate scratch and certifies against the
+/// exact submitted tuple operator. All gate actions are counted separately.
+///
+/// Limits, exact breakdown and non-resumable native exits still return candidates.
+/// Every exit gets a fresh independent final certificate; inspect
+/// `report.solve.accepted`. Errors publish no candidate and preserve attempted
+/// work. The ordinary native route remains available without gate checks.
+pub fn solve_prepared_least_squares_with_certificate_gate<'workspace>(
+    hierarchy: &PreparedMapHierarchy<'_>,
+    targets: &[f64],
+    workspace: &'workspace mut PreparedLsmrWorkspace<'_>,
+) -> Result<PreparedGatedLsmrResult<'workspace>, MultiwayError> {
+    let solve = solve_impl(hierarchy, targets, workspace, true)?;
+    Ok(PreparedGatedLsmrResult {
+        coefficients: &workspace.coefficients,
+        report: PreparedGatedLsmrReport {
+            solve,
+            gate: workspace.last_gate_work,
+        },
+    })
+}
+
+fn solve_impl(
+    hierarchy: &PreparedMapHierarchy<'_>,
+    targets: &[f64],
+    workspace: &mut PreparedLsmrWorkspace<'_>,
+    use_gate: bool,
+) -> Result<PreparedLsmrReport, MultiwayError> {
     workspace.validate_for(hierarchy)?;
     let fine = workspace.hierarchy.frames().fine();
     if targets.len() != fine.weights().len() {
@@ -292,6 +377,7 @@ pub fn solve_prepared_least_squares<'workspace>(
     }
     ensure_finite(targets, "prepared LSMR targets")?;
     workspace.last_work = PreparedLsmrWorkReport::default();
+    workspace.last_gate_work = PreparedLsmrGateWorkReport::default();
     for ((out, &y), &root) in workspace
         .weighted_targets
         .iter_mut()
@@ -316,15 +402,41 @@ pub fn solve_prepared_least_squares<'workspace>(
         count: 0,
         error: None,
     };
-    let candidate = mlsmr_with_workspace(
-        &mut operator,
-        &workspace.weighted_targets,
-        &mut preconditioner,
-        workspace.options.tolerance,
-        workspace.options.max_iterations,
-        MlsmrWorkspaceOptions::default(),
-        &mut workspace.recurrence,
-    );
+    let mut gate_error = None;
+    let candidate = if use_gate {
+        let mut gate = OriginalCertificateGate {
+            view: fine.operator_view(),
+            targets,
+            coefficients: &mut workspace.coefficients,
+            projection: &mut workspace.projection,
+            certificate: &mut workspace.certificate,
+            tolerance: workspace.options.certificate_tolerance,
+            work: &mut workspace.last_gate_work,
+            error: None,
+        };
+        let result = mlsmr_with_workspace_and_candidate_gate(
+            &mut operator,
+            &workspace.weighted_targets,
+            &mut preconditioner,
+            workspace.options.tolerance,
+            workspace.options.max_iterations,
+            MlsmrWorkspaceOptions::default(),
+            &mut gate,
+            &mut workspace.recurrence,
+        );
+        gate_error = gate.error.take();
+        result
+    } else {
+        mlsmr_with_workspace(
+            &mut operator,
+            &workspace.weighted_targets,
+            &mut preconditioner,
+            workspace.options.tolerance,
+            workspace.options.max_iterations,
+            MlsmrWorkspaceOptions::default(),
+            &mut workspace.recurrence,
+        )
+    };
     workspace.last_work.weighted_incidence_applications = operator.forward;
     workspace.last_work.weighted_adjoint_applications = operator.adjoint;
     workspace.last_work.hierarchy_applications = preconditioner.count;
@@ -332,12 +444,15 @@ pub fn solve_prepared_least_squares<'workspace>(
         .error
         .take()
         .or_else(|| preconditioner.error.take())
+        .or(gate_error)
     {
         return Err(error);
     }
     let candidate = candidate.map_err(MultiwayError::PreparedLsmr)?;
     let native = candidate.diagnostics;
     workspace.coefficients.copy_from_slice(candidate.x);
+    workspace.last_gate_work.projection_applications =
+        work_add(workspace.last_gate_work.projection_applications, 1)?;
     fine.topology().project_structural_range_with_workspace(
         &mut workspace.coefficients,
         &mut workspace.projection,
@@ -351,7 +466,7 @@ pub fn solve_prepared_least_squares<'workspace>(
     );
     workspace.last_work.certificate = workspace.certificate.last_work();
     let certificate = certificate?;
-    let report = PreparedLsmrReport {
+    Ok(PreparedLsmrReport {
         native_converged: native.converged,
         native_stop_reason: crate::lsmr::convert_stop_reason(native.stop_reason),
         iterations: native.iterations,
@@ -360,11 +475,77 @@ pub fn solve_prepared_least_squares<'workspace>(
         certified_normal_equation_residual: certificate,
         accepted: certificate <= workspace.options.certificate_tolerance,
         work: workspace.last_work,
-    };
-    Ok(PreparedLsmrResult {
-        coefficients: &workspace.coefficients,
-        report,
     })
+}
+
+struct OriginalCertificateGate<'borrow, 'owner> {
+    view: ThreeWayOperatorView<'owner, 'owner>,
+    targets: &'borrow [f64],
+    coefficients: &'borrow mut [f64],
+    projection: &'borrow mut PreparedStructuralProjectionWorkspace<'owner>,
+    certificate: &'borrow mut PreparedCertificateWorkspace<'owner, 'owner>,
+    tolerance: f64,
+    work: &'borrow mut PreparedLsmrGateWorkReport,
+    error: Option<MultiwayError>,
+}
+impl OriginalCertificateGate<'_, '_> {
+    fn check(&mut self, correction: &[f64], offset: Option<&[f64]>) -> Result<bool, MultiwayError> {
+        self.work.candidate_checks = work_add(self.work.candidate_checks, 1)?;
+        ensure_finite(correction, "prepared LSMR gate candidate")?;
+        if let Some(offset) = offset {
+            for (i, value) in self.coefficients.iter_mut().enumerate() {
+                *value = correction[i] + offset[i];
+            }
+        } else {
+            self.coefficients.copy_from_slice(correction);
+        }
+        self.work.projection_applications = work_add(self.work.projection_applications, 1)?;
+        self.view
+            .frame()
+            .topology()
+            .project_structural_range_with_workspace(self.coefficients, self.projection)?;
+        ensure_finite(self.coefficients, "prepared LSMR projected gate candidate")?;
+        let result = certify_prepared_normal_equations(
+            self.view,
+            self.targets,
+            self.coefficients,
+            self.certificate,
+        );
+        let work = self.certificate.last_work();
+        self.work.candidate_certificate.incidence_applications = work_add(
+            self.work.candidate_certificate.incidence_applications,
+            work.incidence_applications,
+        )?;
+        self.work.candidate_certificate.adjoint_applications = work_add(
+            self.work.candidate_certificate.adjoint_applications,
+            work.adjoint_applications,
+        )?;
+        let allowed = result? <= self.tolerance;
+        if !allowed {
+            self.work.candidate_vetoes = work_add(self.work.candidate_vetoes, 1)?;
+        }
+        Ok(allowed)
+    }
+}
+impl LsmrCandidateGate for OriginalCertificateGate<'_, '_> {
+    fn allow_stop(
+        &mut self,
+        correction: &[f64],
+        offset: Option<&[f64]>,
+    ) -> Result<bool, SolveError> {
+        self.check(correction, offset).map_err(|error| {
+            self.error = Some(error);
+            SolveError::Synchronization {
+                context: "prepared LSMR original certificate gate",
+            }
+        })
+    }
+}
+fn work_add(a: usize, b: usize) -> Result<usize, MultiwayError> {
+    a.checked_add(b)
+        .ok_or(MultiwayError::WorkspaceSizeOverflow {
+            context: "prepared LSMR work counter",
+        })
 }
 
 struct IncidenceAction<'state> {
@@ -458,6 +639,72 @@ pub fn solve_prepared_least_squares_batch_into(
     reports: &mut [Option<PreparedLsmrReport>],
     workspace: &mut PreparedLsmrWorkspace<'_>,
 ) -> Result<(), MultiwayError> {
+    let (rows, dimension) = validate_batch(
+        hierarchy,
+        targets,
+        columns,
+        coefficients,
+        reports.len(),
+        workspace,
+    )?;
+    reports.fill(None);
+    for (column, report) in reports.iter_mut().enumerate() {
+        let result = solve_prepared_least_squares(
+            hierarchy,
+            &targets[column * rows..(column + 1) * rows],
+            workspace,
+        )?;
+        coefficients[column * dimension..(column + 1) * dimension]
+            .copy_from_slice(result.coefficients);
+        *report = Some(result.report);
+    }
+    Ok(())
+}
+
+/// Bounded 1–32 RHS scalar reuse with original-certificate-gated continuation.
+///
+/// Static validation precedes mutation. Completed candidates/reports are retained
+/// even when acceptance is false; inspect `report.solve.accepted`. On an error,
+/// the failed/unprocessed output suffix is unchanged, its reports are `None`,
+/// and both workspace work getters retain the failed attempt. No allocation or
+/// parallelism is introduced; targets/coefficients are column-major.
+pub fn solve_prepared_least_squares_with_certificate_gate_batch_into(
+    hierarchy: &PreparedMapHierarchy<'_>,
+    targets: &[f64],
+    columns: usize,
+    coefficients: &mut [f64],
+    reports: &mut [Option<PreparedGatedLsmrReport>],
+    workspace: &mut PreparedLsmrWorkspace<'_>,
+) -> Result<(), MultiwayError> {
+    let (rows, dimension) = validate_batch(
+        hierarchy,
+        targets,
+        columns,
+        coefficients,
+        reports.len(),
+        workspace,
+    )?;
+    reports.fill(None);
+    for (column, report) in reports.iter_mut().enumerate() {
+        let result = solve_prepared_least_squares_with_certificate_gate(
+            hierarchy,
+            &targets[column * rows..(column + 1) * rows],
+            workspace,
+        )?;
+        coefficients[column * dimension..(column + 1) * dimension]
+            .copy_from_slice(result.coefficients);
+        *report = Some(result.report);
+    }
+    Ok(())
+}
+fn validate_batch(
+    hierarchy: &PreparedMapHierarchy<'_>,
+    targets: &[f64],
+    columns: usize,
+    coefficients: &[f64],
+    reports_length: usize,
+    workspace: &PreparedLsmrWorkspace<'_>,
+) -> Result<(usize, usize), MultiwayError> {
     workspace.validate_for(hierarchy)?;
     if !(1..=32).contains(&columns) {
         return Err(MultiwayError::DimensionMismatch {
@@ -486,23 +733,112 @@ pub fn solve_prepared_least_squares_batch_into(
             coefficient_length,
             coefficients.len(),
         ),
-        ("prepared RHS reports", columns, reports.len()),
+        ("prepared RHS reports", columns, reports_length),
     ] {
         if expected != actual {
             return Err(crate::error::dimension(context, expected, actual));
         }
     }
     ensure_finite(targets, "prepared RHS panel")?;
-    reports.fill(None);
-    for (column, report) in reports.iter_mut().enumerate() {
-        let result = solve_prepared_least_squares(
-            hierarchy,
-            &targets[column * rows..(column + 1) * rows],
-            workspace,
-        )?;
-        coefficients[column * dimension..(column + 1) * dimension]
-            .copy_from_slice(result.coefficients);
-        *report = Some(result.report);
+    Ok((rows, dimension))
+}
+
+#[cfg(test)]
+mod gate_tests {
+    use super::*;
+    use multiway_incidence::{PreparedThreeWayTopology, ThreeWayWeightFrame, WeightFrameInput};
+
+    #[test]
+    fn gate_errors_preserve_original_type_and_count_attempted_work() {
+        let topology = PreparedThreeWayTopology::try_from_collapsed([1; 3], &[[0; 3]]).unwrap();
+        let fine = ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::UnitTuples).unwrap();
+        let mut projection = topology.try_projection_workspace().unwrap();
+        let mut certificate = PreparedCertificateWorkspace::try_new(&fine).unwrap();
+        let mut coefficients = [0.0; 3];
+        let mut work = PreparedLsmrGateWorkReport::default();
+        let mut gate = OriginalCertificateGate {
+            view: fine.operator_view(),
+            targets: &[0.0],
+            coefficients: &mut coefficients,
+            projection: &mut projection,
+            certificate: &mut certificate,
+            tolerance: 1e-8,
+            work: &mut work,
+            error: None,
+        };
+        assert!(gate.allow_stop(&[f64::NAN, 0.0, 0.0], None).is_err());
+        assert!(matches!(
+            gate.error.take(),
+            Some(MultiwayError::NumericalFailure {
+                context: "prepared LSMR gate candidate"
+            })
+        ));
+        assert_eq!(gate.work.candidate_checks, 1);
+        assert_eq!(gate.work.projection_applications, 0);
+        assert_eq!(
+            gate.work.candidate_certificate,
+            CertificateWorkReport::default()
+        );
+        assert!(
+            gate.allow_stop(&[f64::MAX, f64::MAX, -f64::MAX], None)
+                .is_err()
+        );
+        assert!(matches!(
+            gate.error.take(),
+            Some(MultiwayError::NumericalFailure {
+                context: "prepared LSMR projected gate candidate"
+            })
+        ));
+        assert_eq!(gate.work.projection_applications, 1);
+        assert_eq!(
+            gate.work.candidate_certificate,
+            CertificateWorkReport::default()
+        );
+        assert!(gate.allow_stop(&[f64::MAX; 3], None).is_err());
+        assert!(matches!(
+            gate.error.take(),
+            Some(MultiwayError::NumericalFailure { .. })
+        ));
+        assert_eq!(gate.work.projection_applications, 2);
+        assert_eq!(
+            gate.work.candidate_certificate,
+            CertificateWorkReport {
+                incidence_applications: 1,
+                adjoint_applications: 0
+            }
+        );
+        assert!(gate.allow_stop(&[0.0; 3], None).unwrap());
+        assert_eq!(gate.work.candidate_checks, 4);
+        assert_eq!(gate.work.projection_applications, 3);
+        assert_eq!(
+            gate.work.candidate_certificate,
+            CertificateWorkReport {
+                incidence_applications: 2,
+                adjoint_applications: 2
+            }
+        );
+        // Finite vectors can still fail the original certificate's representability boundary.
+        gate.targets = &[f64::MAX];
+        assert!(gate.allow_stop(&[0.0; 3], None).is_err());
+        assert!(matches!(
+            gate.error.take(),
+            Some(MultiwayError::NumericalFailure { .. })
+        ));
+        assert_eq!(
+            gate.work.candidate_certificate,
+            CertificateWorkReport {
+                incidence_applications: 3,
+                adjoint_applications: 4
+            }
+        );
+        gate.targets = &[0.0];
+        gate.work.candidate_checks = usize::MAX;
+        assert!(gate.allow_stop(&[0.0; 3], None).is_err());
+        assert!(matches!(
+            gate.error.take(),
+            Some(MultiwayError::WorkspaceSizeOverflow {
+                context: "prepared LSMR work counter"
+            })
+        ));
     }
-    Ok(())
 }

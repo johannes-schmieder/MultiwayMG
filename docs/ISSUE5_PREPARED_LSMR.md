@@ -84,8 +84,10 @@ The feature-independent certificate test separately measures three-array setup,
 first/repeated numerical failures and recovery. Prior component-level injection
 covers all fork and hierarchy reservation boundaries.
 
-M4 remains open for the prepared PCG driver and a reproducible complete-cost
-serial benchmark/evidence surface. Automatic routing, changed-weight quality
+Prepared PCG and the complete-cost serial v1 benchmark are now merged. Its
+LSMR certificate rejections motivated the separate [certificate-gated
+route](ISSUE5_CERTIFICATE_GATED_LSMR.md); M4 remains open pending that route
+and its declared complete-cost development coverage. Automatic routing, changed-weight quality
 admission, CPU scaling and competitive qualification gates remain unchanged.
 No competitive performance result is claimed from these correctness/allocation
 checks, and the campaign holdout has not been used for tuning.

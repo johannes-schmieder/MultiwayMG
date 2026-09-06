@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG merged PR #42; serial evidence PR #43; certificate-aware LSMR required |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG merged PR #42; serial evidence merged PR #43; certificate-aware LSMR integration in qualification |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -267,3 +267,16 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   every candidate certificate, handle exact breakdown/iteration limits, retain
   independent final certification and zero-allocation storage. Use a separately
   declared development comparison, not retuned or overwritten v1 results.
+
+- M4 serial evidence PR #43 merged as `285f1e9d07c2880f6975a39b302178b0cb24349c`.
+  Final source/PR workflows `34059873790`/`34059873640` and
+  `34059875980`/`34059875996` passed; post-merge `34060024104`/`34060024117` passed.
+- M4d dependency candidate gate qualified and merged in within PR #2 as
+  `cb20b27a7137804202be39976415618686a144de`; its post-merge CI passed. Both
+  downstream pins now move together to that revision. The [separate prepared
+  certificate-gated route](ISSUE5_CERTIFICATE_GATED_LSMR.md) reuses all arrays,
+  preserves native APIs, records every extra check/veto and retains fresh final
+  independent acceptance. After its source/PR qualification, freeze a distinct
+  three-route comparison (PCG, native LSMR, gated LSMR) on the unchanged v1
+  development inputs, with five rotated repetitions and all candidate work.
+  Record full gated coverage before closing M4 or moving to M5 optimization.
