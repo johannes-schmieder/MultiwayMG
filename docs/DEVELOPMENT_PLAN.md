@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a pass removal and scratch liveness |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a merged; M5b opt-in kernel attribution |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -348,3 +348,33 @@ The next [grouped-layout experiment design](ISSUE5_GROUPED_LAYOUT_DESIGN.md) spe
 exact owner binding, stable counting placement, u32/checked-wide indices, construction
 cursors, three traffic alternatives and later thread/panel ownership. It is a design
 for measurement, not an implemented layout or selected default.
+
+- M5a PR #46 merged as `c5d623bc5323a92189664a16cce7b4238b431f0e` after
+  final source workflows `34064935550`/`34064935556` and PR workflows
+  `34064937694`/`34064937677` passed. Post-merge workflows
+  `34065082134`/`34065082163` also passed.
+- M5b [opt-in diagnostic profiling](ISSUE5_KERNEL_PROFILING.md) adds fixed
+  current-thread nested attribution, actual level inventory and independently
+  validated complete work/certificate accounting. Disabled builds contain no
+  hooks. Active collection preserves solve bits/work and zero allocations.
+  The frozen diagnostic policy covers existing smoke/development widths and a
+  separately declared n4096, depth8, single-RHS expanded diagnostic. It is not
+  authoritative performance evidence. Source/recipe must be committed before
+  collection; no M5b timing exists at this checkpoint. Grouped layout remains
+  a measured hypothesis; M5 and M6–M10 stay open.
+
+- M5b source `42d6f527bdf09a2b38769d5724b88829cce97877` passes the
+  [complete diagnostic gates](../benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md):
+  Mac smoke/development and Linux smoke each certify 4,800 measured columns;
+  expanded RHS1 certifies 60/60. No invalid profiles, errors, timeouts or RSS
+  failures. All 1,008 Mac smoke/development processes exactly match corresponding
+  uninstrumented M5a input/numerical/work/fingerprint/payload records. Source
+  workflows `34067385068`/`34067385070` and PR `34067398348`/`34067398347` passed.
+  Final evidence-head CI/merge remains before the next increment.
+- Diagnostic attribution prioritizes grouped MAP/Gramian above small transfer
+  and certificate-reference savings. Expanded nonterminal tuple complexity is
+  6.71x uniform / 5.58x communities / 1.81x chain; account for grouping at each
+  level, compare explicit fine-only/all-nonterminal choices, and preserve scalar
+  scatter. Coefficient halving alone is insufficient for M6 admission. These
+  instrumented, cache-bounded development results select the next experiment,
+  not a default layout or a competitive route. M5–M10 remain open.

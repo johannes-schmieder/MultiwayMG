@@ -241,6 +241,10 @@ pub fn solve_prepared_pcg_least_squares<'workspace>(
     targets: &[f64],
     workspace: &'workspace mut PreparedPcgWorkspace<'_>,
 ) -> Result<PreparedPcgResult<'workspace>, MultiwayError> {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::PreparedPcg);
+
     workspace.validate_for(hierarchy)?;
     let fine = workspace.hierarchy.frames().fine();
     if targets.len() != fine.weights().len() {

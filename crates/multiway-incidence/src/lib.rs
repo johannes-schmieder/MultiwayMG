@@ -15,6 +15,9 @@ mod kernels;
 mod operator_view;
 mod prepared;
 mod problem;
+/// Explicit serial diagnostic timing, absent unless the profiling feature is enabled.
+#[cfg(feature = "profiling")]
+pub mod profiling;
 mod symbolic;
 mod topology;
 mod weight_frame;

@@ -1,0 +1,1934 @@
+{
+  "all_measured_columns_certified": true,
+  "authoritative_performance_measurement": false,
+  "certified_columns": 60,
+  "competitive_qualification": false,
+  "diagnostic_gate_passed": true,
+  "eligible_routes": [
+    "pcg",
+    "lsmr-gated"
+  ],
+  "eligible_routes_certified": true,
+  "expected_runs": 72,
+  "failed_measured_runs": 0,
+  "invalid_profile_reports": 0,
+  "kernel_profiles": [
+    {
+      "callback_ns_median": 826794000,
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 65974
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 37216
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 9170
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 3584
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 1792
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 896
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 448
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 224
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 112
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 12,
+          "exclusive_ns_median": 2461711,
+          "inclusive_ns_median": 8809542
+        },
+        "cycle": {
+          "calls_per_batch": 1476,
+          "exclusive_ns_median": 29749683,
+          "inclusive_ns_median": 1297679635
+        },
+        "dense_terminal": {
+          "calls_per_batch": 164,
+          "exclusive_ns_median": 412665,
+          "inclusive_ns_median": 412665
+        },
+        "gramian": {
+          "calls_per_batch": 2624,
+          "exclusive_ns_median": 141183010,
+          "inclusive_ns_median": 141183010
+        },
+        "incidence": {
+          "calls_per_batch": 175,
+          "exclusive_ns_median": 10918666,
+          "inclusive_ns_median": 10918666
+        },
+        "map_sweep": {
+          "calls_per_batch": 2624,
+          "exclusive_ns_median": 433017789,
+          "inclusive_ns_median": 433017789
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 38348000,
+          "inclusive_ns_median": 826664542
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "projection": {
+          "calls_per_batch": 9360,
+          "exclusive_ns_median": 112924315,
+          "inclusive_ns_median": 112924315
+        },
+        "prolongation": {
+          "calls_per_batch": 1312,
+          "exclusive_ns_median": 2544148,
+          "inclusive_ns_median": 2544148
+        },
+        "restriction": {
+          "calls_per_batch": 1312,
+          "exclusive_ns_median": 7683855,
+          "inclusive_ns_median": 7683855
+        },
+        "rhs": {
+          "calls_per_batch": 24,
+          "exclusive_ns_median": 5613419,
+          "inclusive_ns_median": 5613419
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 164,
+          "exclusive_ns_median": 37969047,
+          "inclusive_ns_median": 37969047
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 163,
+          "exclusive_ns_median": 2640784,
+          "inclusive_ns_median": 12860620
+        }
+      },
+      "route": "lsmr-gated",
+      "unattributed_ns_median": 127792
+    },
+    {
+      "callback_ns_median": 860104250,
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 65974
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 37216
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 9170
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 3584
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 1792
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 896
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 448
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 224
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 112
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 205999,
+          "inclusive_ns_median": 745083
+        },
+        "cycle": {
+          "calls_per_batch": 1566,
+          "exclusive_ns_median": 31694461,
+          "inclusive_ns_median": 1377909299
+        },
+        "dense_terminal": {
+          "calls_per_batch": 174,
+          "exclusive_ns_median": 438332,
+          "inclusive_ns_median": 438332
+        },
+        "gramian": {
+          "calls_per_batch": 2965,
+          "exclusive_ns_median": 192760673,
+          "inclusive_ns_median": 192760673
+        },
+        "incidence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 62375,
+          "inclusive_ns_median": 62375
+        },
+        "map_sweep": {
+          "calls_per_batch": 2784,
+          "exclusive_ns_median": 460316708,
+          "inclusive_ns_median": 460316708
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 16206420,
+          "inclusive_ns_median": 858925292
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 33333,
+          "inclusive_ns_median": 859967167
+        },
+        "projection": {
+          "calls_per_batch": 10448,
+          "exclusive_ns_median": 146790415,
+          "inclusive_ns_median": 146790415
+        },
+        "prolongation": {
+          "calls_per_batch": 1392,
+          "exclusive_ns_median": 2714306,
+          "inclusive_ns_median": 2714306
+        },
+        "restriction": {
+          "calls_per_batch": 1392,
+          "exclusive_ns_median": 8235030,
+          "inclusive_ns_median": 8235030
+        },
+        "rhs": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 710666,
+          "inclusive_ns_median": 710666
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        }
+      },
+      "route": "pcg",
+      "unattributed_ns_median": 136458
+    },
+    {
+      "callback_ns_median": 539592292,
+      "case_id": "chain-unit-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 65974
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 37216
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 9170
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 3584
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 1792
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 896
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 448
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 224
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 112
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 17,
+          "exclusive_ns_median": 3378880,
+          "inclusive_ns_median": 12272417
+        },
+        "cycle": {
+          "calls_per_batch": 972,
+          "exclusive_ns_median": 18981828,
+          "inclusive_ns_median": 836782706
+        },
+        "dense_terminal": {
+          "calls_per_batch": 108,
+          "exclusive_ns_median": 265627,
+          "inclusive_ns_median": 265627
+        },
+        "gramian": {
+          "calls_per_batch": 1728,
+          "exclusive_ns_median": 91039315,
+          "inclusive_ns_median": 91039315
+        },
+        "incidence": {
+          "calls_per_batch": 124,
+          "exclusive_ns_median": 7550833,
+          "inclusive_ns_median": 7550833
+        },
+        "map_sweep": {
+          "calls_per_batch": 1728,
+          "exclusive_ns_median": 279556743,
+          "inclusive_ns_median": 279556743
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 24792719,
+          "inclusive_ns_median": 539467083
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "projection": {
+          "calls_per_batch": 6173,
+          "exclusive_ns_median": 73293973,
+          "inclusive_ns_median": 73293973
+        },
+        "prolongation": {
+          "calls_per_batch": 864,
+          "exclusive_ns_median": 1627879,
+          "inclusive_ns_median": 1627879
+        },
+        "restriction": {
+          "calls_per_batch": 864,
+          "exclusive_ns_median": 4956115,
+          "inclusive_ns_median": 4956115
+        },
+        "rhs": {
+          "calls_per_batch": 34,
+          "exclusive_ns_median": 7856081,
+          "inclusive_ns_median": 7856081
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 108,
+          "exclusive_ns_median": 24631999,
+          "inclusive_ns_median": 24631999
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 107,
+          "exclusive_ns_median": 1593707,
+          "inclusive_ns_median": 8101496
+        }
+      },
+      "route": "lsmr-gated",
+      "unattributed_ns_median": 123708
+    },
+    {
+      "callback_ns_median": 547844667,
+      "case_id": "chain-unit-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 65974
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 37216
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 9170
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 3584
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 1792
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 896
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 448
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 224
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 112
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 198709,
+          "inclusive_ns_median": 718750
+        },
+        "cycle": {
+          "calls_per_batch": 1017,
+          "exclusive_ns_median": 19896030,
+          "inclusive_ns_median": 876621412
+        },
+        "dense_terminal": {
+          "calls_per_batch": 113,
+          "exclusive_ns_median": 271997,
+          "inclusive_ns_median": 271997
+        },
+        "gramian": {
+          "calls_per_batch": 1926,
+          "exclusive_ns_median": 122760664,
+          "inclusive_ns_median": 122760664
+        },
+        "incidence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 59959,
+          "inclusive_ns_median": 59959
+        },
+        "map_sweep": {
+          "calls_per_batch": 1808,
+          "exclusive_ns_median": 293120177,
+          "inclusive_ns_median": 293120177
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 10259430,
+          "inclusive_ns_median": 546730791
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 34042,
+          "inclusive_ns_median": 547721333
+        },
+        "projection": {
+          "calls_per_batch": 6786,
+          "exclusive_ns_median": 93429132,
+          "inclusive_ns_median": 93429132
+        },
+        "prolongation": {
+          "calls_per_batch": 904,
+          "exclusive_ns_median": 1700225,
+          "inclusive_ns_median": 1700225
+        },
+        "restriction": {
+          "calls_per_batch": 904,
+          "exclusive_ns_median": 5196788,
+          "inclusive_ns_median": 5196788
+        },
+        "rhs": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 690416,
+          "inclusive_ns_median": 690416
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        }
+      },
+      "route": "pcg",
+      "unattributed_ns_median": 123334
+    },
+    {
+      "callback_ns_median": 168169209,
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69627
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67550
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66300
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 64042
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 51744
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 16094
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 2051
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 259
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 2,
+          "exclusive_ns_median": 433084,
+          "inclusive_ns_median": 1623958
+        },
+        "cycle": {
+          "calls_per_batch": 117,
+          "exclusive_ns_median": 2373964,
+          "inclusive_ns_median": 563887043
+        },
+        "dense_terminal": {
+          "calls_per_batch": 13,
+          "exclusive_ns_median": 32167,
+          "inclusive_ns_median": 32167
+        },
+        "gramian": {
+          "calls_per_batch": 208,
+          "exclusive_ns_median": 38545626,
+          "inclusive_ns_median": 38545626
+        },
+        "incidence": {
+          "calls_per_batch": 14,
+          "exclusive_ns_median": 960626,
+          "inclusive_ns_median": 960626
+        },
+        "map_sweep": {
+          "calls_per_batch": 208,
+          "exclusive_ns_median": 108486997,
+          "inclusive_ns_median": 108486997
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 2826792,
+          "inclusive_ns_median": 168045417
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "projection": {
+          "calls_per_batch": 743,
+          "exclusive_ns_median": 8895381,
+          "inclusive_ns_median": 8895381
+        },
+        "prolongation": {
+          "calls_per_batch": 104,
+          "exclusive_ns_median": 208957,
+          "inclusive_ns_median": 208957
+        },
+        "restriction": {
+          "calls_per_batch": 104,
+          "exclusive_ns_median": 603244,
+          "inclusive_ns_median": 603244
+        },
+        "rhs": {
+          "calls_per_batch": 4,
+          "exclusive_ns_median": 1050249,
+          "inclusive_ns_median": 1050249
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 13,
+          "exclusive_ns_median": 3398500,
+          "inclusive_ns_median": 3398500
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 12,
+          "exclusive_ns_median": 221915,
+          "inclusive_ns_median": 1049375
+        }
+      },
+      "route": "lsmr-gated",
+      "unattributed_ns_median": 123792
+    },
+    {
+      "callback_ns_median": 141218792,
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69627
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67550
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66300
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 64042
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 51744
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 16094
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 2051
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 259
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 220501,
+          "inclusive_ns_median": 814167
+        },
+        "cycle": {
+          "calls_per_batch": 99,
+          "exclusive_ns_median": 1971634,
+          "inclusive_ns_median": 473962335
+        },
+        "dense_terminal": {
+          "calls_per_batch": 11,
+          "exclusive_ns_median": 27624,
+          "inclusive_ns_median": 27624
+        },
+        "gramian": {
+          "calls_per_batch": 188,
+          "exclusive_ns_median": 35686791,
+          "inclusive_ns_median": 35686791
+        },
+        "incidence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 66750,
+          "inclusive_ns_median": 66750
+        },
+        "map_sweep": {
+          "calls_per_batch": 176,
+          "exclusive_ns_median": 91242539,
+          "inclusive_ns_median": 91242539
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 1076543,
+          "inclusive_ns_median": 139977750
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 36249,
+          "inclusive_ns_median": 141081791
+        },
+        "projection": {
+          "calls_per_batch": 662,
+          "exclusive_ns_median": 9246060,
+          "inclusive_ns_median": 9246060
+        },
+        "prolongation": {
+          "calls_per_batch": 88,
+          "exclusive_ns_median": 172581,
+          "inclusive_ns_median": 172581
+        },
+        "restriction": {
+          "calls_per_batch": 88,
+          "exclusive_ns_median": 508040,
+          "inclusive_ns_median": 508040
+        },
+        "rhs": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 781792,
+          "inclusive_ns_median": 781792
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        }
+      },
+      "route": "pcg",
+      "unattributed_ns_median": 125458
+    },
+    {
+      "callback_ns_median": 107371292,
+      "case_id": "communities-unit-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69627
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67550
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66300
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 64042
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 51744
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 16094
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 2051
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 259
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 669918,
+          "inclusive_ns_median": 2526167
+        },
+        "cycle": {
+          "calls_per_batch": 72,
+          "exclusive_ns_median": 1533664,
+          "inclusive_ns_median": 353541538
+        },
+        "dense_terminal": {
+          "calls_per_batch": 8,
+          "exclusive_ns_median": 21167,
+          "inclusive_ns_median": 21167
+        },
+        "gramian": {
+          "calls_per_batch": 128,
+          "exclusive_ns_median": 24284875,
+          "inclusive_ns_median": 24284875
+        },
+        "incidence": {
+          "calls_per_batch": 10,
+          "exclusive_ns_median": 772460,
+          "inclusive_ns_median": 772460
+        },
+        "map_sweep": {
+          "calls_per_batch": 128,
+          "exclusive_ns_median": 68040534,
+          "inclusive_ns_median": 68040534
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 1852415,
+          "inclusive_ns_median": 107234250
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "projection": {
+          "calls_per_batch": 459,
+          "exclusive_ns_median": 5690759,
+          "inclusive_ns_median": 5690759
+        },
+        "prolongation": {
+          "calls_per_batch": 64,
+          "exclusive_ns_median": 132580,
+          "inclusive_ns_median": 132580
+        },
+        "restriction": {
+          "calls_per_batch": 64,
+          "exclusive_ns_median": 375118,
+          "inclusive_ns_median": 375118
+        },
+        "rhs": {
+          "calls_per_batch": 6,
+          "exclusive_ns_median": 1609541,
+          "inclusive_ns_median": 1609541
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 8,
+          "exclusive_ns_median": 2132292,
+          "inclusive_ns_median": 2132292
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 7,
+          "exclusive_ns_median": 136833,
+          "inclusive_ns_median": 667085
+        }
+      },
+      "route": "lsmr-gated",
+      "unattributed_ns_median": 127459
+    },
+    {
+      "callback_ns_median": 79338750,
+      "case_id": "communities-unit-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69627
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67550
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66300
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 64042
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 51744
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 16094
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 2051
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 259
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 223666,
+          "inclusive_ns_median": 828750
+        },
+        "cycle": {
+          "calls_per_batch": 54,
+          "exclusive_ns_median": 1140331,
+          "inclusive_ns_median": 263724043
+        },
+        "dense_terminal": {
+          "calls_per_batch": 6,
+          "exclusive_ns_median": 15624,
+          "inclusive_ns_median": 15624
+        },
+        "gramian": {
+          "calls_per_batch": 103,
+          "exclusive_ns_median": 20005131,
+          "inclusive_ns_median": 20005131
+        },
+        "incidence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 68958,
+          "inclusive_ns_median": 68958
+        },
+        "map_sweep": {
+          "calls_per_batch": 96,
+          "exclusive_ns_median": 50680290,
+          "inclusive_ns_median": 50680290
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 633459,
+          "inclusive_ns_median": 78001375
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 37665,
+          "inclusive_ns_median": 79211500
+        },
+        "projection": {
+          "calls_per_batch": 362,
+          "exclusive_ns_median": 5170794,
+          "inclusive_ns_median": 5170794
+        },
+        "prolongation": {
+          "calls_per_batch": 48,
+          "exclusive_ns_median": 97914,
+          "inclusive_ns_median": 97914
+        },
+        "restriction": {
+          "calls_per_batch": 48,
+          "exclusive_ns_median": 286791,
+          "inclusive_ns_median": 286791
+        },
+        "rhs": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 804166,
+          "inclusive_ns_median": 804166
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        }
+      },
+      "route": "pcg",
+      "unattributed_ns_median": 127250
+    },
+    {
+      "callback_ns_median": 213024917,
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69630
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67580
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66538
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 65924
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 64788
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 58102
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 28354
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 4096
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 654708,
+          "inclusive_ns_median": 2434292
+        },
+        "cycle": {
+          "calls_per_batch": 126,
+          "exclusive_ns_median": 2534589,
+          "inclusive_ns_median": 839660745
+        },
+        "dense_terminal": {
+          "calls_per_batch": 14,
+          "exclusive_ns_median": 35751,
+          "inclusive_ns_median": 35751
+        },
+        "gramian": {
+          "calls_per_batch": 224,
+          "exclusive_ns_median": 50055001,
+          "inclusive_ns_median": 50055001
+        },
+        "incidence": {
+          "calls_per_batch": 16,
+          "exclusive_ns_median": 1112500,
+          "inclusive_ns_median": 1112500
+        },
+        "map_sweep": {
+          "calls_per_batch": 224,
+          "exclusive_ns_median": 139272124,
+          "inclusive_ns_median": 139272124
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 3173170,
+          "inclusive_ns_median": 212900958
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "projection": {
+          "calls_per_batch": 801,
+          "exclusive_ns_median": 9653476,
+          "inclusive_ns_median": 9653476
+        },
+        "prolongation": {
+          "calls_per_batch": 112,
+          "exclusive_ns_median": 222912,
+          "inclusive_ns_median": 222912
+        },
+        "restriction": {
+          "calls_per_batch": 112,
+          "exclusive_ns_median": 647832,
+          "inclusive_ns_median": 647832
+        },
+        "rhs": {
+          "calls_per_batch": 6,
+          "exclusive_ns_median": 1576626,
+          "inclusive_ns_median": 1576626
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 14,
+          "exclusive_ns_median": 3631295,
+          "inclusive_ns_median": 3631295
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 13,
+          "exclusive_ns_median": 245540,
+          "inclusive_ns_median": 1170083
+        }
+      },
+      "route": "lsmr-gated",
+      "unattributed_ns_median": 123959
+    },
+    {
+      "callback_ns_median": 182973666,
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69630
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67580
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66538
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 65924
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 64788
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 58102
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 28354
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 4096
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 221707,
+          "inclusive_ns_median": 827291
+        },
+        "cycle": {
+          "calls_per_batch": 108,
+          "exclusive_ns_median": 2162963,
+          "inclusive_ns_median": 727089875
+        },
+        "dense_terminal": {
+          "calls_per_batch": 12,
+          "exclusive_ns_median": 30500,
+          "inclusive_ns_median": 30500
+        },
+        "gramian": {
+          "calls_per_batch": 205,
+          "exclusive_ns_median": 46779460,
+          "inclusive_ns_median": 46779460
+        },
+        "incidence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 67625,
+          "inclusive_ns_median": 67625
+        },
+        "map_sweep": {
+          "calls_per_batch": 192,
+          "exclusive_ns_median": 120575162,
+          "inclusive_ns_median": 120575162
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 1168667,
+          "inclusive_ns_median": 181722584
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 36748,
+          "inclusive_ns_median": 182846750
+        },
+        "projection": {
+          "calls_per_batch": 722,
+          "exclusive_ns_median": 10264247,
+          "inclusive_ns_median": 10264247
+        },
+        "prolongation": {
+          "calls_per_batch": 96,
+          "exclusive_ns_median": 196626,
+          "inclusive_ns_median": 196626
+        },
+        "restriction": {
+          "calls_per_batch": 96,
+          "exclusive_ns_median": 566705,
+          "inclusive_ns_median": 566705
+        },
+        "rhs": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 795709,
+          "inclusive_ns_median": 795709
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        }
+      },
+      "route": "pcg",
+      "unattributed_ns_median": 126916
+    },
+    {
+      "callback_ns_median": 106227208,
+      "case_id": "uniform-unit-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69630
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67580
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66538
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 65924
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 64788
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 58102
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 28354
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 4096
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 2,
+          "exclusive_ns_median": 431709,
+          "inclusive_ns_median": 1610500
+        },
+        "cycle": {
+          "calls_per_batch": 63,
+          "exclusive_ns_median": 1261778,
+          "inclusive_ns_median": 417811917
+        },
+        "dense_terminal": {
+          "calls_per_batch": 7,
+          "exclusive_ns_median": 17165,
+          "inclusive_ns_median": 17165
+        },
+        "gramian": {
+          "calls_per_batch": 112,
+          "exclusive_ns_median": 24888882,
+          "inclusive_ns_median": 24888882
+        },
+        "incidence": {
+          "calls_per_batch": 8,
+          "exclusive_ns_median": 543290,
+          "inclusive_ns_median": 543290
+        },
+        "map_sweep": {
+          "calls_per_batch": 112,
+          "exclusive_ns_median": 69259836,
+          "inclusive_ns_median": 69259836
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 1432832,
+          "inclusive_ns_median": 106103667
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "projection": {
+          "calls_per_batch": 401,
+          "exclusive_ns_median": 4890676,
+          "inclusive_ns_median": 4890676
+        },
+        "prolongation": {
+          "calls_per_batch": 56,
+          "exclusive_ns_median": 109249,
+          "inclusive_ns_median": 109249
+        },
+        "restriction": {
+          "calls_per_batch": 56,
+          "exclusive_ns_median": 324500,
+          "inclusive_ns_median": 324500
+        },
+        "rhs": {
+          "calls_per_batch": 4,
+          "exclusive_ns_median": 1041500,
+          "inclusive_ns_median": 1041500
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 7,
+          "exclusive_ns_median": 1812708,
+          "inclusive_ns_median": 1812708
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 6,
+          "exclusive_ns_median": 111460,
+          "inclusive_ns_median": 517875
+        }
+      },
+      "route": "lsmr-gated",
+      "unattributed_ns_median": 123708
+    },
+    {
+      "callback_ns_median": 76051750,
+      "case_id": "uniform-unit-s10001-k1",
+      "levels": [
+        {
+          "coefficients": 12288,
+          "index": 0,
+          "tuples": 73726
+        },
+        {
+          "coefficients": 6144,
+          "index": 1,
+          "tuples": 69630
+        },
+        {
+          "coefficients": 3072,
+          "index": 2,
+          "tuples": 67580
+        },
+        {
+          "coefficients": 1536,
+          "index": 3,
+          "tuples": 66538
+        },
+        {
+          "coefficients": 768,
+          "index": 4,
+          "tuples": 65924
+        },
+        {
+          "coefficients": 384,
+          "index": 5,
+          "tuples": 64788
+        },
+        {
+          "coefficients": 192,
+          "index": 6,
+          "tuples": 58102
+        },
+        {
+          "coefficients": 96,
+          "index": 7,
+          "tuples": 28354
+        },
+        {
+          "coefficients": 48,
+          "index": 8,
+          "tuples": 4096
+        }
+      ],
+      "measured_repetitions": 5,
+      "phases": {
+        "adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "certificate": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 216458,
+          "inclusive_ns_median": 804959
+        },
+        "cycle": {
+          "calls_per_batch": 45,
+          "exclusive_ns_median": 893836,
+          "inclusive_ns_median": 298292293
+        },
+        "dense_terminal": {
+          "calls_per_batch": 5,
+          "exclusive_ns_median": 12042,
+          "inclusive_ns_median": 12042
+        },
+        "gramian": {
+          "calls_per_batch": 86,
+          "exclusive_ns_median": 19338242,
+          "inclusive_ns_median": 19338242
+        },
+        "incidence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 67792,
+          "inclusive_ns_median": 67792
+        },
+        "map_sweep": {
+          "calls_per_batch": 80,
+          "exclusive_ns_median": 49445701,
+          "inclusive_ns_median": 49445701
+        },
+        "pcg_recurrence": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 523833,
+          "inclusive_ns_median": 74826250
+        },
+        "prepared_lsmr": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "prepared_pcg": {
+          "calls_per_batch": 1,
+          "exclusive_ns_median": 36833,
+          "inclusive_ns_median": 75928375
+        },
+        "projection": {
+          "calls_per_batch": 302,
+          "exclusive_ns_median": 4267321,
+          "inclusive_ns_median": 4267321
+        },
+        "prolongation": {
+          "calls_per_batch": 40,
+          "exclusive_ns_median": 77499,
+          "inclusive_ns_median": 77499
+        },
+        "restriction": {
+          "calls_per_batch": 40,
+          "exclusive_ns_median": 232039,
+          "inclusive_ns_median": 232039
+        },
+        "rhs": {
+          "calls_per_batch": 3,
+          "exclusive_ns_median": 782000,
+          "inclusive_ns_median": 782000
+        },
+        "weighted_adjoint": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        },
+        "weighted_incidence": {
+          "calls_per_batch": 0,
+          "exclusive_ns_median": 0,
+          "inclusive_ns_median": 0
+        }
+      },
+      "route": "pcg",
+      "unattributed_ns_median": 123375
+    }
+  ],
+  "measured_columns": 60,
+  "memory_scopes": {
+    "construction_peak_live_allocations": "unavailable: allocator high-water instrumentation is separate from this timing run",
+    "logical_live_array_lengths": "unavailable: capacity reports do not expose all lengths separately",
+    "old_new_generation_overlap": "not applicable: fresh fixed-weight single generation per process",
+    "opaque_dependency_memory": "transient terminal factorization not separately observed; retained dense/workspace arrays included",
+    "process_peak_rss": "isolated process including runtime, input decode, setup, solve, output and destruction",
+    "profiling_inline_record": "whole probe Record and per-report inline bytes reported separately; compiler stack copies/metadata not separately observed",
+    "profiling_thread_local_state": "fixed current-thread state; inline bytes reported separately; included in process RSS",
+    "reserved_live_array_capacity": "measured per direct owner, including caller input/output and workspace",
+    "workspace_pool": "one serial workspace; hierarchy_workspace plus outer_workspace are measured capacities"
+  },
+  "profile": "expanded",
+  "rejected_columns": 0,
+  "route_coverage": {
+    "lsmr-gated": {
+      "certified": 30,
+      "columns": 30,
+      "failed_runs": 0,
+      "rejected": 0
+    },
+    "pcg": {
+      "certified": 30,
+      "columns": 30,
+      "failed_runs": 0,
+      "rejected": 0
+    }
+  },
+  "scope": "prepared_serial_kernel_profile_only",
+  "timing_scope": "instrumented callback; exclusive categories partition it with observer overhead; inclusive categories overlap",
+  "timings": [
+    {
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.853371417,
+      "peak_rss_bytes_max": 17219584,
+      "phase_seconds_median": {
+        "coarse_frames": 0.001078625,
+        "decode": 0.008685625,
+        "fine_frame": 0.001038792,
+        "fine_topology": 0.001007167,
+        "maps_topology": 0.0138255,
+        "terminal": 0.000113625,
+        "workspace_output": 0.000442958
+      },
+      "process_seconds_max": 0.864227334,
+      "process_seconds_median": 0.860262334,
+      "process_seconds_min": 0.840822542,
+      "retained_capacity_bytes": 14513848,
+      "route": "lsmr-gated",
+      "solve_certificate_output_seconds_median": 0.826795167
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.886351041,
+      "peak_rss_bytes_max": 13402112,
+      "phase_seconds_median": {
+        "coarse_frames": 0.001086333,
+        "decode": 0.0086395,
+        "fine_frame": 0.001076083,
+        "fine_topology": 0.001036042,
+        "maps_topology": 0.014047083,
+        "terminal": 0.000112625,
+        "workspace_output": 0.000190333
+      },
+      "process_seconds_max": 0.900475667,
+      "process_seconds_median": 0.8935525,
+      "process_seconds_min": 0.871712209,
+      "retained_capacity_bytes": 10829816,
+      "route": "pcg",
+      "solve_certificate_output_seconds_median": 0.860105291
+    },
+    {
+      "case_id": "chain-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.565437542,
+      "peak_rss_bytes_max": 17252352,
+      "phase_seconds_median": {
+        "coarse_frames": 0.001075417,
+        "decode": 0.008551167,
+        "fine_frame": 0.001011459,
+        "fine_topology": 0.001004625,
+        "maps_topology": 0.013660875,
+        "terminal": 0.000110666,
+        "workspace_output": 0.000413792
+      },
+      "process_seconds_max": 0.588905667,
+      "process_seconds_median": 0.571875708,
+      "process_seconds_min": 0.570602917,
+      "retained_capacity_bytes": 14513848,
+      "route": "lsmr-gated",
+      "solve_certificate_output_seconds_median": 0.539593042
+    },
+    {
+      "case_id": "chain-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.573850583,
+      "peak_rss_bytes_max": 13500416,
+      "phase_seconds_median": {
+        "coarse_frames": 0.001067166,
+        "decode": 0.008436417,
+        "fine_frame": 0.001041834,
+        "fine_topology": 0.001002708,
+        "maps_topology": 0.013740375,
+        "terminal": 0.000112042,
+        "workspace_output": 0.000184167
+      },
+      "process_seconds_max": 0.582315875,
+      "process_seconds_median": 0.580355542,
+      "process_seconds_min": 0.577635334,
+      "retained_capacity_bytes": 10829816,
+      "route": "pcg",
+      "solve_certificate_output_seconds_median": 0.547845667
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.230422417,
+      "peak_rss_bytes_max": 32833536,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00573,
+        "decode": 0.009728875,
+        "fine_frame": 0.001186334,
+        "fine_topology": 0.00082475,
+        "maps_topology": 0.04450125,
+        "terminal": 0.000116834,
+        "workspace_output": 0.000428874
+      },
+      "process_seconds_max": 0.240627541,
+      "process_seconds_median": 0.236835209,
+      "process_seconds_min": 0.235523542,
+      "retained_capacity_bytes": 30159420,
+      "route": "lsmr-gated",
+      "solve_certificate_output_seconds_median": 0.168170084
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.204182125,
+      "peak_rss_bytes_max": 28934144,
+      "phase_seconds_median": {
+        "coarse_frames": 0.005630708,
+        "decode": 0.00987675,
+        "fine_frame": 0.001142917,
+        "fine_topology": 0.00082775,
+        "maps_topology": 0.044582125,
+        "terminal": 0.00011725,
+        "workspace_output": 0.00019475
+      },
+      "process_seconds_max": 0.210921875,
+      "process_seconds_median": 0.210460708,
+      "process_seconds_min": 0.209374292,
+      "retained_capacity_bytes": 26227324,
+      "route": "pcg",
+      "solve_certificate_output_seconds_median": 0.141219791
+    },
+    {
+      "case_id": "communities-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.172214542,
+      "peak_rss_bytes_max": 32964608,
+      "phase_seconds_median": {
+        "coarse_frames": 0.00575975,
+        "decode": 0.009839959,
+        "fine_frame": 0.00118775,
+        "fine_topology": 0.0008445,
+        "maps_topology": 0.045914125,
+        "terminal": 0.000120292,
+        "workspace_output": 0.000453083
+      },
+      "process_seconds_max": 0.1828645,
+      "process_seconds_median": 0.17864625,
+      "process_seconds_min": 0.176932958,
+      "retained_capacity_bytes": 30159420,
+      "route": "lsmr-gated",
+      "solve_certificate_output_seconds_median": 0.1073725
+    },
+    {
+      "case_id": "communities-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.143961792,
+      "peak_rss_bytes_max": 29048832,
+      "phase_seconds_median": {
+        "coarse_frames": 0.005866375,
+        "decode": 0.010093834,
+        "fine_frame": 0.001174625,
+        "fine_topology": 0.000836708,
+        "maps_topology": 0.045596333,
+        "terminal": 0.00012075,
+        "workspace_output": 0.000206125
+      },
+      "process_seconds_max": 0.160003625,
+      "process_seconds_median": 0.150355167,
+      "process_seconds_min": 0.148353083,
+      "retained_capacity_bytes": 26227324,
+      "route": "pcg",
+      "solve_certificate_output_seconds_median": 0.079342833
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.287278708,
+      "peak_rss_bytes_max": 37404672,
+      "phase_seconds_median": {
+        "coarse_frames": 0.006612833,
+        "decode": 0.010814,
+        "fine_frame": 0.001229084,
+        "fine_topology": 0.000844542,
+        "maps_topology": 0.052998292,
+        "terminal": 0.000138584,
+        "workspace_output": 0.00041575
+      },
+      "process_seconds_max": 0.295800834,
+      "process_seconds_median": 0.293952916,
+      "process_seconds_min": 0.290088667,
+      "retained_capacity_bytes": 34639968,
+      "route": "lsmr-gated",
+      "solve_certificate_output_seconds_median": 0.213025791
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.254322125,
+      "peak_rss_bytes_max": 33357824,
+      "phase_seconds_median": {
+        "coarse_frames": 0.006592042,
+        "decode": 0.009653042,
+        "fine_frame": 0.001180792,
+        "fine_topology": 0.000810584,
+        "maps_topology": 0.053382042,
+        "terminal": 0.0001385,
+        "workspace_output": 0.000191292
+      },
+      "process_seconds_max": 0.269919375,
+      "process_seconds_median": 0.260567417,
+      "process_seconds_min": 0.259635375,
+      "retained_capacity_bytes": 30707872,
+      "route": "pcg",
+      "solve_certificate_output_seconds_median": 0.182974292
+    },
+    {
+      "case_id": "uniform-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.177846083,
+      "peak_rss_bytes_max": 37388288,
+      "phase_seconds_median": {
+        "coarse_frames": 0.006495625,
+        "decode": 0.009541167,
+        "fine_frame": 0.001164667,
+        "fine_topology": 0.000810959,
+        "maps_topology": 0.052996667,
+        "terminal": 0.00013475,
+        "workspace_output": 0.000428458
+      },
+      "process_seconds_max": 0.193480458,
+      "process_seconds_median": 0.184082209,
+      "process_seconds_min": 0.183726958,
+      "retained_capacity_bytes": 34639968,
+      "route": "lsmr-gated",
+      "solve_certificate_output_seconds_median": 0.106228042
+    },
+    {
+      "case_id": "uniform-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "inner_seconds_median": 0.147847333,
+      "peak_rss_bytes_max": 33505280,
+      "phase_seconds_median": {
+        "coarse_frames": 0.006509542,
+        "decode": 0.009885958,
+        "fine_frame": 0.001193,
+        "fine_topology": 0.000829041,
+        "maps_topology": 0.053268208,
+        "terminal": 0.000136333,
+        "workspace_output": 0.000188043
+      },
+      "process_seconds_max": 0.15593625,
+      "process_seconds_median": 0.154127459,
+      "process_seconds_min": 0.153327292,
+      "retained_capacity_bytes": 30707872,
+      "route": "pcg",
+      "solve_certificate_output_seconds_median": 0.076052166
+    }
+  ],
+  "valid_profiles": true
+}

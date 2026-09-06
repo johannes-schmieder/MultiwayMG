@@ -366,6 +366,10 @@ fn solve_impl(
     workspace: &mut PreparedLsmrWorkspace<'_>,
     use_gate: bool,
 ) -> Result<PreparedLsmrReport, MultiwayError> {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::PreparedLsmr);
+
     workspace.validate_for(hierarchy)?;
     let fine = workspace.hierarchy.frames().fine();
     if targets.len() != fine.weights().len() {

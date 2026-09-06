@@ -8,6 +8,10 @@ license.workspace = true
 repository.workspace = true
 description = "Deterministic weighted three-way incidence operators"
 
+[features]
+default = []
+profiling = []
+
 [dependencies]
 thiserror.workspace = true
 

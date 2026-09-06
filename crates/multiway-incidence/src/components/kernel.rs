@@ -12,6 +12,9 @@ impl ProjectionData<'_> {
         values: &mut [f64],
         scratch: &mut [StructuralProjectionScratch],
     ) -> f64 {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Projection);
+
         self.accumulate_factor_sums(values, scratch);
 
         let mut removed_squared = 0.0;

@@ -20,6 +20,9 @@ impl OperatorData<'_> {
     }
     /// Compute `out = B x`.
     pub(crate) fn apply_incidence(&self, x: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Incidence);
+
         validate_len(
             "ThreeWayProblem::apply_incidence input",
             self.dimension(),
@@ -40,6 +43,9 @@ impl OperatorData<'_> {
 
     /// Compute `out = B^T y`.
     pub(crate) fn apply_adjoint(&self, y: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Adjoint);
+
         validate_len(
             "ThreeWayProblem::apply_adjoint input",
             self.tuple_count(),
@@ -65,6 +71,9 @@ impl OperatorData<'_> {
         x: &[f64],
         out: &mut [f64],
     ) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::WeightedIncidence);
+
         self.apply_incidence(x, out)?;
         for (value, &sqrt_weight) in out.iter_mut().zip(self.square_root_weights.iter()) {
             *value *= sqrt_weight;
@@ -78,6 +87,9 @@ impl OperatorData<'_> {
         y: &[f64],
         out: &mut [f64],
     ) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::WeightedAdjoint);
+
         validate_len(
             "ThreeWayProblem::apply_weighted_adjoint input",
             self.tuple_count(),
@@ -106,6 +118,9 @@ impl OperatorData<'_> {
 
     /// Compute `out = G x`, where `G = B^T W B`.
     pub(crate) fn apply_gramian(&self, x: &[f64], out: &mut [f64]) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Gramian);
+
         validate_len(
             "ThreeWayProblem::apply_gramian input",
             self.dimension(),
@@ -153,6 +168,9 @@ impl OperatorData<'_> {
         targets: &[f64],
         rhs: &mut [f64],
     ) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Rhs);
+
         validate_len(
             "ThreeWayProblem::rhs_from_targets_into targets",
             self.tuple_count(),

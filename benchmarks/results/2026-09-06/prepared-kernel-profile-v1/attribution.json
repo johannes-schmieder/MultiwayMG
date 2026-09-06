@@ -1,0 +1,197 @@
+{
+  "profiles": {
+    "linux-smoke": {
+      "lsmr-gated": {
+        "cell_count": 42,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 1.547248027410535,
+          "cycle": 3.187009960075678,
+          "dense_terminal": 7.05611199652996,
+          "gramian": 7.126800993126103,
+          "incidence": 1.4865387186452566,
+          "map_sweep": 62.25337006642607,
+          "pcg_recurrence": 0.0,
+          "prepared_lsmr": 5.064656076428234,
+          "prepared_pcg": 0.0,
+          "projection": 4.5903683206771255,
+          "prolongation": 0.1718850809701024,
+          "restriction": 0.24524054702377468,
+          "rhs": 1.6753686685933653,
+          "weighted_adjoint": 3.5344703733508505,
+          "weighted_incidence": 0.3603699128154905
+        }
+      },
+      "pcg": {
+        "cell_count": 42,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 0.9789599170931069,
+          "cycle": 3.3381011766937503,
+          "dense_terminal": 7.206427600567094,
+          "gramian": 11.64253951457596,
+          "incidence": 0.2202364904714076,
+          "map_sweep": 63.497666801775495,
+          "pcg_recurrence": 3.061570463051557,
+          "prepared_lsmr": 0.0,
+          "prepared_pcg": 0.26504651470897955,
+          "projection": 6.609630829188538,
+          "prolongation": 0.18162596164720968,
+          "restriction": 0.23786261110361373,
+          "rhs": 1.6633046137735499,
+          "weighted_adjoint": 0.0,
+          "weighted_incidence": 0.0
+        }
+      }
+    },
+    "mac-development": {
+      "lsmr-gated": {
+        "cell_count": 42,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 1.1426041068359498,
+          "cycle": 0.6181308137015791,
+          "dense_terminal": 0.2222856464929717,
+          "gramian": 18.937581743760973,
+          "incidence": 1.5789253786303656,
+          "map_sweep": 62.94698236073573,
+          "pcg_recurrence": 0.0,
+          "prepared_lsmr": 3.1217819970173193,
+          "prepared_pcg": 0.0,
+          "projection": 1.7130025166963896,
+          "prolongation": 0.04769118885483306,
+          "restriction": 0.09092494488836728,
+          "rhs": 3.515963651689983,
+          "weighted_adjoint": 5.239016779917911,
+          "weighted_incidence": 0.24923652573480692
+        }
+      },
+      "pcg": {
+        "cell_count": 42,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 0.7624915210394843,
+          "cycle": 0.6427980380253799,
+          "dense_terminal": 0.2272721888831184,
+          "gramian": 26.44427613407213,
+          "incidence": 0.2944687607673429,
+          "map_sweep": 64.27112357055003,
+          "pcg_recurrence": 0.3632697576839694,
+          "prepared_lsmr": 0.0,
+          "prepared_pcg": 0.14145230240769194,
+          "projection": 2.224096535220383,
+          "prolongation": 0.0496142260082867,
+          "restriction": 0.0954552772932703,
+          "rhs": 3.530864525179585,
+          "weighted_adjoint": 0.0,
+          "weighted_incidence": 0.0
+        }
+      }
+    },
+    "mac-expanded": {
+      "lsmr-gated": {
+        "cell_count": 6,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 0.3568701131802922,
+          "cycle": 1.4200131770409994,
+          "dense_terminal": 0.019420797006086385,
+          "gramian": 22.769200233038084,
+          "incidence": 0.6453273280450353,
+          "map_sweep": 63.94000486407606,
+          "pcg_recurrence": 0.0,
+          "prepared_lsmr": 1.7030818082907566,
+          "prepared_pcg": 0.0,
+          "projection": 5.294808515424254,
+          "prolongation": 0.12386604465264295,
+          "restriction": 0.35403889082459417,
+          "rhs": 0.8602795165091273,
+          "weighted_adjoint": 2.003393188022636,
+          "weighted_incidence": 0.1296992226472053
+        }
+      },
+      "pcg": {
+        "cell_count": 6,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 0.13865510164710726,
+          "cycle": 1.4167247153611489,
+          "dense_terminal": 0.01962695455265691,
+          "gramian": 25.242699089104857,
+          "incidence": 0.042112975393392815,
+          "map_sweep": 64.24456001872782,
+          "pcg_recurrence": 0.7803729909957158,
+          "prepared_lsmr": 0.0,
+          "prepared_pcg": 0.022876222266097538,
+          "projection": 6.532346169171127,
+          "prolongation": 0.12281041097267344,
+          "restriction": 0.36061520036039707,
+          "rhs": 0.494239808282377,
+          "weighted_adjoint": 0.0,
+          "weighted_incidence": 0.0
+        }
+      }
+    },
+    "mac-smoke": {
+      "lsmr-gated": {
+        "cell_count": 42,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 1.9204148371959628,
+          "cycle": 4.555349259526009,
+          "dense_terminal": 2.218821700392147,
+          "gramian": 15.111763231397624,
+          "incidence": 2.3169092698311324,
+          "map_sweep": 46.0975974420267,
+          "pcg_recurrence": 0.0,
+          "prepared_lsmr": 7.040590793740534,
+          "prepared_pcg": 0.0,
+          "projection": 5.859852651795558,
+          "prolongation": 0.2453371144983315,
+          "restriction": 0.3783983047763415,
+          "rhs": 3.73570765295724,
+          "weighted_adjoint": 7.468776488803085,
+          "weighted_incidence": 0.4478445055266327
+        }
+      },
+      "pcg": {
+        "cell_count": 42,
+        "phase_exclusive_share_percent_median_across_cells": {
+          "adjoint": 0.0,
+          "certificate": 1.319254508639637,
+          "cycle": 5.892431187846942,
+          "dense_terminal": 2.4308174416612474,
+          "gramian": 24.280118656189572,
+          "incidence": 0.4060872079139823,
+          "map_sweep": 46.91008037729817,
+          "pcg_recurrence": 3.528531651258357,
+          "prepared_lsmr": 0.0,
+          "prepared_pcg": 0.3988867182864766,
+          "projection": 8.485936604532474,
+          "prolongation": 0.3029201580479108,
+          "restriction": 0.4579612820869119,
+          "rhs": 3.8449276067111224,
+          "weighted_adjoint": 0.0,
+          "weighted_incidence": 0.0
+        }
+      }
+    }
+  },
+  "scope": "instrumented exclusive phase median divided by callback median per cell, then median across balanced cells; not a speedup",
+  "uninstrumented_m5a_equivalence": [
+    {
+      "input_numerical_work_fingerprint_payload_exact": true,
+      "instrumented_manifest_sha256": "4d950fd7b56764b0991ac0b111daef79efd64f28331744f811c28a439e13b4cb",
+      "label": "mac-smoke",
+      "processes_compared": 504,
+      "uninstrumented_manifest_sha256": "d743ed9a626de545285d679a2285383bb6c2a5e5f26934adc28689be52c7a9b6"
+    },
+    {
+      "input_numerical_work_fingerprint_payload_exact": true,
+      "instrumented_manifest_sha256": "9ba18185fd898e7814d5527c3e8ed6e20e8cbed4944231876c5ec956a0c72cea",
+      "label": "mac-development",
+      "processes_compared": 504,
+      "uninstrumented_manifest_sha256": "302d4b54c883f91c996e0475cf879e3941f5e1126132d4a4ef858405c68a65d4"
+    }
+  ]
+}

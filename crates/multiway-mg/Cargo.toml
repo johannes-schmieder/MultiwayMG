@@ -13,6 +13,7 @@ default = ["cmg", "lsmr"]
 cmg = ["dep:cmg"]
 lsmr = ["dep:schwarz-precond"]
 within-comparator = ["dep:within", "lsmr"]
+profiling = ["multiway-incidence/profiling"]
 
 [dependencies]
 multiway-incidence = { path = "../multiway-incidence" }

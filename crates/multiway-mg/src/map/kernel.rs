@@ -11,6 +11,10 @@ pub(super) fn sweep(
     forward: &mut [f64],
     solution: &mut [f64],
 ) {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::MapSweep);
+
     let MapData {
         topology,
         weights,
