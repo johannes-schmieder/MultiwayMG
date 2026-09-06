@@ -142,7 +142,9 @@ Its frozen paired Mac evidence preserves numerical/work identity, reduces exact
 scratch capacity and measures about 1.06x inner improvement on the small development
 matrix. [Opt-in kernel profiling](ISSUE5_KERNEL_PROFILING.md) now supplies
 validated attribution and level inventory for larger development inputs. Its
-instrumented times are diagnostic; M5 remains open for measured layout work.
+[four diagnostic artifacts](../benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md)
+pass complete accounting/certification and prioritize grouped MAP/Gramian trials.
+Instrumented times are diagnostic; M5 remains open for measured layout work.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

@@ -83,7 +83,8 @@ profiling. Local required Rust 1.85 checks and 73 Python evidence tests pass bef
 collection. Allocator regressions cover first/repeated PCG/gated LSMR collection,
 exact coefficient/report equivalence, recursive/certificate work identities and
 failure recovery. Profiler tests cover malformed lifetimes, overflow, panic and
-cross-thread guard rejection. No benchmark collection exists at this checkpoint.
+cross-thread guard rejection. The committed-source collection now passes all four diagnostic gates; see the
+[complete results and preservation receipts](../benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md).
 
 ## Next experiment
 

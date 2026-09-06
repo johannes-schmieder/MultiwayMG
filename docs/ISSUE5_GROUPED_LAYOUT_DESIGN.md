@@ -9,3 +9,12 @@ At cache-resident V the added indices/reloads can dominate, so do not default to
 The grouped representation must serve later M7 row-owned parallel actions and M8 panels. Balance partitions by tuple count; declare hub segments and combine their partials in fixed order. Keep scalar mode and cross-RHS concurrency available without mandatory grouping. Avoid oversubscribed inner workers and floating-point atomics. Panel loops should use const widths 2/4/8 and coordinate-major lane-minor vectors, while each lane retains independent Krylov recurrence, certificate, retirement and tail handling. Memory economics include the two LSMR history windows per lane.
 
 M5a precedes this experiment. Flat arenas, fused prolong-add, fused weighted incidence and exact-RHS certificate-reference caching remain individually reviewable opportunities. No selector or new default is justified until measured on the declared balanced development matrix; calibration/holdout and immutable upstream executable comparisons remain later gates.
+
+The [M5b diagnostic results](../benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md)
+now support prioritizing MAP and Gramian kernels. Coarse tuple inventories can
+remain large despite coefficient halving: expanded uniform/communities have
+6.71/5.58 fine-equivalent nonterminal tuple counts. Grouping every level therefore
+needs complete admission, not fine-only estimates. Compare explicit fine-only
+and all-nonterminal layouts before selecting per-level rules; scalar scatter
+remains the control. Instrumented shares do not establish layout speedups, and
+the current expansion still does not measure large out-of-cache/SCC behavior.

@@ -362,3 +362,19 @@ for measurement, not an implemented layout or selected default.
   authoritative performance evidence. Source/recipe must be committed before
   collection; no M5b timing exists at this checkpoint. Grouped layout remains
   a measured hypothesis; M5 and M6–M10 stay open.
+
+- M5b source `42d6f527bdf09a2b38769d5724b88829cce97877` passes the
+  [complete diagnostic gates](../benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md):
+  Mac smoke/development and Linux smoke each certify 4,800 measured columns;
+  expanded RHS1 certifies 60/60. No invalid profiles, errors, timeouts or RSS
+  failures. All 1,008 Mac smoke/development processes exactly match corresponding
+  uninstrumented M5a input/numerical/work/fingerprint/payload records. Source
+  workflows `34067385068`/`34067385070` and PR `34067398348`/`34067398347` passed.
+  Final evidence-head CI/merge remains before the next increment.
+- Diagnostic attribution prioritizes grouped MAP/Gramian above small transfer
+  and certificate-reference savings. Expanded nonterminal tuple complexity is
+  6.71x uniform / 5.58x communities / 1.81x chain; account for grouping at each
+  level, compare explicit fine-only/all-nonterminal choices, and preserve scalar
+  scatter. Coefficient halving alone is insufficient for M6 admission. These
+  instrumented, cache-bounded development results select the next experiment,
+  not a default layout or a competitive route. M5–M10 remain open.
