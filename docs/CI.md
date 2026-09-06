@@ -65,3 +65,10 @@ exact generation rejection and transactional numerical failure/recovery. The
 permanent allocation executable now also tests prepared MAP's five-array setup,
 first/repeat32 calls, allocation-free errors and exact release; the LSMR composed
 path uses this exact-current-frame MAP directly.
+
+M4c's prepared fixed-cycle increment compares all eight recursive fixtures with
+ordinary V-cycle output, including changed weights. The permanent allocation
+executable measures complete first/repeat32 calls, failure/recovery and exact
+terminal/workspace release; unit tests inject errors/unwinds at all 31 workspace
+reservation boundaries of a two-transition case. The ordinary path continues to
+run all existing scientific gates through the same shared recurrence.

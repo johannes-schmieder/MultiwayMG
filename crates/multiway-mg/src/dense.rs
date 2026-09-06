@@ -32,6 +32,54 @@ impl DensePseudoinverse {
         let dimension = problem.dimension();
         let flat: Vec<f64> = dense.into_iter().flatten().collect();
         let matrix = DMatrix::from_row_slice(dimension, dimension, &flat);
+        Self::from_matrix(matrix, relative_tolerance)
+    }
+
+    pub(crate) fn from_frame(
+        frame: &multiway_incidence::ThreeWayWeightFrame<'_>,
+        relative_tolerance: f64,
+    ) -> Result<Self, MultiwayError> {
+        if !relative_tolerance.is_finite() || relative_tolerance <= 0.0 {
+            return Err(MultiwayError::InvalidOption {
+                name: "terminal_relative_tolerance",
+                message: format!("must be finite and positive, got {relative_tolerance}"),
+            });
+        }
+        let topology = frame.topology().topology();
+        let n = topology.total_levels();
+        let length = n
+            .checked_mul(n)
+            .filter(|&n| n <= isize::MAX as usize / 8)
+            .ok_or(MultiwayError::WorkspaceSizeOverflow {
+                context: "prepared dense terminal matrix",
+            })?;
+        let mut values = Vec::new();
+        values
+            .try_reserve_exact(length)
+            .map_err(|source| MultiwayError::WorkspaceAllocation {
+                context: "prepared dense terminal matrix",
+                source,
+            })?;
+        values.resize(length, 0.0);
+        // Native column-major assembly follows the ordinary canonical tuple and
+        // row/column accumulation order, without row-vector/flattened copies.
+        for (&tuple, &weight) in topology.tuples().iter().zip(frame.weights()) {
+            let indices = [
+                topology.global_index(0, tuple[0]),
+                topology.global_index(1, tuple[1]),
+                topology.global_index(2, tuple[2]),
+            ];
+            for &row in &indices {
+                for &column in &indices {
+                    values[column * n + row] += weight;
+                }
+            }
+        }
+        Self::from_matrix(DMatrix::from_vec(n, n, values), relative_tolerance)
+    }
+
+    fn from_matrix(matrix: DMatrix<f64>, relative_tolerance: f64) -> Result<Self, MultiwayError> {
+        let dimension = matrix.nrows();
         if !matrix.iter().all(|value| value.is_finite()) {
             return Err(MultiwayError::NumericalFailure {
                 context: "dense terminal matrix",

@@ -1,12 +1,12 @@
 //! Caller-owned scratch for the complete recursive MAP hierarchy.
 
-use super::{CycleScreenedMapHierarchy, add_assign};
+use super::CycleScreenedMapHierarchy;
+use crate::cycle_kernel::{self, CycleActions, FRAME_BUFFERS};
 use crate::{DensePseudoinverseWorkspace, MultiwayError, Preconditioner, ThreeWayProblem};
 
 mod operators;
 use operators::{LevelWorkspace, OperatorWorkspaces};
 
-const FRAME_BUFFERS: usize = 7;
 const CONTEXT: &str = "CycleScreenedMapHierarchyWorkspace";
 
 /// Reusable vector and nested operator scratch for recursive MAP application.
@@ -219,74 +219,15 @@ impl CycleScreenedMapHierarchy {
         operator_levels: &mut [LevelWorkspace],
         terminal: &mut DensePseudoinverseWorkspace,
     ) -> Result<(), MultiwayError> {
-        let problem = &self.problems[level];
-        if rhs.len() != problem.dimension() {
-            return Err(crate::error::dimension(
-                "CycleScreenedMapHierarchy::apply_level",
-                problem.dimension(),
-                rhs.len(),
-            ));
-        }
-        let (state, children) = operator_levels
-            .split_first_mut()
-            .expect("prepared operator level");
-        solution.fill(0.0);
-        if level == self.aggregations.len() {
-            self.terminal
-                .solve_into_with_workspace(rhs, solution, terminal)?;
-            problem
-                .components()
-                .project_structural_range_with_workspace(solution, &mut state.projection)?;
-            return Ok(());
-        }
-        let (frame, child_scratch) = scratch.split_at_mut(FRAME_BUFFERS);
-        let [
-            compatible_rhs,
-            residual,
-            coarse_rhs,
-            coarse_solution,
-            prolonged,
-            post_residual,
-            post,
-        ] = frame
-        else {
-            unreachable!("a prepared nonterminal frame has seven buffers");
-        };
-        let map = state.map.as_mut().expect("prepared MAP level");
-        compatible_rhs.fill(0.0);
-        compatible_rhs.copy_from_slice(rhs);
-        problem
-            .components()
-            .project_structural_range_with_workspace(compatible_rhs, &mut state.projection)?;
-        self.smoothers[level].apply_with_workspace(compatible_rhs, solution, map)?;
-        residual.fill(0.0);
-        problem.residual_into(compatible_rhs, solution, residual)?;
-        let coarse_problem = &self.problems[level + 1];
-        coarse_rhs.fill(0.0);
-        self.aggregations[level].restrict(residual, coarse_rhs)?;
-        coarse_problem
-            .components()
-            .project_structural_range_with_workspace(coarse_rhs, &mut children[0].projection)?;
-        self.apply_level_into(
-            level + 1,
-            coarse_rhs,
-            coarse_solution,
-            child_scratch,
-            children,
+        cycle_kernel::apply_level(
+            self,
+            level,
+            rhs,
+            solution,
+            scratch,
+            operator_levels,
             terminal,
-        )?;
-        prolonged.fill(0.0);
-        self.aggregations[level].prolong(coarse_solution, prolonged)?;
-        add_assign(solution, prolonged);
-        post_residual.fill(0.0);
-        problem.residual_into(compatible_rhs, solution, post_residual)?;
-        post.fill(0.0);
-        self.smoothers[level].apply_with_workspace(post_residual, post, map)?;
-        add_assign(solution, post);
-        problem
-            .components()
-            .project_structural_range_with_workspace(solution, &mut state.projection)?;
-        Ok(())
+        )
     }
 }
 
@@ -355,6 +296,71 @@ impl CycleScreenedMapHierarchyWorkspace {
                     .zip([fine, fine, coarse, coarse, fine, fine, fine])
                     .all(|(buffer, expected)| buffer.len() == expected)
             })
+    }
+}
+
+impl CycleActions for CycleScreenedMapHierarchy {
+    type LevelScratch = LevelWorkspace;
+    fn level_count(&self) -> usize {
+        self.problems.len()
+    }
+    fn dimension_at(&self, level: usize) -> usize {
+        self.problems[level].dimension()
+    }
+    fn project(
+        &self,
+        level: usize,
+        values: &mut [f64],
+        scratch: &mut LevelWorkspace,
+    ) -> Result<(), MultiwayError> {
+        self.problems[level]
+            .components()
+            .project_structural_range_with_workspace(values, &mut scratch.projection)?;
+        Ok(())
+    }
+    fn smooth(
+        &self,
+        level: usize,
+        rhs: &[f64],
+        out: &mut [f64],
+        scratch: &mut LevelWorkspace,
+    ) -> Result<(), MultiwayError> {
+        self.smoothers[level].apply_with_workspace(
+            rhs,
+            out,
+            scratch.map.as_mut().expect("prepared MAP level"),
+        )
+    }
+    fn residual(
+        &self,
+        level: usize,
+        rhs: &[f64],
+        x: &[f64],
+        out: &mut [f64],
+    ) -> Result<(), MultiwayError> {
+        self.problems[level].residual_into(rhs, x, out)?;
+        Ok(())
+    }
+    fn restrict(
+        &self,
+        level: usize,
+        fine: &[f64],
+        coarse: &mut [f64],
+    ) -> Result<(), MultiwayError> {
+        self.aggregations[level].restrict(fine, coarse)?;
+        Ok(())
+    }
+    fn prolong(&self, level: usize, coarse: &[f64], fine: &mut [f64]) -> Result<(), MultiwayError> {
+        self.aggregations[level].prolong(coarse, fine)?;
+        Ok(())
+    }
+    fn terminal(
+        &self,
+        rhs: &[f64],
+        out: &mut [f64],
+        workspace: &mut DensePseudoinverseWorkspace,
+    ) -> Result<(), MultiwayError> {
+        self.terminal.solve_into_with_workspace(rhs, out, workspace)
     }
 }
 

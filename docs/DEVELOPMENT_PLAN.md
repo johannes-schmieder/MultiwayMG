@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b projection/MAP qualification; M4c hierarchy/drivers next |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c fixed-cycle qualification, drivers next |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -209,3 +209,16 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   scratch to the exact current frame. The integrated allocation test now uses
   prepared MAP directly, eliminating its independently constructed ordinary
   problem. See [`ISSUE5_PREPARED_MAP.md`](ISSUE5_PREPARED_MAP.md).
+
+- M4a merged as `d898a08dfeaca10507bcce23bb872c937edb7f7c`; post-merge workflows
+  34054976958/34054976971 passed on the same qualified tree.
+- M4b PR #39 merged as `bb33c259beae9a98f92dcb3b8025c7d177b3d9a7`.
+  Reviewed source `c629c2d7e3c8ab8bc1c4255d29f98ade3811e01b` passed push workflows
+  34055195957/34055195967 and PR workflows 34055198201/34055198223;
+  post-merge workflows 34055570517/34055570575 passed.
+- M4c fixed-cycle increment shares the ordinary recurrence, adds a whole-terminal
+  cap of 256 coefficients and depth cap of 64 levels, and counts complete retained
+  application payload. Prepared native dense assembly moves forward from M5 to
+  avoid manufacturing an ordinary problem just to factor the terminal. M4 remains
+  open for outer drivers, certificate, bounded RHS reuse and complete economics.
+  See [`ISSUE5_PREPARED_CYCLE.md`](ISSUE5_PREPARED_CYCLE.md).
