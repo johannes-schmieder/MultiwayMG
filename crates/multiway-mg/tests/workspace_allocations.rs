@@ -23,6 +23,8 @@ mod prepared_cycle_allocations;
 mod prepared_lsmr_allocations;
 #[path = "support/prepared_map_allocations.rs"]
 mod prepared_map_allocations;
+#[path = "support/prepared_pcg_allocations.rs"]
+mod prepared_pcg_allocations;
 #[path = "support/prepared_topology_allocations.rs"]
 mod prepared_topology_allocations;
 #[path = "support/symbolic_map_allocations.rs"]
@@ -242,6 +244,7 @@ fn main() -> Result<()> {
     hierarchy_owner_allocations::run()?;
     prepared_map_allocations::run()?;
     prepared_cycle_allocations::run()?;
+    prepared_pcg_allocations::run()?;
     prepared_certificate_allocations::run()?;
     #[cfg(feature = "lsmr")]
     prepared_lsmr_allocations::run()?;

@@ -128,8 +128,9 @@ across all supplied levels. [Prepared projection and MAP](ISSUE5_PREPARED_MAP.md
 now share scalar kernels with ordinary owners. The [prepared serial fixed
 cycle](ISSUE5_PREPARED_CYCLE.md) adds a bounded terminal and complete application
 scratch. [Prepared serial LSMR](ISSUE5_PREPARED_LSMR.md) now integrates the
-original-operator certificate and bounded 1–32 RHS scalar reuse; prepared PCG
-and complete-cost benchmark integration remain open.
+original-operator certificate and bounded 1–32 RHS scalar reuse.
+[Prepared PCG](ISSUE5_PREPARED_PCG.md) adds the same complete ownership/certificate
+boundary. Complete-cost serial benchmark integration remains open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

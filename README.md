@@ -25,7 +25,9 @@ scalar arithmetic with exact current-frame scratch. The [prepared serial
 V-cycle](docs/ISSUE5_PREPARED_CYCLE.md) now applies all levels with a bounded dense
 terminal. [Complete prepared LSMR](docs/ISSUE5_PREPARED_LSMR.md) adds independent
 original-operator certification and bounded scalar reuse across 1–32 RHS.
-Prepared PCG and complete-cost benchmark integration remain in progress.
+[Prepared PCG](docs/ISSUE5_PREPARED_PCG.md) now shares the ordinary untraced
+recurrence and independent certificate. Complete-cost benchmark integration
+remains in progress.
 
 ## The problem
 

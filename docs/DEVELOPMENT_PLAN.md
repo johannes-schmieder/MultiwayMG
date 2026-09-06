@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; complete LSMR/certificate/RHS qualification; PCG/economics next |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG qualification; serial economics next |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -232,3 +232,14 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   payload admission/work counts and bounded scalar RHS1–32 reuse. PCG and a
   complete-cost serial benchmark surface remain required before M4 closes.
   See [`ISSUE5_PREPARED_LSMR.md`](ISSUE5_PREPARED_LSMR.md).
+
+- M4c LSMR PR #41 merged as `cb0b3cf2fd41385c91690c515013ee591496c263`.
+  Reviewed source `8f0dbb5671ec97745bcbf66ea159d057a380e0c6` passed source workflows
+  34056669213/34056669197 and PR workflows 34056671815/34056671806;
+  post-merge workflows 34057003019/34057003032 passed on the identical tree.
+- M4c prepared PCG shares the untraced recurrence, complete hierarchy/certificate
+  storage, independent acceptance, actual work and bounded RHS reuse. A local
+  frozen-source comparison passes 144 coefficient/diagnostic bit comparisons;
+  full platform/scientific CI remains required. Complete-cost serial economics
+  reporting is the remaining M4 closure item. See
+  [`ISSUE5_PREPARED_PCG.md`](ISSUE5_PREPARED_PCG.md).
