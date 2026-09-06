@@ -4,8 +4,11 @@ use std::sync::Arc;
 
 use crate::{IncidenceError, ThreeWayTopology};
 
+mod kernel;
 pub(crate) mod partition;
+mod prepared;
 mod workspace;
+pub use prepared::PreparedStructuralProjectionWorkspace;
 
 #[derive(Debug, Clone, Copy, Default, PartialEq)]
 struct StructuralProjectionScratch {
@@ -58,10 +61,6 @@ impl StructuralProjectionWorkspace {
     #[must_use]
     pub fn retained_bytes(&self) -> usize {
         self.scratch.capacity() * core::mem::size_of::<StructuralProjectionScratch>()
-    }
-
-    fn clear(&mut self) {
-        self.scratch.fill(StructuralProjectionScratch::default());
     }
 }
 
@@ -166,39 +165,7 @@ impl IncidenceComponents {
             "IncidenceComponents::project_structural_range_with_workspace",
             workspace,
         )?;
-        self.accumulate_factor_sums(values, workspace);
-
-        let mut removed_squared = 0.0;
-        for (component, scratch) in workspace.scratch.iter_mut().enumerate() {
-            let [n1, n2, n3] = self.factor_sizes[component];
-            debug_assert!(n1 > 0 && n2 > 0 && n3 > 0);
-            let [s1, s2, s3] = scratch.sums;
-            let g1 = s1 - s2;
-            let g2 = s1 - s3;
-            let a11 = (n1 + n2) as f64;
-            let a12 = n1 as f64;
-            let a22 = (n1 + n3) as f64;
-            let determinant = a11.mul_add(a22, -(a12 * a12));
-            debug_assert!(determinant > 0.0);
-            let alpha = (a22.mul_add(g1, -(a12 * g2))) / determinant;
-            let beta = (a11.mul_add(g2, -(a12 * g1))) / determinant;
-            let projection = [alpha + beta, -alpha, -beta];
-            scratch.projection = projection;
-            removed_squared += (n1 as f64).mul_add(
-                projection[0] * projection[0],
-                (n2 as f64).mul_add(
-                    projection[1] * projection[1],
-                    n3 as f64 * projection[2] * projection[2],
-                ),
-            );
-        }
-
-        for factor in 0..3 {
-            for vertex in self.offsets[factor]..self.offsets[factor + 1] {
-                values[vertex] -= workspace.scratch[self.labels[vertex]].projection[factor];
-            }
-        }
-        Ok(removed_squared.sqrt())
+        Ok(self.data().project(values, &mut workspace.scratch))
     }
 
     /// Maximum absolute dot product with either known structural kernel vector.
@@ -227,14 +194,7 @@ impl IncidenceComponents {
             "IncidenceComponents::maximum_structural_defect_with_workspace",
             workspace,
         )?;
-        self.accumulate_factor_sums(values, workspace);
-
-        let mut maximum: f64 = 0.0;
-        for scratch in &workspace.scratch {
-            let [a, b, c] = scratch.sums;
-            maximum = maximum.max((a - b).abs()).max((a - c).abs());
-        }
-        Ok(maximum)
+        Ok(self.data().defect(values, &mut workspace.scratch))
     }
 
     fn validate_values(&self, context: &'static str, values: &[f64]) -> Result<(), IncidenceError> {
@@ -273,25 +233,11 @@ impl IncidenceComponents {
         Ok(())
     }
 
-    fn accumulate_factor_sums(
-        &self,
-        values: &[f64],
-        workspace: &mut StructuralProjectionWorkspace,
-    ) {
-        workspace.clear();
-        for factor in 0..3 {
-            for vertex in self.offsets[factor]..self.offsets[factor + 1] {
-                let component = self.labels[vertex];
-                let StructuralProjectionScratch {
-                    sums, corrections, ..
-                } = &mut workspace.scratch[component];
-                neumaier_add(&mut sums[factor], &mut corrections[factor], values[vertex]);
-            }
-        }
-        for scratch in &mut workspace.scratch {
-            for factor in 0..3 {
-                scratch.sums[factor] += scratch.corrections[factor];
-            }
+    fn data(&self) -> kernel::ProjectionData<'_> {
+        kernel::ProjectionData {
+            labels: &self.labels,
+            factor_sizes: &self.factor_sizes,
+            offsets: self.offsets,
         }
     }
 }

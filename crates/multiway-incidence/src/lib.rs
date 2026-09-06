@@ -21,7 +21,9 @@ mod weight_frame;
 mod weight_replay;
 
 pub use aggregation::FactorAggregation;
-pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
+pub use components::{
+    IncidenceComponents, PreparedStructuralProjectionWorkspace, StructuralProjectionWorkspace,
+};
 pub use error::IncidenceError;
 pub use factor_pair::FactorPair;
 pub use hierarchy::{HierarchyWeightFrames, PreparedHierarchyBudget, PreparedHierarchyTopology};

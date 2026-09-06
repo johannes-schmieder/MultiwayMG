@@ -59,3 +59,9 @@ arrays), zero-allocation budget rejection, first/repeated level actions, and
 balanced changed-frame construction/destruction. Unit tests inject errors and
 unwinds at all 21 structural and 11 numerical reservations of a two-transition
 case. This does not yet qualify a complete prepared hierarchy solve.
+
+M4b checks ordinary/prepared projection and MAP bitwise equivalence, symmetry,
+exact generation rejection and transactional numerical failure/recovery. The
+permanent allocation executable now also tests prepared MAP's five-array setup,
+first/repeat32 calls, allocation-free errors and exact release; the LSMR composed
+path uses this exact-current-frame MAP directly.

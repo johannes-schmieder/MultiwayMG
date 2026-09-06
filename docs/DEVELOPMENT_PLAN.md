@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a owning structure/replay; M4b projection/MAP; M4c hierarchy/drivers |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b projection/MAP qualification; M4c hierarchy/drivers next |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -200,3 +200,12 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   M4b shares projection/MAP arithmetic with frame-based caller scratch; M4c
   integrates the fixed serial cycle, PCG/LSMR, certification and repeated RHS.
   The complete M4 milestone remains open until the entire vertical slice passes.
+
+- M4a: reviewed source `8d9c4bf16644b9a9ce817650047cc81901c98f8e` passed
+  source workflows 34054714391/34054714389 and PR workflows
+  34054716149/34054716213; PR #38 merged. See
+  [`ISSUE5_PREPARED_HIERARCHY.md`](ISSUE5_PREPARED_HIERARCHY.md).
+- M4b: prepared projection/MAP share ordinary scalar kernels and bind caller
+  scratch to the exact current frame. The integrated allocation test now uses
+  prepared MAP directly, eliminating its independently constructed ordinary
+  problem. See [`ISSUE5_PREPARED_MAP.md`](ISSUE5_PREPARED_MAP.md).

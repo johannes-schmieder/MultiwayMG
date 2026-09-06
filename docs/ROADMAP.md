@@ -124,7 +124,9 @@ the scalar kernels. [M3 pins reusable LSMR and mutable actions](ISSUE5_LSMR_DEPE
 from a narrowly qualified owner-controlled within fork. Complete current-frame
 solver integration remains M4 work. Its [owning structural hierarchy and complete
 weight replay](ISSUE5_PREPARED_HIERARCHY.md) now preserve one exact fine generation
-across all supplied levels. Numerical MAP/cycle/driver integration is still open.
+across all supplied levels. [Prepared projection and MAP](ISSUE5_PREPARED_MAP.md)
+now share scalar kernels with ordinary owners. Complete cycle/driver integration
+is still open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
