@@ -28,7 +28,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
-| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG qualification; serial economics next |
+| M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | In progress: M4a merged PR #38; M4b merged PR #39; M4c cycle merged PR #40; LSMR/certificate/RHS merged PR #41; PCG merged PR #42; serial evidence PR #43; certificate-aware LSMR required |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
@@ -243,3 +243,27 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   full platform/scientific CI remains required. Complete-cost serial economics
   reporting is the remaining M4 closure item. See
   [`ISSUE5_PREPARED_PCG.md`](ISSUE5_PREPARED_PCG.md).
+
+- M4c PCG PR #42 merged as `3bb2d3f9424f39754463cf85d155ba48b9ec3a04`;
+  post-merge workflows `34057809493` and `34057809500` passed. The final M4
+  [serial evidence increment](ISSUE5_SERIAL_BENCHMARK.md) freezes bounded
+  canonical-input smoke/development recipes, complete cold-process and RHS-prefix
+  costs, reserved payload/RSS/work scopes and adversarial evidence validation.
+  Commit source and recipe before timed collection; retain all negative results.
+  M4 stays open until this evidence surface is checked and merged.
+
+- M4 serial source `9b4f1740ce5e9bbb399059fe1615adbd10820ab7` was committed
+  before Mac smoke/development and Linux smoke collection. All three complete
+  artifacts pass the evidence gate and fixed-configuration repeatability. Each
+  has 504 processes and 4,800 measured RHS columns. PCG certifies 2,400/2,400 in
+  every run; LSMR certifies 1,840/2,400 in both smokes and 1,465/2,400 in Mac
+  development. All rejections are native normal-equation stops missing the
+  independent 1e-8 original-operator tolerance. No timeout or process error.
+  Preserve the [v1 negative baseline](../benchmarks/results/2026-09-06/prepared-serial-v1/README.md).
+- M4 now requires one additional correctness/completion increment before M5:
+  a separate certificate-aware LSMR route that vetoes early native stops before
+  the dependency's terminal audit clobbers recurrence vectors. Continue the same
+  Krylov recurrence after a veto; keep the legacy/native route unchanged. Charge
+  every candidate certificate, handle exact breakdown/iteration limits, retain
+  independent final certification and zero-allocation storage. Use a separately
+  declared development comparison, not retuned or overwritten v1 results.

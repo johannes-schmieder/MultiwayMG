@@ -1,0 +1,1618 @@
+{
+  "all_measured_columns_certified": false,
+  "certified_columns": 4240,
+  "competitive_qualification": false,
+  "expected_runs": 504,
+  "failed_measured_runs": 125,
+  "measured_columns": 4800,
+  "memory_scopes": {
+    "construction_peak_live_allocations": "unavailable: allocator high-water instrumentation is separate from this timing run",
+    "logical_live_array_lengths": "unavailable: capacity reports do not expose all lengths separately",
+    "old_new_generation_overlap": "not applicable: fresh fixed-weight single generation per process",
+    "opaque_dependency_memory": "transient terminal factorization not separately observed; retained dense/workspace arrays included",
+    "process_peak_rss": "isolated process including runtime, input decode, setup, solve, output and destruction",
+    "reserved_live_array_capacity": "measured per direct owner, including caller input/output and workspace",
+    "workspace_pool": "one serial workspace; hierarchy_workspace plus outer_workspace are measured capacities"
+  },
+  "profile": "smoke",
+  "rejected_columns": 560,
+  "scope": "prepared_serial_development_only",
+  "timings": [
+    {
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3104768,
+      "phase_seconds_median": {
+        "coarse_frames": 5.288e-06,
+        "decode": 2.9965e-05,
+        "fine_frame": 1.0415e-05,
+        "fine_topology": 1.5002e-05,
+        "maps_topology": 6.8153e-05,
+        "terminal": 4.9054e-05,
+        "workspace_output": 1.7286e-05
+      },
+      "process_seconds_max": 0.003022585,
+      "process_seconds_median": 0.00292939,
+      "process_seconds_min": 0.002896445,
+      "retained_capacity_bytes": 77956,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 5.208e-06,
+        "decode": 2.9705e-05,
+        "fine_frame": 1.0276e-05,
+        "fine_topology": 1.4582e-05,
+        "maps_topology": 6.5689e-05,
+        "terminal": 4.7222e-05,
+        "workspace_output": 7.451e-06
+      },
+      "process_seconds_max": 0.002934293,
+      "process_seconds_median": 0.002897467,
+      "process_seconds_min": 0.002797897,
+      "retained_capacity_bytes": 57668,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3317760,
+      "phase_seconds_median": {
+        "coarse_frames": 5.268e-06,
+        "decode": 0.00011316,
+        "fine_frame": 9.044e-06,
+        "fine_topology": 1.5152e-05,
+        "maps_topology": 6.1252e-05,
+        "terminal": 4.3646e-05,
+        "workspace_output": 9.594e-06
+      },
+      "process_seconds_max": 0.008071338,
+      "process_seconds_median": 0.00805285,
+      "process_seconds_min": 0.008006499,
+      "retained_capacity_bytes": 136756,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3149824,
+      "phase_seconds_median": {
+        "coarse_frames": 5.248e-06,
+        "decode": 0.000111849,
+        "fine_frame": 8.973e-06,
+        "fine_topology": 1.375e-05,
+        "maps_topology": 6.1473e-05,
+        "terminal": 4.2565e-05,
+        "workspace_output": 4.617e-06
+      },
+      "process_seconds_max": 0.007072239,
+      "process_seconds_median": 0.007017356,
+      "process_seconds_min": 0.007006449,
+      "retained_capacity_bytes": 116468,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3305472,
+      "phase_seconds_median": {
+        "coarse_frames": 5.238e-06,
+        "decode": 0.000143256,
+        "fine_frame": 8.863e-06,
+        "fine_topology": 1.5033e-05,
+        "maps_topology": 6.1463e-05,
+        "terminal": 4.3385e-05,
+        "workspace_output": 9.604e-06
+      },
+      "process_seconds_max": 0.008144157,
+      "process_seconds_median": 0.008095564,
+      "process_seconds_min": 0.008065789,
+      "retained_capacity_bytes": 140676,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3203072,
+      "phase_seconds_median": {
+        "coarse_frames": 5.248e-06,
+        "decode": 0.000142645,
+        "fine_frame": 9.044e-06,
+        "fine_topology": 1.5954e-05,
+        "maps_topology": 6.1443e-05,
+        "terminal": 4.3105e-05,
+        "workspace_output": 4.636e-06
+      },
+      "process_seconds_max": 0.00713971,
+      "process_seconds_median": 0.007093201,
+      "process_seconds_min": 0.00704635,
+      "retained_capacity_bytes": 120388,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3137536,
+      "phase_seconds_median": {
+        "coarse_frames": 5.298e-06,
+        "decode": 3.5183e-05,
+        "fine_frame": 8.984e-06,
+        "fine_topology": 1.5023e-05,
+        "maps_topology": 6.7492e-05,
+        "terminal": 4.9254e-05,
+        "workspace_output": 1.7346e-05
+      },
+      "process_seconds_max": 0.003355779,
+      "process_seconds_median": 0.003285543,
+      "process_seconds_min": 0.003215947,
+      "retained_capacity_bytes": 81876,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3072000,
+      "phase_seconds_median": {
+        "coarse_frames": 5.278e-06,
+        "decode": 3.5784e-05,
+        "fine_frame": 8.844e-06,
+        "fine_topology": 1.4432e-05,
+        "maps_topology": 6.642e-05,
+        "terminal": 4.7662e-05,
+        "workspace_output": 1.0437e-05
+      },
+      "process_seconds_max": 0.003208807,
+      "process_seconds_median": 0.003107254,
+      "process_seconds_min": 0.003088004,
+      "retained_capacity_bytes": 61588,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3133440,
+      "phase_seconds_median": {
+        "coarse_frames": 5.278e-06,
+        "decode": 0.00019243,
+        "fine_frame": 8.883e-06,
+        "fine_topology": 1.5353e-05,
+        "maps_topology": 6.1302e-05,
+        "terminal": 4.2585e-05,
+        "workspace_output": 1.3801e-05
+      },
+      "process_seconds_max": 0.013377635,
+      "process_seconds_median": 0.012981788,
+      "process_seconds_min": 0.012967366,
+      "retained_capacity_bytes": 199476,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3186688,
+      "phase_seconds_median": {
+        "coarse_frames": 5.298e-06,
+        "decode": 0.000186512,
+        "fine_frame": 8.964e-06,
+        "fine_topology": 1.5483e-05,
+        "maps_topology": 6.1723e-05,
+        "terminal": 4.3336e-05,
+        "workspace_output": 4.787e-06
+      },
+      "process_seconds_max": 0.011219687,
+      "process_seconds_median": 0.011011993,
+      "process_seconds_min": 0.01084098,
+      "retained_capacity_bytes": 179188,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3035136,
+      "phase_seconds_median": {
+        "coarse_frames": 5.248e-06,
+        "decode": 4.7732e-05,
+        "fine_frame": 8.894e-06,
+        "fine_topology": 1.2158e-05,
+        "maps_topology": 6.4087e-05,
+        "terminal": 4.9264e-05,
+        "workspace_output": 1.7706e-05
+      },
+      "process_seconds_max": 0.004005851,
+      "process_seconds_median": 0.003952601,
+      "process_seconds_min": 0.003937568,
+      "retained_capacity_bytes": 89716,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3039232,
+      "phase_seconds_median": {
+        "coarse_frames": 5.248e-06,
+        "decode": 4.678e-05,
+        "fine_frame": 8.864e-06,
+        "fine_topology": 1.5523e-05,
+        "maps_topology": 6.2694e-05,
+        "terminal": 4.7922e-05,
+        "workspace_output": 1.0606e-05
+      },
+      "process_seconds_max": 0.003656874,
+      "process_seconds_median": 0.00363452,
+      "process_seconds_min": 0.003628802,
+      "retained_capacity_bytes": 69428,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3174400,
+      "phase_seconds_median": {
+        "coarse_frames": 5.198e-06,
+        "decode": 6.9625e-05,
+        "fine_frame": 8.874e-06,
+        "fine_topology": 1.5023e-05,
+        "maps_topology": 6.1513e-05,
+        "terminal": 4.4807e-05,
+        "workspace_output": 1.4262e-05
+      },
+      "process_seconds_max": 0.00544412,
+      "process_seconds_median": 0.005320146,
+      "process_seconds_min": 0.005286873,
+      "retained_capacity_bytes": 105396,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3063808,
+      "phase_seconds_median": {
+        "coarse_frames": 5.228e-06,
+        "decode": 6.9274e-05,
+        "fine_frame": 8.834e-06,
+        "fine_topology": 1.4733e-05,
+        "maps_topology": 6.3626e-05,
+        "terminal": 4.5178e-05,
+        "workspace_output": 7.552e-06
+      },
+      "process_seconds_max": 0.004827259,
+      "process_seconds_median": 0.004760348,
+      "process_seconds_min": 0.004740268,
+      "retained_capacity_bytes": 85108,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3072000,
+      "phase_seconds_median": {
+        "coarse_frames": 5.178e-06,
+        "decode": 3.0606e-05,
+        "fine_frame": 1.0495e-05,
+        "fine_topology": 1.4982e-05,
+        "maps_topology": 6.584e-05,
+        "terminal": 4.8873e-05,
+        "workspace_output": 1.7577e-05
+      },
+      "process_seconds_max": 0.002928592,
+      "process_seconds_median": 0.002830795,
+      "process_seconds_min": 0.002726136,
+      "retained_capacity_bytes": 77956,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3006464,
+      "phase_seconds_median": {
+        "coarse_frames": 5.197e-06,
+        "decode": 2.9715e-05,
+        "fine_frame": 1.0316e-05,
+        "fine_topology": 1.2408e-05,
+        "maps_topology": 6.7562e-05,
+        "terminal": 5.0786e-05,
+        "workspace_output": 7.681e-06
+      },
+      "process_seconds_max": 0.002839969,
+      "process_seconds_median": 0.002742581,
+      "process_seconds_min": 0.00268204,
+      "retained_capacity_bytes": 57668,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3244032,
+      "phase_seconds_median": {
+        "coarse_frames": 5.238e-06,
+        "decode": 0.000119901,
+        "fine_frame": 8.923e-06,
+        "fine_topology": 1.5403e-05,
+        "maps_topology": 6.1283e-05,
+        "terminal": 4.4978e-05,
+        "workspace_output": 9.694e-06
+      },
+      "process_seconds_max": 0.006507785,
+      "process_seconds_median": 0.006367083,
+      "process_seconds_min": 0.00627099,
+      "retained_capacity_bytes": 136756,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3170304,
+      "phase_seconds_median": {
+        "coarse_frames": 5.137e-06,
+        "decode": 0.000115564,
+        "fine_frame": 8.883e-06,
+        "fine_topology": 1.6645e-05,
+        "maps_topology": 6.1433e-05,
+        "terminal": 4.647e-05,
+        "workspace_output": 4.817e-06
+      },
+      "process_seconds_max": 0.005589107,
+      "process_seconds_median": 0.005492644,
+      "process_seconds_min": 0.005364391,
+      "retained_capacity_bytes": 116468,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3137536,
+      "phase_seconds_median": {
+        "coarse_frames": 5.218e-06,
+        "decode": 0.000138409,
+        "fine_frame": 9.033e-06,
+        "fine_topology": 1.5133e-05,
+        "maps_topology": 6.1753e-05,
+        "terminal": 4.5149e-05,
+        "workspace_output": 9.674e-06
+      },
+      "process_seconds_max": 0.006395145,
+      "process_seconds_median": 0.006337032,
+      "process_seconds_min": 0.006290813,
+      "retained_capacity_bytes": 140676,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3178496,
+      "phase_seconds_median": {
+        "coarse_frames": 5.298e-06,
+        "decode": 0.000123236,
+        "fine_frame": 8.884e-06,
+        "fine_topology": 1.5533e-05,
+        "maps_topology": 6.1954e-05,
+        "terminal": 4.5158e-05,
+        "workspace_output": 4.687e-06
+      },
+      "process_seconds_max": 0.006093319,
+      "process_seconds_median": 0.005569237,
+      "process_seconds_min": 0.00546817,
+      "retained_capacity_bytes": 120388,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3186688,
+      "phase_seconds_median": {
+        "coarse_frames": 5.258e-06,
+        "decode": 3.5473e-05,
+        "fine_frame": 8.763e-06,
+        "fine_topology": 1.4883e-05,
+        "maps_topology": 6.5498e-05,
+        "terminal": 4.9395e-05,
+        "workspace_output": 1.7306e-05
+      },
+      "process_seconds_max": 0.003158158,
+      "process_seconds_median": 0.003133461,
+      "process_seconds_min": 0.003028373,
+      "retained_capacity_bytes": 81876,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 5.298e-06,
+        "decode": 3.5734e-05,
+        "fine_frame": 8.993e-06,
+        "fine_topology": 1.5093e-05,
+        "maps_topology": 6.5039e-05,
+        "terminal": 4.9335e-05,
+        "workspace_output": 7.783e-06
+      },
+      "process_seconds_max": 0.003003205,
+      "process_seconds_median": 0.002978082,
+      "process_seconds_min": 0.002859107,
+      "retained_capacity_bytes": 61588,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3194880,
+      "phase_seconds_median": {
+        "coarse_frames": 5.288e-06,
+        "decode": 0.000193903,
+        "fine_frame": 8.923e-06,
+        "fine_topology": 1.2569e-05,
+        "maps_topology": 7.269e-05,
+        "terminal": 4.4116e-05,
+        "workspace_output": 1.6985e-05
+      },
+      "process_seconds_max": 0.010089961,
+      "process_seconds_median": 0.009671149,
+      "process_seconds_min": 0.009547892,
+      "retained_capacity_bytes": 199476,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3170304,
+      "phase_seconds_median": {
+        "coarse_frames": 5.348e-06,
+        "decode": 0.00021821,
+        "fine_frame": 9.023e-06,
+        "fine_topology": 1.5423e-05,
+        "maps_topology": 6.1684e-05,
+        "terminal": 4.5109e-05,
+        "workspace_output": 4.757e-06
+      },
+      "process_seconds_max": 0.008850129,
+      "process_seconds_median": 0.00822533,
+      "process_seconds_min": 0.008043461,
+      "retained_capacity_bytes": 179188,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 5.258e-06,
+        "decode": 4.7131e-05,
+        "fine_frame": 8.953e-06,
+        "fine_topology": 1.5744e-05,
+        "maps_topology": 6.1343e-05,
+        "terminal": 4.9855e-05,
+        "workspace_output": 1.7456e-05
+      },
+      "process_seconds_max": 0.003915423,
+      "process_seconds_median": 0.003512574,
+      "process_seconds_min": 0.003466575,
+      "retained_capacity_bytes": 89716,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 5.227e-06,
+        "decode": 4.664e-05,
+        "fine_frame": 8.794e-06,
+        "fine_topology": 1.4582e-05,
+        "maps_topology": 6.3285e-05,
+        "terminal": 5.0746e-05,
+        "workspace_output": 8.082e-06
+      },
+      "process_seconds_max": 0.003341785,
+      "process_seconds_median": 0.003243928,
+      "process_seconds_min": 0.003216787,
+      "retained_capacity_bytes": 69428,
+      "route": "pcg"
+    },
+    {
+      "case_id": "chain-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3170304,
+      "phase_seconds_median": {
+        "coarse_frames": 5.168e-06,
+        "decode": 6.9134e-05,
+        "fine_frame": 8.873e-06,
+        "fine_topology": 1.4642e-05,
+        "maps_topology": 6.1363e-05,
+        "terminal": 4.7031e-05,
+        "workspace_output": 1.4492e-05
+      },
+      "process_seconds_max": 0.004534307,
+      "process_seconds_median": 0.004431901,
+      "process_seconds_min": 0.00441052,
+      "retained_capacity_bytes": 105396,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "chain-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 2871296,
+      "phase_seconds_median": {
+        "coarse_frames": 5.227e-06,
+        "decode": 7.0226e-05,
+        "fine_frame": 8.984e-06,
+        "fine_topology": 1.4942e-05,
+        "maps_topology": 6.1382e-05,
+        "terminal": 4.6611e-05,
+        "workspace_output": 7.591e-06
+      },
+      "process_seconds_max": 0.004089815,
+      "process_seconds_median": 0.003991016,
+      "process_seconds_min": 0.003957796,
+      "retained_capacity_bytes": 85108,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3137536,
+      "phase_seconds_median": {
+        "coarse_frames": 3.696e-06,
+        "decode": 1.9159e-05,
+        "fine_frame": 5.708e-06,
+        "fine_topology": 1.1457e-05,
+        "maps_topology": 3.3471e-05,
+        "terminal": 4.1573e-05,
+        "workspace_output": 1.316e-05
+      },
+      "process_seconds_max": 0.002882287,
+      "process_seconds_median": 0.002729407,
+      "process_seconds_min": 0.002708925,
+      "retained_capacity_bytes": 48540,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 3.626e-06,
+        "decode": 1.9409e-05,
+        "fine_frame": 5.609e-06,
+        "fine_topology": 1.2058e-05,
+        "maps_topology": 3.4161e-05,
+        "terminal": 4.1443e-05,
+        "workspace_output": 7.421e-06
+      },
+      "process_seconds_max": 0.002723939,
+      "process_seconds_median": 0.002700463,
+      "process_seconds_min": 0.002655685,
+      "retained_capacity_bytes": 35196,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3141632,
+      "phase_seconds_median": {
+        "coarse_frames": 2.173e-06,
+        "decode": 5.95e-05,
+        "fine_frame": 5.719e-06,
+        "fine_topology": 9.425e-06,
+        "maps_topology": 3.5804e-05,
+        "terminal": 3.8588e-05,
+        "workspace_output": 1.5122e-05
+      },
+      "process_seconds_max": 0.007344471,
+      "process_seconds_median": 0.006706066,
+      "process_seconds_min": 0.006658765,
+      "retained_capacity_bytes": 81300,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3039232,
+      "phase_seconds_median": {
+        "coarse_frames": 2.294e-06,
+        "decode": 5.8929e-05,
+        "fine_frame": 5.679e-06,
+        "fine_topology": 1.1808e-05,
+        "maps_topology": 3.2159e-05,
+        "terminal": 3.7827e-05,
+        "workspace_output": 8.873e-06
+      },
+      "process_seconds_max": 0.006257494,
+      "process_seconds_median": 0.006148124,
+      "process_seconds_min": 0.006083876,
+      "retained_capacity_bytes": 67956,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 2.143e-06,
+        "decode": 6.5989e-05,
+        "fine_frame": 5.829e-06,
+        "fine_topology": 1.1868e-05,
+        "maps_topology": 3.291e-05,
+        "terminal": 3.8028e-05,
+        "workspace_output": 1.1187e-05
+      },
+      "process_seconds_max": 0.006829186,
+      "process_seconds_median": 0.006750673,
+      "process_seconds_min": 0.006680988,
+      "retained_capacity_bytes": 83484,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3047424,
+      "phase_seconds_median": {
+        "coarse_frames": 2.113e-06,
+        "decode": 6.8753e-05,
+        "fine_frame": 5.659e-06,
+        "fine_topology": 1.2258e-05,
+        "maps_topology": 3.308e-05,
+        "terminal": 3.8428e-05,
+        "workspace_output": 4.756e-06
+      },
+      "process_seconds_max": 0.007339012,
+      "process_seconds_median": 0.006260329,
+      "process_seconds_min": 0.006189932,
+      "retained_capacity_bytes": 70140,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3084288,
+      "phase_seconds_median": {
+        "coarse_frames": 3.926e-06,
+        "decode": 2.1343e-05,
+        "fine_frame": 5.589e-06,
+        "fine_topology": 1.1998e-05,
+        "maps_topology": 3.4292e-05,
+        "terminal": 4.0512e-05,
+        "workspace_output": 1.311e-05
+      },
+      "process_seconds_max": 0.007531333,
+      "process_seconds_median": 0.003010791,
+      "process_seconds_min": 0.002982273,
+      "retained_capacity_bytes": 50724,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3121152,
+      "phase_seconds_median": {
+        "coarse_frames": 3.526e-06,
+        "decode": 2.0691e-05,
+        "fine_frame": 5.658e-06,
+        "fine_topology": 1.1838e-05,
+        "maps_topology": 3.32e-05,
+        "terminal": 4.0661e-05,
+        "workspace_output": 7.382e-06
+      },
+      "process_seconds_max": 0.002894525,
+      "process_seconds_median": 0.00289011,
+      "process_seconds_min": 0.002848757,
+      "retained_capacity_bytes": 37380,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3203072,
+      "phase_seconds_median": {
+        "coarse_frames": 2.233e-06,
+        "decode": 0.000105569,
+        "fine_frame": 5.658e-06,
+        "fine_topology": 1.2078e-05,
+        "maps_topology": 3.2189e-05,
+        "terminal": 3.8508e-05,
+        "workspace_output": 6.379e-06
+      },
+      "process_seconds_max": 0.010634328,
+      "process_seconds_median": 0.010502354,
+      "process_seconds_min": 0.010493315,
+      "retained_capacity_bytes": 116244,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3162112,
+      "phase_seconds_median": {
+        "coarse_frames": 2.214e-06,
+        "decode": 0.000109725,
+        "fine_frame": 5.588e-06,
+        "fine_topology": 1.1787e-05,
+        "maps_topology": 3.2369e-05,
+        "terminal": 3.8789e-05,
+        "workspace_output": 4.748e-06
+      },
+      "process_seconds_max": 0.009562194,
+      "process_seconds_median": 0.009407891,
+      "process_seconds_min": 0.009388942,
+      "retained_capacity_bytes": 102900,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3170304,
+      "phase_seconds_median": {
+        "coarse_frames": 3.655e-06,
+        "decode": 2.679e-05,
+        "fine_frame": 5.699e-06,
+        "fine_topology": 9.144e-06,
+        "maps_topology": 3.1838e-05,
+        "terminal": 4.0461e-05,
+        "workspace_output": 1.5894e-05
+      },
+      "process_seconds_max": 0.003861291,
+      "process_seconds_median": 0.003548749,
+      "process_seconds_min": 0.003451712,
+      "retained_capacity_bytes": 55092,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3039232,
+      "phase_seconds_median": {
+        "coarse_frames": 3.806e-06,
+        "decode": 2.7231e-05,
+        "fine_frame": 5.678e-06,
+        "fine_topology": 1.1878e-05,
+        "maps_topology": 3.2519e-05,
+        "terminal": 4.3045e-05,
+        "workspace_output": 7.952e-06
+      },
+      "process_seconds_max": 0.003534838,
+      "process_seconds_median": 0.003365372,
+      "process_seconds_min": 0.003308626,
+      "retained_capacity_bytes": 41748,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3084288,
+      "phase_seconds_median": {
+        "coarse_frames": 2.173e-06,
+        "decode": 3.8939e-05,
+        "fine_frame": 5.739e-06,
+        "fine_topology": 1.1968e-05,
+        "maps_topology": 3.1207e-05,
+        "terminal": 4.0351e-05,
+        "workspace_output": 1.4462e-05
+      },
+      "process_seconds_max": 0.004744604,
+      "process_seconds_median": 0.004618515,
+      "process_seconds_min": 0.004567778,
+      "retained_capacity_bytes": 63828,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 2985984,
+      "phase_seconds_median": {
+        "coarse_frames": 2.134e-06,
+        "decode": 3.9089e-05,
+        "fine_frame": 5.568e-06,
+        "fine_topology": 1.1868e-05,
+        "maps_topology": 3.2279e-05,
+        "terminal": 3.9569e-05,
+        "workspace_output": 7.572e-06
+      },
+      "process_seconds_max": 0.004478673,
+      "process_seconds_median": 0.004362688,
+      "process_seconds_min": 0.004260383,
+      "retained_capacity_bytes": 50484,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3108864,
+      "phase_seconds_median": {
+        "coarse_frames": 3.716e-06,
+        "decode": 1.952e-05,
+        "fine_frame": 5.829e-06,
+        "fine_topology": 1.1668e-05,
+        "maps_topology": 3.3441e-05,
+        "terminal": 4.2163e-05,
+        "workspace_output": 1.2959e-05
+      },
+      "process_seconds_max": 0.002626743,
+      "process_seconds_median": 0.002558879,
+      "process_seconds_min": 0.002500861,
+      "retained_capacity_bytes": 48540,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 3.786e-06,
+        "decode": 1.9259e-05,
+        "fine_frame": 5.578e-06,
+        "fine_topology": 1.1668e-05,
+        "maps_topology": 3.3991e-05,
+        "terminal": 4.2004e-05,
+        "workspace_output": 7.491e-06
+      },
+      "process_seconds_max": 0.002610142,
+      "process_seconds_median": 0.002516566,
+      "process_seconds_min": 0.002491087,
+      "retained_capacity_bytes": 35196,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3112960,
+      "phase_seconds_median": {
+        "coarse_frames": 2.163e-06,
+        "decode": 6.1863e-05,
+        "fine_frame": 5.688e-06,
+        "fine_topology": 1.2058e-05,
+        "maps_topology": 3.303e-05,
+        "terminal": 3.977e-05,
+        "workspace_output": 1.4522e-05
+      },
+      "process_seconds_max": 0.005075635,
+      "process_seconds_median": 0.004887166,
+      "process_seconds_min": 0.004813704,
+      "retained_capacity_bytes": 81300,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3112960,
+      "phase_seconds_median": {
+        "coarse_frames": 2.214e-06,
+        "decode": 6.2334e-05,
+        "fine_frame": 5.779e-06,
+        "fine_topology": 1.1418e-05,
+        "maps_topology": 3.2138e-05,
+        "terminal": 4.009e-05,
+        "workspace_output": 9.104e-06
+      },
+      "process_seconds_max": 0.004579481,
+      "process_seconds_median": 0.004385382,
+      "process_seconds_min": 0.004172195,
+      "retained_capacity_bytes": 67956,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3084288,
+      "phase_seconds_median": {
+        "coarse_frames": 2.133e-06,
+        "decode": 6.5108e-05,
+        "fine_frame": 5.799e-06,
+        "fine_topology": 1.1026e-05,
+        "maps_topology": 3.2719e-05,
+        "terminal": 4.0141e-05,
+        "workspace_output": 1.0966e-05
+      },
+      "process_seconds_max": 0.004995709,
+      "process_seconds_median": 0.004876519,
+      "process_seconds_min": 0.004822443,
+      "retained_capacity_bytes": 83484,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3055616,
+      "phase_seconds_median": {
+        "coarse_frames": 2.193e-06,
+        "decode": 6.6911e-05,
+        "fine_frame": 5.609e-06,
+        "fine_topology": 9.354e-06,
+        "maps_topology": 3.2219e-05,
+        "terminal": 3.974e-05,
+        "workspace_output": 4.688e-06
+      },
+      "process_seconds_max": 0.004382242,
+      "process_seconds_median": 0.004196477,
+      "process_seconds_min": 0.004168911,
+      "retained_capacity_bytes": 70140,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3084288,
+      "phase_seconds_median": {
+        "coarse_frames": 3.936e-06,
+        "decode": 2.1603e-05,
+        "fine_frame": 5.628e-06,
+        "fine_topology": 1.2078e-05,
+        "maps_topology": 3.3951e-05,
+        "terminal": 4.1793e-05,
+        "workspace_output": 1.362e-05
+      },
+      "process_seconds_max": 0.002871501,
+      "process_seconds_median": 0.002823523,
+      "process_seconds_min": 0.002687248,
+      "retained_capacity_bytes": 50724,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3084288,
+      "phase_seconds_median": {
+        "coarse_frames": 3.826e-06,
+        "decode": 2.1643e-05,
+        "fine_frame": 5.728e-06,
+        "fine_topology": 1.1737e-05,
+        "maps_topology": 3.3921e-05,
+        "terminal": 4.2174e-05,
+        "workspace_output": 7.762e-06
+      },
+      "process_seconds_max": 0.002794416,
+      "process_seconds_median": 0.002719992,
+      "process_seconds_min": 0.002599936,
+      "retained_capacity_bytes": 37380,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3215360,
+      "phase_seconds_median": {
+        "coarse_frames": 2.183e-06,
+        "decode": 0.000107322,
+        "fine_frame": 5.669e-06,
+        "fine_topology": 1.0445e-05,
+        "maps_topology": 3.2399e-05,
+        "terminal": 4.0461e-05,
+        "workspace_output": 6.58e-06
+      },
+      "process_seconds_max": 0.00692015,
+      "process_seconds_median": 0.006892072,
+      "process_seconds_min": 0.006822508,
+      "retained_capacity_bytes": 116244,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3162112,
+      "phase_seconds_median": {
+        "coarse_frames": 2.153e-06,
+        "decode": 0.000105739,
+        "fine_frame": 5.639e-06,
+        "fine_topology": 1.2008e-05,
+        "maps_topology": 3.1448e-05,
+        "terminal": 4.1172e-05,
+        "workspace_output": 4.857e-06
+      },
+      "process_seconds_max": 0.005729117,
+      "process_seconds_median": 0.005686707,
+      "process_seconds_min": 0.005617457,
+      "retained_capacity_bytes": 102900,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3006464,
+      "phase_seconds_median": {
+        "coarse_frames": 3.796e-06,
+        "decode": 2.7442e-05,
+        "fine_frame": 5.688e-06,
+        "fine_topology": 8.993e-06,
+        "maps_topology": 3.3651e-05,
+        "terminal": 4.3906e-05,
+        "workspace_output": 1.3581e-05
+      },
+      "process_seconds_max": 0.003133052,
+      "process_seconds_median": 0.003094483,
+      "process_seconds_min": 0.002921422,
+      "retained_capacity_bytes": 55092,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3055616,
+      "phase_seconds_median": {
+        "coarse_frames": 3.896e-06,
+        "decode": 2.8093e-05,
+        "fine_frame": 5.739e-06,
+        "fine_topology": 1.1678e-05,
+        "maps_topology": 3.2259e-05,
+        "terminal": 4.2434e-05,
+        "workspace_output": 7.651e-06
+      },
+      "process_seconds_max": 0.003017016,
+      "process_seconds_median": 0.002955694,
+      "process_seconds_min": 0.002783153,
+      "retained_capacity_bytes": 41748,
+      "route": "pcg"
+    },
+    {
+      "case_id": "communities-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3067904,
+      "phase_seconds_median": {
+        "coarse_frames": 2.143e-06,
+        "decode": 3.942e-05,
+        "fine_frame": 5.709e-06,
+        "fine_topology": 1.1387e-05,
+        "maps_topology": 3.1708e-05,
+        "terminal": 4.0441e-05,
+        "workspace_output": 1.372e-05
+      },
+      "process_seconds_max": 0.003800819,
+      "process_seconds_median": 0.003712056,
+      "process_seconds_min": 0.003676772,
+      "retained_capacity_bytes": 63828,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "communities-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3055616,
+      "phase_seconds_median": {
+        "coarse_frames": 2.133e-06,
+        "decode": 4.1994e-05,
+        "fine_frame": 5.748e-06,
+        "fine_topology": 1.1728e-05,
+        "maps_topology": 3.1808e-05,
+        "terminal": 4.2404e-05,
+        "workspace_output": 7.782e-06
+      },
+      "process_seconds_max": 0.003457541,
+      "process_seconds_median": 0.003392653,
+      "process_seconds_min": 0.003288766,
+      "retained_capacity_bytes": 50484,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3063808,
+      "phase_seconds_median": {
+        "coarse_frames": 8.984e-06,
+        "decode": 3.327e-05,
+        "fine_frame": 9.555e-06,
+        "fine_topology": 1.4281e-05,
+        "maps_topology": 7.4914e-05,
+        "terminal": 4.7722e-05,
+        "workspace_output": 1.6044e-05
+      },
+      "process_seconds_max": 0.002942508,
+      "process_seconds_median": 0.002796328,
+      "process_seconds_min": 0.002742882,
+      "retained_capacity_bytes": 90268,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3031040,
+      "phase_seconds_median": {
+        "coarse_frames": 9.093e-06,
+        "decode": 3.3851e-05,
+        "fine_frame": 9.555e-06,
+        "fine_topology": 1.311e-05,
+        "maps_topology": 7.5183e-05,
+        "terminal": 5.0727e-05,
+        "workspace_output": 9.183e-06
+      },
+      "process_seconds_max": 0.002882147,
+      "process_seconds_median": 0.002765081,
+      "process_seconds_min": 0.002703618,
+      "retained_capacity_bytes": 67964,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3170304,
+      "phase_seconds_median": {
+        "coarse_frames": 7.541e-06,
+        "decode": 0.000139831,
+        "fine_frame": 9.825e-06,
+        "fine_topology": 1.5624e-05,
+        "maps_topology": 7.0386e-05,
+        "terminal": 4.4467e-05,
+        "workspace_output": 1.2278e-05
+      },
+      "process_seconds_max": 0.008867962,
+      "process_seconds_median": 0.008714665,
+      "process_seconds_min": 0.008531288,
+      "retained_capacity_bytes": 156628,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3108864,
+      "phase_seconds_median": {
+        "coarse_frames": 7.642e-06,
+        "decode": 0.000130046,
+        "fine_frame": 9.855e-06,
+        "fine_topology": 1.5393e-05,
+        "maps_topology": 7.0416e-05,
+        "terminal": 4.4607e-05,
+        "workspace_output": 4.506e-06
+      },
+      "process_seconds_max": 0.007573688,
+      "process_seconds_median": 0.0072246,
+      "process_seconds_min": 0.007076827,
+      "retained_capacity_bytes": 134324,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3174400,
+      "phase_seconds_median": {
+        "coarse_frames": 7.572e-06,
+        "decode": 0.000150136,
+        "fine_frame": 9.765e-06,
+        "fine_topology": 1.5763e-05,
+        "maps_topology": 7.0556e-05,
+        "terminal": 4.5288e-05,
+        "workspace_output": 1.3881e-05
+      },
+      "process_seconds_max": 0.008777481,
+      "process_seconds_median": 0.008534057,
+      "process_seconds_min": 0.008465834,
+      "retained_capacity_bytes": 161052,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3178496,
+      "phase_seconds_median": {
+        "coarse_frames": 7.572e-06,
+        "decode": 0.000153802,
+        "fine_frame": 9.654e-06,
+        "fine_topology": 1.5854e-05,
+        "maps_topology": 7.27e-05,
+        "terminal": 4.629e-05,
+        "workspace_output": 4.507e-06
+      },
+      "process_seconds_max": 0.007415352,
+      "process_seconds_median": 0.007298967,
+      "process_seconds_min": 0.007197459,
+      "retained_capacity_bytes": 138748,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3162112,
+      "phase_seconds_median": {
+        "coarse_frames": 8.853e-06,
+        "decode": 3.8448e-05,
+        "fine_frame": 9.404e-06,
+        "fine_topology": 1.3881e-05,
+        "maps_topology": 7.309e-05,
+        "terminal": 5.0837e-05,
+        "workspace_output": 1.3701e-05
+      },
+      "process_seconds_max": 0.00342027,
+      "process_seconds_median": 0.003242742,
+      "process_seconds_min": 0.003016826,
+      "retained_capacity_bytes": 94692,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3043328,
+      "phase_seconds_median": {
+        "coarse_frames": 8.863e-06,
+        "decode": 3.9059e-05,
+        "fine_frame": 9.435e-06,
+        "fine_topology": 1.5293e-05,
+        "maps_topology": 7.303e-05,
+        "terminal": 5.0406e-05,
+        "workspace_output": 6.72e-06
+      },
+      "process_seconds_max": 0.003225436,
+      "process_seconds_median": 0.002950425,
+      "process_seconds_min": 0.002764465,
+      "retained_capacity_bytes": 72388,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3305472,
+      "phase_seconds_median": {
+        "coarse_frames": 7.531e-06,
+        "decode": 0.000261515,
+        "fine_frame": 9.785e-06,
+        "fine_topology": 1.6004e-05,
+        "maps_topology": 7.1228e-05,
+        "terminal": 4.5179e-05,
+        "workspace_output": 1.4452e-05
+      },
+      "process_seconds_max": 0.014148586,
+      "process_seconds_median": 0.01407561,
+      "process_seconds_min": 0.013971043,
+      "retained_capacity_bytes": 227412,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3186688,
+      "phase_seconds_median": {
+        "coarse_frames": 7.592e-06,
+        "decode": 0.000220923,
+        "fine_frame": 1.0045e-05,
+        "fine_topology": 1.6235e-05,
+        "maps_topology": 7.0536e-05,
+        "terminal": 4.5659e-05,
+        "workspace_output": 6.26e-06
+      },
+      "process_seconds_max": 0.011648526,
+      "process_seconds_median": 0.011607689,
+      "process_seconds_min": 0.011415975,
+      "retained_capacity_bytes": 205108,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3215360,
+      "phase_seconds_median": {
+        "coarse_frames": 9.324e-06,
+        "decode": 5.5453e-05,
+        "fine_frame": 9.745e-06,
+        "fine_topology": 1.5814e-05,
+        "maps_topology": 7.259e-05,
+        "terminal": 5.2068e-05,
+        "workspace_output": 1.5674e-05
+      },
+      "process_seconds_max": 0.004284791,
+      "process_seconds_median": 0.004192997,
+      "process_seconds_min": 0.004107954,
+      "retained_capacity_bytes": 103540,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3035136,
+      "phase_seconds_median": {
+        "coarse_frames": 9.134e-06,
+        "decode": 5.1818e-05,
+        "fine_frame": 9.785e-06,
+        "fine_topology": 1.6435e-05,
+        "maps_topology": 7.1608e-05,
+        "terminal": 5.1628e-05,
+        "workspace_output": 8.042e-06
+      },
+      "process_seconds_max": 0.003880345,
+      "process_seconds_median": 0.003794045,
+      "process_seconds_min": 0.003624484,
+      "retained_capacity_bytes": 81236,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3317760,
+      "phase_seconds_median": {
+        "coarse_frames": 7.422e-06,
+        "decode": 7.8018e-05,
+        "fine_frame": 9.585e-06,
+        "fine_topology": 1.2569e-05,
+        "maps_topology": 6.8333e-05,
+        "terminal": 4.627e-05,
+        "workspace_output": 1.6445e-05
+      },
+      "process_seconds_max": 0.005759814,
+      "process_seconds_median": 0.005491078,
+      "process_seconds_min": 0.005434131,
+      "retained_capacity_bytes": 121236,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-heterogeneous-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3170304,
+      "phase_seconds_median": {
+        "coarse_frames": 7.371e-06,
+        "decode": 8.1824e-05,
+        "fine_frame": 9.544e-06,
+        "fine_topology": 1.4061e-05,
+        "maps_topology": 6.8814e-05,
+        "terminal": 4.4327e-05,
+        "workspace_output": 7.061e-06
+      },
+      "process_seconds_max": 0.004884971,
+      "process_seconds_median": 0.004706808,
+      "process_seconds_min": 0.004628229,
+      "retained_capacity_bytes": 98932,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3006464,
+      "phase_seconds_median": {
+        "coarse_frames": 8.823e-06,
+        "decode": 3.2329e-05,
+        "fine_frame": 8.643e-06,
+        "fine_topology": 1.302e-05,
+        "maps_topology": 7.3862e-05,
+        "terminal": 4.7191e-05,
+        "workspace_output": 1.6505e-05
+      },
+      "process_seconds_max": 0.002445768,
+      "process_seconds_median": 0.002331561,
+      "process_seconds_min": 0.002319633,
+      "retained_capacity_bytes": 90268,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k1",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3039232,
+      "phase_seconds_median": {
+        "coarse_frames": 8.794e-06,
+        "decode": 3.292e-05,
+        "fine_frame": 8.783e-06,
+        "fine_topology": 1.3009e-05,
+        "maps_topology": 7.3701e-05,
+        "terminal": 4.7492e-05,
+        "workspace_output": 8.683e-06
+      },
+      "process_seconds_max": 0.002418387,
+      "process_seconds_median": 0.002282687,
+      "process_seconds_min": 0.002230969,
+      "retained_capacity_bytes": 67964,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3137536,
+      "phase_seconds_median": {
+        "coarse_frames": 7.281e-06,
+        "decode": 0.000144488,
+        "fine_frame": 8.873e-06,
+        "fine_topology": 1.3671e-05,
+        "maps_topology": 6.9064e-05,
+        "terminal": 4.2654e-05,
+        "workspace_output": 1.0356e-05
+      },
+      "process_seconds_max": 0.006277409,
+      "process_seconds_median": 0.006230398,
+      "process_seconds_min": 0.006148164,
+      "retained_capacity_bytes": 156628,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k16",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3162112,
+      "phase_seconds_median": {
+        "coarse_frames": 7.201e-06,
+        "decode": 0.000146081,
+        "fine_frame": 8.814e-06,
+        "fine_topology": 1.2188e-05,
+        "maps_topology": 6.7983e-05,
+        "terminal": 4.2724e-05,
+        "workspace_output": 2.954e-06
+      },
+      "process_seconds_max": 0.005156176,
+      "process_seconds_median": 0.005120021,
+      "process_seconds_min": 0.005050096,
+      "retained_capacity_bytes": 134324,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3198976,
+      "phase_seconds_median": {
+        "coarse_frames": 7.291e-06,
+        "decode": 0.000157448,
+        "fine_frame": 9.324e-06,
+        "fine_topology": 1.4812e-05,
+        "maps_topology": 6.8804e-05,
+        "terminal": 4.4016e-05,
+        "workspace_output": 1.2378e-05
+      },
+      "process_seconds_max": 0.006414737,
+      "process_seconds_median": 0.006380695,
+      "process_seconds_min": 0.006285792,
+      "retained_capacity_bytes": 161052,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k17",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3108864,
+      "phase_seconds_median": {
+        "coarse_frames": 7.241e-06,
+        "decode": 0.000153182,
+        "fine_frame": 8.953e-06,
+        "fine_topology": 1.3881e-05,
+        "maps_topology": 6.9035e-05,
+        "terminal": 4.3115e-05,
+        "workspace_output": 3.435e-06
+      },
+      "process_seconds_max": 0.005328506,
+      "process_seconds_median": 0.0050592,
+      "process_seconds_min": 0.005008724,
+      "retained_capacity_bytes": 138748,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3305472,
+      "phase_seconds_median": {
+        "coarse_frames": 8.663e-06,
+        "decode": 3.8258e-05,
+        "fine_frame": 8.623e-06,
+        "fine_topology": 1.316e-05,
+        "maps_topology": 7.4463e-05,
+        "terminal": 4.9244e-05,
+        "workspace_output": 1.3079e-05
+      },
+      "process_seconds_max": 0.002783503,
+      "process_seconds_median": 0.002605874,
+      "process_seconds_min": 0.002567276,
+      "retained_capacity_bytes": 94692,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k2",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 2990080,
+      "phase_seconds_median": {
+        "coarse_frames": 8.693e-06,
+        "decode": 3.938e-05,
+        "fine_frame": 8.623e-06,
+        "fine_topology": 1.324e-05,
+        "maps_topology": 7.2119e-05,
+        "terminal": 4.9114e-05,
+        "workspace_output": 6.17e-06
+      },
+      "process_seconds_max": 0.002676191,
+      "process_seconds_median": 0.002412042,
+      "process_seconds_min": 0.002402357,
+      "retained_capacity_bytes": 72388,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3268608,
+      "phase_seconds_median": {
+        "coarse_frames": 7.311e-06,
+        "decode": 0.000221555,
+        "fine_frame": 9.374e-06,
+        "fine_topology": 1.5744e-05,
+        "maps_topology": 6.7411e-05,
+        "terminal": 4.3336e-05,
+        "workspace_output": 1.3721e-05
+      },
+      "process_seconds_max": 0.010053747,
+      "process_seconds_median": 0.009887982,
+      "process_seconds_min": 0.00974063,
+      "retained_capacity_bytes": 227412,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k32",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3198976,
+      "phase_seconds_median": {
+        "coarse_frames": 7.481e-06,
+        "decode": 0.000248735,
+        "fine_frame": 9.435e-06,
+        "fine_topology": 1.6835e-05,
+        "maps_topology": 6.9244e-05,
+        "terminal": 4.5208e-05,
+        "workspace_output": 6.299e-06
+      },
+      "process_seconds_max": 0.007979349,
+      "process_seconds_median": 0.007826774,
+      "process_seconds_min": 0.00764862,
+      "retained_capacity_bytes": 205108,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3252224,
+      "phase_seconds_median": {
+        "coarse_frames": 8.994e-06,
+        "decode": 5.1908e-05,
+        "fine_frame": 8.623e-06,
+        "fine_topology": 1.337e-05,
+        "maps_topology": 7.0046e-05,
+        "terminal": 5.0916e-05,
+        "workspace_output": 1.3761e-05
+      },
+      "process_seconds_max": 0.003218761,
+      "process_seconds_median": 0.003160042,
+      "process_seconds_min": 0.003129555,
+      "retained_capacity_bytes": 103540,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k4",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3039232,
+      "phase_seconds_median": {
+        "coarse_frames": 8.993e-06,
+        "decode": 5.2149e-05,
+        "fine_frame": 8.903e-06,
+        "fine_topology": 1.3641e-05,
+        "maps_topology": 6.9425e-05,
+        "terminal": 5.0436e-05,
+        "workspace_output": 6.32e-06
+      },
+      "process_seconds_max": 0.002906359,
+      "process_seconds_median": 0.002802161,
+      "process_seconds_min": 0.002781028,
+      "retained_capacity_bytes": 81236,
+      "route": "pcg"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3227648,
+      "phase_seconds_median": {
+        "coarse_frames": 7.131e-06,
+        "decode": 8.1263e-05,
+        "fine_frame": 8.734e-06,
+        "fine_topology": 1.342e-05,
+        "maps_topology": 6.7562e-05,
+        "terminal": 4.3646e-05,
+        "workspace_output": 1.3851e-05
+      },
+      "process_seconds_max": 0.004398011,
+      "process_seconds_median": 0.00420536,
+      "process_seconds_min": 0.004157847,
+      "retained_capacity_bytes": 121236,
+      "route": "lsmr"
+    },
+    {
+      "case_id": "uniform-unit-s10001-k8",
+      "complete_repetitions": 5,
+      "peak_rss_bytes_max": 3137536,
+      "phase_seconds_median": {
+        "coarse_frames": 7.281e-06,
+        "decode": 8.1773e-05,
+        "fine_frame": 8.934e-06,
+        "fine_topology": 1.301e-05,
+        "maps_topology": 6.8163e-05,
+        "terminal": 4.4427e-05,
+        "workspace_output": 6.49e-06
+      },
+      "process_seconds_max": 0.003709371,
+      "process_seconds_median": 0.003571914,
+      "process_seconds_min": 0.003555309,
+      "retained_capacity_bytes": 98932,
+      "route": "pcg"
+    }
+  ]
+}

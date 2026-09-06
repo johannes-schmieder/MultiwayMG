@@ -33,6 +33,12 @@ jobs:
         run: cargo test --locked --workspace --all-features
       - name: Test minimal feature set
         run: cargo test --locked --workspace --no-default-features
+      - name: Test evidence validators
+        env:
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+      - name: Test prepared benchmark input boundary
+        run: cargo test --locked -p multiway-mg --all-features --example prepared_serial_benchmark
       - name: Build documentation
         env:
           RUSTDOCFLAGS: -D warnings
@@ -257,4 +263,27 @@ jobs:
         with:
           name: issue-4-whole-system-output
           path: issue4-whole-output/
+          if-no-files-found: error
+
+  prepared-serial:
+    name: Prepared serial complete-cost evidence
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Collect the frozen serial development smoke
+        run: python3 scripts/prepared_serial.py "$RUNNER_TEMP/prepared-serial-smoke" --profile smoke
+      - name: Validate complete evidence, including scientific rejections
+        run: python3 scripts/validate_prepared_serial.py "$RUNNER_TEMP/prepared-serial-smoke"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prepared-serial-smoke
+          path: ${{ runner.temp }}/prepared-serial-smoke/
           if-no-files-found: error
