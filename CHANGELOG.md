@@ -4,6 +4,10 @@
 
 ### Added
 
+- Compensated coarse-weight and pair-conductance replay with exact parent-frame
+  and symbolic-map provenance, rebuilt finite degrees, checked live payload
+  admission and allocation/failure tests; see `docs/ISSUE5_WEIGHT_REPLAY.md`.
+
 - Immutable validated weight frames with explicit input layouts, numerical-owner
   bindings, compensated duplicate weights/degrees, component diagnostics and
   checked live setup-payload accounting; see `docs/ISSUE5_WEIGHT_FRAMES.md`.

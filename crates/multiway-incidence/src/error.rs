@@ -6,6 +6,17 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A replay was supplied with a different symbolic map owner.
+    #[error("numerical replay belongs to a different symbolic map owner")]
+    WeightReplayMapMismatch,
+    /// Declared live requested-array payload is too small for replay construction.
+    #[error("weight replay setup requires {required} payload bytes, budget is {budget}")]
+    WeightReplayBudgetExceeded {
+        /// Checked direct-owner plus requested-new-array payload.
+        required: usize,
+        /// Caller-declared payload limit, not an allocator quota.
+        budget: usize,
+    },
     /// Observation weights require a prepared source with original row groups.
     #[error("observation weight input requires an observation-prepared topology")]
     WeightFrameObservationLayoutRequired,
