@@ -1,0 +1,30 @@
+name: Assemble replay source (temporary)
+on:
+  push:
+    branches: ["implementation/issue-5-weight-replay-stage"]
+    paths: ["scripts/issue5_weight_replay_assembly.py", ".github/workflows/issue5-weight-replay-assembly.yml"]
+permissions:
+  contents: write
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+          components: rustfmt
+      - name: Integrate and format permanent source; remove this machinery
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git branch --show-current)" = "implementation/issue-5-weight-replay-stage"
+          python scripts/issue5_weight_replay_assembly.py
+          cargo fmt --all
+          git rm scripts/issue5_weight_replay_assembly.py .github/workflows/issue5-weight-replay-assembly.yml
+          git add crates/multiway-incidence crates/multiway-mg/tests docs/ISSUE5_WEIGHT_REPLAY.md CHANGELOG.md
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrate permanent weight replay source; not a validation receipt'
+          git push origin HEAD:implementation/issue-5-weight-replay-stage
