@@ -3,6 +3,9 @@
 #[allow(dead_code)]
 #[path = "../examples/support/issue3_recursive_fixtures.rs"]
 mod fixtures;
+#[cfg(feature = "lsmr")]
+#[path = "support/lsmr_workspace_integration.rs"]
+mod lsmr_workspace_integration;
 #[path = "support/operator_view_allocations.rs"]
 mod operator_view_allocations;
 #[path = "support/payload_allocations.rs"]
@@ -225,6 +228,8 @@ fn main() -> Result<()> {
     weight_frame_allocations::run()?;
     weight_replay_allocations::run()?;
     operator_view_allocations::run()?;
+    #[cfg(feature = "lsmr")]
+    lsmr_workspace_integration::run()?;
     pcg_allocations::run()?;
     let fixtures = fixtures::recursive_holdout_fixtures()?;
     assert_eq!(fixtures.len(), 8);

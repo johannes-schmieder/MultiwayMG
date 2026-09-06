@@ -46,3 +46,9 @@ identity and mutation tests run in `multiway-incidence`. The permanent isolated
 first/repeated actions and errors on Linux/macOS/Windows, debug/release and
 minimal/all-feature configurations. See `NUMERICAL_BOUNDARIES.md` and
 `ISSUE5_OPERATOR_VIEWS.md` for the qualified scope of each boundary.
+
+M3 additionally composes immutable frame actions, caller-owned MAP scratch,
+forked serial LSMR and an independent certificate for 32 RHS inside the same
+isolated allocation executable (when `lsmr` is enabled). Both dependency pins
+move together; immutable performance baselines remain separately identified in
+`PERFORMANCE_PROTOCOL.md` and `ISSUE5_LSMR_DEPENDENCY.md`.
