@@ -25,8 +25,8 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | Increment | Deliverable and acceptance boundary | State |
 | --- | --- | --- |
 | M0 | Commit this plan, performance protocol, immutable baseline identity, resource limits and evidence contract before optimization. | Complete: PR #34, main `1702699` |
-| M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Implemented; numerical gates and PR qualification in progress |
-| M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Planned |
+| M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Complete: PR #35, main `0cfb9f3` |
+| M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Implemented; PR qualification pending |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Planned |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Planned |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Planned |
@@ -167,4 +167,10 @@ work; this campaign ends at a verified standalone candidate and honest evidence.
   34050885584/34050885611 and PR CI 34050891406/34050891411 all passed.
 - M1: boundary contracts and regression scope are documented in
   [`NUMERICAL_BOUNDARIES.md`](NUMERICAL_BOUNDARIES.md). Source qualification
-  and merge receipts belong in this ledger at the next checkpoint.
+  passed locally on Rust 1.85. PR #35 merged as `0cfb9f348bad536b5496a850e656fca3306a3a43`;
+  reviewed source `1d7fff0cc837d02743dac177918ea515601df4ba`, push workflows
+  34051329176/34051329194 and PR workflows 34051333405/34051333432 all passed.
+
+- M2: shared scalar operators and exact numerical ownership are documented in
+  [`ISSUE5_OPERATOR_VIEWS.md`](ISSUE5_OPERATOR_VIEWS.md). Complete solver and
+  numerical hierarchy integration remain M3/M4 work.

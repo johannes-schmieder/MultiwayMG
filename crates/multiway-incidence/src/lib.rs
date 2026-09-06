@@ -10,6 +10,8 @@ mod components;
 mod construction;
 mod error;
 mod factor_pair;
+mod kernels;
+mod operator_view;
 mod prepared;
 mod problem;
 mod symbolic;
@@ -21,6 +23,7 @@ pub use aggregation::FactorAggregation;
 pub use components::{IncidenceComponents, StructuralProjectionWorkspace};
 pub use error::IncidenceError;
 pub use factor_pair::FactorPair;
+pub use operator_view::ThreeWayOperatorView;
 pub use prepared::{
     ObservationGroups, PreparedThreeWayTopology, PreparedTopologyBinding, PreparedTopologySource,
 };

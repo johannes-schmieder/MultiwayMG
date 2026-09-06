@@ -14,6 +14,9 @@ The current standalone CPU implementation campaign is documented in the
 1–32 RHS solves and changing-weight reuse on Mac and SCC CPUs. Competitive
 performance remains to be demonstrated. See the [numerical boundary contract](docs/NUMERICAL_BOUNDARIES.md)
 for fail-closed driver certification and extreme-scale limitations.
+[Frame-bound operator views](docs/ISSUE5_OPERATOR_VIEWS.md) now provide
+allocation-free actions from immutable numerical frames; complete prepared
+solver integration remains in progress.
 
 ## The problem
 

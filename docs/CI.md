@@ -36,3 +36,13 @@ evidence-integrity contract not already covered by the general Rust matrix.
 Scratch benchmark directories must not be committed; canonical generated
 evidence belongs under `benchmarks/results/<date>/` or a documented permanent
 `evidence/<milestone>/` directory with checksums and provenance.
+
+## Standalone campaign additions
+
+M1 numerical boundary regressions run in the ordinary all/minimal-feature Rust
+suite (LSMR cases require its feature). M2 frame-view dense/adjoint/Galerkin,
+identity and mutation tests run in `multiway-incidence`. The permanent isolated
+`workspace_allocations` executable additionally measures frame-view creation,
+first/repeated actions and errors on Linux/macOS/Windows, debug/release and
+minimal/all-feature configurations. See `NUMERICAL_BOUNDARIES.md` and
+`ISSUE5_OPERATOR_VIEWS.md` for the qualified scope of each boundary.

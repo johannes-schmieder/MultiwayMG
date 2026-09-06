@@ -119,6 +119,8 @@ These do not yet form a complete prepared solver or total lifetime memory report
 The checkboxes below describe complete integrated outcomes.
 Standalone M1 adds [numerical acceptance guards](NUMERICAL_BOUNDARIES.md) before
 prepared-operator integration; these are correctness improvements, not speed claims.
+Standalone M2 adds [frame-bound operator views](ISSUE5_OPERATOR_VIEWS.md) sharing
+the scalar kernels. Complete current-frame solver integration remains pending.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
