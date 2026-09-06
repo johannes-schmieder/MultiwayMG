@@ -150,6 +150,9 @@ impl LeastSquaresResult {
     }
 
     /// Whether modified LSMR reported convergence.
+    ///
+    /// This native flag is not independent acceptance. Use [`Self::is_certified`]
+    /// with the requested tolerance to assess the original-operator certificate.
     #[must_use]
     pub const fn converged(&self) -> bool {
         self.converged
@@ -177,6 +180,18 @@ impl LeastSquaresResult {
     #[must_use]
     pub const fn certified_normal_equation_residual(&self) -> f64 {
         self.certified_normal_equation_residual
+    }
+
+    /// Whether the independent original-operator residual meets a valid tolerance.
+    ///
+    /// This is separate from native convergence and stop reason. Invalid
+    /// tolerances fail closed; no non-finite certificate is published.
+    #[must_use]
+    pub fn is_certified(&self, tolerance: f64) -> bool {
+        tolerance.is_finite()
+            && tolerance > 0.0
+            && self.certified_normal_equation_residual.is_finite()
+            && self.certified_normal_equation_residual <= tolerance
     }
 
     /// Stop reason.
@@ -232,6 +247,8 @@ pub fn solve_weighted_least_squares<P: Preconditioner + ?Sized>(
         .zip(problem.square_root_weights())
         .map(|(&target, &sqrt_weight)| target * sqrt_weight)
         .collect();
+    ensure_finite(targets, "least-squares targets")?;
+    ensure_finite(&weighted_targets, "least-squares weighted targets")?;
     let result = mlsmr(
         &operator,
         &weighted_targets,
@@ -333,20 +350,60 @@ fn certify_normal_equations(
     targets: &[f64],
     coefficients: &[f64],
 ) -> Result<f64, MultiwayError> {
+    ensure_finite(targets, "certificate targets")?;
+    ensure_finite(coefficients, "certificate coefficients")?;
     let mut fitted = vec![0.0; problem.tuple_count()];
     problem.apply_incidence(coefficients, &mut fitted)?;
     for (value, &target) in fitted.iter_mut().zip(targets) {
         *value = target - *value;
     }
+    ensure_finite(&fitted, "certificate residual")?;
+    // Reject overflow and a nonzero product rounding to zero before reduction.
+    // A finite input alone does not imply B' W y is representable in f64.
+    validate_weighted_products(problem, &fitted)?;
+    validate_weighted_products(problem, targets)?;
     let gradient = problem.rhs_from_targets(&fitted)?;
     let reference = problem.rhs_from_targets(targets)?;
+    ensure_finite(&gradient, "certificate gradient")?;
+    ensure_finite(&reference, "certificate reference")?;
     let numerator = norm(&gradient);
     let denominator = norm(&reference);
-    Ok(if denominator == 0.0 {
-        if numerator == 0.0 { 0.0 } else { f64::INFINITY }
+    ensure_finite(&[numerator, denominator], "certificate norms")?;
+    let residual = if denominator == 0.0 && numerator == 0.0 {
+        0.0
     } else {
         numerator / denominator
-    })
+    };
+    ensure_finite(&[residual], "certificate relative residual")?;
+    if numerator != 0.0 && residual == 0.0 {
+        return Err(MultiwayError::NumericalFailure {
+            context: "certificate ratio underflow",
+        });
+    }
+    Ok(residual)
+}
+
+fn ensure_finite(values: &[f64], context: &'static str) -> Result<(), MultiwayError> {
+    if values.iter().all(|value| value.is_finite()) {
+        Ok(())
+    } else {
+        Err(MultiwayError::NumericalFailure { context })
+    }
+}
+
+fn validate_weighted_products(
+    problem: &ThreeWayProblem,
+    values: &[f64],
+) -> Result<(), MultiwayError> {
+    for (&weight, &value) in problem.weights().iter().zip(values) {
+        let product = weight * value;
+        if !product.is_finite() || (value != 0.0 && product == 0.0) {
+            return Err(MultiwayError::NumericalFailure {
+                context: "certificate weighted product",
+            });
+        }
+    }
+    Ok(())
 }
 
 fn convert_stop_reason(reason: LsmrStopReason) -> LeastSquaresStopReason {
@@ -382,4 +439,35 @@ fn norm(values: &[f64]) -> f64 {
             .map(|value| (value / scale) * (value / scale))
             .sum::<f64>()
             .sqrt()
+}
+
+#[cfg(test)]
+mod certificate_tests {
+    use super::*;
+
+    fn problem(weight: f64) -> ThreeWayProblem {
+        ThreeWayProblem::from_observations([1; 3], &[[0; 3]], &[weight]).unwrap()
+    }
+
+    #[test]
+    fn invalid_certificate_arithmetic_never_becomes_zero() {
+        let p = problem(1.0);
+        for bad in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY] {
+            assert!(certify_normal_equations(&p, &[bad], &[0.0; 3]).is_err());
+            assert!(certify_normal_equations(&p, &[1.0], &[bad; 3]).is_err());
+        }
+        assert!(certify_normal_equations(&p, &[0.0], &[1.0; 3]).is_err());
+        // Finite entries, unrepresentable Euclidean norm.
+        assert!(certify_normal_equations(&p, &[f64::MAX], &[0.0; 3]).is_err());
+        // Positive represented weight, but the reference product rounds to zero.
+        assert!(certify_normal_equations(&problem(1.0e-200), &[1.0e-200], &[0.0; 3]).is_err());
+        assert_eq!(
+            certify_normal_equations(&p, &[0.0], &[0.0; 3]).unwrap(),
+            0.0
+        );
+        assert_eq!(
+            certify_normal_equations(&p, &[1.0], &[0.0; 3]).unwrap(),
+            1.0
+        );
+    }
 }

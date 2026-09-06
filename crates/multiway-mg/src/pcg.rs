@@ -169,12 +169,14 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
         ));
     }
 
+    ensure_finite("PCG right-hand side", rhs)?;
     let mut projected_rhs = rhs.to_vec();
     let rhs_projection_norm = problem
         .components()
         .project_structural_range(&mut projected_rhs)?;
     ensure_finite("projected PCG right-hand side", &projected_rhs)?;
-    let rhs_norm = norm(&projected_rhs);
+    ensure_finite("PCG projection norm", &[rhs_projection_norm])?;
+    let rhs_norm = checked_norm(&projected_rhs)?;
     if rhs_norm == 0.0 {
         return Ok(PcgResult {
             solution: vec![0.0; dimension],
@@ -189,6 +191,8 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
     let tolerance = options
         .absolute_tolerance
         .max(options.relative_tolerance * rhs_norm);
+
+    ensure_finite("PCG tolerance", &[tolerance])?;
 
     let mut solution = vec![0.0; dimension];
     let mut residual = projected_rhs.clone();
@@ -230,16 +234,19 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
             .components()
             .project_structural_range(&mut residual)?;
 
-        if iteration % options.residual_recompute_interval == 0 || norm(&residual) <= tolerance {
+        if iteration % options.residual_recompute_interval == 0
+            || checked_norm(&residual)? <= tolerance
+        {
             residual = problem.residual(&projected_rhs, &solution)?;
             problem
                 .components()
                 .project_structural_range(&mut residual)?;
-            let residual_norm = norm(&residual);
+            let residual_norm = checked_norm(&residual)?;
             if residual_norm <= tolerance {
                 problem
                     .components()
                     .project_structural_range(&mut solution)?;
+                ensure_finite("PCG solution", &solution)?;
                 return Ok(PcgResult {
                     solution,
                     iterations: iteration,
@@ -265,6 +272,7 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
             });
         }
         let beta = new_rho / rho;
+        ensure_finite("PCG recurrence beta", &[beta])?;
         for (search, &z) in direction.iter_mut().zip(&preconditioned) {
             *search = beta.mul_add(*search, z);
         }
@@ -281,7 +289,8 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
     problem
         .components()
         .project_structural_range(&mut solution)?;
-    let residual_norm = norm(&residual);
+    let residual_norm = checked_norm(&residual)?;
+    ensure_finite("PCG solution", &solution)?;
     Ok(PcgResult {
         solution,
         iterations: options.max_iterations,
@@ -341,4 +350,11 @@ fn ensure_finite(context: &'static str, values: &[f64]) -> Result<(), MultiwayEr
         });
     }
     Ok(())
+}
+
+fn checked_norm(values: &[f64]) -> Result<f64, MultiwayError> {
+    ensure_finite("PCG norm input", values)?;
+    let value = norm(values);
+    ensure_finite("PCG norm", &[value])?;
+    Ok(value)
 }

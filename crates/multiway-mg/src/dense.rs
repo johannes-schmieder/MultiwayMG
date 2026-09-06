@@ -32,15 +32,47 @@ impl DensePseudoinverse {
         let dimension = problem.dimension();
         let flat: Vec<f64> = dense.into_iter().flatten().collect();
         let matrix = DMatrix::from_row_slice(dimension, dimension, &flat);
-        let decomposition = SymmetricEigen::new(matrix);
+        if !matrix.iter().all(|value| value.is_finite()) {
+            return Err(MultiwayError::NumericalFailure {
+                context: "dense terminal matrix",
+            });
+        }
+        // Bound failure on numerically unrepresentable inputs. This is a setup
+        // guard, not an RHS-dependent inner solver or a change in rank policy.
+        let decomposition = SymmetricEigen::try_new(matrix, f64::EPSILON, 10_000).ok_or(
+            MultiwayError::NumericalFailure {
+                context: "dense terminal eigendecomposition",
+            },
+        )?;
+        if !decomposition
+            .eigenvalues
+            .iter()
+            .all(|value| value.is_finite())
+            || !decomposition
+                .eigenvectors
+                .iter()
+                .all(|value| value.is_finite())
+        {
+            return Err(MultiwayError::NumericalFailure {
+                context: "dense terminal eigendecomposition",
+            });
+        }
         let spectral_scale = decomposition
             .eigenvalues
             .iter()
             .copied()
             .map(f64::abs)
             .fold(0.0, f64::max);
-        debug_assert!(spectral_scale.is_finite() && spectral_scale > 0.0);
         let threshold = relative_tolerance * spectral_scale;
+        if !spectral_scale.is_finite()
+            || spectral_scale <= 0.0
+            || !threshold.is_finite()
+            || threshold <= 0.0
+        {
+            return Err(MultiwayError::NumericalFailure {
+                context: "dense terminal spectral threshold",
+            });
+        }
         let mut inverse_eigenvalues = Vec::with_capacity(dimension);
         let mut rank = 0;
         for &value in decomposition.eigenvalues.iter() {
@@ -51,7 +83,13 @@ impl DensePseudoinverse {
                 });
             }
             if value > threshold {
-                inverse_eigenvalues.push(1.0 / value);
+                let inverse = 1.0 / value;
+                if !inverse.is_finite() || inverse <= 0.0 {
+                    return Err(MultiwayError::NumericalFailure {
+                        context: "dense terminal inverse eigenvalue",
+                    });
+                }
+                inverse_eigenvalues.push(inverse);
                 rank += 1;
             } else {
                 inverse_eigenvalues.push(0.0);

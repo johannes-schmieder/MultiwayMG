@@ -24,8 +24,8 @@ recurrence and local reorthogonalization window before algorithm experiments.
 
 | Increment | Deliverable and acceptance boundary | State |
 | --- | --- | --- |
-| M0 | Commit this plan, performance protocol, immutable baseline identity, resource limits and evidence contract before optimization. | Implemented; PR qualification pending |
-| M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Next |
+| M0 | Commit this plan, performance protocol, immutable baseline identity, resource limits and evidence contract before optimization. | Complete: PR #34, main `1702699` |
+| M1 | Reject zero damping and unrepresentable Jacobi coefficients; make independent LSMR certification fail closed, retain native diagnostics separately; extreme/ordinary regressions and adjacent numerical audit. | Implemented; numerical gates and PR qualification in progress |
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Planned |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Planned |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Planned |
@@ -159,3 +159,12 @@ and result documents synchronized. Update the external vault's project status
 and reverse-chronological timeline at milestone closure. Raw logs/builds remain
 outside the vault. Final release publication and fereg changes require separate
 work; this campaign ends at a verified standalone candidate and honest evidence.
+
+## Checkpoint receipts
+
+- M0: PR #34 merged to `170269976c2ce98b968c765d3fdd8a5db16aad13`.
+  Reviewed source `bc6be61e40c32ae62251f3d53395c98b0265a751`; push CI
+  34050885584/34050885611 and PR CI 34050891406/34050891411 all passed.
+- M1: boundary contracts and regression scope are documented in
+  [`NUMERICAL_BOUNDARIES.md`](NUMERICAL_BOUNDARIES.md). Source qualification
+  and merge receipts belong in this ledger at the next checkpoint.

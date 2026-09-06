@@ -117,6 +117,8 @@ maps, immutable numerical frames, compensated one-transition replay, complete
 MAP-cycle and traced-PCG workspace primitives, and scoped payload admission.
 These do not yet form a complete prepared solver or total lifetime memory report.
 The checkboxes below describe complete integrated outcomes.
+Standalone M1 adds [numerical acceptance guards](NUMERICAL_BOUNDARIES.md) before
+prepared-operator integration; these are correctness improvements, not speed claims.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

@@ -12,7 +12,8 @@ The current standalone CPU implementation campaign is documented in the
 [development plan](docs/DEVELOPMENT_PLAN.md) and
 [performance protocol](docs/PERFORMANCE_PROTOCOL.md). It targets complete
 1–32 RHS solves and changing-weight reuse on Mac and SCC CPUs. Competitive
-performance remains to be demonstrated.
+performance remains to be demonstrated. See the [numerical boundary contract](docs/NUMERICAL_BOUNDARIES.md)
+for fail-closed driver certification and extreme-scale limitations.
 
 ## The problem
 
