@@ -78,7 +78,7 @@ exact ownership and native convergence with a rejected stricter certificate.
 Existing numerical-boundary regressions exercise the shared certificate.
 
 The permanent allocation executable measures exact full scratch payload and
-release of all 48 arrays in a two-transition/window-8 case, zero-allocation
+release of all 40 arrays (48 before M5a scratch reuse) in a two-transition/window-8 case, zero-allocation
 one-byte-short budget rejection, first solve and RHS counts 1,2,4,8,16,17,32.
 The feature-independent certificate test separately measures three-array setup,
 first/repeated numerical failures and recovery. Prior component-level injection
@@ -86,8 +86,8 @@ covers all fork and hierarchy reservation boundaries.
 
 Prepared PCG and the complete-cost serial v1 benchmark are now merged. Its
 LSMR certificate rejections motivated the separate [certificate-gated
-route](ISSUE5_CERTIFICATE_GATED_LSMR.md); M4 remains open pending that route
-and its declared complete-cost development coverage. Automatic routing, changed-weight quality
-admission, CPU scaling and competitive qualification gates remain unchanged.
+route](ISSUE5_CERTIFICATE_GATED_LSMR.md); M4 is now complete through PR #45.
+Its declared complete-cost development coverage passes. Automatic routing,
+changed-weight quality admission, CPU scaling and competitive qualification gates remain unchanged.
 No competitive performance result is claimed from these correctness/allocation
 checks, and the campaign holdout has not been used for tuning.

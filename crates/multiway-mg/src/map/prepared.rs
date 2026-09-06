@@ -37,7 +37,6 @@ pub struct PreparedMapWorkspace<'frame, 'topology> {
     projection: PreparedStructuralProjectionWorkspace<'topology>,
     compatible_rhs: Vec<f64>,
     forward: Vec<f64>,
-    middle: Vec<f64>,
     solution: Vec<f64>,
 }
 
@@ -64,7 +63,7 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
     pub fn workspace_required_bytes(&self) -> Result<usize, MultiwayError> {
         let vectors = self
             .dimension()
-            .checked_mul(4)
+            .checked_mul(3)
             .and_then(|n| n.checked_mul(8))
             .ok_or_else(overflow)?;
         vectors
@@ -99,7 +98,6 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
             projection,
             compatible_rhs: vector(dimension, before)?,
             forward: vector(dimension, before)?,
-            middle: vector(dimension, before)?,
             solution: vector(dimension, before)?,
         })
     }
@@ -135,7 +133,6 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
         let PreparedMapWorkspace {
             compatible_rhs,
             forward,
-            middle,
             solution,
             projection,
             ..
@@ -153,7 +150,6 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
             },
             compatible_rhs,
             forward,
-            middle,
             solution,
         );
         finite(solution, "prepared MAP sweep")?;
@@ -178,23 +174,18 @@ impl PreparedMapWorkspace<'_, '_> {
     ///
     /// Excludes the inline root, borrowed owners and allocator overhead.
     pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
-        [
-            &self.compatible_rhs,
-            &self.forward,
-            &self.middle,
-            &self.solution,
-        ]
-        .iter()
-        .try_fold(
-            self.projection.retained_payload_bytes()?,
-            |total, values| {
-                values
-                    .capacity()
-                    .checked_mul(8)
-                    .and_then(|n| total.checked_add(n))
-                    .ok_or_else(overflow)
-            },
-        )
+        [&self.compatible_rhs, &self.forward, &self.solution]
+            .iter()
+            .try_fold(
+                self.projection.retained_payload_bytes()?,
+                |total, values| {
+                    values
+                        .capacity()
+                        .checked_mul(8)
+                        .and_then(|n| total.checked_add(n))
+                        .ok_or_else(overflow)
+                },
+            )
     }
 }
 
@@ -236,12 +227,12 @@ mod tests {
     use super::*;
     use multiway_incidence::{PreparedThreeWayTopology, WeightFrameInput};
     #[test]
-    fn all_five_setup_boundaries_fail_without_invalidating_existing_scratch() {
+    fn all_four_setup_boundaries_fail_without_invalidating_existing_scratch() {
         let topology = PreparedThreeWayTopology::try_from_collapsed([1; 3], &[[0; 3]]).unwrap();
         let frame = ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::UnitTuples).unwrap();
         let map = PreparedSymmetricMap::new(&frame);
         let mut old = map.application_workspace().unwrap();
-        for fail_at in 0..5 {
+        for fail_at in 0..4 {
             let mut reached = 0;
             assert!(
                 map.workspace_with(&mut |context| {

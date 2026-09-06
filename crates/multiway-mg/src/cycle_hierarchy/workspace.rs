@@ -107,7 +107,7 @@ impl CycleScreenedMapHierarchyWorkspace {
             let coarse = pair[1].dimension();
             for (buffer, length) in self.buffers[start..start + FRAME_BUFFERS]
                 .iter_mut()
-                .zip([fine, fine, coarse, coarse, fine, fine, fine])
+                .zip([fine, fine, coarse, coarse])
             {
                 resize_buffer(buffer, length)?;
             }
@@ -132,7 +132,7 @@ impl CycleScreenedMapHierarchy {
             .try_fold(self.dimension(), |total, pair| {
                 let fine = pair[0]
                     .dimension()
-                    .checked_mul(5)
+                    .checked_mul(2)
                     .ok_or_else(size_overflow)?;
                 let coarse = pair[1]
                     .dimension()
@@ -293,7 +293,7 @@ impl CycleScreenedMapHierarchyWorkspace {
                 let coarse = pair[1].dimension();
                 self.buffers[start..start + FRAME_BUFFERS]
                     .iter()
-                    .zip([fine, fine, coarse, coarse, fine, fine, fine])
+                    .zip([fine, fine, coarse, coarse])
                     .all(|(buffer, expected)| buffer.len() == expected)
             })
     }

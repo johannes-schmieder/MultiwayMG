@@ -42,7 +42,7 @@ pub fn run() -> Result<()> {
         PreparedLsmrWorkspace::try_new_with_payload_budget(&hierarchy, options, required, 123)?;
     let setup = GLOBAL.stats() - before;
     let retained = workspace.retained_payload_bytes()?;
-    assert_eq!(setup.allocations, 48);
+    assert_eq!(setup.allocations, 40);
     assert_eq!(setup.reallocations, 0);
     assert_eq!(setup.deallocations, 0);
     assert_eq!(setup.bytes_allocated, retained);
@@ -94,7 +94,7 @@ pub fn run() -> Result<()> {
         123,
     )?;
     let setup = GLOBAL.stats() - before;
-    assert_eq!(setup.allocations, 48);
+    assert_eq!(setup.allocations, 40);
     assert_eq!(setup.bytes_allocated, retained);
     assert_eq!(gated.retained_payload_bytes()?, retained);
     assert_eq!((setup.deallocations, setup.reallocations), (0, 0));
@@ -150,10 +150,10 @@ pub fn run() -> Result<()> {
     drop(gated);
     let released = GLOBAL.stats() - before;
     assert_eq!(released.bytes_deallocated, retained);
-    assert_eq!(released.deallocations, 48);
+    assert_eq!(released.deallocations, 40);
     assert_eq!((released.allocations, released.reallocations), (0, 0));
     println!(
-        "complete prepared native/gated LSMR: first/scalar and RHS1,2,4,8,16,17,32, vetoes and error/recovery allocations=0; all 48 arrays released per workspace"
+        "complete prepared native/gated LSMR: first/scalar and RHS1,2,4,8,16,17,32, vetoes and error/recovery allocations=0; all 40 arrays released per workspace"
     );
     Ok(())
 }

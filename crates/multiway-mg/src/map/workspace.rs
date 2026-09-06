@@ -14,7 +14,6 @@ use crate::MultiwayError;
 pub struct SymmetricMapWorkspace {
     pub(super) compatible_rhs: Vec<f64>,
     pub(super) forward: Vec<f64>,
-    pub(super) middle: Vec<f64>,
     pub(super) solution: Vec<f64>,
     pub(super) projection: StructuralProjectionWorkspace,
 }
@@ -27,7 +26,7 @@ impl SymmetricMapPreconditioner {
         let vectors = self
             .problem()
             .dimension()
-            .checked_mul(4)
+            .checked_mul(3)
             .and_then(|n| n.checked_mul(core::mem::size_of::<f64>()))
             .ok_or_else(overflow)?;
         vectors
@@ -45,7 +44,6 @@ impl SymmetricMapPreconditioner {
         let mut workspace = SymmetricMapWorkspace {
             compatible_rhs: Vec::new(),
             forward: Vec::new(),
-            middle: Vec::new(),
             solution: Vec::new(),
             projection: self.problem().components().try_projection_workspace()?,
         };
@@ -69,7 +67,6 @@ impl SymmetricMapWorkspace {
         for vector in [
             &mut self.compatible_rhs,
             &mut self.forward,
-            &mut self.middle,
             &mut self.solution,
         ] {
             if dimension > vector.len() {
@@ -86,7 +83,6 @@ impl SymmetricMapWorkspace {
         for vector in [
             &mut self.compatible_rhs,
             &mut self.forward,
-            &mut self.middle,
             &mut self.solution,
         ] {
             vector.resize(dimension, 0.0);
@@ -99,20 +95,15 @@ impl SymmetricMapWorkspace {
     /// Excludes inline descriptors, shared identity metadata, allocator overhead,
     /// the immutable operator and caller input/output. It is not process peak RSS.
     pub fn retained_bytes(&self) -> Result<usize, MultiwayError> {
-        [
-            &self.compatible_rhs,
-            &self.forward,
-            &self.middle,
-            &self.solution,
-        ]
-        .into_iter()
-        .try_fold(self.projection.retained_bytes(), |total, vector| {
-            let bytes = vector
-                .capacity()
-                .checked_mul(core::mem::size_of::<f64>())
-                .ok_or_else(overflow)?;
-            total.checked_add(bytes).ok_or_else(overflow)
-        })
+        [&self.compatible_rhs, &self.forward, &self.solution]
+            .into_iter()
+            .try_fold(self.projection.retained_bytes(), |total, vector| {
+                let bytes = vector
+                    .capacity()
+                    .checked_mul(core::mem::size_of::<f64>())
+                    .ok_or_else(overflow)?;
+                total.checked_add(bytes).ok_or_else(overflow)
+            })
     }
 
     pub(super) fn validate(
@@ -120,12 +111,7 @@ impl SymmetricMapWorkspace {
         operator: &SymmetricMapPreconditioner,
     ) -> Result<(), MultiwayError> {
         let dimension = operator.problem().dimension();
-        for vector in [
-            &self.compatible_rhs,
-            &self.forward,
-            &self.middle,
-            &self.solution,
-        ] {
+        for vector in [&self.compatible_rhs, &self.forward, &self.solution] {
             if vector.len() != dimension {
                 return Err(crate::error::dimension(
                     "SymmetricMapWorkspace",

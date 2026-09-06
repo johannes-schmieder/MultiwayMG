@@ -45,7 +45,7 @@ operators are stored in the workspace. Scratch reuse is not weight replay.
 
 ## Ownership and errors
 
-The traversal arena retains one finest-result vector and seven vectors per
+The traversal arena retains one finest-result vector and four vectors per
 nonterminal level. Per-level operator storage retains one projection workspace,
 and MAP scratch where needed. Terminal modal scratch is retained separately.
 Disjoint mutable tails lend vector and operator frames to recursive children.

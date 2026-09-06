@@ -64,7 +64,6 @@ impl SymmetricMapPreconditioner {
         let SymmetricMapWorkspace {
             compatible_rhs,
             forward,
-            middle,
             solution,
             projection,
         } = workspace;
@@ -80,7 +79,6 @@ impl SymmetricMapPreconditioner {
             },
             compatible_rhs,
             forward,
-            middle,
             solution,
         );
         self.problem

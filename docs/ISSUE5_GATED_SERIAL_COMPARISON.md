@@ -83,4 +83,6 @@ Linux smoke. Each route certifies all 2,400 measured columns per profile; native
 LSMR preserves 560 smoke and 935 development rejections. Fixed-config numerical,
 work and capacity repeats pass; no process errors, timeouts or RSS-budget failures.
 Source `3c1273e` preceded collection. Gated/native LSMR retain the same arrays;
-all candidate/final work is charged. M4 awaits final evidence-head CI and merge.
+all candidate/final work is charged. PR #45 merged as `4fa6401` after all
+source/PR checks; post-merge workflows `34063748407`/`34063748392` passed. M4
+is complete; the preserved v2 executable is the M5 engineering baseline.

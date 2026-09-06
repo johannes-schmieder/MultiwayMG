@@ -161,7 +161,7 @@ impl<'state> PreparedMapHierarchy<'state> {
                 let n = frame.diagonal().len();
                 let m = self.frame_at(level + 1).diagonal().len();
                 let count = add(
-                    n.checked_mul(5).ok_or_else(overflow)?,
+                    n.checked_mul(2).ok_or_else(overflow)?,
                     m.checked_mul(2).ok_or_else(overflow)?,
                 )?;
                 total = add(total, bytes::<f64>(count)?)?;
@@ -292,7 +292,7 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
             let map = if level < owner.depth() {
                 let fine = frame.diagonal().len();
                 let coarse = owner.frame_at(level + 1).diagonal().len();
-                for count in [fine, fine, coarse, coarse, fine, fine, fine] {
+                for count in [fine, fine, coarse, coarse] {
                     buffers.push(vector(count, before)?);
                 }
                 Some(PreparedSymmetricMap::new(frame).workspace_with(before)?)
@@ -503,7 +503,7 @@ mod tests {
             Ok(())
         })
         .unwrap();
-        assert_eq!(calls, 31);
+        assert_eq!(calls, 23);
         for unwind in [false, true] {
             for fail_at in 0..calls {
                 let mut reached = 0;

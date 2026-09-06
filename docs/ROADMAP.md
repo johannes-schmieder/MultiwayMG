@@ -136,7 +136,8 @@ route](ISSUE5_CERTIFICATE_GATED_LSMR.md) addresses native stopping rejections
 without restarting. The [three-route development comparison](ISSUE5_GATED_SERIAL_COMPARISON.md)
 has complete PCG/gated-LSMR certification on Mac smoke/development and Linux
 smoke, with native-control negatives retained. See [the evidence](../benchmarks/results/2026-09-06/prepared-serial-gated-v2/README.md)
-for complete costs and limits. Final evidence CI/merge precedes M5 optimization.
+for complete costs and limits. M4 is complete through PR #45; M5 starts with
+[serial pass removal and scratch reuse](ISSUE5_SERIAL_SCRATCH.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

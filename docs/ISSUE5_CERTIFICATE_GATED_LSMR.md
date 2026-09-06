@@ -75,7 +75,7 @@ retained outer payload remains `8*(5E + 9V + 2kV) + 72C` plus complete hierarchy
 scratch, with k=min(window,E,V). Inline counters/references are excluded from
 array-capacity reports as before. Both MGS windows remain. In the permanent
 heterogeneous two-transition/window-8 allocator case, native and gated workspaces
-each reserve and release the same 48 arrays exactly.
+each reserve and release the same 40 arrays exactly (48 before M5a scratch reuse).
 
 ## Verification and remaining scope
 
@@ -99,5 +99,4 @@ multiple vetoes, zero/mixed columns, selected failures and recovery without
 allocations, and unchanged exact release. All local pinned Rust 1.85 checks and 46 Python validator tests passed.
 Source/PR CI passed and PR #44 merged as `ebd9dd6`. The separately frozen
 [three-route comparison](ISSUE5_GATED_SERIAL_COMPARISON.md) now qualifies
-development coverage with all extra checks charged. M4 remains open until that gated coverage
-is recorded. No v1 results, calibration seeds or campaign holdout are retuned.
+development coverage with all extra checks charged. M4 completed through PR #45. No v1 results, calibration seeds or campaign holdout are retuned.

@@ -18,7 +18,7 @@ pub fn run() -> Result<()> {
     let mut scratch = map.application_workspace()?;
     let setup = GLOBAL.stats() - before;
     let retained = scratch.retained_payload_bytes()?;
-    assert_eq!(setup.allocations, 5);
+    assert_eq!(setup.allocations, 4);
     assert_eq!(setup.reallocations, 0);
     assert_eq!(setup.deallocations, 0);
     assert_eq!(setup.bytes_allocated, retained);
@@ -64,7 +64,7 @@ pub fn run() -> Result<()> {
     assert_eq!(released.bytes_deallocated, retained);
     assert_eq!(released.allocations, 0);
     println!(
-        "prepared MAP: first/repeat32 and static/numerical failures allocate zero; five setup arrays released exactly"
+        "prepared MAP: first/repeat32 and static/numerical failures allocate zero; four setup arrays released exactly"
     );
     Ok(())
 }
