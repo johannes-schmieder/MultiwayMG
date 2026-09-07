@@ -318,3 +318,31 @@ jobs:
           name: prepared-kernel-profile-smoke
           path: ${{ runner.temp }}/prepared-kernel-profile-smoke/
           if-no-files-found: error
+
+
+  prepared-layout:
+    name: Complete paired grouped-layout smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Build the debug layout protocol fixture
+        run: cargo build --locked -p multiway-mg --no-default-features --features lsmr --example prepared_serial_benchmark
+      - name: Verify debug protocol, original numerical identity and failures
+        run: python3 scripts/check_prepared_layout_probe.py target/debug/examples/prepared_serial_benchmark "$RUNNER_TEMP/prepared-layout-protocol-debug"
+      - name: Collect committed uninstrumented five-layout smoke
+        run: python3 scripts/prepared_layout.py "$RUNNER_TEMP/prepared-layout-smoke" --profile smoke
+      - name: Require full accounting, exact pairing and independent certification
+        run: python3 scripts/validate_prepared_layout.py "$RUNNER_TEMP/prepared-layout-smoke" --require-certification
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prepared-layout-smoke
+          path: ${{ runner.temp }}/prepared-layout-smoke/
+          if-no-files-found: error

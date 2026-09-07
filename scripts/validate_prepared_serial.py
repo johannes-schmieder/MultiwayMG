@@ -77,13 +77,16 @@ def check_gate(gate, route, complete):
                 and gate['certificate_adjoint'] <= 2*gate['certificate_incidence'], 'impossible failed gate work')
 
 
-def check_probe(probe, run, policy):
-    require(probe['schema'] == 2 and probe['route'] == run['route'], 'wrong probe provenance')
+def check_probe(probe, run, policy, *, schema=2, phase_names=None, payload_names=None,
+                zero_phase_names=(), zero_payload_names=()):
+    phase_names = PHASES if phase_names is None else phase_names
+    payload_names = PAYLOAD if payload_names is None else payload_names
+    require(probe['schema'] == schema and probe['route'] == run['route'], 'wrong probe provenance')
     require(probe['status'] in ('complete', 'error'), 'invalid probe status')
     require(probe['config'] == {key: policy[key] for key in ['native_tolerance', 'certificate_tolerance',
         'max_iterations', 'local_window', 'pcg_recompute_interval', 'terminal_relative_tolerance', 'process_budget_bytes']},
         'solver configuration differs from frozen policy')
-    require(set(probe['phases_ns']) == set(PHASES), 'missing/extra phase')
+    require(set(probe['phases_ns']) == set(phase_names), 'missing/extra phase')
     for name, value in probe['phases_ns'].items():
         integer(value, f'phase {name}')
     integer(probe['total_ns'], 'total', 1)
@@ -98,10 +101,10 @@ def check_probe(probe, run, policy):
         require(dims['terminal_rank'] <= terminal, 'impossible terminal rank')
     payload = probe.get('payload_bytes')
     if payload is not None:
-        require(set(payload) == set(PAYLOAD), 'missing/extra payload scope')
+        require(set(payload) == set(payload_names), 'missing/extra payload scope')
         for name, value in payload.items():
-            integer(value, f'payload {name}', 1)
-        require(payload['total'] == sum(payload[name] for name in PAYLOAD[:-1]), 'invalid complete payload sum')
+            integer(value, f'payload {name}', 0 if name in zero_payload_names else 1)
+        require(payload['total'] == sum(payload[name] for name in payload_names if name != 'total'), 'invalid complete payload sum')
         require(payload['total'] <= policy['process_budget_bytes'], 'payload exceeds declared admission budget')
         require(payload['total'] <= run['resources']['peak_rss_bytes'], 'retained payload exceeds observed process peak')
         e, n, k = (run['dimensions'][key] for key in ('tuples', 'coefficients', 'rhs'))
@@ -145,23 +148,23 @@ def check_probe(probe, run, policy):
     require(probe['total_ns'] == elapsed + failed + probe['overhead_ns'], 'invalid phase total or omitted failed action cost')
     if probe['status'] == 'complete':
         require(run['exit_code'] == 0 and dims is not None and payload is not None, 'missing completed solve scope')
-        require(all(v > 0 for v in probe['phases_ns'].values()), 'uncharged setup phase')
+        require(all(v > 0 or name in zero_phase_names for name, v in probe['phases_ns'].items()), 'uncharged setup phase')
         require(len(columns) == run['case']['width'] and not failed and 'failed_work' not in probe and 'failed_gate' not in probe,
                 'incomplete or failed successful batch')
         require('error' not in probe and 'error_stage' not in probe, 'contradictory success')
     else:
         require(run['exit_code'] != 0 and probe.get('error'), 'missing failed route diagnostic')
         stage = probe.get('error_stage')
-        require(stage in PHASES + ['solve_certificate_output'], 'missing failed route stage')
+        require(stage in phase_names + ['solve_certificate_output'], 'missing failed route stage')
         if stage == 'solve_certificate_output':
             require(failed > 0 and len(columns) < run['case']['width'], 'uncharged failed RHS action')
             check_gate(probe.get('failed_gate'), run['route'], complete=False)
             check_work(probe['failed_work'], run['route'], gate=probe.get('failed_gate'))
         else:
             require(not columns and not failed and 'failed_gate' not in probe and 'failed_work' not in probe
-                    and stage in PHASES and probe['phases_ns'][stage] > 0,
+                    and stage in phase_names and probe['phases_ns'][stage] > 0,
                     'uncharged failed preparation')
-            require(all(probe['phases_ns'][p] == 0 for p in PHASES[PHASES.index(stage)+1:]),
+            require(all(probe['phases_ns'][p] == 0 for p in phase_names[phase_names.index(stage)+1:]),
                     'work after failed setup')
     return probe['status'] == 'complete' and all(c['accepted'] for c in columns)
 
@@ -175,7 +178,8 @@ def numerical_signature(probe):
 
 def _validate_manifest(manifest, expected_policy, expected_hashes, *,
                        evidence_scope='prepared_serial_development_only',
-                       policy_paths=(POLICY, POLICY_GATED), memory_scopes=MEMORY_SCOPES):
+                       policy_paths=(POLICY, POLICY_GATED), memory_scopes=MEMORY_SCOPES,
+                      probe_checker=check_probe, summary_phase_names=PHASES):
     no_nonfinite(manifest)
     require(manifest['schema'] == 1 and manifest['scope'] == evidence_scope, 'wrong evidence scope')
     require(manifest['memory_scopes'] == memory_scopes, 'missing or misleading memory scopes')
@@ -246,7 +250,7 @@ def _validate_manifest(manifest, expected_policy, expected_hashes, *,
         require(resource['method'] == ('darwin_time_l' if meta['system'] == 'Darwin' else 'gnu_time_v'), 'wrong memory units/method')
         for name in ['user_seconds', 'system_seconds']:
             finite(resource[name], name)
-        passed = check_probe(run['probe'], run, policy)
+        passed = probe_checker(run['probe'], run, policy)
         within_budget = resource['peak_rss_bytes'] <= policy['process_budget_bytes']
         signature_key = (run['case_id'], run['route'])
         sig = numerical_signature(run['probe'])
@@ -274,7 +278,7 @@ def _validate_manifest(manifest, expected_policy, expected_hashes, *,
         complete = [r for r in runs if r['probe']['status'] == 'complete']
         if complete:
             times = [r['process_wall_ns']/1e9 for r in complete]
-            phases = {name: statistics.median(r['probe']['phases_ns'][name]/1e9 for r in complete) for name in PHASES}
+            phases = {name: statistics.median(r['probe']['phases_ns'][name]/1e9 for r in complete) for name in summary_phase_names}
             timing.append(dict(case_id=cid, route=route, complete_repetitions=len(complete),
                 inner_seconds_median=statistics.median(r['probe']['total_ns']/1e9 for r in complete),
                 solve_certificate_output_seconds_median=statistics.median(sum(c['elapsed_ns'] for c in r['probe']['columns'])/1e9 for r in complete),
@@ -291,10 +295,12 @@ def _validate_manifest(manifest, expected_policy, expected_hashes, *,
 
 def validate_manifest(manifest, expected_policy, expected_hashes, *,
                       evidence_scope='prepared_serial_development_only',
-                      policy_paths=(POLICY, POLICY_GATED), memory_scopes=MEMORY_SCOPES):
+                      policy_paths=(POLICY, POLICY_GATED), memory_scopes=MEMORY_SCOPES,
+                      probe_checker=check_probe, summary_phase_names=PHASES):
     try:
         return _validate_manifest(manifest, expected_policy, expected_hashes,
-            evidence_scope=evidence_scope, policy_paths=policy_paths, memory_scopes=memory_scopes)
+            evidence_scope=evidence_scope, policy_paths=policy_paths, memory_scopes=memory_scopes,
+            probe_checker=probe_checker, summary_phase_names=summary_phase_names)
     except (KeyError, TypeError, IndexError) as error:
         raise ValueError(f'malformed evidence: {error}') from error
 

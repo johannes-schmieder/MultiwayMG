@@ -152,7 +152,9 @@ image and separate grouping admission. Paired measurement and layout selection
 remain M5 work. The [preserved scalar baselines](../benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
 retain exact M5a numerical/work/payload results on Mac and Linux. The
 [M5d scalar regression](../benchmarks/results/2026-09-06/prepared-serial-m5d-scalar/README.md) in turn matches
-all 2,268 corresponding M5c process records, with complete candidate certification.
+all 2,268 corresponding M5c process records, with complete candidate certification. The
+[five-layout experiment](ISSUE5_LAYOUT_BENCHMARK.md) now declares complete paired costs
+and admission checks; collection is pending and no new default is selected.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
