@@ -630,3 +630,17 @@ for measurement, not an implemented layout or selected default.
   preserve visit order. The candidate retains only 4V parent bytes and performs
   no dense setup. Freeze source before the unchanged v2 existing-solver
   regression; this is not candidate timing or complete automatic qualification.
+
+
+- M6a frozen source `2d67bc40cbc489a70494e1ef9edac4eba39b7c93`
+  passes [all four existing-solver artifacts](../benchmarks/results/2026-09-07/prepared-layout-bounded-candidates/README.md):
+  7,920 processes and 72,300 certified measured columns. Every corresponding
+  M5h input/numerical/work/fingerprint/payload/layout record matches exactly;
+  no process, rejection, timeout, RSS failure or measured retry occurred.
+  Source `34084223619`/`34084223515` and PR `34084226689`/`34084226778`
+  passed. Full binaries/raw records and independently revalidated archives are
+  preserved with every member rehashed. These supplied-map regressions do not
+  measure candidate setup or qualify automatic construction. Final evidence-head
+  CI and PR54 merge remain; M6b next appends bounded structural transitions
+  without rebuilding the prefix. Component-local depths, numerical screening
+  and M7–M10 remain open. Scalar default and campaign holdout are unchanged.

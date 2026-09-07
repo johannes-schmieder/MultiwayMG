@@ -107,3 +107,15 @@ this source before the unchanged four-artifact v2 existing-solver regression;
 all corresponding M5h numerical/work/payload records must match exactly. This
 regression does not measure the new candidate builder or qualify an automatic
 solver. Candidate setup timing follows complete builder integration.
+
+
+Frozen source `2d67bc4` passes the [four-artifact existing-solver regression](../benchmarks/results/2026-09-07/prepared-layout-bounded-candidates/README.md):
+7,920 complete processes and 72,300 certified measured columns. Every
+corresponding M5h input/numerical/work/fingerprint/payload/layout record matches
+exactly, with no process, rejection, timeout, RSS failure or measured retry.
+Exact binaries/raw outputs and independently revalidated archives are preserved;
+every archive member is rehashed. This supplied-map regression exercises shared
+parent validation but does not time the new candidate stage or qualify an
+automatic hierarchy. Source `34084223619`/`34084223515` and PR
+`34084226689`/`34084226778` passed. Final evidence-head CI and PR54 merge
+remain before incremental structural admission begins. M6–M10 remain open.
