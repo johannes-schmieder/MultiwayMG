@@ -92,3 +92,16 @@ full PCG/gated LSMR coefficients, work and acceptance before collecting timing.
 Freeze source/recipe for complete uninstrumented paired comparisons, retaining
 all failures and balanced RHS widths. Use aggregate tuple complexity from M5b
 when admitting layouts; decide no implicit default from nominal byte counts.
+
+The [preserved M5c scalar baselines](../benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
+pass all frozen v2 candidate gates on Mac smoke/development and Linux smoke.
+All 2,268 corresponding processes exactly match M5a numerical/work/input/payload
+records; every native negative persists. These provide uninstrumented executables
+for the next comparison, not measurements of grouped execution.
+
+The image liveness audit permits one shared maximum-E tuple image per complete
+hierarchy workspace. Each Gramian consumes the image before recursion or the
+next operator action. Reborrow that single buffer across hierarchy levels and
+outer PCG actions; do not allocate an image at every level. Append its descriptor
+only in image mode so scalar/row-gather retained workspace capacities are unchanged.
+For later panels this becomes one E*K image per active panel workspace.

@@ -396,3 +396,18 @@ for measurement, not an implemented layout or selected default.
   73 Python checks pass, as do targeted release operator/width/MAP/frozen-loop
   and complete allocator tests. No grouped
   complete-solve route or timing exists yet, and scalar defaults remain unchanged.
+
+- M5c measured source `6cdd0f70bc57a9d4e241d953b700b4890f640398` passes
+  [unchanged v2 scalar baseline gates](../benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
+  on Mac smoke/development and Linux smoke. All 2,268 processes exactly match
+  corresponding M5a input/numerical/work/fingerprint/payload records. Candidate
+  routes each certify 2,400 columns/profile; native 560/935 smoke/development
+  rejects persist. Source `34068763134`/`34068763121` and PR
+  `34068919030`/`34068919027` workflows passed. Final evidence-head CI/merge
+  remains. No grouped complete-solve timing exists yet.
+- For M5d integration, reserve one shared maximum-E tuple-image buffer per
+  complete hierarchy workspace: it is dead after each Gramian and before child
+  recursion, so all levels and outer PCG can reuse it. Charge one optional image
+  descriptor/vector, preserving scalar/row-gather capacities. Avoid multiplying
+  image storage by the observed 6.71x hierarchy tuple complexity. M7/M8 can reuse
+  this lifetime with explicit workers and one E*K image per active panel.
