@@ -746,3 +746,18 @@ for measurement, not an implemented layout or selected default.
   failure cleanup, original certification and rank-control evidence. Freeze
   this source before unchanged Mac smoke/development/expanded and Linux smoke
   regression; the supplied-map harness does not time provisional construction.
+
+- M6d frozen source `3e9028f41cea793fc6c04518b0880bc63bd45cb3` passes
+  [all four supplied-map regression artifacts](../benchmarks/results/2026-09-07/prepared-layout-provisional-replay/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6c input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34092590894`/`34092590882` and PR `34092595142`/`34092595090`
+  passed. Copies independently revalidate, all raw numerical/work/payload records remain exact and every
+  archive member is rehashed. Seven derived timing geomeans differ by one ULP
+  under local recomputation, within the existing archival-only tolerance. The
+  discrepancy is recorded in receipts; no raw comparison is relaxed. These supplied-map runs do not invoke provisional
+  setup. Final evidence-head CI and PR57 merge remain. Next implement actual
+  recursive tail screening with shared terminal/workspace and bounded summary
+  probes, then integrate component-local automatic construction. M6–M10 remain
+  open, scalar stays default and campaign holdout is untouched.

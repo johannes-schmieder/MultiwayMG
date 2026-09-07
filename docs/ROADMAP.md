@@ -185,6 +185,8 @@ consumes predecessor weights before finishing the next frame, with separate
 stage admission and unchanged complete replay ownership. Required and release
 numerical, allocation and lifetime gates pass. Explicit nested-factor
 rank controls correct the earlier Latin-square additional-nullity description.
+Its 7,920-process supplied-map regression exactly matches all M6c numerical/work/
+payload/layout records; it does not measure provisional setup.
 Component-local numerical construction and recursive screening remain the next stages. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 

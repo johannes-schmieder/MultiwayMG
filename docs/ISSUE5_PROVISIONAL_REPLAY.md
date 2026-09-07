@@ -126,3 +126,13 @@ and all 120 actual protocol comparisons pass. Failed development scaffolding
 logs and the independent rational-rank audit are preserved beside final logs.
 The source is frozen before the unchanged supplied-map regression; no new
 construction performance claim follows from that regression.
+
+
+Frozen source `3e9028f` passes the [four-artifact supplied-map regression](../benchmarks/results/2026-09-07/prepared-layout-provisional-replay/README.md):
+7,920 processes, 72,300 certified measured columns, 6,336 exact within-source
+layout comparisons and exact agreement with all corresponding M6c input,
+numerical, work, payload and layout records. No measured retries or failed gates
+occurred. Source/PR workflows passed; raw/binary copies and every archive member independently revalidate. Seven
+derived timing geomeans differ by one ULP under local recomputation; receipts
+record these within the existing archival tolerance, with raw records exact. Final evidence-head CI and PR57 merge
+remain. The measured path does not invoke the provisional constructor.
