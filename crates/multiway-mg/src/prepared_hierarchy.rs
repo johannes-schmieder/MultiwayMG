@@ -327,6 +327,107 @@ impl<'state> PreparedMapHierarchy<'state> {
         Ok(())
     }
 
+    /// Apply the actual recursive suffix starting at an existing numerical level.
+    /// Reuses the same terminal, image and complete workspace; no new factor or
+    /// allocation is made. Output is transactional and static validation comes first.
+    /// This exposes a cycle for quality probing, not a convergence certificate.
+    pub fn apply_tail_with_workspace(
+        &self,
+        level: usize,
+        rhs: &[f64],
+        output: &mut [f64],
+        workspace: &mut PreparedHierarchyWorkspace<'_>,
+    ) -> Result<(), MultiwayError> {
+        // Preserve the existing root hot path and its validation precedence.
+        if level == 0 {
+            return self.apply_with_workspace(rhs, output, workspace);
+        }
+        let frame = self.checked_tail_frame(level)?;
+        let dimension = frame.diagonal().len();
+        if rhs.len() != dimension {
+            return Err(crate::error::dimension(
+                "prepared hierarchy tail rhs",
+                dimension,
+                rhs.len(),
+            ));
+        }
+        if output.len() != dimension {
+            return Err(crate::error::dimension(
+                "prepared hierarchy tail output",
+                dimension,
+                output.len(),
+            ));
+        }
+        workspace.validate_for(self)?;
+        finite(rhs, "prepared hierarchy tail rhs")?;
+        let image_start = workspace.arena.len() - self.tuple_image_len();
+        let (traversal, image) = workspace.arena.split_at_mut(image_start);
+        let (root_result, scratch) = traversal.split_at_mut(self.dimension());
+        // Fine-result/traversal storage covers every dimension-nonincreasing tail.
+        // No parent traversal values remain live across separate applications.
+        let solution = &mut root_result[..dimension];
+        cycle_kernel::apply_level(
+            workspace.owner,
+            level,
+            rhs,
+            solution,
+            scratch,
+            &mut workspace.levels[level..],
+            &mut cycle_kernel::CycleSharedScratch {
+                terminal: &mut workspace.terminal,
+                image,
+            },
+        )?;
+        finite(solution, "prepared hierarchy tail solution")?;
+        output.copy_from_slice(solution);
+        Ok(())
+    }
+    fn checked_tail_frame(&self, level: usize) -> Result<&ThreeWayWeightFrame<'_>, MultiwayError> {
+        self.frames
+            .frame(level)
+            .ok_or(MultiwayError::InvalidHierarchyLevel {
+                level,
+                levels: self.frames.level_count(),
+            })
+    }
+    pub(crate) fn gramian_tail_with_workspace(
+        &self,
+        level: usize,
+        x: &[f64],
+        out: &mut [f64],
+        workspace: &mut PreparedHierarchyWorkspace<'_>,
+    ) -> Result<(), MultiwayError> {
+        self.checked_tail_frame(level)?;
+        workspace.validate_for(self)?;
+        let image_start = workspace.arena.len() - self.tuple_image_len();
+        self.gramian_at(level, x, out, &mut workspace.arena[image_start..])
+    }
+    pub(crate) fn project_tail_with_workspace(
+        &self,
+        level: usize,
+        values: &mut [f64],
+        workspace: &mut PreparedHierarchyWorkspace<'_>,
+    ) -> Result<(), MultiwayError> {
+        self.checked_tail_frame(level)?;
+        workspace.validate_for(self)?;
+        workspace
+            .owner
+            .project(level, values, &mut workspace.levels[level])
+    }
+    pub(crate) fn defect_tail_with_workspace(
+        &self,
+        level: usize,
+        values: &[f64],
+        workspace: &mut PreparedHierarchyWorkspace<'_>,
+    ) -> Result<f64, MultiwayError> {
+        let frame = self.checked_tail_frame(level)?;
+        workspace.validate_for(self)?;
+        Ok(frame.topology().maximum_structural_defect_with_workspace(
+            values,
+            &mut workspace.levels[level].projection,
+        )?)
+    }
+
     /// Validate exact fine numerical generation and structural hierarchy provenance.
     pub fn validate_for(
         &self,

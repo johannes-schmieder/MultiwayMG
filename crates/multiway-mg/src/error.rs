@@ -8,6 +8,20 @@ use multiway_incidence::IncidenceError;
 #[derive(Debug, Error)]
 #[non_exhaustive]
 pub enum MultiwayError {
+    /// The requested recursive level does not exist in this exact hierarchy.
+    #[error("hierarchy level {level} is outside {levels} levels")]
+    InvalidHierarchyLevel {
+        /// Requested level.
+        level: usize,
+        /// Existing numerical level count.
+        levels: usize,
+    },
+    /// An explicit bounded recursive-screen option is invalid.
+    #[error("invalid prepared cycle screen input: {context}")]
+    InvalidCycleScreenInput {
+        /// Invalid option boundary.
+        context: &'static str,
+    },
     /// Structured failure from the reusable modified-LSMR driver.
     #[cfg(feature = "lsmr")]
     #[error("prepared modified LSMR failed: {0}")]
