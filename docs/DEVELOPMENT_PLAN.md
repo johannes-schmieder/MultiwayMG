@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6e merged; M6f explicit adjacent candidates |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6f merged; M6g scalable baseline execution |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -837,3 +837,35 @@ for measurement, not an implemented layout or selected default.
   Next integrate scalable baseline execution and terminal-first component-local
   automatic construction with charged screening/fallback. M6–M10 remain open;
   scalar stays default and calibration/campaign holdout remain untouched.
+
+- M6f PR59 merged as `b5ffa9ef80faefef91f26dd9a76a846071ebb94b`; actual
+  main tree `7f443559d3cee2a42836f0f63f21ebc905a8e93d` matches reviewed
+  evidence. Final source `34101890003`/`34101890033`, final PR
+  `34101895550`/`34101895390`, and post-merge `34102411396`/`34102411394`
+  passed. Four complete artifacts retain 7,920 exact M6e records and 72,300
+  certified measured columns; 11 derived timing geomeans differ within the
+  existing archival-only tolerance. Raw comparisons remain exact. Preservation
+  inventory is 190,297 files. Seven independent candidate-quality rejections
+  remain recorded and are not overridden by supplied-map regression success.
+- M6g now generalizes the shared prepared PCG/native/gated-LSMR wrappers over
+  sealed statically dispatched current-frame owners. The hierarchy remains the
+  default generic owner. Explicit identity, inverse-diagonal and symmetric-MAP
+  owners avoid dense fine terminals and numerical copies for large fallbacks.
+  Initial compilation, unchanged legacy solver/allocator checks, independent
+  projector/range-spectrum tests, >256-coordinate solves and exact grouped-layout
+  comparisons pass. Baseline allocation/failure qualification and complete
+  required/release checks remain. The component-local driver follows; no new
+  automatic/default policy is selected by this baseline execution boundary.
+
+- M6g final required Rust1.85 and 90 Python checks pass; twelve release groups
+  pass, including unchanged hierarchy execution, independent baseline algebra,
+  large certified solves, native/gated negatives, exact allocator/budget/failure
+  gates and all 120 actual protocol comparisons. Identity retains zero action
+  arrays; diagonal/MAP retain two/four, with one optional image. The 48 historical
+  MAP cases preserve 14 native certificate rejects and 18 gate vetoes; every
+  gated result certifies. Self-review covers static dispatch, exact ownership,
+  unchanged recurrence/certificate arithmetic, range positivity, array liveness,
+  admission and failure recovery. This is self-review, not external review.
+  Freeze source before unchanged Mac smoke/development/expanded and Linux smoke
+  regression. That supplied-map harness does not time the new baseline or the
+  forthcoming component-local automatic driver. M6–M10 remain open.

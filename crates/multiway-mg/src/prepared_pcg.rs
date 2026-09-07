@@ -1,7 +1,7 @@
 //! Complete prepared serial projected PCG with independent tuple-space certification.
 use crate::{
     CertificateWorkReport, MultiwayError, PcgOptions, PcgStopReason, PreparedCertificateWorkspace,
-    PreparedHierarchyPayloadReport, PreparedHierarchyWorkspace, PreparedMapHierarchy,
+    PreparedHierarchyPayloadReport, PreparedMapHierarchy, PreparedSolverAction,
     certificate::{bytes, ensure_finite, vector},
     certify_prepared_normal_equations,
     pcg_kernel::{self, PcgActions, PcgStorage},
@@ -43,7 +43,7 @@ pub struct PreparedPcgWorkReport {
     pub rhs_adjoint_applications: usize,
     /// Fine Gramian applications, including true-residual recomputations.
     pub gramian_applications: usize,
-    /// Complete fixed hierarchy applications.
+    /// Complete fixed action applications (hierarchy or explicit baseline).
     pub hierarchy_applications: usize,
     /// Outer structural projections, excluding projections inside the hierarchy.
     pub projection_applications: usize,
@@ -83,7 +83,7 @@ pub struct PreparedPcgResult<'workspace> {
 /// Complete retained payload of one prepared PCG solve and declared caller state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PreparedPcgPayloadReport {
-    /// All direct hierarchy owners/application scratch; additional=0.
+    /// All direct action owners/application scratch; additional=0.
     pub hierarchy: PreparedHierarchyPayloadReport,
     /// Outer PCG, coefficient RHS, projection and certificate arrays.
     pub outer_workspace_payload_bytes: usize,
@@ -93,17 +93,21 @@ pub struct PreparedPcgPayloadReport {
     pub total_payload_bytes: usize,
 }
 
-/// Caller-owned serial PCG, hierarchy and certificate storage for one exact owner.
+/// Caller-owned serial PCG, fixed-action and certificate storage for one exact owner.
 ///
 /// Shares the ordinary untraced PCG recurrence; traced research PCG remains a
 /// separate diagnostic driver. Additional unidentified directions can cause PCG
 /// breakdown. Rectangular LSMR remains the rank-robust default candidate route.
-/// Targets are canonical tuple values. No automatic fallback or generation rebind
+/// The default generic owner is the supplied-map hierarchy; explicit baseline
+/// owners share the same recurrence and certificate. Targets are canonical tuple values. No automatic fallback or generation rebind
 /// occurs, and a native stopping flag alone never accepts a solution.
 #[derive(Debug)]
-pub struct PreparedPcgWorkspace<'owner> {
-    hierarchy: &'owner PreparedMapHierarchy<'owner>,
-    hierarchy_scratch: PreparedHierarchyWorkspace<'owner>,
+pub struct PreparedPcgWorkspace<
+    'owner,
+    P: PreparedSolverAction + 'owner = PreparedMapHierarchy<'owner>,
+> {
+    hierarchy: &'owner P,
+    hierarchy_scratch: P::Workspace<'owner>,
     projection: PreparedStructuralProjectionWorkspace<'owner>,
     certificate: PreparedCertificateWorkspace<'owner, 'owner>,
     storage: PcgStorage,
@@ -111,17 +115,17 @@ pub struct PreparedPcgWorkspace<'owner> {
     options: PreparedPcgOptions,
     last_work: PreparedPcgWorkReport,
 }
-impl<'owner> PreparedPcgWorkspace<'owner> {
+impl<'owner, P: PreparedSolverAction + 'owner> PreparedPcgWorkspace<'owner, P> {
     /// Fallibly allocate complete scratch at an explicit fixed-configuration boundary.
     pub fn try_new(
-        hierarchy: &'owner PreparedMapHierarchy<'owner>,
+        hierarchy: &'owner P,
         options: PreparedPcgOptions,
     ) -> Result<Self, MultiwayError> {
         Self::try_new_with_payload_budget(hierarchy, options, usize::MAX, 0)
     }
     /// Admit exact immutable owners plus complete requested scratch before allocation.
     pub fn try_new_with_payload_budget(
-        hierarchy: &'owner PreparedMapHierarchy<'owner>,
+        hierarchy: &'owner P,
         options: PreparedPcgOptions,
         maximum_payload_bytes: usize,
         additional_live_payload_bytes: usize,
@@ -135,8 +139,8 @@ impl<'owner> PreparedPcgWorkspace<'owner> {
                 budget: maximum_payload_bytes,
             });
         }
-        let fine = hierarchy.frames().fine();
-        Ok(Self {
+        let fine = hierarchy.fine_frame();
+        let result = Self {
             hierarchy,
             hierarchy_scratch: hierarchy.application_workspace()?,
             projection: fine.topology().try_projection_workspace()?,
@@ -145,31 +149,33 @@ impl<'owner> PreparedPcgWorkspace<'owner> {
             rhs: vector(fine.diagonal().len())?,
             options,
             last_work: PreparedPcgWorkReport::default(),
-        })
+        };
+        let actual = result
+            .payload_report(additional_live_payload_bytes)?
+            .total_payload_bytes;
+        if actual > maximum_payload_bytes {
+            return Err(MultiwayError::PayloadBudgetExceeded {
+                required: actual,
+                budget: maximum_payload_bytes,
+            });
+        }
+        Ok(result)
     }
     /// Complete live requested payload bound; caller inputs/old generations are explicit.
     pub fn setup_payload_bound(
-        hierarchy: &PreparedMapHierarchy<'_>,
+        hierarchy: &P,
         options: PreparedPcgOptions,
         additional_live_payload_bytes: usize,
     ) -> Result<usize, MultiwayError> {
         options.validate()?;
-        let frames = hierarchy.frames();
-        let fine = frames.fine();
+        let fine = hierarchy.fine_frame();
         let mut total = additional_live_payload_bytes;
-        for part in [
-            frames.hierarchy().fine().retained_payload_bytes()?,
-            frames.hierarchy().retained_payload_bytes()?,
-            fine.retained_payload_bytes()?,
-            frames.retained_payload_bytes()?,
-            hierarchy.retained_payload_bytes()?,
-            hierarchy.grouping_payload_bytes()?,
-            hierarchy.workspace_required_bytes()?,
+        for part in hierarchy.requested_payload_parts()?.into_iter().chain([
             fine.topology().projection_workspace_required_bytes()?,
             PreparedCertificateWorkspace::required_payload_bytes(fine)?,
             PcgStorage::required_payload_bytes(fine.diagonal().len())?,
             bytes(fine.diagonal().len())?,
-        ] {
+        ]) {
             total = add(total, part)?;
         }
         Ok(total)
@@ -185,7 +191,7 @@ impl<'owner> PreparedPcgWorkspace<'owner> {
         self.last_work
     }
     /// Exact numerical hierarchy validation without mutation or preparation.
-    pub fn validate_for(&self, hierarchy: &PreparedMapHierarchy<'_>) -> Result<(), MultiwayError> {
+    pub fn validate_for(&self, hierarchy: &P) -> Result<(), MultiwayError> {
         if !core::ptr::eq(self.hierarchy, hierarchy) {
             return Err(MultiwayError::WorkspaceNotPrepared {
                 context: "prepared PCG hierarchy",
@@ -197,7 +203,8 @@ impl<'owner> PreparedPcgWorkspace<'owner> {
     pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
         add(
             self.outer_payload_bytes()?,
-            self.hierarchy_scratch.retained_payload_bytes()?,
+            self.hierarchy
+                .workspace_payload_bytes(&self.hierarchy_scratch)?,
         )
     }
     /// Complete retained direct-owner lifetime inventory with declared caller arrays.
@@ -237,17 +244,17 @@ impl<'owner> PreparedPcgWorkspace<'owner> {
 /// Exact hierarchy, target length and finite values are checked before mutation.
 /// Native convergence remains a candidate. Numerical breakdown returns no result;
 /// complete attempted work remains available and later calls reinitialize scratch.
-pub fn solve_prepared_pcg_least_squares<'workspace>(
-    hierarchy: &PreparedMapHierarchy<'_>,
+pub fn solve_prepared_pcg_least_squares<'workspace, P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
-    workspace: &'workspace mut PreparedPcgWorkspace<'_>,
+    workspace: &'workspace mut PreparedPcgWorkspace<'_, P>,
 ) -> Result<PreparedPcgResult<'workspace>, MultiwayError> {
     #[cfg(feature = "profiling")]
     let _profile_span =
         multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::PreparedPcg);
 
     workspace.validate_for(hierarchy)?;
-    let fine = workspace.hierarchy.frames().fine();
+    let fine = workspace.hierarchy.fine_frame();
     if targets.len() != fine.weights().len() {
         return Err(crate::error::dimension(
             "prepared PCG targets",
@@ -259,7 +266,7 @@ pub fn solve_prepared_pcg_least_squares<'workspace>(
     workspace.last_work = PreparedPcgWorkReport::default();
     workspace.last_work.rhs_adjoint_applications = 1;
     let original = fine.operator_view();
-    if let Some(grouping) = hierarchy.level_grouping(0) {
+    if let Some(grouping) = hierarchy.fine_grouping() {
         original
             .with_grouping(grouping)?
             .rhs_from_targets_into(targets, &mut workspace.rhs)?;
@@ -311,13 +318,13 @@ pub fn solve_prepared_pcg_least_squares<'workspace>(
 /// Inspect each `accepted` flag. Numerical failure preserves the completed prefix
 /// and leaves failed/unprocessed outputs unchanged; the first `None` identifies
 /// the failing column and `last_work()` records its attempted actions.
-pub fn solve_prepared_pcg_batch_into(
-    hierarchy: &PreparedMapHierarchy<'_>,
+pub fn solve_prepared_pcg_batch_into<P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
     columns: usize,
     coefficients: &mut [f64],
     reports: &mut [Option<PreparedPcgReport>],
-    workspace: &mut PreparedPcgWorkspace<'_>,
+    workspace: &mut PreparedPcgWorkspace<'_, P>,
 ) -> Result<(), MultiwayError> {
     workspace.validate_for(hierarchy)?;
     if !(1..=32).contains(&columns) {
@@ -327,7 +334,7 @@ pub fn solve_prepared_pcg_batch_into(
             columns,
         ));
     }
-    let rows = hierarchy.frames().fine().weights().len();
+    let rows = hierarchy.fine_frame().weights().len();
     let n = hierarchy.dimension();
     let target_length = rows.checked_mul(columns).ok_or_else(overflow)?;
     let coefficient_length = n.checked_mul(columns).ok_or_else(overflow)?;
@@ -358,14 +365,14 @@ pub fn solve_prepared_pcg_batch_into(
     Ok(())
 }
 
-struct PreparedPcgActions<'borrow, 'owner> {
+struct PreparedPcgActions<'borrow, 'owner, P: PreparedSolverAction + 'owner> {
     view: ThreeWayOperatorView<'owner, 'owner>,
-    hierarchy: &'owner PreparedMapHierarchy<'owner>,
-    hierarchy_scratch: &'borrow mut PreparedHierarchyWorkspace<'owner>,
+    hierarchy: &'owner P,
+    hierarchy_scratch: &'borrow mut P::Workspace<'owner>,
     projection: &'borrow mut PreparedStructuralProjectionWorkspace<'owner>,
     work: &'borrow mut PreparedPcgWorkReport,
 }
-impl PcgActions for PreparedPcgActions<'_, '_> {
+impl<P: PreparedSolverAction> PcgActions for PreparedPcgActions<'_, '_, P> {
     fn project(&mut self, values: &mut [f64]) -> Result<f64, MultiwayError> {
         self.work.projection_applications += 1;
         Ok(self

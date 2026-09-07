@@ -52,6 +52,9 @@ mod provisional_replay_allocations;
 #[path = "support/prepared_cycle_quality_allocations.rs"]
 mod prepared_cycle_quality_allocations;
 
+#[path = "support/prepared_baseline_allocations.rs"]
+mod prepared_baseline_allocations;
+
 use multiway_mg::{
     CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, DensePseudoinverse,
     FactorAggregation, MultiwayError, Preconditioner, SymmetricMapPreconditioner, ThreeWayProblem,
@@ -255,6 +258,7 @@ fn main() -> Result<()> {
     positive_controls();
     operator_checks()?;
     prepared_aggregation_allocations::run()?;
+    prepared_baseline_allocations::run()?;
     prepared_topology_allocations::run()?;
     symbolic_map_allocations::run()?;
     weight_frame_allocations::run()?;
