@@ -132,6 +132,45 @@ impl FactorAggregation {
         Ok(())
     }
 
+    /// Add piecewise-constant prolongation directly: `fine += P coarse`.
+    ///
+    /// Checks both dimensions before any output write. Each coefficient uses the
+    /// same addition as materializing `P coarse` and then adding it, without a
+    /// temporary vector or a second fine-vector pass. This action does not check
+    /// finiteness; complete solver boundaries retain their numerical checks.
+    pub fn prolong_add(&self, coarse: &[f64], fine: &mut [f64]) -> Result<(), IncidenceError> {
+        #[cfg(feature = "profiling")]
+        let _profile_span = crate::profiling::span(crate::profiling::Phase::Prolongation);
+
+        let fine_dimension: usize = self.fine_counts.iter().sum();
+        let coarse_dimension: usize = self.coarse_counts.iter().sum();
+        if coarse.len() != coarse_dimension {
+            return Err(crate::error::dimension(
+                "FactorAggregation::prolong_add coarse",
+                coarse_dimension,
+                coarse.len(),
+            ));
+        }
+        if fine.len() != fine_dimension {
+            return Err(crate::error::dimension(
+                "FactorAggregation::prolong_add fine",
+                fine_dimension,
+                fine.len(),
+            ));
+        }
+        let mut fine_offset = 0;
+        let mut coarse_offset = 0;
+        for factor in 0..3 {
+            let end = fine_offset + self.fine_counts[factor];
+            for (value, &parent) in fine[fine_offset..end].iter_mut().zip(&self.parents[factor]) {
+                *value += coarse[coarse_offset + parent as usize];
+            }
+            fine_offset = end;
+            coarse_offset += self.coarse_counts[factor];
+        }
+        Ok(())
+    }
+
     /// Apply transpose restriction `coarse = P^T fine`.
     pub fn restrict(&self, fine: &[f64], coarse: &mut [f64]) -> Result<(), IncidenceError> {
         #[cfg(feature = "profiling")]

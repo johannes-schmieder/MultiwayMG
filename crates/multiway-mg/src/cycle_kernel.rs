@@ -37,7 +37,12 @@ pub(crate) trait CycleActions {
     ) -> Result<(), MultiwayError>;
     fn restrict(&self, level: usize, fine: &[f64], coarse: &mut [f64])
     -> Result<(), MultiwayError>;
-    fn prolong(&self, level: usize, coarse: &[f64], fine: &mut [f64]) -> Result<(), MultiwayError>;
+    fn prolong_add(
+        &self,
+        level: usize,
+        coarse: &[f64],
+        fine: &mut [f64],
+    ) -> Result<(), MultiwayError>;
     fn terminal(
         &self,
         rhs: &[f64],
@@ -94,10 +99,10 @@ pub(crate) fn apply_level<A: CycleActions>(
         children,
         shared,
     )?;
-    // The pre-residual is dead after restriction. Reuse its storage for the
-    // prolongated correction, then overwrite it with the post-residual.
-    actions.prolong(level, coarse_solution, residual)?;
-    add_assign(solution, residual);
+    // Add the correction with the original coefficient-wise addition, avoiding
+    // a temporary prolongation store/read. The residual stays dead until the
+    // following operator overwrites it for post-smoothing.
+    actions.prolong_add(level, coarse_solution, solution)?;
     actions.residual(level, compatible_rhs, solution, residual, shared.image)?;
     // The compatible RHS dies after that residual. The post smoother copies
     // its input into private scratch before publishing its correction here.

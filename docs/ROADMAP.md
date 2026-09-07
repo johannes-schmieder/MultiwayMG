@@ -156,7 +156,9 @@ all 2,268 corresponding M5c process records, with complete candidate certificati
 [five-layout experiment](ISSUE5_LAYOUT_BENCHMARK.md) now validates 7,920 complete processes across Mac smoke/development/expanded and
 Linux smoke. All-level tuple-image gathering gives about 1.40x/1.44x full-process
 development speedups for PCG/gated LSMR and 1.23x/1.24x on expanded one-RHS
-cases. Small smoke regressions are retained; scalar remains default. See the
+cases. Small smoke regressions are retained; scalar remains default. The next
+[fused transfer increment](ISSUE5_FUSED_TRANSFER.md) removes one temporary store/read
+per coefficient at each cycle transition while preserving the retained scratch. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
