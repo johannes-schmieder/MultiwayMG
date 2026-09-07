@@ -164,9 +164,11 @@ timing gain is claimed. The [single-arena workspace](ISSUE5_TRAVERSAL_ARENA.md)
 consolidates result, traversal and optional image storage with checked disjoint
 slices and fewer allocations. All 7,920 regression processes preserve M5f
 numerical/work records with exactly derived descriptor savings; versioned
-accounting retains all prior evidence. The next [certificate liveness increment](ISSUE5_CERTIFICATE_LIVENESS.md)
+accounting retains all prior evidence. The [certificate liveness increment](ISSUE5_CERTIFICATE_LIVENESS.md)
 reuses the coefficient vector after retaining its norm, with unchanged adjoint
-work and failure precedence. See the
+work and failure precedence. Its 7,920-process regression preserves all prior
+numerical/work records and proves exactly 8V fewer outer-workspace bytes.
+Scalable automatic construction is next. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

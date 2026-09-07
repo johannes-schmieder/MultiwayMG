@@ -588,3 +588,22 @@ for measurement, not an implemented layout or selected default.
   protocol comparisons pass. Preserve the logs and commit source before the
   unchanged four-artifact v2 regression; only the derived 8V outer-workspace
   reduction is permitted against M5g.
+
+
+- M5h measured source `26bfc035984502ed227cf228432ec286342476ed`
+  passes [all four complete-layout artifacts](../benchmarks/results/2026-09-07/prepared-layout-certificate-v2/README.md):
+  7,920 processes, 72,300 certified measured columns and exact matching M5g
+  input/numerical/work/fingerprint/layout records. Only outer_workspace/total
+  falls by 8V bytes. All other capacities/grouping/hierarchy inventory remain
+  exact; there are no process, timeout, rejection, RSS failures or retries.
+  Source `34081515304`/`34081515332` and PR `34081517554`/`34081517611`
+  passed, as did M5g post-merge `34081313866`/`34081313833`. Preserved full
+  raw/binary records, independently revalidated copies and every archive member.
+  Final evidence-head CI and PR53 merge remain before M5 closes. Next is M6
+  bounded flat automatic candidates, structural admission and component-local
+  depths. Supplied-map symbolic sorting/direct dense assembly already satisfy
+  those M5 layout objectives; automatic tree replacement belongs to M6's builder.
+  Reference caching was evaluated and deferred using diagnostic cost shares;
+  it is not implemented or claimed. No cross-revision timing or competitive
+  qualification is claimed; scalar stays default and calibration/holdout stay
+  untouched.

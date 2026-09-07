@@ -34,14 +34,16 @@ both attempted adjoints and successful recovery. Existing independent numerical,
 owner, static-input, zero/zero, extreme-weight, complete-solve and zero-allocation
 checks remain required. These injected actions test errors, not performance.
 
-Run all Rust1.85 checks, Python evidence tests, release complete-solver/allocator
-gates and actual layout protocol comparisons. Commit source before the unchanged
-v2 layout regression on Mac smoke/development/expanded and exact-source Linux
-smoke. Compare every corresponding M5g input/numerical/work/fingerprint record,
-allowing only 8V reduction in outer_workspace/total payload. Layout, grouping,
-hierarchy payload and failure coverage must remain exact. Preserve complete
-costs and all attempts. No measured M5h timing or qualification exists at this
-source checkpoint; calibration/holdout remain untouched.
+Frozen source `26bfc03` now passes [all four complete-layout artifacts](../benchmarks/results/2026-09-07/prepared-layout-certificate-v2/README.md):
+7,920 processes and 72,300 certified measured columns, including 6,336 exact
+within-source scalar/layout comparisons. Every corresponding M5g input/numerical/
+work/fingerprint/layout record matches. Only outer_workspace/total payload falls
+by exactly 8V bytes: 384 smoke, 3,072 development and 98,304 expanded. Grouping,
+hierarchy and every other payload category remain exact. No process, timeout,
+rejection, RSS failure or measured retry occurred. Exact raw/binary artifacts
+are independently revalidated and archived with every member rehashed.
+Separate collections imply no old/new paired timing gain. Scalar stays default;
+campaign calibration and holdout remain untouched.
 
 Reference-norm caching across repeated certificates is a separate hypothesis.
 M5b instrumented scalar profiles place the full certificate inclusive share at
@@ -60,3 +62,11 @@ solver and allocator tests pass; private fault precedence also passes in release
 The release executable passes 120 layout protocol comparisons with exact legacy
 scalar numerical/work/payload records and all explicit layouts. Freeze this
 source before full v2 regression collection.
+
+Source `34081515304`/`34081515332` and PR `34081517554`/`34081517611`
+workflows passed. M5g post-merge `34081313866`/`34081313833` passed. Final
+evidence-head CI and PR53 merge remain. The next M6 stage replaces legacy
+tree-based automatic candidate setup with explicit bounded flat arrays; the
+supplied-map prepared path already uses flat structural sorting and direct
+native dense assembly. The remaining target-reference cache is evaluated and
+deferred until current complete costs warrant it, not silently counted as built.
