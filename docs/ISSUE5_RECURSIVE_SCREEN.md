@@ -114,3 +114,13 @@ dense terminals per component or separately qualified fixed sparse terminals.
 Charge failed constructions and screen results before baseline fallback. M6 and
 M7–M10 remain open; scalar is still the default layout and no automatic-selector,
 calibration, campaign-holdout or competitive claim is introduced here.
+
+
+Frozen source `ba98d54` passes the [four-artifact supplied-map regression](../benchmarks/results/2026-09-07/prepared-layout-recursive-screen/README.md):
+7,920 processes, 72,300 certified measured columns, 6,336 exact within-source
+layout comparisons and exact agreement with every corresponding M6d input,
+numerical, work, payload and layout record. No measured retries or failed gates
+occurred. Source/PR workflows passed; copies and every archive member independently
+revalidate. 8 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+Final evidence-head CI and PR58 merge remain. These measurements do not run
+the new screen and cannot qualify its automatic construction cost.

@@ -1,0 +1,153 @@
+[
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3575398,
+    "archive_sha256": "6483ce397665058e1609f4d55ad9c75ce98727eea99fda328e68be9bfd9fe49a",
+    "binary_sha256": "d80fad46d17540c0ddb90f717e1e77fab4d1af480dc736915bbc7725e9581978",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "recursive_screen_existing_solver_regression",
+    "label": "mac-smoke",
+    "m6d_input_numerical_work_fingerprint_exact": true,
+    "m6d_layout_manifest_sha256": "9a11063ff62bcac7f0c6d3ec144149eb364f0beb4c1f79bcce344970dd7dfbda",
+    "m6d_layout_processes_compared": 2520,
+    "m6d_layout_source": "3e9028f41cea793fc6c04518b0880bc63bd45cb3",
+    "m6d_payload_exact": true,
+    "manifest_sha256": "60fbb8170e5d7b0533751fd97de84400987ffee654d01cc53ace5752de9f84e4",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-screen-ba98d54.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-screen-ba98d54.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/fine-row/pcg/inner_geomean",
+        "recomputed": 1.202511508264581,
+        "stored": 1.2025115082645812
+      },
+      {
+        "path": "/balanced/fine-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.357110064349049,
+        "stored": 1.3571100643490488
+      },
+      {
+        "path": "/balanced/all-image/pcg/inner_geomean",
+        "recomputed": 1.3428860709347077,
+        "stored": 1.3428860709347075
+      }
+    ],
+    "source_commit": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "source_tree": "f5c0a7a6ec6735d4c6fe4f07055df86a6a0e3db2",
+    "summary_sha256": "0f6fcad781a4c9a643db4677b79fe59ea483837f0166b6795c30cbfe42ccd00c"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3780126,
+    "archive_sha256": "0683126973c4a0cbffdd27b629e35b88618a1dd5d8a239656985793d8f4ca1b7",
+    "binary_sha256": "d80fad46d17540c0ddb90f717e1e77fab4d1af480dc736915bbc7725e9581978",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "recursive_screen_existing_solver_regression",
+    "label": "mac-development",
+    "m6d_input_numerical_work_fingerprint_exact": true,
+    "m6d_layout_manifest_sha256": "291038bb7c00745e5f6be01f210c467ce3d9780d8cd2aade99e623d5182ba978",
+    "m6d_layout_processes_compared": 2520,
+    "m6d_layout_source": "3e9028f41cea793fc6c04518b0880bc63bd45cb3",
+    "m6d_payload_exact": true,
+    "manifest_sha256": "970e2d2962402d37d5037520e70f815d4ee0c23d5b0ac57b01bbe05b4564ca94",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-screen-ba98d54.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-screen-ba98d54.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/all-row/lsmr-gated/inner_geomean",
+        "recomputed": 1.4328224062317425,
+        "stored": 1.4328224062317427
+      },
+      {
+        "path": "/balanced/fine-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.257645586562703,
+        "stored": 1.2576455865627028
+      },
+      {
+        "path": "/balanced/all-image/pcg/inner_geomean",
+        "recomputed": 1.504752627331145,
+        "stored": 1.5047526273311453
+      },
+      {
+        "path": "/balanced/all-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.5384605011896448,
+        "stored": 1.5384605011896446
+      }
+    ],
+    "source_commit": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "source_tree": "f5c0a7a6ec6735d4c6fe4f07055df86a6a0e3db2",
+    "summary_sha256": "68a3cfd9fe59dd99ff188d5c3b7ace11f250ea31e77beff091135e8fa7db7cfc"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 613209,
+    "archive_sha256": "672549af2df115bb5b31aa810f906e459463635940ee611b0cd0e313eb7c9ae7",
+    "binary_sha256": "d80fad46d17540c0ddb90f717e1e77fab4d1af480dc736915bbc7725e9581978",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "recursive_screen_existing_solver_regression",
+    "label": "mac-expanded",
+    "m6d_input_numerical_work_fingerprint_exact": true,
+    "m6d_layout_manifest_sha256": "bfcf9b3b2fc1694c54c9d084b4f6866c0cb009015e407f065961d81ac366eeef",
+    "m6d_layout_processes_compared": 360,
+    "m6d_layout_source": "3e9028f41cea793fc6c04518b0880bc63bd45cb3",
+    "m6d_payload_exact": true,
+    "manifest_sha256": "57b4ca0ecc2d5d42d5a1232d4abcde7318f19430391ce94a8d93239397ff3950",
+    "paired_processes_compared": 288,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-expanded-screen-ba98d54.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-expanded-screen-ba98d54.tar.gz",
+    "processes": 360,
+    "recomputed_derived_timing_rounding": [],
+    "source_commit": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "source_tree": "f5c0a7a6ec6735d4c6fe4f07055df86a6a0e3db2",
+    "summary_sha256": "e51f7c71d1d63371d906f88c83bd690b34db3af9ca3273441626f3e2e3c3698c"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3635442,
+    "archive_sha256": "ba96915ef53305cb6c2684c44c7c49d3f062cd8a65a17cf5c0c8071845c4e78f",
+    "binary_sha256": "45827ebbc0079e8111f6a51d82f82d56cb65019efb657f8a06929268d0710abb",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": 34096124588,
+    "kind": "recursive_screen_existing_solver_regression",
+    "label": "linux-smoke",
+    "m6d_input_numerical_work_fingerprint_exact": true,
+    "m6d_layout_manifest_sha256": "4c34283205f2a9a777e8c5c101eb7eb2fca14e532b8e92215d399c018f148033",
+    "m6d_layout_processes_compared": 2520,
+    "m6d_layout_source": "3e9028f41cea793fc6c04518b0880bc63bd45cb3",
+    "m6d_payload_exact": true,
+    "manifest_sha256": "16b5169c67ea20cf72ea59e3afb55375bf39427d1b7203eddd4d13f979412b3a",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-screen-ba98d54.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-screen-ba98d54.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/fine-row/lsmr-gated/inner_geomean",
+        "recomputed": 1.1624490007588235,
+        "stored": 1.1624490007588237
+      }
+    ],
+    "source_commit": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "source_tree": "f5c0a7a6ec6735d4c6fe4f07055df86a6a0e3db2",
+    "summary_sha256": "913a13c60642889f5ba0dbc32304b8a424b053686cfaad8a74da510bc74d60ea"
+  }
+]

@@ -788,3 +788,16 @@ for measurement, not an implemented layout or selected default.
   complete payload/work scope. Freeze this source before unchanged Mac smoke/
   development/expanded and Linux smoke regression. The supplied-map harness
   does not run the new screen; complete automatic performance remains open.
+
+- M6e frozen source `ba98d54947b3c05b35b7a1dd38a190fcf06728a7` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-07/prepared-layout-recursive-screen/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6d input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34096124588`/`34096124774` and PR `34096127941`/`34096127889`
+  passed. Copies and every archive member independently revalidate.
+  8 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+  The supplied-map harness does not time the screen. Final evidence-head CI and
+  PR58 merge remain. Next compare bounded full-row candidate coverage and
+  integrate component-local automatic construction with charged screening and
+  fallback. M6–M10 remain open, scalar stays default and holdout is untouched.
