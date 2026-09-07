@@ -1,8 +1,9 @@
 //! Immutable current-frame MAP and caller-owned mutable scratch.
-use super::kernel::{MapData, sweep};
+use super::kernel::{MapData, sweep, sweep_grouped};
 use crate::MultiwayError;
 use multiway_incidence::{
-    PreparedStructuralProjectionWorkspace, ThreeWayWeightFrame, WeightFrameBinding,
+    PreparedStructuralProjectionWorkspace, PreparedTupleGrouping, ThreeWayWeightFrame,
+    WeightFrameBinding,
 };
 
 /// One fixed symmetric MAP correction borrowing an exact numerical frame.
@@ -14,6 +15,50 @@ use multiway_incidence::{
 #[derive(Debug, Clone, Copy)]
 pub struct PreparedSymmetricMap<'frame, 'topology> {
     frame: &'frame ThreeWayWeightFrame<'topology>,
+}
+
+/// Explicit stable-row MAP alternative for an exact immutable numerical frame.
+///
+/// Borrows grouping and numerical state separately. Reuses the same caller-owned
+/// MAP workspace; row order, tuple subtraction order, mul_add association,
+/// rounded middle and structural projections match the scalar sweep. No layout
+/// is selected implicitly and no extra application arrays are required.
+#[derive(Debug, Clone, Copy)]
+pub struct PreparedGroupedSymmetricMap<'groups, 'frame, 'topology> {
+    scalar: PreparedSymmetricMap<'frame, 'topology>,
+    grouping: &'groups PreparedTupleGrouping<'topology>,
+}
+impl<'groups, 'frame, 'topology> PreparedGroupedSymmetricMap<'groups, 'frame, 'topology> {
+    /// Exact current numerical frame.
+    #[must_use]
+    pub const fn frame(&self) -> &'frame ThreeWayWeightFrame<'topology> {
+        self.scalar.frame
+    }
+    /// Borrowed weights-free grouping owner, counted separately from scratch.
+    #[must_use]
+    pub const fn grouping(&self) -> &'groups PreparedTupleGrouping<'topology> {
+        self.grouping
+    }
+    /// Same exclusive scratch requirement as scalar MAP.
+    pub fn workspace_required_bytes(&self) -> Result<usize, MultiwayError> {
+        self.scalar.workspace_required_bytes()
+    }
+    /// Prepare the existing three-vector/projector MAP scratch, without layout copies.
+    pub fn application_workspace(
+        &self,
+    ) -> Result<PreparedMapWorkspace<'frame, 'topology>, MultiwayError> {
+        self.scalar.application_workspace()
+    }
+    /// Apply ordered grouped MAP, with the scalar validation/transactional boundary.
+    pub fn apply_with_workspace(
+        &self,
+        rhs: &[f64],
+        output: &mut [f64],
+        workspace: &mut PreparedMapWorkspace<'_, '_>,
+    ) -> Result<(), MultiwayError> {
+        self.scalar
+            .apply_impl(rhs, output, workspace, Some(self.grouping))
+    }
 }
 
 /// All mutable storage for one exact current-frame MAP application.
@@ -45,6 +90,18 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
     #[must_use]
     pub const fn new(frame: &'frame ThreeWayWeightFrame<'topology>) -> Self {
         Self { frame }
+    }
+
+    /// Bind optional grouping from this frame's exact structural owner.
+    pub fn with_grouping<'groups>(
+        self,
+        grouping: &'groups PreparedTupleGrouping<'topology>,
+    ) -> Result<PreparedGroupedSymmetricMap<'groups, 'frame, 'topology>, MultiwayError> {
+        grouping.validate_for(self.frame.topology())?;
+        Ok(PreparedGroupedSymmetricMap {
+            scalar: self,
+            grouping,
+        })
     }
 
     /// Exact borrowed numerical owner.
@@ -114,6 +171,15 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
         output: &mut [f64],
         workspace: &mut PreparedMapWorkspace<'_, '_>,
     ) -> Result<(), MultiwayError> {
+        self.apply_impl(rhs, output, workspace, None)
+    }
+    fn apply_impl(
+        &self,
+        rhs: &[f64],
+        output: &mut [f64],
+        workspace: &mut PreparedMapWorkspace<'_, '_>,
+        grouping: Option<&PreparedTupleGrouping<'_>>,
+    ) -> Result<(), MultiwayError> {
         if rhs.len() != self.dimension() {
             return Err(crate::error::dimension(
                 "prepared MAP rhs",
@@ -142,16 +208,16 @@ impl<'frame, 'topology> PreparedSymmetricMap<'frame, 'topology> {
             .topology()
             .project_structural_range_with_workspace(compatible_rhs, projection)?;
         finite(compatible_rhs, "prepared MAP projected rhs")?;
-        sweep(
-            MapData {
-                topology: self.frame.topology().topology(),
-                weights: self.frame.weights(),
-                diagonal: self.frame.diagonal(),
-            },
-            compatible_rhs,
-            forward,
-            solution,
-        );
+        let data = MapData {
+            topology: self.frame.topology().topology(),
+            weights: self.frame.weights(),
+            diagonal: self.frame.diagonal(),
+        };
+        if let Some(grouping) = grouping {
+            sweep_grouped(data, grouping, compatible_rhs, forward, solution);
+        } else {
+            sweep(data, compatible_rhs, forward, solution);
+        }
         finite(solution, "prepared MAP sweep")?;
         self.frame
             .topology()

@@ -5,7 +5,7 @@ use crate::{MultiwayError, Preconditioner, ThreeWayProblem};
 mod kernel;
 mod prepared;
 mod workspace;
-pub use prepared::{PreparedMapWorkspace, PreparedSymmetricMap};
+pub use prepared::{PreparedGroupedSymmetricMap, PreparedMapWorkspace, PreparedSymmetricMap};
 pub use workspace::SymmetricMapWorkspace;
 
 /// One symmetric factor sweep, equivalent to a block symmetric

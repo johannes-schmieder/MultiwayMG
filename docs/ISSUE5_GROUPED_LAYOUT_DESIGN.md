@@ -18,3 +18,7 @@ needs complete admission, not fine-only estimates. Compare explicit fine-only
 and all-nonterminal layouts before selecting per-level rules; scalar scatter
 remains the control. Instrumented shares do not establish layout speedups, and
 the current expansion still does not measure large out-of-cache/SCC behavior.
+
+[M5c primitives](ISSUE5_GROUPED_KERNELS.md) implement the grouping owner, stable
+operator alternatives and grouped MAP. Full hierarchy ownership/workspace
+integration and paired layout measurement remain the next boundary.

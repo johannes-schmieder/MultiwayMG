@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a merged; M5b opt-in kernel attribution |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a/M5b merged; M5c explicit grouped kernels |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -378,3 +378,21 @@ for measurement, not an implemented layout or selected default.
   scatter. Coefficient halving alone is insufficient for M6 admission. These
   instrumented, cache-bounded development results select the next experiment,
   not a default layout or a competitive route. M5–M10 remain open.
+
+- M5b PR #47 merged as `3ab634bbec517bf0894396c1b7d59778b928456a` after
+  final source workflows `34067750094`/`34067750074` and PR workflows
+  `34067752756`/`34067752759` passed. Verified main matches the reviewed tree;
+  post-merge workflows are tracked separately.
+- M5c begins with exact topology-bound factor grouping, stable narrow/wide row
+  access, grouped original-operator alternatives and ordered grouped MAP sweeps.
+  Preserve scalar defaults, arithmetic association and current frame binding;
+  qualify construction admission, errors, exact operator/smoother outputs and
+  allocation/release before complete-solve integration and paired layout timing.
+
+- M5b post-merge workflows `34067935454`/`34067935479` passed on actual main.
+  M5c [stable grouped primitives](ISSUE5_GROUPED_KERNELS.md) now implement
+  checked weights-free row ownership, narrow/wide indices, exact row-gather and
+  tuple-image operators and grouped MAP over unchanged scratch. All required Rust 1.85 and
+  73 Python checks pass, as do targeted release operator/width/MAP/frozen-loop
+  and complete allocator tests. No grouped
+  complete-solve route or timing exists yet, and scalar defaults remain unchanged.

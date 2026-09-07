@@ -261,7 +261,7 @@ impl OperatorData<'_> {
     }
 }
 
-fn validate_len(
+pub(crate) fn validate_len(
     context: &'static str,
     expected: usize,
     actual: usize,

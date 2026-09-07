@@ -144,7 +144,10 @@ matrix. [Opt-in kernel profiling](ISSUE5_KERNEL_PROFILING.md) now supplies
 validated attribution and level inventory for larger development inputs. Its
 [four diagnostic artifacts](../benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md)
 pass complete accounting/certification and prioritize grouped MAP/Gramian trials.
-Instrumented times are diagnostic; M5 remains open for measured layout work.
+Instrumented times are diagnostic. [Stable grouped kernels](ISSUE5_GROUPED_KERNELS.md)
+now provide explicit row-gather/tuple-image operators and grouped MAP with the
+same arithmetic and scratch. Complete-solve integration and measured layout
+selection remain M5 work.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

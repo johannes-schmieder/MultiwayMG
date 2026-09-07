@@ -123,7 +123,8 @@ pub use lsmr::{
     solve_weighted_least_squares,
 };
 pub use map::{
-    PreparedMapWorkspace, PreparedSymmetricMap, SymmetricMapPreconditioner, SymmetricMapWorkspace,
+    PreparedGroupedSymmetricMap, PreparedMapWorkspace, PreparedSymmetricMap,
+    SymmetricMapPreconditioner, SymmetricMapWorkspace,
 };
 #[cfg(feature = "cmg")]
 pub use oracle_schedule::{
