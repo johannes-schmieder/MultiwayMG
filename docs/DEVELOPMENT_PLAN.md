@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5d merged; M5e paired layout evidence passes |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5e merged; M5f fused transfer evidence passes |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -498,3 +498,35 @@ for measurement, not an implemented layout or selected default.
   evidence-head review/CI and merge remain for PR #50. M5 next audits fused
   prolong-add and certificate-reference liveness against measured traffic;
   broad layout selection, scalable construction and M6–M10 remain open.
+
+
+- M5e PR #50 merged as `aed6f4f8c38f17ddfa2b4d1ef7276a4307f75772`
+  after final source `34076699999`/`34076699976` and PR
+  `34076702412`/`34076702419` workflows passed. Main matches reviewed tree
+  `ba55842b6d98eb84664a9f0eeaa3215429acc43e`. M5f implements the bounded
+  [fused prolong-add](ISSUE5_FUSED_TRANSFER.md) pass, retaining all arithmetic,
+  arrays and work counters. Test/commit before unchanged layout-policy
+  regression collection. Separate prior/current runs do not imply a paired
+  timing gain. Read-only audit confirms prepared symbolic setup already uses
+  flat sorting and terminal assembly is already column-major; traversal arena
+  consolidation and certificate-reference scope remain separate increments.
+
+- M5e post-merge workflows `34077088058`/`34077087956` passed. M5f
+  required Rust1.85 checks and all 88 Python validators pass, as do release
+  transfer arithmetic, complete prepared/grouped hierarchy, PCG/native/gated
+  LSMR and allocator tests in all/minimal feature configurations. Freeze this
+  source before the unchanged layout regression; retained payload and work must
+  exactly match M5e. No M5f timing has been collected.
+
+
+- M5f measured source `a95c84ec618429194da5184ac8abff124c680323`
+  passes [complete layout regression](../benchmarks/results/2026-09-06/prepared-layout-fused-transfer/README.md)
+  across all 7,920 Mac/Linux processes and 72,300 measured columns. Every
+  corresponding M5e input/numerical/work/fingerprint/payload/layout record
+  matches exactly. No process, timeout, certificate or RSS failure occurred.
+  Source `34077448539`/`34077448504` and PR `34077479671`/`34077479681`
+  workflows passed; exact binaries/raw evidence and independently revalidated
+  archives are preserved externally. The source-level temporary pass is removed;
+  retained memory is unchanged and no old/new paired timing gain is claimed.
+  Final evidence-head review/CI and PR #51 merge remain before the next
+  traversal-arena increment. M5 and M6–M10 remain open.

@@ -354,8 +354,13 @@ impl CycleActions for CycleScreenedMapHierarchy {
         self.aggregations[level].restrict(fine, coarse)?;
         Ok(())
     }
-    fn prolong(&self, level: usize, coarse: &[f64], fine: &mut [f64]) -> Result<(), MultiwayError> {
-        self.aggregations[level].prolong(coarse, fine)?;
+    fn prolong_add(
+        &self,
+        level: usize,
+        coarse: &[f64],
+        fine: &mut [f64],
+    ) -> Result<(), MultiwayError> {
+        self.aggregations[level].prolong_add(coarse, fine)?;
         Ok(())
     }
     fn terminal(

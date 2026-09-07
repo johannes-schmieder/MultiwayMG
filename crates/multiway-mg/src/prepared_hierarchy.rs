@@ -560,12 +560,17 @@ impl<'state> CycleActions for PreparedMapHierarchy<'state> {
             .restrict(fine, coarse)?;
         finite(coarse, "prepared hierarchy restriction")
     }
-    fn prolong(&self, level: usize, coarse: &[f64], fine: &mut [f64]) -> Result<(), MultiwayError> {
+    fn prolong_add(
+        &self,
+        level: usize,
+        coarse: &[f64],
+        fine: &mut [f64],
+    ) -> Result<(), MultiwayError> {
         self.frames
             .hierarchy()
             .aggregation(level)
             .expect("prepared transition")
-            .prolong(coarse, fine)?;
+            .prolong_add(coarse, fine)?;
         Ok(())
     }
     fn terminal(
