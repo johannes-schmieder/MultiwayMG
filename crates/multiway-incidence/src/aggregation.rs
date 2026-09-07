@@ -20,6 +20,30 @@ pub struct FactorAggregation {
 impl FactorAggregation {
     /// Validate factor-local parent labels and construct an aggregation.
     pub fn new(fine_counts: [usize; 3], parents: [Vec<u32>; 3]) -> Result<Self, IncidenceError> {
+        Self::try_new(fine_counts, parents)
+    }
+
+    /// Validate dense factor-local parent labels using fallible, bounded scratch.
+    ///
+    /// Valid maps use at most one byte per fine coefficient in the largest
+    /// factor during validation. Invalid large labels cannot request a huge
+    /// array: the first missing dense label is at most the fine factor count.
+    /// Consumed parent arrays and partially validated state are dropped on error.
+    pub fn try_new(
+        fine_counts: [usize; 3],
+        parents: [Vec<u32>; 3],
+    ) -> Result<Self, IncidenceError> {
+        Self::validate_with(fine_counts, parents, &mut |_| Ok(()))
+    }
+
+    fn validate_with<F>(
+        fine_counts: [usize; 3],
+        parents: [Vec<u32>; 3],
+        before: &mut F,
+    ) -> Result<Self, IncidenceError>
+    where
+        F: FnMut(&'static str) -> Result<(), IncidenceError>,
+    {
         let mut coarse_counts = [0; 3];
         for factor in 0..3 {
             if parents[factor].len() != fine_counts[factor] {
@@ -32,14 +56,27 @@ impl FactorAggregation {
             let Some(maximum) = parents[factor].iter().copied().max() else {
                 return Err(IncidenceError::EmptyFactor { factor });
             };
-            let coarse_count = maximum as usize + 1;
-            let mut seen = vec![false; coarse_count];
+            let coarse_count =
+                (maximum as usize)
+                    .checked_add(1)
+                    .ok_or(IncidenceError::DimensionOverflow {
+                        context: "aggregation parent extent",
+                    })?;
+            let validation_count = coarse_count.min(fine_counts[factor].saturating_add(1));
+            let mut seen = crate::construction::reserve(
+                validation_count,
+                "aggregation parent validation",
+                before,
+            )?;
+            seen.resize(validation_count, false);
             for &parent in &parents[factor] {
                 let index = parent as usize;
                 if index >= coarse_count {
                     return Err(IncidenceError::InvalidParent { factor, parent });
                 }
-                seen[index] = true;
+                if let Some(slot) = seen.get_mut(index) {
+                    *slot = true;
+                }
             }
             if let Some(parent) = seen.iter().position(|&value| !value) {
                 return Err(IncidenceError::EmptyAggregate { factor, parent });
@@ -266,5 +303,69 @@ mod payload_tests {
         assert_eq!(map.retained_payload_bytes().unwrap(), expected);
         assert!(expected > 6 * core::mem::size_of::<u32>());
         assert_eq!(map.retained_payload_bytes().unwrap(), map.retained_bytes());
+    }
+}
+
+#[cfg(test)]
+mod fallible_validation_tests {
+    use super::*;
+    #[test]
+    fn huge_sparse_parent_labels_reject_without_huge_validation_arrays() {
+        for parents in [
+            [vec![u32::MAX], vec![0], vec![0]],
+            [vec![0, u32::MAX], vec![0], vec![0]],
+        ] {
+            let n = parents[0].len();
+            let mut calls = 0;
+            let error = FactorAggregation::validate_with([n, 1, 1], parents, &mut |_| {
+                calls += 1;
+                Ok(())
+            })
+            .unwrap_err();
+            assert_eq!(
+                error,
+                IncidenceError::EmptyAggregate {
+                    factor: 0,
+                    parent: n - 1
+                }
+            );
+            assert_eq!(calls, 1);
+        }
+        let relabel =
+            FactorAggregation::try_new([4, 3, 2], [vec![1, 0, 1, 0], vec![0, 1, 0], vec![0, 0]])
+                .unwrap();
+        assert_eq!(relabel.coarse_counts(), [2, 2, 1]);
+    }
+    #[test]
+    fn each_validation_reservation_failure_or_unwind_drops_unpublished_state() {
+        for unwind in [false, true] {
+            for fail_at in 0..3 {
+                let mut calls = 0;
+                let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                    FactorAggregation::validate_with(
+                        [2; 3],
+                        [vec![0, 1], vec![1, 0], vec![0, 0]],
+                        &mut |context| {
+                            let at = calls;
+                            calls += 1;
+                            if at == fail_at {
+                                if unwind {
+                                    panic!("injected parent validation unwind");
+                                }
+                                return Err(IncidenceError::TopologyAllocation { context });
+                            }
+                            Ok(())
+                        },
+                    )
+                }));
+                assert_eq!(calls, fail_at + 1);
+                if unwind {
+                    assert!(result.is_err());
+                } else {
+                    assert!(result.unwrap().is_err());
+                }
+                assert!(FactorAggregation::try_new([1; 3], [vec![0], vec![0], vec![0]]).is_ok());
+            }
+        }
     }
 }

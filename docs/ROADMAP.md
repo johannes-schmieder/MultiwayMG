@@ -168,7 +168,10 @@ accounting retains all prior evidence. The [certificate liveness increment](ISSU
 reuses the coefficient vector after retaining its norm, with unchanged adjoint
 work and failure precedence. Its 7,920-process regression preserves all prior
 numerical/work records and proves exactly 8V fewer outer-workspace bytes.
-Scalable automatic construction is next. See the
+M5 is complete. [Bounded structural candidates](ISSUE5_BOUNDED_CANDIDATES.md)
+begin M6 with flat arrays, admission before allocation and preserved finite
+legacy matching order. Component-local construction and recursive screening
+remain the next stages. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
