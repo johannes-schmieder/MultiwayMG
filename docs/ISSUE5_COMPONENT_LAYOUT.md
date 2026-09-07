@@ -116,3 +116,12 @@ and allocator checks, and 120 actual protocol comparisons pass. Initial failed
 unused-level-fixture and redundant-lifetime lint logs are preserved alongside
 passing final checks. Complete existing-solver regression follows frozen source;
 it does not invoke or time the new component partition.
+
+
+Frozen source `1b4baae` passes the [four-artifact existing-solver regression](../benchmarks/results/2026-09-07/prepared-layout-component-layout/README.md):
+7,920 processes, 72,300 certified measured columns and exact agreement with
+every corresponding M6b input/numerical/work/payload/layout record. No errors,
+rejections, timeouts, RSS failures or measured retries occurred. Source/PR
+workflows passed; independently revalidated binary/raw copies and every archived
+member are preserved. Final evidence-head CI and PR56 merge remain. These
+supplied-map measurements do not invoke or time component layout construction.

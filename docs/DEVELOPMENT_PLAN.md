@@ -706,3 +706,16 @@ for measurement, not an implemented layout or selected default.
   component-layout source before unchanged five-layout Mac smoke/development/
   expanded and Linux smoke regression. These supplied-map timings do not invoke
   the new partition and cannot qualify component-local automatic performance.
+
+- M6c frozen source `1b4baaed8f67956f5f210171345f14b586b8e17c` passes
+  [all four existing-solver artifacts](../benchmarks/results/2026-09-07/prepared-layout-component-layout/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6b input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34088832395`/`34088832402` and PR `34088867632`/`34088867657`
+  passed. Binary/raw copies independently revalidate, saved summaries reproduce
+  exactly and every archive member is rehashed. These supplied-map regressions
+  do not invoke or time the new partition. Final evidence-head CI/PR56 merge
+  remain. Next integrate component-local structural prefixes, one-transition
+  provisional replay, bounded numerical terminals and actual recursive screening.
+  M6–M10 remain open, scalar stays default and campaign holdout is untouched.
