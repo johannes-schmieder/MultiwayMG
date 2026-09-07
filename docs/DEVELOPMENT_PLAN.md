@@ -443,3 +443,16 @@ for measurement, not an implemented layout or selected default.
   row gathering, plus one for image mode. Numerical RHS/metric/norm failures
   and recovery allocate zero. Commit this source before the unchanged v2 scalar
   regression collection; grouped timing remains a separate frozen experiment.
+
+- M5d measured source `d11917f152704973c673728d85b3eae1190f76b5` passes
+  the [unchanged scalar v2 regression](../benchmarks/results/2026-09-06/prepared-serial-m5d-scalar/README.md)
+  on Mac smoke/development and Linux smoke. Every one of 2,268 corresponding
+  processes exactly matches M5c input/numerical/work/fingerprint/payload records,
+  including native 560/935 smoke/development rejects. PCG and gated LSMR certify
+  all 2,400 measured columns per route/profile. No process, timeout or RSS-budget
+  failure occurred. Source `34071799728`/`34071799760` and PR
+  `34071824688`/`34071824642` workflows passed. Exact binaries/raw outputs and
+  independently revalidated archives are preserved externally. Final evidence-head
+  CI/merge remains for PR #49. M5e next freezes a paired complete-cost comparison
+  of scalar, fine-only/all-level rows and fine-only/all-level images; no grouped
+  timing or layout default is claimed yet.

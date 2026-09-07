@@ -150,7 +150,9 @@ same arithmetic and scratch. [Explicit complete grouped hierarchies](ISSUE5_GROU
 now connect them to prepared PCG and native/gated LSMR, with one shared optional
 image and separate grouping admission. Paired measurement and layout selection
 remain M5 work. The [preserved scalar baselines](../benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
-retain exact M5a numerical/work/payload results on Mac and Linux.
+retain exact M5a numerical/work/payload results on Mac and Linux. The
+[M5d scalar regression](../benchmarks/results/2026-09-06/prepared-serial-m5d-scalar/README.md) in turn matches
+all 2,268 corresponding M5c process records, with complete candidate certification.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

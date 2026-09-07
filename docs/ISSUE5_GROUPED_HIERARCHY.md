@@ -92,3 +92,13 @@ allocations; image mode uses 35 and 41. All first/repeated action, static failur
 RHS/metric/norm overflow and recovery windows allocate/deallocate/reallocate zero.
 Fork post-merge `34071548162` passed. Exact-source/PR checks and the unchanged
 v2 scalar regression run follow the source commit before this increment closes.
+
+
+Source `d11917f152704973c673728d85b3eae1190f76b5` passed exact-source
+`34071799728`/`34071799760` and PR `34071824688`/`34071824642` workflows.
+The [scalar regression receipts](../benchmarks/results/2026-09-06/prepared-serial-m5d-scalar/README.md)
+preserve all 2,268 Mac/Linux input/numerical/work/payload records exactly against
+M5c, with full eligible-route certification and unchanged native negatives.
+The first sandboxed local hardware inventory was blocked before any cases ran;
+its retained log is separate from the complete successful measurements. Final
+evidence-head CI/merge remains; grouped paired timing follows in M5e.
