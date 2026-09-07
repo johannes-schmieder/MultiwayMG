@@ -90,3 +90,12 @@ pass. The unchanged four-artifact supplied-map regression will check existing so
 does not invoke or time adjacent candidate setup. Complete component-local
 construction, charged failure/fallback, parallelism, RHS panels, changing-weight
 policy and competitive calibration/holdout remain open.
+
+
+Frozen source `31b202e` passes the [four-artifact supplied-map regression](../benchmarks/results/2026-09-07/prepared-layout-adjacent-candidates/README.md):
+7,920 processes, 72,300 certified measured columns, 6,336 exact layout comparisons
+and exact M6e input/numerical/work/payload/layout records. No measured retries or
+failed gates occurred. Copies and every archived member independently revalidate.
+11 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+Source/PR checks passed; final evidence-head checks and PR59 merge remain. These
+measurements do not run the new candidate or override its diagnostic negatives.

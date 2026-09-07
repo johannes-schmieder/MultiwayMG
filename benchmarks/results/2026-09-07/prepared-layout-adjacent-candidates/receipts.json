@@ -1,0 +1,169 @@
+[
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3574439,
+    "archive_sha256": "bd0b38533b7d547ecf1d79be48ee87588011423e2cd8523f35af0142a9f0366a",
+    "binary_sha256": "da58253a69a5acdfc42a1adc257eeebc6684684bbc7a27ee658a02c6b783c835",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "adjacent_candidate_existing_solver_regression",
+    "label": "mac-smoke",
+    "m6e_input_numerical_work_fingerprint_exact": true,
+    "m6e_layout_manifest_sha256": "60fbb8170e5d7b0533751fd97de84400987ffee654d01cc53ace5752de9f84e4",
+    "m6e_layout_processes_compared": 2520,
+    "m6e_layout_source": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "m6e_payload_exact": true,
+    "manifest_sha256": "582148b6006de71b69bf29adbec15b71706e6b8bc642624361286f84ca40afce",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-adjacent-31b202e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-adjacent-31b202e.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/fine-row/lsmr-gated/inner_geomean",
+        "recomputed": 1.2635210076467411,
+        "stored": 1.263521007646741
+      },
+      {
+        "path": "/balanced/fine-image/pcg/inner_geomean",
+        "recomputed": 1.335200103453196,
+        "stored": 1.3352001034531957
+      },
+      {
+        "path": "/balanced/fine-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.3632784831444533,
+        "stored": 1.3632784831444535
+      }
+    ],
+    "source_commit": "31b202e10c65cee77a079fb574f1408e778901db",
+    "source_tree": "7ed7b3f00443b4ff1b7e7b6945cfae125b2689ef",
+    "summary_sha256": "a4e356e951a9a3b547db5e7ca1741ad4f1e3dc1a8faee5f6bb40041240c630fb"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3784005,
+    "archive_sha256": "7ffc553cf6bee159666132ec070ef080c5d1822b41200d9527ca1a64afe07629",
+    "binary_sha256": "da58253a69a5acdfc42a1adc257eeebc6684684bbc7a27ee658a02c6b783c835",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "adjacent_candidate_existing_solver_regression",
+    "label": "mac-development",
+    "m6e_input_numerical_work_fingerprint_exact": true,
+    "m6e_layout_manifest_sha256": "970e2d2962402d37d5037520e70f815d4ee0c23d5b0ac57b01bbe05b4564ca94",
+    "m6e_layout_processes_compared": 2520,
+    "m6e_layout_source": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "m6e_payload_exact": true,
+    "manifest_sha256": "7e54ef9e29e9dce4334de7e61f1c8121eba436b0f23dc3ee66576822146ed95e",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-adjacent-31b202e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-adjacent-31b202e.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/fine-row/pcg/inner_geomean",
+        "recomputed": 1.1848525198509703,
+        "stored": 1.1848525198509705
+      },
+      {
+        "path": "/balanced/all-row/pcg/inner_geomean",
+        "recomputed": 1.3741326825512556,
+        "stored": 1.3741326825512559
+      },
+      {
+        "path": "/balanced/all-row/lsmr-gated/process_geomean",
+        "recomputed": 1.3665177728481122,
+        "stored": 1.3665177728481124
+      },
+      {
+        "path": "/balanced/all-image/pcg/process_geomean",
+        "recomputed": 1.4125535672143315,
+        "stored": 1.4125535672143317
+      },
+      {
+        "path": "/balanced/all-image/pcg/inner_geomean",
+        "recomputed": 1.5031749759008772,
+        "stored": 1.5031749759008775
+      }
+    ],
+    "source_commit": "31b202e10c65cee77a079fb574f1408e778901db",
+    "source_tree": "7ed7b3f00443b4ff1b7e7b6945cfae125b2689ef",
+    "summary_sha256": "adc4d32378c2f921fd5f0eb837cfd653a80193e0461ff1b766e3218cd2ecbd12"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 613427,
+    "archive_sha256": "3ce5cbf67f8e110f7380f8dbde4afc2ad69f6fee6a252c7c98b76971d3989195",
+    "binary_sha256": "da58253a69a5acdfc42a1adc257eeebc6684684bbc7a27ee658a02c6b783c835",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "adjacent_candidate_existing_solver_regression",
+    "label": "mac-expanded",
+    "m6e_input_numerical_work_fingerprint_exact": true,
+    "m6e_layout_manifest_sha256": "57b4ca0ecc2d5d42d5a1232d4abcde7318f19430391ce94a8d93239397ff3950",
+    "m6e_layout_processes_compared": 360,
+    "m6e_layout_source": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "m6e_payload_exact": true,
+    "manifest_sha256": "3dd7412b5d56f63bc995fddf69789eaa2bbd5d3fcbd3b2739abddd0a103c9312",
+    "paired_processes_compared": 288,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-expanded-adjacent-31b202e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-expanded-adjacent-31b202e.tar.gz",
+    "processes": 360,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/all-image/pcg/process_geomean",
+        "recomputed": 1.234934861441026,
+        "stored": 1.2349348614410258
+      },
+      {
+        "path": "/balanced/all-image/lsmr-gated/process_geomean",
+        "recomputed": 1.246749924435658,
+        "stored": 1.2467499244356581
+      }
+    ],
+    "source_commit": "31b202e10c65cee77a079fb574f1408e778901db",
+    "source_tree": "7ed7b3f00443b4ff1b7e7b6945cfae125b2689ef",
+    "summary_sha256": "ba3f93cad05efdcf0e7ee50c07bde2a68c312c892a283cbb579d8a1fdb866c99"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3647893,
+    "archive_sha256": "e6bcf7a8ab8db7569a72e33c329b959e80b2b37d99b006a9cb077b2beefae8b6",
+    "binary_sha256": "7ab717cbae82906821438e72cace6c5b8857de2449a5c5456931ba934d3cf642",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": 34100575280,
+    "kind": "adjacent_candidate_existing_solver_regression",
+    "label": "linux-smoke",
+    "m6e_input_numerical_work_fingerprint_exact": true,
+    "m6e_layout_manifest_sha256": "16b5169c67ea20cf72ea59e3afb55375bf39427d1b7203eddd4d13f979412b3a",
+    "m6e_layout_processes_compared": 2520,
+    "m6e_layout_source": "ba98d54947b3c05b35b7a1dd38a190fcf06728a7",
+    "m6e_payload_exact": true,
+    "manifest_sha256": "acd053b8af8a1c8f9dac3df3b0f23c621c80efcca3d508c3366a9dbe2ef3e03c",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-adjacent-31b202e.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-adjacent-31b202e.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/all-row/lsmr-gated/process_geomean",
+        "recomputed": 1.0377374355150781,
+        "stored": 1.0377374355150784
+      }
+    ],
+    "source_commit": "31b202e10c65cee77a079fb574f1408e778901db",
+    "source_tree": "7ed7b3f00443b4ff1b7e7b6945cfae125b2689ef",
+    "summary_sha256": "9a366981c3d98eeae23a85db619dd9a198fef342f012a6b284f4a933f4c873e8"
+  }
+]

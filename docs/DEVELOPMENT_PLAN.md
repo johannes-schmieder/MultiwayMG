@@ -823,3 +823,17 @@ for measurement, not an implemented layout or selected default.
   exclusions. This is self-review, not independent external review. Freeze this
   source before the unchanged Mac smoke/development/expanded and Linux smoke
   existing-solver regression; these supplied maps do not time the new candidate.
+
+- M6f frozen source `31b202e10c65cee77a079fb574f1408e778901db` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-07/prepared-layout-adjacent-candidates/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6e input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34100575280`/`34100575335` and PR `34100640663`/`34100640606`
+  passed. Copies and every archived member independently revalidate.
+  11 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+  Final evidence-head CI and PR59 merge remain. The regression does not invoke
+  adjacent construction or override its seven development quality rejections.
+  Next integrate scalable baseline execution and terminal-first component-local
+  automatic construction with charged screening/fallback. M6–M10 remain open;
+  scalar stays default and calibration/campaign holdout remain untouched.
