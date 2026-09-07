@@ -13,6 +13,7 @@ mod factor_pair;
 mod grouped_operator;
 mod grouping;
 mod hierarchy;
+mod hierarchy_grouping;
 mod kernels;
 mod operator_view;
 mod prepared;
@@ -55,3 +56,5 @@ mod tests;
 pub use grouping::{GroupedIndexWidth, GroupedTupleRow, PreparedTupleGrouping};
 
 pub use grouped_operator::ThreeWayGroupedOperatorView;
+
+pub use hierarchy_grouping::PreparedHierarchyGrouping;

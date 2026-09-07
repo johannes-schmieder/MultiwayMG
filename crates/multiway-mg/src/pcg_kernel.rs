@@ -123,9 +123,10 @@ pub(crate) fn solve<A: PcgActions>(
     ensure_finite("initial preconditioned residual", preconditioned)?;
     let mut rho = dot(residual, preconditioned);
     if !rho.is_finite() || rho <= 0.0 {
-        return Err(MultiwayError::PcgBreakdown {
+        return Err(MultiwayError::PcgMetricBreakdown {
             iteration: 0,
-            message: format!("initial preconditioned metric is {rho}"),
+            context: "initial preconditioned metric",
+            value: rho,
         });
     }
     direction.copy_from_slice(preconditioned);
@@ -135,16 +136,18 @@ pub(crate) fn solve<A: PcgActions>(
         actions.gramian(direction, applied)?;
         let curvature = dot(direction, applied);
         if !curvature.is_finite() || curvature <= 0.0 {
-            return Err(MultiwayError::PcgBreakdown {
+            return Err(MultiwayError::PcgMetricBreakdown {
                 iteration: iteration - 1,
-                message: format!("search-direction curvature is {curvature}"),
+                context: "search-direction curvature",
+                value: curvature,
             });
         }
         let alpha = rho / curvature;
         if !alpha.is_finite() {
-            return Err(MultiwayError::PcgBreakdown {
+            return Err(MultiwayError::PcgMetricBreakdown {
                 iteration: iteration - 1,
-                message: format!("step length is {alpha}"),
+                context: "step length",
+                value: alpha,
             });
         }
         axpy(alpha, direction, solution);
@@ -176,9 +179,10 @@ pub(crate) fn solve<A: PcgActions>(
         ensure_finite("preconditioned residual", preconditioned)?;
         let new_rho = dot(residual, preconditioned);
         if !new_rho.is_finite() || new_rho <= 0.0 {
-            return Err(MultiwayError::PcgBreakdown {
+            return Err(MultiwayError::PcgMetricBreakdown {
                 iteration,
-                message: format!("preconditioned metric is {new_rho}"),
+                context: "preconditioned metric",
+                value: new_rho,
             });
         }
         let beta = new_rho / rho;
@@ -247,9 +251,10 @@ pub(crate) fn ensure_finite(context: &'static str, values: &[f64]) -> Result<(),
         .enumerate()
         .find(|(_, value)| !value.is_finite())
     {
-        return Err(MultiwayError::PcgBreakdown {
-            iteration: 0,
-            message: format!("{context} entry {index} is non-finite: {value}"),
+        return Err(MultiwayError::PcgNonFinite {
+            context,
+            index,
+            value,
         });
     }
     Ok(())

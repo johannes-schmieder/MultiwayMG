@@ -230,6 +230,7 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
             fine.retained_payload_bytes()?,
             frames.retained_payload_bytes()?,
             hierarchy.retained_payload_bytes()?,
+            hierarchy.grouping_payload_bytes()?,
             hierarchy.workspace_required_bytes()?,
             fine.topology().projection_workspace_required_bytes()?,
             PreparedCertificateWorkspace::required_payload_bytes(fine)?,
@@ -396,6 +397,7 @@ fn solve_impl(
     )?;
     let mut operator = IncidenceAction {
         view: fine.operator_view(),
+        grouping: hierarchy.level_grouping(0),
         forward: 0,
         adjoint: 0,
         error: None,
@@ -554,6 +556,7 @@ fn work_add(a: usize, b: usize) -> Result<usize, MultiwayError> {
 
 struct IncidenceAction<'state> {
     view: ThreeWayOperatorView<'state, 'state>,
+    grouping: Option<&'state multiway_incidence::PreparedTupleGrouping<'state>>,
     forward: usize,
     adjoint: usize,
     error: Option<MultiwayError>,
@@ -576,10 +579,14 @@ impl OperatorMut for IncidenceAction<'_> {
     }
     fn apply_adjoint(&mut self, x: &[f64], out: &mut [f64]) -> Result<(), SolveError> {
         self.adjoint += 1;
-        capture(
-            self.view.apply_weighted_adjoint(x, out).map_err(Into::into),
-            &mut self.error,
-        )
+        let result = if let Some(grouping) = self.grouping {
+            self.view
+                .with_grouping(grouping)
+                .and_then(|view| view.apply_weighted_adjoint(x, out))
+        } else {
+            self.view.apply_weighted_adjoint(x, out)
+        };
+        capture(result.map_err(Into::into), &mut self.error)
     }
 }
 struct HierarchyAction<'borrow, 'owner> {

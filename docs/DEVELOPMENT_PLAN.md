@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a/M5b merged; M5c explicit grouped kernels |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5c merged; M5d complete grouped integration |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -411,3 +411,48 @@ for measurement, not an implemented layout or selected default.
   descriptor/vector, preserving scalar/row-gather capacities. Avoid multiplying
   image storage by the observed 6.71x hierarchy tuple complexity. M7/M8 can reuse
   this lifetime with explicit workers and one E*K image per active panel.
+
+- M5c PR #48 merged as `73b303f8947488b327af13f849c3952505eff967` after
+  final source `34069417992`/`34069418007` and PR
+  `34069419963`/`34069419983` workflows passed. Actual main matches the reviewed
+  tree. M5d starts complete optional grouped-hierarchy execution, preserving
+  scalar capacities and original certificates, with one shared image buffer.
+
+
+- M5c post-merge workflows `34069670239`/`34069670293` passed. M5d
+  [complete grouped integration](ISSUE5_GROUPED_HIERARCHY.md) implements
+  separately admitted hierarchy grouping, all explicit nonterminal prefixes,
+  unchanged scalar/row-gather scratch and one shared image. Complete numerical
+  comparisons pass. Stronger failure-path allocator checks found formatted PCG
+  and LSMR norm errors; structured corrections and full qualification are in
+  progress, including a separately qualified narrow fork update. No grouped
+  timing has been collected or default selected.
+
+- The M5d norm-error fork [PR #3](https://github.com/johannes-schmieder/within/pull/3)
+  merged as `fad1d462d44e7d5b5226370021d69dab4e854669`. Exact-source
+  `34071170642` and PR `34071211981`/`34071211993` passed all checks;
+  actual fork mainline tree equals reviewed `f64bb8d2806a47b4defac077f46d2e98925013fd`.
+  Both downstream dependency pins advance together. The complete downstream
+  qualification follows on that exact revision.
+
+- Fork post-merge workflow `34071548162` passed. M5d complete required
+  Rust 1.85 and 73 Python checks pass on the exact new pin, as do release
+  all/minimal grouped integration and full allocator checks. All explicit
+  prefixes/modes preserve scalar bits/reports on recursive fixtures and every
+  RHS width. Two-transition PCG/LSMR setup remains 34/40 arrays for scalar or
+  row gathering, plus one for image mode. Numerical RHS/metric/norm failures
+  and recovery allocate zero. Commit this source before the unchanged v2 scalar
+  regression collection; grouped timing remains a separate frozen experiment.
+
+- M5d measured source `d11917f152704973c673728d85b3eae1190f76b5` passes
+  the [unchanged scalar v2 regression](../benchmarks/results/2026-09-06/prepared-serial-m5d-scalar/README.md)
+  on Mac smoke/development and Linux smoke. Every one of 2,268 corresponding
+  processes exactly matches M5c input/numerical/work/fingerprint/payload records,
+  including native 560/935 smoke/development rejects. PCG and gated LSMR certify
+  all 2,400 measured columns per route/profile. No process, timeout or RSS-budget
+  failure occurred. Source `34071799728`/`34071799760` and PR
+  `34071824688`/`34071824642` workflows passed. Exact binaries/raw outputs and
+  independently revalidated archives are preserved externally. Final evidence-head
+  CI/merge remains for PR #49. M5e next freezes a paired complete-cost comparison
+  of scalar, fine-only/all-level rows and fine-only/all-level images; no grouped
+  timing or layout default is claimed yet.
