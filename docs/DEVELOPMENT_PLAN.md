@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a candidates merged; M6b incremental structural admission |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a/M6b merged; M6c component permutations |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -680,3 +680,42 @@ for measurement, not an implemented layout or selected default.
   Final evidence-head CI/PR55 merge remain. M6c next builds flat component
   permutations with a separately lived temporary inverse, avoiding permanent
   4V recoding storage before numerical setup. M6–M10 remain open.
+
+- M6b PR55 merged as `1dca8018b4101d33528521acd0d82eeaf6ef79ac` after final
+  source `34087777128`/`34087777130` and PR `34087778076`/`34087778026`
+  workflows passed. Actual main matches reviewed tree
+  `4752411b313b0a67f8e2b0a8153379c1bfe3f926`. M6c now implements a bounded
+  flat component permutation and separate temporary inverse recoding stage.
+
+- M6c initially passes all/minimal numerical and allocator tests, public local-
+  operator/permutation comparisons and 90 Python validators. Corrected the
+  draft's unused-level assumption (the prepared owner already rejects it),
+  removed a redundant support scan, elided a Clippy-redundant lifetime, added
+  direct connected slice copies and explicit compile-fail ownership gates.
+  Final required/release qualification follows these refinements. The inverse
+  recoder is separately lived: connected input uses zero arrays; disconnected
+  partition retains three arrays and releases its counting cursor, then uses
+  one temporary inverse only while local keys are materialized. See
+  `ISSUE5_COMPONENT_LAYOUT.md`. Complete automatic construction remains open.
+
+- M6c final required Rust 1.85 formatting/Clippy/all/minimal/rustdoc checks and
+  90 Python validators pass after refinement. Release component public tests in
+  all/minimal configurations, private error/unwind/width/budget tests, complete
+  solver/allocator regressions and 120 actual protocol comparisons pass.
+  M6b post-merge workflows `34088159709`/`34088159668` passed. Freeze this
+  component-layout source before unchanged five-layout Mac smoke/development/
+  expanded and Linux smoke regression. These supplied-map timings do not invoke
+  the new partition and cannot qualify component-local automatic performance.
+
+- M6c frozen source `1b4baaed8f67956f5f210171345f14b586b8e17c` passes
+  [all four existing-solver artifacts](../benchmarks/results/2026-09-07/prepared-layout-component-layout/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6b input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34088832395`/`34088832402` and PR `34088867632`/`34088867657`
+  passed. Binary/raw copies independently revalidate, saved summaries reproduce
+  exactly and every archive member is rehashed. These supplied-map regressions
+  do not invoke or time the new partition. Final evidence-head CI/PR56 merge
+  remain. Next integrate component-local structural prefixes, one-transition
+  provisional replay, bounded numerical terminals and actual recursive screening.
+  M6–M10 remain open, scalar stays default and campaign holdout is untouched.
