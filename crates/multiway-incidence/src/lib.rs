@@ -32,7 +32,11 @@ pub use components::{
 };
 pub use error::IncidenceError;
 pub use factor_pair::FactorPair;
-pub use hierarchy::{HierarchyWeightFrames, PreparedHierarchyBudget, PreparedHierarchyTopology};
+pub use hierarchy::{
+    HierarchyWeightFrames, PreparedHierarchyAppendFailure, PreparedHierarchyAppendReport,
+    PreparedHierarchyBudget, PreparedHierarchyBuilder, PreparedHierarchyLimits,
+    PreparedHierarchyTopology,
+};
 pub use operator_view::ThreeWayOperatorView;
 pub use prepared::{
     ObservationGroups, PreparedThreeWayTopology, PreparedTopologyBinding, PreparedTopologySource,

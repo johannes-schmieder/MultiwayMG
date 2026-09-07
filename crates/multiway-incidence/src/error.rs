@@ -6,6 +6,16 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A proposed hierarchy exceeds an explicitly declared structural limit.
+    #[error("{context}: structural size {actual} exceeds limit {maximum}")]
+    HierarchyStructureLimit {
+        /// Structural quantity being limited.
+        context: &'static str,
+        /// Checked proposed size.
+        actual: usize,
+        /// Caller-declared inclusive limit.
+        maximum: usize,
+    },
     /// A numerical hierarchy names another supplied-map structural owner.
     #[error("prepared hierarchy binding belongs to a different owner")]
     HierarchyBindingMismatch,

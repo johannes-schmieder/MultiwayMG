@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a bounded structural candidates |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a candidates merged; M6b incremental structural admission |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -644,3 +644,26 @@ for measurement, not an implemented layout or selected default.
   CI and PR54 merge remain; M6b next appends bounded structural transitions
   without rebuilding the prefix. Component-local depths, numerical screening
   and M7–M10 remain open. Scalar default and campaign holdout are unchanged.
+
+- M6a PR54 merged as `6183e1b6edaf124da7d3f83e6a80e218d5a13ee2` after final
+  source workflows `34085268315`/`34085268256` and PR workflows
+  `34085269945`/`34085269918` passed. Actual main matches reviewed tree
+  `2b02c52a19ac6c32688d20ef17d68f15ad125aa2`. M6b now adds incremental
+  structural admission; M6 remains open until component-local construction,
+  actual recursive numerical screening and complete automatic integration pass.
+
+- M6a post-merge workflows `34086156421`/`34086156342` passed. M6b adds the
+  unpublished incremental builder with fixed descriptor capacities, explicit
+  structural limits, per-append live-payload admission and atomic failed-prefix
+  preservation. Initial private allocation/unwind and complete current-weight
+  PCG/gated-LSMR equivalence tests pass. See `ISSUE5_INCREMENTAL_HIERARCHY.md`;
+  full required/release and benchmark qualification remain before source freeze.
+
+- M6b source qualification passes required Rust 1.85 formatting, strict Clippy,
+  all/minimal tests, warning-free rustdoc and 90 Python validators. Release
+  all/minimal numerical/allocator tests, every builder reservation failure and
+  120 actual complete-solver protocol comparisons pass. Eight recursive fixtures
+  times three current-weight generations times 32 RHS preserve exact complete
+  PCG and gated-LSMR reports/coefficients (768 comparisons per route), all
+  certified. Source is frozen before unchanged five-layout Mac smoke/development/
+  expanded and Linux smoke regression. No builder setup-speed claim is made.

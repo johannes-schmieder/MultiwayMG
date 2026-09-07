@@ -172,8 +172,10 @@ M5 is complete. [Bounded structural candidates](ISSUE5_BOUNDED_CANDIDATES.md)
 begin M6 with flat arrays, admission before allocation and preserved finite
 legacy matching order. Its existing-solver regression exactly matches all
 7,920 corresponding M5h numerical/work/payload records. This does not measure
-candidate setup. Component-local construction and recursive screening
-remain the next stages. See the
+candidate setup. [Incremental structural admission](ISSUE5_INCREMENTAL_HIERARCHY.md)
+now reserves descriptors once, checks complete live payload and structural limits,
+and preserves accepted levels after a failed transition. Component-local
+construction and recursive screening remain the next stages. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
