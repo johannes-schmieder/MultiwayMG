@@ -7,6 +7,12 @@ use crate::{
     weight_replay::reduce_groups,
 };
 
+mod builder;
+pub use builder::{
+    PreparedHierarchyAppendFailure, PreparedHierarchyAppendReport, PreparedHierarchyBuilder,
+    PreparedHierarchyLimits,
+};
+
 /// Live array-payload admission for a complete structural or replay build.
 ///
 /// Charges the fine topology once, all owned hierarchy arrays, and (for replay)

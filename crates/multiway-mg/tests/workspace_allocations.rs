@@ -40,6 +40,9 @@ mod weight_frame_allocations;
 #[path = "support/weight_replay_allocations.rs"]
 mod weight_replay_allocations;
 
+#[path = "support/incremental_hierarchy_allocations.rs"]
+mod incremental_hierarchy_allocations;
+
 use multiway_mg::{
     CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, DensePseudoinverse,
     FactorAggregation, MultiwayError, Preconditioner, SymmetricMapPreconditioner, ThreeWayProblem,
@@ -251,6 +254,7 @@ fn main() -> Result<()> {
     grouped_allocations::run()?;
     grouped_hierarchy_allocations::run()?;
     hierarchy_owner_allocations::run()?;
+    incremental_hierarchy_allocations::run()?;
     prepared_map_allocations::run()?;
     prepared_cycle_allocations::run()?;
     prepared_pcg_allocations::run()?;
