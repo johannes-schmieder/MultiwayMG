@@ -10,6 +10,8 @@ mod components;
 mod construction;
 mod error;
 mod factor_pair;
+mod grouped_operator;
+mod grouping;
 mod hierarchy;
 mod kernels;
 mod operator_view;
@@ -49,3 +51,7 @@ pub use weight_replay::{
 
 #[cfg(test)]
 mod tests;
+
+pub use grouping::{GroupedIndexWidth, GroupedTupleRow, PreparedTupleGrouping};
+
+pub use grouped_operator::ThreeWayGroupedOperatorView;

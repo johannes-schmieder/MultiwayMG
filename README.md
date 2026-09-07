@@ -41,7 +41,11 @@ matrix. [Opt-in kernel profiling](docs/ISSUE5_KERNEL_PROFILING.md) now supplies
 validated attribution and level inventory for larger development inputs. Its
 [four diagnostic artifacts](benchmarks/results/2026-09-06/prepared-kernel-profile-v1/README.md)
 pass complete accounting/certification and prioritize grouped MAP/Gramian trials.
-Instrumented times are diagnostic; M5 remains open for measured layout work.
+Instrumented times are diagnostic. [Stable grouped kernels](docs/ISSUE5_GROUPED_KERNELS.md)
+now provide explicit row-gather/tuple-image operators and grouped MAP with the
+same arithmetic and scratch. Complete-solve integration and measured layout
+selection remain M5 work. The [preserved scalar baselines](benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
+retain exact M5a numerical/work/payload results on Mac and Linux.
 
 ## The problem
 

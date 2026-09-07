@@ -1,5 +1,7 @@
 //! Prepared and ordinary scalar equivalence and exact numerical ownership.
-use multiway_incidence::{PreparedThreeWayTopology, ThreeWayWeightFrame, WeightFrameInput};
+use multiway_incidence::{
+    PreparedThreeWayTopology, PreparedTupleGrouping, ThreeWayWeightFrame, WeightFrameInput,
+};
 use multiway_mg::{PreparedSymmetricMap, SymmetricMapPreconditioner, ThreeWayProblem};
 
 fn bits(a: &[f64], b: &[f64]) {
@@ -19,6 +21,14 @@ fn cases() -> Vec<([usize; 3], Vec<[u32; 3]>)> {
         ([2; 3], vec![[0, 0, 0], [1, 1, 1]]),
         ([2, 3, 4], vec![[0, 0, 0], [0, 1, 1], [0, 2, 3], [1, 2, 2]]),
         ([2; 3], vec![[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 0]]),
+        (
+            [3, 33, 8],
+            (0..32)
+                .map(|j| [0, j, j % 7])
+                .chain((0..32).map(|j| [1, j, (j + 3) % 7]))
+                .chain([[2, 32, 7]])
+                .collect(),
+        ),
     ]
 }
 
@@ -26,6 +36,7 @@ fn cases() -> Vec<([usize; 3], Vec<[u32; 3]>)> {
 fn prepared_projection_and_map_match_ordinary_bits_and_are_symmetric() {
     for (counts, tuples) in cases() {
         let topology = PreparedThreeWayTopology::try_from_collapsed(counts, &tuples).unwrap();
+        let grouping = PreparedTupleGrouping::try_new(&topology).unwrap();
         for change in 0..3 {
             let weights: Vec<_> = (0..tuples.len())
                 .map(|i| 1.0 + (i * (change + 1)) as f64)
@@ -78,6 +89,12 @@ fn prepared_projection_and_map_match_ordinary_bits_and_are_symmetric() {
                     .apply_with_workspace(&x, &mut expected, &mut old_workspace)
                     .unwrap();
                 bits(&actual, &expected);
+                let mut grouped = vec![f64::NAN; n];
+                map.with_grouping(&grouping)
+                    .unwrap()
+                    .apply_with_workspace(&x, &mut grouped, &mut workspace)
+                    .unwrap();
+                bits(&grouped, &expected);
                 let mut my = vec![0.0; n];
                 map.apply_with_workspace(&y, &mut my, &mut workspace)
                     .unwrap();
@@ -104,6 +121,8 @@ fn frame_binding_and_dimensions_reject_before_output_or_projection_mutation() {
     let changed =
         ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::Tuples(&[2.0; 2])).unwrap();
     let map = PreparedSymmetricMap::new(&frame);
+    let grouping = PreparedTupleGrouping::try_new(&topology).unwrap();
+    let grouped = map.with_grouping(&grouping).unwrap();
     let mut scratch = map.application_workspace().unwrap();
     let sentinel = f64::from_bits(0x7ff8000000001234);
     let mut output = [sentinel; 6];
@@ -111,6 +130,13 @@ fn frame_binding_and_dimensions_reject_before_output_or_projection_mutation() {
     for alternate in [&equal, &changed] {
         assert!(
             PreparedSymmetricMap::new(alternate)
+                .apply_with_workspace(&[1.0; 6], &mut output, &mut scratch)
+                .is_err()
+        );
+        assert!(
+            PreparedSymmetricMap::new(alternate)
+                .with_grouping(&grouping)
+                .unwrap()
                 .apply_with_workspace(&[1.0; 6], &mut output, &mut scratch)
                 .is_err()
         );
@@ -127,6 +153,20 @@ fn frame_binding_and_dimensions_reject_before_output_or_projection_mutation() {
     );
     assert_eq!(format!("{scratch:?}"), saved);
     bits(&output, &[sentinel; 6]);
+    assert!(
+        grouped
+            .apply_with_workspace(&[1.0; 5], &mut output, &mut scratch)
+            .is_err()
+    );
+    assert!(
+        grouped
+            .apply_with_workspace(&[1.0; 6], &mut output[..5], &mut scratch)
+            .is_err()
+    );
+    assert_eq!(format!("{scratch:?}"), saved);
+    bits(&output, &[sentinel; 6]);
+    let foreign = PreparedTupleGrouping::try_new(&other).unwrap();
+    assert!(map.with_grouping(&foreign).is_err());
     let mut projection = topology.try_projection_workspace().unwrap();
     let saved = format!("{projection:?}");
     assert!(
@@ -151,6 +191,8 @@ fn nonfinite_and_overflow_fail_transactionally_then_storage_recovers() {
     let frame =
         ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::Tuples(&[1e-308; 2])).unwrap();
     let map = PreparedSymmetricMap::new(&frame);
+    let grouping = PreparedTupleGrouping::try_new(&topology).unwrap();
+    let grouped = map.with_grouping(&grouping).unwrap();
     let mut scratch = map.application_workspace().unwrap();
     let mut output = [7.0; 6];
     for bad in [f64::NAN, f64::INFINITY, f64::NEG_INFINITY, f64::MAX] {
@@ -159,9 +201,20 @@ fn nonfinite_and_overflow_fail_transactionally_then_storage_recovers() {
                 .is_err()
         );
         bits(&output, &[7.0; 6]);
+        assert!(
+            grouped
+                .apply_with_workspace(&[bad; 6], &mut output, &mut scratch)
+                .is_err()
+        );
+        bits(&output, &[7.0; 6]);
         let mut valid = [0.0; 6];
         map.apply_with_workspace(&[1e-308; 6], &mut valid, &mut scratch)
             .unwrap();
         assert!(valid.iter().all(|x| (x - 1.0 / 3.0).abs() < 1e-14));
+        grouped
+            .apply_with_workspace(&[1e-308; 6], &mut output, &mut scratch)
+            .unwrap();
+        bits(&valid, &output);
+        output.fill(7.0);
     }
 }

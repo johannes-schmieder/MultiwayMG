@@ -3,6 +3,8 @@
 #[allow(dead_code)]
 #[path = "../examples/support/issue3_recursive_fixtures.rs"]
 mod fixtures;
+#[path = "support/grouped_allocations.rs"]
+mod grouped_allocations;
 #[path = "support/hierarchy_owner_allocations.rs"]
 mod hierarchy_owner_allocations;
 #[cfg(feature = "lsmr")]
@@ -241,6 +243,7 @@ fn main() -> Result<()> {
     weight_frame_allocations::run()?;
     weight_replay_allocations::run()?;
     operator_view_allocations::run()?;
+    grouped_allocations::run()?;
     hierarchy_owner_allocations::run()?;
     prepared_map_allocations::run()?;
     prepared_cycle_allocations::run()?;

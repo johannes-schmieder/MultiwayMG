@@ -70,6 +70,74 @@ pub(super) fn sweep(
     }
 }
 
+// Exact per-row traversal: start from the RHS/middle and subtract each tuple
+// coupling in original order. Summing couplings first would change rounding.
+pub(super) fn sweep_grouped(
+    data: MapData<'_>,
+    grouping: &multiway_incidence::PreparedTupleGrouping<'_>,
+    compatible_rhs: &[f64],
+    forward: &mut [f64],
+    solution: &mut [f64],
+) {
+    #[cfg(feature = "profiling")]
+    let _profile_span =
+        multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::MapSweep);
+    let MapData {
+        topology,
+        weights,
+        diagonal,
+    } = data;
+    debug_assert!(core::ptr::eq(topology, grouping.topology().topology()));
+    let offsets = topology.offsets();
+    for factor in 0..3 {
+        for level in 0..topology.level_counts()[factor] {
+            let index = offsets[factor] + level;
+            let mut value = compatible_rhs[index];
+            if factor > 0 {
+                grouping
+                    .row(factor, level)
+                    .expect("validated MAP row")
+                    .for_each(|id| {
+                        let tuple = topology.tuples()[id];
+                        let weight = weights[id];
+                        let mut coupling = 0.0;
+                        for previous in 0..factor {
+                            coupling = forward[offsets[previous] + tuple[previous] as usize]
+                                .mul_add(weight, coupling);
+                        }
+                        value -= coupling;
+                    });
+            }
+            forward[index] = value / diagonal[index];
+        }
+    }
+    for (value, &degree) in forward.iter_mut().zip(diagonal) {
+        *value *= degree;
+    }
+    for factor in (0..3).rev() {
+        for level in 0..topology.level_counts()[factor] {
+            let index = offsets[factor] + level;
+            let mut value = forward[index];
+            if factor < 2 {
+                grouping
+                    .row(factor, level)
+                    .expect("validated MAP row")
+                    .for_each(|id| {
+                        let tuple = topology.tuples()[id];
+                        let weight = weights[id];
+                        let mut coupling = 0.0;
+                        for following in (factor + 1)..3 {
+                            coupling = solution[offsets[following] + tuple[following] as usize]
+                                .mul_add(weight, coupling);
+                        }
+                        value -= coupling;
+                    });
+            }
+            solution[index] = value / diagonal[index];
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -146,6 +214,14 @@ mod tests {
                     .collect();
                 let problem =
                     ThreeWayProblem::from_observations(counts, &tuples, &weights).unwrap();
+                let grouped_topology =
+                    multiway_incidence::PreparedThreeWayTopology::try_from_collapsed(
+                        counts,
+                        problem.topology().tuples(),
+                    )
+                    .unwrap();
+                let grouping =
+                    multiway_incidence::PreparedTupleGrouping::try_new(&grouped_topology).unwrap();
                 let n = problem.dimension();
                 for scale in [
                     0.0,
@@ -180,6 +256,31 @@ mod tests {
                         for i in 0..n {
                             assert_eq!(actual[i].to_bits(), expected[i].to_bits(), "output {i}");
                             assert_eq!(forward[i].to_bits(), old_middle[i].to_bits(), "middle {i}");
+                        }
+                        forward.fill(f64::NAN);
+                        actual.fill(f64::INFINITY);
+                        sweep_grouped(
+                            MapData {
+                                topology: grouped_topology.topology(),
+                                weights: problem.weights(),
+                                diagonal: problem.diagonal(),
+                            },
+                            &grouping,
+                            &rhs,
+                            &mut forward,
+                            &mut actual,
+                        );
+                        for i in 0..n {
+                            assert_eq!(
+                                actual[i].to_bits(),
+                                expected[i].to_bits(),
+                                "grouped output {i}"
+                            );
+                            assert_eq!(
+                                forward[i].to_bits(),
+                                old_middle[i].to_bits(),
+                                "grouped middle {i}"
+                            );
                         }
                     }
                 }
