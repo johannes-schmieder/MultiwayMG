@@ -9,10 +9,15 @@ pub fn run() -> Result<()> {
     let mut workspace = PreparedCertificateWorkspace::try_new(&fine)?;
     let setup = GLOBAL.stats() - before;
     let retained = workspace.retained_payload_bytes()?;
-    assert_eq!(setup.allocations, 3);
+    assert_eq!(setup.allocations, 2);
     assert_eq!(setup.deallocations, 0);
     assert_eq!(setup.reallocations, 0);
     assert_eq!(setup.bytes_allocated, retained);
+    assert_eq!(retained, 8 * (1 + 3));
+    assert_eq!(
+        retained,
+        PreparedCertificateWorkspace::required_payload_bytes(&fine)?
+    );
     let before = GLOBAL.stats();
     for _ in 0..32 {
         assert_eq!(
@@ -58,8 +63,9 @@ pub fn run() -> Result<()> {
     let released = GLOBAL.stats() - before;
     assert_eq!(released.bytes_deallocated, retained);
     assert_eq!(released.allocations, 0);
+    assert_eq!(released.deallocations, 2);
     println!(
-        "prepared original-operator certificate: first/repeat32 failures and recovery allocations=0; exact three-array release"
+        "prepared original-operator certificate: first/repeat32 failures and recovery allocations=0; exact two-array release"
     );
     Ok(())
 }

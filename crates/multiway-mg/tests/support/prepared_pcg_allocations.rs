@@ -43,7 +43,7 @@ pub fn run() -> Result<()> {
         PreparedPcgWorkspace::try_new_with_payload_budget(&hierarchy, options, required, 123)?;
     let setup = GLOBAL.stats() - before;
     let retained = workspace.retained_payload_bytes()?;
-    assert_eq!(setup.allocations, 25);
+    assert_eq!(setup.allocations, 24);
     assert_eq!(setup.deallocations, 0);
     assert_eq!(setup.reallocations, 0);
     assert_eq!(setup.bytes_allocated, retained);
@@ -128,7 +128,7 @@ pub fn run() -> Result<()> {
     assert_eq!(released.bytes_deallocated, retained);
     assert_eq!(released.allocations, 0);
     println!(
-        "complete prepared PCG: first/scalar and RHS1,2,4,8,16,17,32 allocations=0; exact 25-array release"
+        "complete prepared PCG: first/scalar and RHS1,2,4,8,16,17,32 allocations=0; exact 24-array release"
     );
     Ok(())
 }
