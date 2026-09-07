@@ -16,6 +16,8 @@ use std::{
     time::Instant,
 };
 
+#[path = "support/prepared_layout.rs"]
+mod layout;
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 const MAX_PAYLOAD: usize = 1 << 30;
 const PHASES: [&str; 7] = [
@@ -163,6 +165,7 @@ struct Column {
 }
 struct Record {
     start: Instant,
+    layout: Option<layout::Record>,
     stage: &'static str,
     phases: [u128; 7],
     columns: [Option<Column>; 32],
@@ -181,6 +184,7 @@ impl Record {
     fn new() -> Self {
         Self {
             start: Instant::now(),
+            layout: None,
             stage: "decode",
             phases: [0; 7],
             columns: [None; 32],
@@ -330,6 +334,24 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
             )?)
         })()
     );
+    // Grouping is structural: build before coarse frames and declare all live
+    // input/fine-frame arrays in its separate construction admission.
+    let grouping = if let Some(layout) = r.layout.as_mut() {
+        r.stage = "grouping";
+        let start = Instant::now();
+        let result = layout.prepare(
+            &topology,
+            input.payload() + frame.retained_payload_bytes()?,
+            MAX_PAYLOAD,
+        );
+        layout.nanos = start.elapsed().as_nanos();
+        result?
+    } else {
+        None
+    };
+    let group_bytes = grouping
+        .as_ref()
+        .map_or(Ok(0), |g| g.retained_payload_bytes())?;
     let frames = phase!(
         r,
         4,
@@ -338,7 +360,7 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
             &frame,
             PreparedHierarchyBudget {
                 maximum_payload_bytes: MAX_PAYLOAD,
-                additional_live_payload_bytes: input.payload()
+                additional_live_payload_bytes: input.payload() + group_bytes
             }
         )
     );
@@ -347,7 +369,23 @@ fn run(route: &str, r: &mut Record) -> Result<()> {
         let frame = frames.frame(level).expect("prepared level");
         r.profile_levels[level] = Some([frame.weights().len(), frame.diagonal().len()]);
     }
-    let hierarchy = phase!(r, 5, PreparedMapHierarchy::try_new(&frames, 1e-12));
+    let hierarchy = phase!(
+        r,
+        5,
+        if let Some(groups) = grouping.as_ref() {
+            PreparedMapHierarchy::try_new_with_grouping(
+                &frames,
+                groups,
+                r.layout.as_ref().expect("explicit layout").layout.mode(),
+                1e-12,
+            )
+        } else {
+            PreparedMapHierarchy::try_new(&frames, 1e-12)
+        }
+    );
+    if let Some(layout) = r.layout.as_mut() {
+        layout.image_len = hierarchy.tuple_image_len();
+    }
     r.dimensions = Some([e, n, input.rhs, input.depth, hierarchy.terminal_rank()]);
     let mut output: Vec<f64> = phase!(r, 6, vector(n * input.rhs));
     let caller = input.payload() + output.capacity() * 8;
@@ -494,10 +532,25 @@ fn main() {
         eprintln!("usage: prepared_serial_benchmark pcg|lsmr|lsmr-gated < canonical-input.bin");
         std::process::exit(2);
     }
+    let requested = std::env::args().nth(2);
+    let selected = requested.as_deref().and_then(layout::Layout::parse);
+    if (requested.is_some() && selected.is_none())
+        || std::env::args().count() > 3
+        || (cfg!(feature = "profiling") && selected.is_some())
+    {
+        eprintln!(
+            "optional explicit layout: scalar|fine-row|all-row|fine-image|all-image; profiling must be disabled"
+        );
+        std::process::exit(2);
+    }
     let mut r = Record::new();
+    r.layout = selected.map(layout::Record::new);
     let outcome = run(&route, &mut r);
     r.total = r.start.elapsed().as_nanos(); // Includes failure unwind and all owned-state destruction.
-    println!("schema\t2");
+    println!("schema\t{}", if r.layout.is_some() { 3 } else { 2 });
+    if let Some(layout) = r.layout.as_ref() {
+        layout.emit(size_of::<Record>());
+    }
     #[cfg(feature = "profiling")]
     println!(
         "profiling_metadata\t1\t{}\t{}\t{}",
@@ -603,6 +656,7 @@ fn main() {
         emit_gate("failed_gate", "", gate);
     }
     let measured: u128 = r.failed_nanos
+        + r.layout.as_ref().map_or(0, |layout| layout.nanos)
         + r.phases.iter().sum::<u128>()
         + r.columns.iter().flatten().map(|c| c.nanos).sum::<u128>();
     // Remaining time contains setup bookkeeping, inter-phase gaps and teardown.

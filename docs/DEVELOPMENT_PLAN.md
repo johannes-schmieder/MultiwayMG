@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5c merged; M5d complete grouped integration |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5d merged; M5e paired layout evidence passes |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -456,3 +456,45 @@ for measurement, not an implemented layout or selected default.
   CI/merge remains for PR #49. M5e next freezes a paired complete-cost comparison
   of scalar, fine-only/all-level rows and fine-only/all-level images; no grouped
   timing or layout default is claimed yet.
+
+- M5d PR #49 merged as `ef82a5e0954afe96e8f9457eceefdda2b4493dbd`
+  after final source `34072373478`/`34072373473` and PR
+  `34072375226`/`34072375233` workflows passed. Main matches reviewed tree
+  `4e8183c20589155cb441d49c577f882d87f00f7b`. M5e begins a separately frozen
+  uninstrumented five-layout comparison: all seven RHS widths on smoke/development,
+  and larger depth-eight cases at one RHS. Group construction precedes coarse
+  numerical replay with full live admission. Large multi-RHS/default selection
+  remains a later qualification gate; no M5e timing exists at this checkpoint.
+
+- M5d post-merge workflows `34072588342`/`34072588332` passed. The M5e
+  [paired layout protocol](ISSUE5_LAYOUT_BENCHMARK.md) now implements explicit
+  schema3 grouping phases/inventory/admission, a deterministic five-layout
+  schedule and independent raw-evidence validation. The unchanged v2 generator
+  and scalar schema2 remain available. Initial 80 debug protocol comparisons
+  preserve all legacy numerical/work/payload fields and validate rejection
+  framing. Adversarial schedule tests caught and fixed a route-position rotation
+  interaction before policy freeze; no M5e performance data has been collected.
+
+- M5e required Rust 1.85 format, strict Clippy, all/minimal workspace tests,
+  warning-free rustdoc and all 88 Python tests pass. The release probe passes
+  120 black-box layout protocol comparisons, including ordinary scalar
+  numerical/work/payload identity, RHS17/32 zero columns and malformed/unknown
+  input boundaries. No numerical library default changed. Freeze this source
+  and policy before smoke/development/expanded collection; the paired gate
+  retains all failures and reports no qualified speedup for incomplete cells.
+
+
+- M5e frozen source `7c2794c3b279d7fa59575ef8b36d29366d33ee3a` passes
+  [complete five-layout evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md):
+  7,920 processes and 72,300 measured columns, with 6,336 exact scalar/layout
+  numerical/work/fingerprint comparisons and fully derived payload changes.
+  All 1,584 scalar processes also match M5d/M5b input/numerical/work/payload
+  records. Mac all-image full-process geomeans are 1.3984/1.4439 development
+  and 1.2318/1.2381 expanded one-RHS (PCG/gated); every such cell improves.
+  Smoke process regressions are retained, so scalar remains default. Expanded
+  additional capacities are 1.68–4.74MB; no per-level image replication.
+  Source `34074747242`/`34074747247` and PR `34074829795`/`34074829807`
+  workflows passed. Raw/binary/copied archives independently revalidate. Final
+  evidence-head review/CI and merge remain for PR #50. M5 next audits fused
+  prolong-add and certificate-reference liveness against measured traffic;
+  broad layout selection, scalable construction and M6–M10 remain open.

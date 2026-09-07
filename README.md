@@ -45,11 +45,16 @@ Instrumented times are diagnostic. [Stable grouped kernels](docs/ISSUE5_GROUPED_
 now provide explicit row-gather/tuple-image operators and grouped MAP with the
 same arithmetic and scratch. [Explicit complete grouped hierarchies](docs/ISSUE5_GROUPED_HIERARCHY.md)
 now connect them to prepared PCG and native/gated LSMR, with one shared optional
-image and separate grouping admission. Paired measurement and layout selection
-remain M5 work. The [preserved scalar baselines](benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
+image and separate grouping admission. Paired layout evidence now preserves exact
+numerical/work results; broader layout selection remains open. The [preserved scalar baselines](benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
 retain exact M5a numerical/work/payload results on Mac and Linux. The
 [M5d scalar regression](benchmarks/results/2026-09-06/prepared-serial-m5d-scalar/README.md) in turn matches
-all 2,268 corresponding M5c process records, with complete candidate certification.
+all 2,268 corresponding M5c process records, with complete candidate certification. The
+[five-layout experiment](docs/ISSUE5_LAYOUT_BENCHMARK.md) now validates 7,920 complete processes across Mac smoke/development/expanded and
+Linux smoke. All-level tuple-image gathering gives about 1.40x/1.44x full-process
+development speedups for PCG/gated LSMR and 1.23x/1.24x on expanded one-RHS
+cases. Small smoke regressions are retained; scalar remains default. See the
+[complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 ## The problem
 
