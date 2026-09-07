@@ -29,8 +29,8 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5g merged; M5h certificate-vector qualification |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a bounded structural candidates |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -607,3 +607,40 @@ for measurement, not an implemented layout or selected default.
   it is not implemented or claimed. No cross-revision timing or competitive
   qualification is claimed; scalar stays default and calibration/holdout stay
   untouched.
+
+
+- M5h PR53 merged as `0b8437fe6e729d2c8bf11cfc4a85c7abc99c1c9b`
+  after final source `34082169775`/`34082169793` and PR
+  `34082170785`/`34082170798` passed. Main matches reviewed tree
+  `e659a6f3d1380e04b6c2f9f2506619ccbcfd6987`. M5's serial prepared
+  layout/liveness work is complete; target caching was evaluated and deferred,
+  while legacy automatic tree replacement belongs to M6. M6a introduces
+  [bounded flat candidates](ISSUE5_BOUNDED_CANDIDATES.md), with complete
+  preallocation admission, exact finite legacy accumulation order, typed failed
+  work reports and fallible dense-parent validation. Candidate maps are
+  unscreened; component-local depths, recursive quality, full automatic drivers
+  and M7–M10 remain open. Tests/checks and committed-source regression precede
+  qualification of this first construction primitive.
+
+- M5h post-merge workflows `34082605701`/`34082605728` passed. M6a
+  final compact-index required Rust1.85 and 90 Python checks pass, as do release
+  all/minimal complete solvers, exact candidate allocations, private failure/
+  width/parent-validation gates and 120 actual protocol comparisons. Source IDs
+  use four bytes when the maximum ID fits, otherwise usize; forced-wide tests
+  preserve visit order. The candidate retains only 4V parent bytes and performs
+  no dense setup. Freeze source before the unchanged v2 existing-solver
+  regression; this is not candidate timing or complete automatic qualification.
+
+
+- M6a frozen source `2d67bc40cbc489a70494e1ef9edac4eba39b7c93`
+  passes [all four existing-solver artifacts](../benchmarks/results/2026-09-07/prepared-layout-bounded-candidates/README.md):
+  7,920 processes and 72,300 certified measured columns. Every corresponding
+  M5h input/numerical/work/fingerprint/payload/layout record matches exactly;
+  no process, rejection, timeout, RSS failure or measured retry occurred.
+  Source `34084223619`/`34084223515` and PR `34084226689`/`34084226778`
+  passed. Full binaries/raw records and independently revalidated archives are
+  preserved with every member rehashed. These supplied-map regressions do not
+  measure candidate setup or qualify automatic construction. Final evidence-head
+  CI and PR54 merge remain; M6b next appends bounded structural transitions
+  without rebuilding the prefix. Component-local depths, numerical screening
+  and M7–M10 remain open. Scalar default and campaign holdout are unchanged.

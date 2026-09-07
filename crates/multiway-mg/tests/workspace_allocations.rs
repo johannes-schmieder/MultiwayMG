@@ -18,6 +18,8 @@ mod operator_view_allocations;
 mod payload_allocations;
 #[path = "support/pcg_allocations.rs"]
 mod pcg_allocations;
+#[path = "support/prepared_aggregation_allocations.rs"]
+mod prepared_aggregation_allocations;
 #[path = "support/prepared_certificate_allocations.rs"]
 mod prepared_certificate_allocations;
 #[path = "support/prepared_cycle_allocations.rs"]
@@ -240,6 +242,7 @@ fn main() -> Result<()> {
     println!("issue5-complete-map-cycle-allocation-v1");
     positive_controls();
     operator_checks()?;
+    prepared_aggregation_allocations::run()?;
     prepared_topology_allocations::run()?;
     symbolic_map_allocations::run()?;
     weight_frame_allocations::run()?;
