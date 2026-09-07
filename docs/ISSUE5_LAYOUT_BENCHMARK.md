@@ -2,8 +2,9 @@
 
 M5d merged complete grouped execution with unchanged scalar numerical payloads.
 The new [policy](../benchmarks/policies/prepared-layout-v1.json) compares five
-explicit layouts, with no automatic selection or performance claim at this
-pre-collection checkpoint. Commit the policy, harness and source before timing.
+explicit layouts. Source and policy were committed as `7c2794c` before timing.
+The [complete results](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md)
+now pass all four artifacts. No automatic selector or competitive claim follows.
 
 | Layout | Nonterminal prefix | Gramian | Extra solver scratch |
 | --- | --- | --- | --- |
@@ -86,11 +87,13 @@ The full comparison gate requires all pairs and certificates, exact numerical/
 work identity and complete physical payload accounting. Passing it demonstrates
 a valid layout comparison, not competitive performance or a default selector.
 
-No M5e performance collection has occurred at this checkpoint. Required local,
-release/protocol and adversarial checks precede the measured source commit;
-Linux CI runs the frozen smoke, and Mac runs smoke/development/expanded. Preserve
-exact executables, raw evidence, archives and compact canonical receipts before
-closing this increment. Update the development ledger and measured limits.
+M5e collection is complete: 7,920 processes, 72,300 measured columns and 6,336
+exact scalar/layout comparisons all pass. All-image full-process geomeans improve
+1.3984/1.4439 on Mac development and 1.2318/1.2381 on expanded one-RHS
+(PCG/gated LSMR). Small smoke process regressions are retained. Grouping setup,
+full ownership and one shared image are charged. Exact binaries/raw outputs and
+independently revalidated archives are preserved; final evidence-head CI/merge
+remain. Scalar stays default pending broader admission and qualification.
 
 
 Pre-collection local qualification passes: every required Rust1.85 check,
