@@ -667,3 +667,16 @@ for measurement, not an implemented layout or selected default.
   PCG and gated-LSMR reports/coefficients (768 comparisons per route), all
   certified. Source is frozen before unchanged five-layout Mac smoke/development/
   expanded and Linux smoke regression. No builder setup-speed claim is made.
+
+- M6b frozen source `6a212e0ab19eea9f253f5588260e62681c9a89bb` passes
+  [all four existing-solver artifacts](../benchmarks/results/2026-09-07/prepared-layout-incremental-hierarchy/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6a input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34086907166`/`34086907201` and PR `34086939140`/`34086939147`
+  passed. Full binary/raw artifacts independently revalidate, saved summaries
+  reproduce exactly and every archive member is rehashed. These supplied-map
+  regressions do not time the new builder or qualify automatic construction.
+  Final evidence-head CI/PR55 merge remain. M6c next builds flat component
+  permutations with a separately lived temporary inverse, avoiding permanent
+  4V recoding storage before numerical setup. M6–M10 remain open.

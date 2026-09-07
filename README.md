@@ -71,7 +71,8 @@ legacy matching order. Its existing-solver regression exactly matches all
 7,920 corresponding M5h numerical/work/payload records. This does not measure
 candidate setup. [Incremental structural admission](docs/ISSUE5_INCREMENTAL_HIERARCHY.md)
 now reserves descriptors once, checks complete live payload and structural limits,
-and preserves accepted levels after a failed transition. Component-local
+and preserves accepted levels after a failed transition. Its 7,920-process
+regression exactly matches M6a numerical/work/payload/layout records. Component-local
 construction and recursive screening remain the next stages. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 

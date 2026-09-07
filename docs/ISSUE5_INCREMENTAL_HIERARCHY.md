@@ -109,3 +109,12 @@ current numerical values, admit bounded terminals, then screen the actual
 recursive cycle from the bottom up before publishing an automatic numerical
 hierarchy. Fixed sparse terminals and any candidate-policy decisions still need
 separate correctness, resource and complete-cost qualification.
+
+
+Frozen source `6a212e0` passes the [four-artifact existing-solver regression](../benchmarks/results/2026-09-07/prepared-layout-incremental-hierarchy/README.md):
+7,920 processes, 72,300 certified measured columns and exact agreement with
+every corresponding M6a input/numerical/work/payload/layout record. No errors,
+rejections, timeouts, RSS failures or measured retries occurred. Source and PR
+workflows passed; independently revalidated binary/raw artifacts and every
+archive member are preserved. Final evidence-head CI and PR55 merge remain.
+These supplied-map measurements do not invoke or time the incremental builder.
