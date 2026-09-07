@@ -192,7 +192,13 @@ reuses the existing cycle and matches independent suffix/full-history references
 with three coefficient vectors and a bounded report array. Required and release
 qualification pass. Its 7,920-process supplied-map regression exactly matches
 M6d numerical/work/payload/layout records; that harness does not run the screen.
-Component-local automatic construction remains the next stage. See the
+[Explicit adjacent-pair candidates](ISSUE5_ADJACENT_CANDIDATES.md)
+cover complete neighbor rows with at most E shared proposal slots. Independent
+map/cycle references and 66 certified diagnostic solves per route pass; seven
+of 22 quality screens reject and remain recorded. This is an explicit candidate
+choice, with no default promotion. Its 7,920-process supplied-map regression
+exactly matches M6e numerical/work/payload/layout records; it does not time the
+new candidate. Component-local automatic construction remains the next stage. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

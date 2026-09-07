@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6d merged; M6e actual recursive screening |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6e merged; M6f explicit adjacent candidates |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -801,3 +801,39 @@ for measurement, not an implemented layout or selected default.
   PR58 merge remain. Next compare bounded full-row candidate coverage and
   integrate component-local automatic construction with charged screening and
   fallback. M6–M10 remain open, scalar stays default and holdout is untouched.
+
+- M6e PR58 merged as `63602ec931c6d513161e355399460ba516874f7b`; actual main
+  tree `cfb6279722b651a6b2f11993383395108de55810` matches reviewed evidence.
+  Final source `34097467156`/`34097467187`, final PR
+  `34097468566`/`34097468507` and post-merge `34098169621`/`34098169622`
+  passed. M6f adds an explicit complete-row adjacent-pair policy with Q<=E
+  shared proposal slots; the legacy finite top-k constructor is unchanged.
+  Independent reference, allocation/failure and actual-cycle tests pass.
+  On 22 problem/weight combinations, seven preselected quality screens reject;
+  all 66 forced PCG and 66 gated-LSMR diagnostic solves certify. Negative
+  screens are retained separately from solve acceptance. Required/release checks
+  precede source freeze and the unchanged existing-solver regression. No automatic
+  policy, performance/default promotion or holdout result is claimed.
+
+- M6f final required Rust1.85 and 90 Python checks pass, together with release
+  all/minimal adjacent/reference/full-solver/allocator gates, private admission/
+  reservation/unwind/overflow checks and all 120 actual protocol comparisons.
+  Self-review covers the capped Q<=E proof, unchanged legacy order, source/frame
+  ownership, complete-row matching, explicit diagnostic negatives and payload
+  exclusions. This is self-review, not independent external review. Freeze this
+  source before the unchanged Mac smoke/development/expanded and Linux smoke
+  existing-solver regression; these supplied maps do not time the new candidate.
+
+- M6f frozen source `31b202e10c65cee77a079fb574f1408e778901db` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-07/prepared-layout-adjacent-candidates/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6e input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34100575280`/`34100575335` and PR `34100640663`/`34100640606`
+  passed. Copies and every archived member independently revalidate.
+  11 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+  Final evidence-head CI and PR59 merge remain. The regression does not invoke
+  adjacent construction or override its seven development quality rejections.
+  Next integrate scalable baseline execution and terminal-first component-local
+  automatic construction with charged screening/fallback. M6–M10 remain open;
+  scalar stays default and calibration/campaign holdout remain untouched.

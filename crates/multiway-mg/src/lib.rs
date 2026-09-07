@@ -197,7 +197,7 @@ mod tests;
 
 pub use prepared_aggregation::{
     PreparedAggregationFailure, PreparedAggregationSetup, PreparedAggregationWork,
-    PreparedPairNeighborhoodCandidate,
+    PreparedPairNeighborhoodCandidate, PreparedPairProposalCoverage,
 };
 
 pub use prepared_cycle_quality::{

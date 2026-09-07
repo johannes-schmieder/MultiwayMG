@@ -4,6 +4,16 @@ use multiway_incidence::{
     FactorAggregation, PreparedHierarchyBudget, ThreeWayWeightFrame, WeightFrameBinding,
 };
 
+/// Explicit proposal coverage; neither choice is an automatic quality decision.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PreparedPairProposalCoverage {
+    /// Preserve the finite legacy top-k proposal set and accumulation order.
+    LegacyTopK,
+    /// Pair adjacent entries across each complete mass-sorted neighbor row.
+    /// Pairs are disjoint within a row; final matching is still global per factor.
+    AdjacentPairs,
+}
+
 /// Work actually completed while proposing one factor-respecting map.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub struct PreparedAggregationWork {
@@ -24,6 +34,8 @@ pub struct PreparedAggregationWork {
 /// Conservative live requested-array admission, not an allocator or RSS quota.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PreparedAggregationSetup {
+    /// Proposal set used by this sizing/construction call.
+    pub coverage: PreparedPairProposalCoverage,
     /// Borrowed fine topology and current weight-frame capacities, counted once.
     pub borrowed_payload_bytes: usize,
     /// Caller-declared old hierarchies, input arrays or other live owners.
@@ -151,6 +163,38 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
         options: PairNeighborhoodAggregationOptions,
         budget: PreparedHierarchyBudget,
     ) -> Result<PreparedAggregationSetup, MultiwayError> {
+        Self::setup_with_coverage(
+            frame,
+            options,
+            PreparedPairProposalCoverage::LegacyTopK,
+            budget,
+        )
+    }
+
+    /// Size the separate complete-row adjacent-pair proposal policy.
+    /// Its maximum shared proposal count is at most E; no neighbor cap is applied.
+    pub fn adjacent_pairs_setup_payload_report(
+        frame: &ThreeWayWeightFrame<'_>,
+        minimum_affinity: f64,
+        budget: PreparedHierarchyBudget,
+    ) -> Result<PreparedAggregationSetup, MultiwayError> {
+        Self::setup_with_coverage(
+            frame,
+            PairNeighborhoodAggregationOptions {
+                minimum_affinity,
+                maximum_neighbor_degree: 2,
+            },
+            PreparedPairProposalCoverage::AdjacentPairs,
+            budget,
+        )
+    }
+
+    fn setup_with_coverage(
+        frame: &ThreeWayWeightFrame<'_>,
+        options: PairNeighborhoodAggregationOptions,
+        coverage: PreparedPairProposalCoverage,
+        budget: PreparedHierarchyBudget,
+    ) -> Result<PreparedAggregationSetup, MultiwayError> {
         if !options.minimum_affinity.is_finite()
             || !(0.0..=1.0).contains(&options.minimum_affinity)
             || options.maximum_neighbor_degree < 2
@@ -166,14 +210,30 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
         let v = frame.diagonal().len();
         let mut maximum_proposals = 0;
         for factor in 0..3 {
-            let k = options.maximum_neighbor_degree.min(counts[factor]);
-            let pairs = mul(k, k.saturating_sub(1))? / 2;
-            let edge_bound = mul(e, k.saturating_sub(1))? / 2;
             let mut factor_bound = 0;
-            for neighbor in 0..3 {
-                if neighbor != factor {
-                    factor_bound =
-                        add(factor_bound, mul(counts[neighbor], pairs)?.min(edge_bound))?;
+            match coverage {
+                PreparedPairProposalCoverage::LegacyTopK => {
+                    let k = options.maximum_neighbor_degree.min(counts[factor]);
+                    let pairs = mul(k, k.saturating_sub(1))? / 2;
+                    let edge_bound = mul(e, k.saturating_sub(1))? / 2;
+                    for neighbor in 0..3 {
+                        if neighbor != factor {
+                            factor_bound =
+                                add(factor_bound, mul(counts[neighbor], pairs)?.min(edge_bound))?;
+                        }
+                    }
+                }
+                PreparedPairProposalCoverage::AdjacentPairs => {
+                    for neighbor in 0..3 {
+                        if neighbor != factor {
+                            // min(floor(E/2), neighbor_count*floor(target_count/2)).
+                            // Saturating the product is exact under this finite cap.
+                            let bound = counts[neighbor]
+                                .saturating_mul(counts[factor] / 2)
+                                .min(e / 2);
+                            factor_bound = add(factor_bound, bound)?;
+                        }
+                    }
                 }
             }
             maximum_proposals = maximum_proposals.max(factor_bound);
@@ -199,6 +259,7 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
             scratch_payload_bound,
         ])?;
         Ok(PreparedAggregationSetup {
+            coverage,
             borrowed_payload_bytes,
             additional_live_payload_bytes: budget.additional_live_payload_bytes,
             parent_payload_bytes,
@@ -223,6 +284,26 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
         Self::build_with(frame, options, budget, &mut |_| Ok(()))
     }
 
+    /// Propose adjacent pairs over every complete mass-sorted neighbor row.
+    /// This is a distinct unscreened map policy; the legacy constructor is unchanged.
+    /// No positive tuple is removed. The caller must qualify the actual recursive cycle.
+    pub fn try_adjacent_pairs(
+        frame: &'frame ThreeWayWeightFrame<'topology>,
+        minimum_affinity: f64,
+        budget: PreparedHierarchyBudget,
+    ) -> Result<Self, PreparedAggregationFailure> {
+        Self::build_with_coverage(
+            frame,
+            PairNeighborhoodAggregationOptions {
+                minimum_affinity,
+                maximum_neighbor_degree: 2,
+            },
+            PreparedPairProposalCoverage::AdjacentPairs,
+            budget,
+            &mut |_| Ok(()),
+        )
+    }
+
     fn build_with<F>(
         frame: &'frame ThreeWayWeightFrame<'topology>,
         options: PairNeighborhoodAggregationOptions,
@@ -232,10 +313,29 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
     where
         F: FnMut(&'static str) -> Result<(), MultiwayError>,
     {
+        Self::build_with_coverage(
+            frame,
+            options,
+            PreparedPairProposalCoverage::LegacyTopK,
+            budget,
+            before,
+        )
+    }
+
+    fn build_with_coverage<F>(
+        frame: &'frame ThreeWayWeightFrame<'topology>,
+        options: PairNeighborhoodAggregationOptions,
+        coverage: PreparedPairProposalCoverage,
+        budget: PreparedHierarchyBudget,
+        before: &mut F,
+    ) -> Result<Self, PreparedAggregationFailure>
+    where
+        F: FnMut(&'static str) -> Result<(), MultiwayError>,
+    {
         let mut work = PreparedAggregationWork::default();
         let mut setup_payload_bound = None;
         let result = (|| {
-            let report = Self::setup_payload_report(frame, options, budget)?;
+            let report = Self::setup_with_coverage(frame, options, coverage, budget)?;
             setup_payload_bound = Some(report.total_payload_bound);
             if report.total_payload_bound > budget.maximum_payload_bytes {
                 return Err(MultiwayError::PayloadBudgetExceeded {
@@ -297,6 +397,31 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
                                     .total_cmp(&a.mass)
                                     .then_with(|| a.level.cmp(&b.level))
                             });
+                            if coverage == PreparedPairProposalCoverage::AdjacentPairs {
+                                for pair in row.chunks_exact(2) {
+                                    let left = pair[0].level.min(pair[1].level);
+                                    let right = pair[0].level.max(pair[1].level);
+                                    debug_assert_eq!(
+                                        frame.topology().component_labels()
+                                            [offsets[factor] + left as usize],
+                                        frame.topology().component_labels()
+                                            [offsets[factor] + right as usize]
+                                    );
+                                    assert!(
+                                        proposals.len() < report.maximum_proposals,
+                                        "proved adjacent proposal bound"
+                                    );
+                                    proposals.push(Proposal {
+                                        left,
+                                        right,
+                                        value: pair[0].mass.min(pair[1].mass),
+                                        ordinal: proposals.len(),
+                                    });
+                                    work.proposals += 1;
+                                }
+                                start = end;
+                                continue;
+                            }
                             let kept = row.len().min(options.maximum_neighbor_degree);
                             if kept < row.len() {
                                 work.truncated_neighbors += 1;
@@ -536,6 +661,14 @@ mod failure_tests {
     }
     #[test]
     fn complete_admission_precedes_every_flat_reservation_and_unwind_recovers() {
+        for coverage in [
+            PreparedPairProposalCoverage::LegacyTopK,
+            PreparedPairProposalCoverage::AdjacentPairs,
+        ] {
+            admission_and_recovery(coverage);
+        }
+    }
+    fn admission_and_recovery(coverage: PreparedPairProposalCoverage) {
         let tuples: Vec<_> = (0..4)
             .flat_map(|i| (0..3).flat_map(move |j| (0..2).map(move |k| [i, j, k])))
             .collect();
@@ -543,9 +676,10 @@ mod failure_tests {
         let frame = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples).unwrap();
         let options = PairNeighborhoodAggregationOptions::default();
         let mut calls = 0;
-        let old = PreparedPairNeighborhoodCandidate::build_with(
+        let old = PreparedPairNeighborhoodCandidate::build_with_coverage(
             &frame,
             options,
+            coverage,
             PreparedHierarchyBudget::UNLIMITED,
             &mut |_| {
                 calls += 1;
@@ -554,10 +688,27 @@ mod failure_tests {
         )
         .unwrap();
         assert_eq!(calls, 7); // Three parents plus source IDs, masses, proposals and mates.
+        assert_eq!(old.setup_report().coverage, coverage);
         let required = old.setup_report().total_payload_bound;
-        let bad = PreparedPairNeighborhoodCandidate::build_with(
+        let exact = PreparedPairNeighborhoodCandidate::build_with_coverage(
             &frame,
             options,
+            coverage,
+            PreparedHierarchyBudget {
+                maximum_payload_bytes: required + 17,
+                additional_live_payload_bytes: 17,
+            },
+            &mut |_| Ok(()),
+        )
+        .unwrap();
+        assert_eq!(exact.aggregation(), old.aggregation());
+        let other = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples).unwrap();
+        assert!(old.validate_for(&other).is_err());
+        old.validate_for(&frame).unwrap();
+        let bad = PreparedPairNeighborhoodCandidate::build_with_coverage(
+            &frame,
+            options,
+            coverage,
             PreparedHierarchyBudget {
                 maximum_payload_bytes: required - 1,
                 additional_live_payload_bytes: 0,
@@ -570,9 +721,10 @@ mod failure_tests {
             for fail_at in 0..calls {
                 let mut reached = 0;
                 let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    PreparedPairNeighborhoodCandidate::build_with(
+                    PreparedPairNeighborhoodCandidate::build_with_coverage(
                         &frame,
                         options,
+                        coverage,
                         PreparedHierarchyBudget::UNLIMITED,
                         &mut |context| {
                             let at = reached;
@@ -598,19 +750,22 @@ mod failure_tests {
                 } else {
                     assert_eq!(result.unwrap().unwrap_err().work, Default::default());
                 }
-                let rebuilt = PreparedPairNeighborhoodCandidate::try_new(
+                let rebuilt = PreparedPairNeighborhoodCandidate::build_with_coverage(
                     &frame,
                     options,
+                    coverage,
                     PreparedHierarchyBudget::UNLIMITED,
+                    &mut |_| Ok(()),
                 )
                 .unwrap();
                 assert_eq!(old.aggregation(), rebuilt.aggregation());
                 assert_eq!(old.work_report(), rebuilt.work_report());
             }
         }
-        let overflowed = PreparedPairNeighborhoodCandidate::build_with(
+        let overflowed = PreparedPairNeighborhoodCandidate::build_with_coverage(
             &frame,
             options,
+            coverage,
             PreparedHierarchyBudget {
                 maximum_payload_bytes: usize::MAX,
                 additional_live_payload_bytes: usize::MAX,
@@ -641,6 +796,13 @@ mod failure_tests {
                         let bound = (3 * k * k.saturating_sub(1) / 2)
                             .min(entries * k.saturating_sub(1) / 2);
                         assert!(actual <= bound);
+                        let adjacent = [a, b, c].into_iter().map(|n| n / 2).sum::<usize>();
+                        let adjacent_bound =
+                            (3 * [a, b, c].into_iter().max().unwrap() / 2).min(entries / 2);
+                        // A tighter count cap rounds each row capacity before multiplying.
+                        let max_degree = [a, b, c].into_iter().max().unwrap();
+                        assert!(adjacent <= (3 * (max_degree / 2)).min(entries / 2));
+                        assert!(adjacent <= adjacent_bound);
                     }
                 }
             }
