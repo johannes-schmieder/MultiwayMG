@@ -554,3 +554,17 @@ for measurement, not an implemented layout or selected default.
   Image-tail lookup is constant-time using nonincreasing mapped tuple counts.
   Initial failed fixture logs and final passing checks are preserved. Commit
   this source and v2 policy before the four-artifact regression campaign.
+
+
+- M5g measured source `c40f9e53fcd59b3d0466be6800795a1d16df6432`
+  passes [all four layout artifacts](../benchmarks/results/2026-09-06/prepared-layout-arena-v2/README.md):
+  7,920 processes and 72,300 certified measured columns. All corresponding M5f
+  input/numerical/work/fingerprint records match exactly, with only the derived
+  hierarchy/total descriptor reduction and declared image ABI24-to0. Grouping
+  admission, other payload and level inventory remain exact. No process, timeout,
+  rejection, RSS failure or measured retry occurred. Source
+  `34079679036`/`34079679035` and PR `34079732692`/`34079732651` passed.
+  Exact binary/raw artifacts are independently revalidated and archived with
+  every member rehashed. Final evidence-head CI and PR52 merge remain before
+  certificate-vector liveness. No old/new paired timing gain or layout default
+  is claimed; M5 and M6–M10 remain open.

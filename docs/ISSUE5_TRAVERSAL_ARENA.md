@@ -61,14 +61,22 @@ Required Rust1.85 format, strict Clippy, all/minimal tests and warning-free docs
 pass, together with all 90 Python evidence tests. Reservation-error/unwind,
 budget-minus-one, exact bytes/release, zero first/repeat32 action allocation,
 foreign owner, numerical failure and recovery gates pass with the new counts.
-Release and actual probe checks precede source freeze. Then run Mac smoke/
-development/expanded and exact-source Linux smoke under committed v2. Compare
-every numerical/work/fingerprint result to M5f, allowing only the derived
-hierarchy/total descriptor delta and the declared image ABI/storage changes.
-Preserve all attempted costs and failures. No M5g measurement or timing claim
-exists at this source checkpoint; campaign calibration/holdout remain untouched.
-
 Final release all/minimal complete solver and allocator gates pass, as do 120
 actual release v2 protocol comparisons. Preserved Mac/Linux M5f v1 artifacts
-revalidate and their summaries reproduce exactly. These checks precede source
+revalidate and their summaries reproduce exactly. These checks preceded source
 freeze and performance collection.
+
+Frozen source `c40f9e5` now passes the [four-artifact regression](../benchmarks/results/2026-09-06/prepared-layout-arena-v2/README.md):
+7,920 complete processes, 72,300 certified measured columns, 6,336 exact
+within-source layout comparisons and all 7,920 corresponding M5f input/numerical/
+work/fingerprint records. The only retained-memory delta is the exact derived
+hierarchy/total descriptor reduction: scalar/rows versus image saves 120/144
+bytes at depth1, 312/336 at depth3 and 792/816 at depth8. Image ABI changes
+24-to-0; all grouping admission and numerical elements remain unchanged.
+No process, timeout, rejection or RSS failure occurred. Exact binaries/raw records
+and independently revalidated archives are preserved. No cross-revision timing
+or competitive qualification is claimed; scalar default remains.
+
+Source `34079679036`/`34079679035` and PR `34079732692`/`34079732651`
+workflows passed. Final evidence-head review/CI and PR52 merge remain before the
+next certificate-vector liveness increment. M5 and M6–M10 remain open.
