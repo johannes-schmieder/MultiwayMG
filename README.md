@@ -72,8 +72,10 @@ legacy matching order. Its existing-solver regression exactly matches all
 candidate setup. [Incremental structural admission](docs/ISSUE5_INCREMENTAL_HIERARCHY.md)
 now reserves descriptors once, checks complete live payload and structural limits,
 and preserves accepted levels after a failed transition. Its 7,920-process
-regression exactly matches M6a numerical/work/payload/layout records. Component-local
-construction and recursive screening remain the next stages. See the
+regression exactly matches M6a numerical/work/payload/layout records.
+[Flat component permutations](docs/ISSUE5_COMPONENT_LAYOUT.md)
+keep inverse recoding temporary and use no new arrays for connected input.
+Component-local numerical construction and recursive screening remain the next stages. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 ## The problem

@@ -6,6 +6,14 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A component index is outside the exact structural partition.
+    #[error("component index {component} is outside component count {count}")]
+    ComponentIndexOutOfBounds {
+        /// Submitted zero-based component ID.
+        component: usize,
+        /// Number of components in the exact owner.
+        count: usize,
+    },
     /// A proposed hierarchy exceeds an explicitly declared structural limit.
     #[error("{context}: structural size {actual} exceeds limit {maximum}")]
     HierarchyStructureLimit {

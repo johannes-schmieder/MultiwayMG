@@ -62,3 +62,8 @@ pub use grouping::{GroupedIndexWidth, GroupedTupleRow, PreparedTupleGrouping};
 pub use grouped_operator::ThreeWayGroupedOperatorView;
 
 pub use hierarchy_grouping::PreparedHierarchyGrouping;
+
+mod component_layout;
+pub use component_layout::{
+    ComponentSourceIds, PreparedComponentLayout, PreparedComponentRecoding, PreparedComponentView,
+};
