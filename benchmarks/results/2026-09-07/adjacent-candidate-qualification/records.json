@@ -1,0 +1,1664 @@
+{
+  "diagnostic_solves": [
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "certificate": 5.321759230417868e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "certificate": 6.431095658523844e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "certificate": 9.398029302054709e-10,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "certificate": 6.940683156559897e-10,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "certificate": 2.7444282048547677e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "certificate": 3.2278713893802065e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "certificate": 2.9281836182798818e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "certificate": 4.153978223518751e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "certificate": 7.80182691730782e-11,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "certificate": 1.6689820642318077e-10,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "certificate": 5.707297385147799e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "certificate": 2.7559247184979724e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "certificate": 6.924394182416025e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "certificate": 4.74640189991856e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "certificate": 6.694490031966678e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "certificate": 8.064222743683632e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "certificate": 2.606616128003647e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "certificate": 1.1930771849619869e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "certificate": 9.737036315261108e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "certificate": 1.3124050155299929e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "certificate": 4.694388418989193e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "certificate": 2.1812423826257145e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "certificate": 4.739226529913259e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "certificate": 1.6013276988430208e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "certificate": 3.2217465135198544e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "certificate": 2.32518476711827e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "certificate": 8.793470204921787e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "certificate": 4.972689424884057e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "certificate": 3.3468517695573816e-09,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "certificate": 9.294312495798252e-09,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "certificate": 6.894450303105354e-09,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "certificate": 6.398915665596646e-09,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "certificate": 6.973189564710488e-16,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "certificate": 2.0642715209307823e-16,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "certificate": 3.159925499485854e-13,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "certificate": 6.672811013887072e-13,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "certificate": 2.1211992587836718e-16,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "certificate": 8.377586145298401e-17,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "certificate": 3.090226001229111e-14,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "certificate": 9.507181690204185e-14,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "certificate": 0.0,
+      "column": 0,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "column": 0,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "certificate": 1.337023691496815e-16,
+      "column": 1,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "column": 1,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 0,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "column": 2,
+      "generation": 0,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "certificate": 0.0,
+      "column": 0,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "column": 0,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "certificate": 1.337023691496815e-16,
+      "column": 1,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "column": 1,
+      "generation": 1,
+      "route": "lsmr"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "certificate": 0.0,
+      "column": 2,
+      "generation": 1,
+      "route": "pcg"
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "column": 2,
+      "generation": 1,
+      "route": "lsmr"
+    }
+  ],
+  "kind": "development_correctness_diagnostics_not_timing_or_policy_promotion",
+  "options": {
+    "damping": 1,
+    "maximum_defect": 1e-10,
+    "maximum_estimated": 0.8,
+    "maximum_observed": 1.05,
+    "maximum_transitions": 2,
+    "minimum_affinity": 0.02,
+    "starts": 2,
+    "steps": 8,
+    "tail": 4
+  },
+  "raw_log": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/multiwaymg-m6f-numerical-initial.log",
+  "raw_log_sha256": "95152e7c5bbdd51be27df955a74ac945e14c912e77fa942f6172eedb111335bd",
+  "rejected_problem_generations": [
+    {
+      "case": "nested-plus-singleton-additional-nullity",
+      "generation": 1
+    },
+    {
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "generation": 0
+    },
+    {
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "generation": 1
+    },
+    {
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "generation": 0
+    },
+    {
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "generation": 1
+    },
+    {
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "generation": 0
+    },
+    {
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "generation": 1
+    }
+  ],
+  "source_files_sha256": {
+    "crates/multiway-mg/src/prepared_aggregation.rs": "7ba87492de9d40a7a59fe2fb9feeb98e295574fd9b9eced05506572fa71ebfb7",
+    "crates/multiway-mg/tests/prepared_adjacent_aggregation.rs": "646d3d0efb2b4a5bd46468fb8925a0a0122199e8176a9c32f021c30bb15e25de"
+  },
+  "tails": [
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "defect": 4.930380657631324e-32,
+      "dimension": 26,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 1.3709001625003436e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "defect": 6.938893903907228e-18,
+      "dimension": 50,
+      "estimated": 0.13647075994949157,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.1377545533454772
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "defect": 4.683753385137379e-17,
+      "dimension": 96,
+      "estimated": 0.2875973421903375,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.2941936597058651
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "defect": 4.930380657631324e-32,
+      "dimension": 27,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 1.6383519490290814e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "defect": 8.673617379884035e-18,
+      "dimension": 50,
+      "estimated": 0.11863603066651214,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.11879281279341442
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-2-seed-800",
+      "defect": 8.586881206085195e-17,
+      "dimension": 96,
+      "estimated": 0.3282569373570188,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.33165989693831877
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "defect": 8.011868568650901e-32,
+      "dimension": 51,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 1.9500576320583476e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "defect": 1.6479873021779667e-17,
+      "dimension": 99,
+      "estimated": 0.10893564858904455,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.11005703422508202
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "defect": 1.4051260155412137e-16,
+      "dimension": 192,
+      "estimated": 0.3301030245918502,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.33487849434387024
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "defect": 1.4791141972893971e-31,
+      "dimension": 53,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 2.0104119401395656e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "defect": 2.6020852139652106e-17,
+      "dimension": 100,
+      "estimated": 0.1667382493136313,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.16735298972817997
+    },
+    {
+      "accepted": true,
+      "case": "recursive-latin-depth-3-seed-801",
+      "defect": 1.491862189340054e-16,
+      "dimension": 192,
+      "estimated": 0.30965114627898316,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.31463618566095936
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "defect": 5.5220263365470826e-30,
+      "dimension": 67,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 1.1857422932784e-14
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "defect": 4.3298697960381105e-15,
+      "dimension": 82,
+      "estimated": 0.973913941767912,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.9741412112231679
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "defect": 2.8935187579293142e-15,
+      "dimension": 96,
+      "estimated": 0.9317548709715173,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.9386409133292175
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "defect": 4.417621069237666e-29,
+      "dimension": 56,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 1.3795481027481779e-14
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "defect": 3.552713678800501e-15,
+      "dimension": 74,
+      "estimated": 0.9476093841295968,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.9495870413246269
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-2-seed-802",
+      "defect": 3.011479954295737e-15,
+      "dimension": 96,
+      "estimated": 0.9186578861923916,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.92558328598124
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "defect": 1.2306230121447784e-28,
+      "dimension": 140,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 1.9547754713253248e-14
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "defect": 6.8833827526759706e-15,
+      "dimension": 169,
+      "estimated": 0.9609798258408165,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.9627697496371855
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "defect": 3.469446951953614e-15,
+      "dimension": 192,
+      "estimated": 0.929668382659945,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.9343637493739639
+    },
+    {
+      "accepted": true,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "defect": 4.1020767071492614e-29,
+      "dimension": 122,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 1.589079080978507e-14
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "defect": 3.552713678800501e-15,
+      "dimension": 159,
+      "estimated": 0.9341576815538425,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.9376395265076981
+    },
+    {
+      "accepted": false,
+      "case": "recursive-weak-chain-depth-3-seed-803",
+      "defect": 4.399258735077183e-15,
+      "dimension": 192,
+      "estimated": 0.9259004970667292,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.9342838020297489
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "defect": 5.423418723394456e-31,
+      "dimension": 24,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 4.620021515826087e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "defect": 9.540979117872439e-18,
+      "dimension": 48,
+      "estimated": 0.165230189228937,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.16523950317491373
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "defect": 3.393552799879629e-17,
+      "dimension": 96,
+      "estimated": 0.21538397116485133,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.22178414462051796
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "defect": 2.7733391199176196e-31,
+      "dimension": 24,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 4.77550423736567e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "defect": 8.239936510889834e-18,
+      "dimension": 48,
+      "estimated": 0.17325910765708585,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.17437740741050878
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-2-seed-804",
+      "defect": 6.505213034913027e-17,
+      "dimension": 96,
+      "estimated": 0.24414718858897794,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.24791752111931037
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "defect": 2.3665827156630354e-30,
+      "dimension": 50,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 5.363772934949642e-15
+    },
+    {
+      "accepted": false,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "defect": 1.5543122344752192e-15,
+      "dimension": 99,
+      "estimated": 0.8855465433834668,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.8856529040839372
+    },
+    {
+      "accepted": false,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "defect": 2.8171909249863347e-15,
+      "dimension": 192,
+      "estimated": 0.9039373087908007,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.9181657128723953
+    },
+    {
+      "accepted": true,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "defect": 5.9164567891575885e-31,
+      "dimension": 52,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 2.8693412980202147e-15
+    },
+    {
+      "accepted": false,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "defect": 1.2490009027033011e-15,
+      "dimension": 100,
+      "estimated": 0.8205182309832263,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.8218202495523957
+    },
+    {
+      "accepted": false,
+      "case": "recursive-nearly-nested-depth-3-seed-805",
+      "defect": 2.4424906541753444e-15,
+      "dimension": 192,
+      "estimated": 0.9447645899115062,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.9599918379294315
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "defect": 4.930380657631324e-32,
+      "dimension": 27,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 1.2242919946052367e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "defect": 1.0408340855860843e-17,
+      "dimension": 51,
+      "estimated": 0.11184830487469147,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.11185246335368605
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "defect": 5.5077470362263625e-17,
+      "dimension": 96,
+      "estimated": 0.294433974339573,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.2952448346039635
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "defect": 3.697785493223493e-32,
+      "dimension": 26,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 1.2293874779371732e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "defect": 9.540979117872439e-18,
+      "dimension": 50,
+      "estimated": 0.11362175596213217,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.12017075764915008
+    },
+    {
+      "accepted": true,
+      "case": "recursive-dominant-pair-depth-2-seed-806",
+      "defect": 5.746271514173174e-17,
+      "dimension": 96,
+      "estimated": 0.28046192087690525,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.29825497255688177
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "defect": 1.7749370367472766e-30,
+      "dimension": 55,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 4.708735820439791e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "defect": 8.326672684688674e-17,
+      "dimension": 103,
+      "estimated": 0.3240958811193497,
+      "generation": 0,
+      "level": 1,
+      "observed": 0.3356245438722373
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "defect": 6.314393452555578e-16,
+      "dimension": 192,
+      "estimated": 0.7232327520077888,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.7459296481631478
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "defect": 4.141519752410312e-30,
+      "dimension": 55,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 4.461188794734522e-15
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "defect": 1.1275702593849246e-16,
+      "dimension": 102,
+      "estimated": 0.40721815006905604,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.409087069902146
+    },
+    {
+      "accepted": true,
+      "case": "recursive-communities-depth-3-seed-807",
+      "defect": 9.992007221626409e-16,
+      "dimension": 192,
+      "estimated": 0.761076107056571,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.7838327979363234
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "defect": 1.1555579666323415e-33,
+      "dimension": 96,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 1.06682261363241e-15
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "defect": 0.0,
+      "dimension": 192,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 1,
+      "observed": 2.1704150651474406e-16
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "defect": 3.851859888774472e-33,
+      "dimension": 384,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 0,
+      "observed": 2.56984763845098e-16
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "defect": 1.0748229833636286e-29,
+      "dimension": 100,
+      "estimated": 1.7957778327443076e-12,
+      "generation": 1,
+      "level": 2,
+      "observed": 1.7960983950493922e-12
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "defect": 2.8455013071824152e-21,
+      "dimension": 194,
+      "estimated": 0.00012664288305225897,
+      "generation": 1,
+      "level": 1,
+      "observed": 0.00012672401378537338
+    },
+    {
+      "accepted": true,
+      "case": "tied-latin-128",
+      "defect": 4.896909226313924e-22,
+      "dimension": 384,
+      "estimated": 1.273181205220189e-05,
+      "generation": 1,
+      "level": 0,
+      "observed": 1.273181225160936e-05
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "defect": 0.0,
+      "dimension": 6,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 2,
+      "observed": 8.396635066451068e-16
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "defect": 2.3129646346357407e-18,
+      "dimension": 9,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 1,
+      "observed": 4.8074067159589095e-17
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "defect": 1.5770213417970978e-17,
+      "dimension": 13,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 0,
+      "observed": 1.2566871346510768e-16
+    },
+    {
+      "accepted": true,
+      "case": "nested-plus-singleton-additional-nullity",
+      "defect": 0.0,
+      "dimension": 6,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 2,
+      "observed": 3.592762669471479e-16
+    },
+    {
+      "accepted": false,
+      "case": "nested-plus-singleton-additional-nullity",
+      "defect": 0.4814719332980611,
+      "dimension": 9,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 1,
+      "observed": 1.571225636247067
+    },
+    {
+      "accepted": false,
+      "case": "nested-plus-singleton-additional-nullity",
+      "defect": 0.5421187137509614,
+      "dimension": 13,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 0,
+      "observed": 0.13258252147247765
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "defect": 0.0,
+      "dimension": 3,
+      "estimated": 0.0,
+      "generation": 0,
+      "level": 0,
+      "observed": 0.0
+    },
+    {
+      "accepted": true,
+      "case": "singleton-zero-proposals",
+      "defect": 0.0,
+      "dimension": 3,
+      "estimated": 0.0,
+      "generation": 1,
+      "level": 0,
+      "observed": 1.1775693440128312e-16
+    }
+  ]
+}

@@ -5,21 +5,45 @@ use multiway_incidence::{
 };
 use multiway_mg::{PairNeighborhoodAggregationOptions, PreparedPairNeighborhoodCandidate};
 pub fn run() -> Result<()> {
+    for adjacent in [false, true] {
+        check(adjacent)?;
+    }
+    Ok(())
+}
+fn check(adjacent: bool) -> Result<()> {
     let tuples: Vec<_> = (0..4)
         .flat_map(|i| (0..3).flat_map(move |j| (0..2).map(move |k| [i, j, k])))
         .collect();
     let t = PreparedThreeWayTopology::try_from_collapsed([4, 3, 2], &tuples)?;
     let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples)?;
     let options = PairNeighborhoodAggregationOptions::default();
-    let report = PreparedPairNeighborhoodCandidate::setup_payload_report(
-        &f,
-        options,
-        PreparedHierarchyBudget::UNLIMITED,
-    )?;
+    let report = if adjacent {
+        PreparedPairNeighborhoodCandidate::adjacent_pairs_setup_payload_report(
+            &f,
+            options.minimum_affinity,
+            PreparedHierarchyBudget::UNLIMITED,
+        )?
+    } else {
+        PreparedPairNeighborhoodCandidate::setup_payload_report(
+            &f,
+            options,
+            PreparedHierarchyBudget::UNLIMITED,
+        )?
+    };
+    let construct = |frame, budget| {
+        if adjacent {
+            PreparedPairNeighborhoodCandidate::try_adjacent_pairs(
+                frame,
+                options.minimum_affinity,
+                budget,
+            )
+        } else {
+            PreparedPairNeighborhoodCandidate::try_new(frame, options, budget)
+        }
+    };
     let before = GLOBAL.stats();
-    let bad = PreparedPairNeighborhoodCandidate::try_new(
+    let bad = construct(
         &f,
-        options,
         PreparedHierarchyBudget {
             maximum_payload_bytes: report.total_payload_bound - 1,
             additional_live_payload_bytes: 0,
@@ -30,11 +54,7 @@ pub fn run() -> Result<()> {
     drop(bad);
     no_events(GLOBAL.stats() - before);
     let before = GLOBAL.stats();
-    let candidate = PreparedPairNeighborhoodCandidate::try_new(
-        &f,
-        options,
-        PreparedHierarchyBudget::UNLIMITED,
-    )?;
+    let candidate = construct(&f, PreparedHierarchyBudget::UNLIMITED)?;
     let setup = GLOBAL.stats() - before;
     let retained = candidate.retained_payload_bytes()?;
     assert_eq!(setup.allocations, 10);
@@ -63,9 +83,7 @@ pub fn run() -> Result<()> {
     )?;
     let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&[f64::MAX * 0.375; 4]))?;
     let before = GLOBAL.stats();
-    let bad =
-        PreparedPairNeighborhoodCandidate::try_new(&f, options, PreparedHierarchyBudget::UNLIMITED)
-            .unwrap_err();
+    let bad = construct(&f, PreparedHierarchyBudget::UNLIMITED).unwrap_err();
     assert_eq!(bad.work.tuple_visits, 8);
     drop(bad);
     let failed = GLOBAL.stats() - before;
@@ -74,7 +92,7 @@ pub fn run() -> Result<()> {
     assert_eq!(failed.reallocations, 0);
     assert_eq!(failed.bytes_allocated, failed.bytes_deallocated);
     println!(
-        "bounded flat candidates: 10 setup arrays, three retained parent arrays; no hidden sort/reallocation; budget rejection allocates zero and numerical failure releases all arrays"
+        "bounded flat candidates (adjacent={adjacent}): 10 setup arrays, three retained parent arrays; no hidden sort/reallocation; budget rejection allocates zero and numerical failure releases all arrays"
     );
     Ok(())
 }
