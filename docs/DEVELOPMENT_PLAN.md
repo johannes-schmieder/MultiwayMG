@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6c merged; M6d provisional replay |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6d merged; M6e actual recursive screening |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -761,3 +761,43 @@ for measurement, not an implemented layout or selected default.
   recursive tail screening with shared terminal/workspace and bounded summary
   probes, then integrate component-local automatic construction. M6–M10 remain
   open, scalar stays default and campaign holdout is untouched.
+
+- M6d PR57 merged as `a984936a7689343b679dac69f6ebd3c7a8be8a0b` after final
+  source `34093594931`/`34093594947` and PR `34093597665`/`34093597640`
+  workflows passed. Actual main matches reviewed tree
+  `e76fb7cf92714811a0d3322d3a24ff8dc0562080`. M6e now implements actual
+  recursive tail screening using the existing terminal/image/traversal and a
+  three-vector summary workspace. Initial compilation identified a projection
+  adapter lifetime mismatch; use the validated workspace owner for that action.
+
+- M6d post-merge workflows `34094256627`/`34094256778` passed. M6e actual-tail
+  and bounded-summary references match independent suffix/full-history results
+  bit for bit across five layouts, including nested and changed-weight controls.
+  Two reservation error/unwind gates, exact budgets, static-before-mutation and
+  numerical recovery pass. Initial full required Rust1.85 and 90 Python checks
+  pass. Narrowed bounded error indices keep failures inline; added access to the
+  completed bottom-up report prefix. Final full/release qualification follows
+  this small diagnostic addition. See `ISSUE5_RECURSIVE_SCREEN.md`.
+
+- M6e final required Rust1.85 formatting/Clippy/all/minimal/rustdoc and 90 Python
+  checks pass. Release all/minimal screen/reference/full-solver/allocator and
+  component gates, private numerical/reservation/budget/count-cap failures and
+  all 120 actual protocol comparisons pass. Self-review covers exact recursive
+  suffix identity, unchanged root execution, shared numerical helpers, three-
+  vector liveness, bounded inline failures, retained diagnostic prefixes and
+  complete payload/work scope. Freeze this source before unchanged Mac smoke/
+  development/expanded and Linux smoke regression. The supplied-map harness
+  does not run the new screen; complete automatic performance remains open.
+
+- M6e frozen source `ba98d54947b3c05b35b7a1dd38a190fcf06728a7` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-07/prepared-layout-recursive-screen/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6d input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34096124588`/`34096124774` and PR `34096127941`/`34096127889`
+  passed. Copies and every archive member independently revalidate.
+  8 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+  The supplied-map harness does not time the screen. Final evidence-head CI and
+  PR58 merge remain. Next compare bounded full-row candidate coverage and
+  integrate component-local automatic construction with charged screening and
+  fallback. M6–M10 remain open, scalar stays default and holdout is untouched.

@@ -572,7 +572,7 @@ fn energy_norm(problem: &ThreeWayProblem, values: &[f64]) -> Result<f64, Multiwa
     Ok(energy.max(0.0).sqrt())
 }
 
-fn tail_geometric_mean(values: &[f64], tail: usize) -> f64 {
+pub(crate) fn tail_geometric_mean(values: &[f64], tail: usize) -> f64 {
     let start = values.len().saturating_sub(tail);
     geometric_mean(&values[start..])
 }
@@ -587,19 +587,19 @@ fn geometric_mean(values: &[f64]) -> f64 {
     (values.iter().map(|value| value.ln()).sum::<f64>() / values.len() as f64).exp()
 }
 
-fn dot(left: &[f64], right: &[f64]) -> f64 {
+pub(crate) fn dot(left: &[f64], right: &[f64]) -> f64 {
     left.iter()
         .zip(right)
         .fold(0.0, |sum, (&a, &b)| a.mul_add(b, sum))
 }
 
-fn scale_in_place(values: &mut [f64], scale: f64) {
+pub(crate) fn scale_in_place(values: &mut [f64], scale: f64) {
     for value in values {
         *value *= scale;
     }
 }
 
-fn orient_deterministically(values: &mut [f64]) {
+pub(crate) fn orient_deterministically(values: &mut [f64]) {
     if let Some(&first) = values.iter().find(|value| value.abs() > 1.0e-15) {
         if first < 0.0 {
             scale_in_place(values, -1.0);
@@ -607,7 +607,7 @@ fn orient_deterministically(values: &mut [f64]) {
     }
 }
 
-fn fill_deterministic(values: &mut [f64], mut state: u64) {
+pub(crate) fn fill_deterministic(values: &mut [f64], mut state: u64) {
     for value in values {
         state = splitmix64(state);
         let unit = (state >> 11) as f64 * (1.0 / ((1_u64 << 53) as f64));

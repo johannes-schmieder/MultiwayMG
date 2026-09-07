@@ -84,7 +84,12 @@ numerical, allocation and lifetime gates pass. Explicit nested-factor
 rank controls correct the earlier Latin-square additional-nullity description.
 Its 7,920-process supplied-map regression exactly matches all M6c numerical/work/
 payload/layout records; it does not measure provisional setup.
-Component-local numerical construction and recursive screening remain the next stages. See the
+[Bounded actual recursive screening](docs/ISSUE5_RECURSIVE_SCREEN.md)
+reuses the existing cycle and matches independent suffix/full-history references,
+with three coefficient vectors and a bounded report array. Required and release
+qualification pass. Its 7,920-process supplied-map regression exactly matches
+M6d numerical/work/payload/layout records; that harness does not run the screen.
+Component-local automatic construction remains the next stage. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 ## The problem

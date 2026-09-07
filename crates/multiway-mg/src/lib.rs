@@ -39,6 +39,7 @@ mod pcg_kernel;
 mod pcg_trace;
 mod preconditioner;
 mod prepared_aggregation;
+mod prepared_cycle_quality;
 mod prepared_hierarchy;
 #[cfg(feature = "lsmr")]
 mod prepared_lsmr;
@@ -197,4 +198,9 @@ mod tests;
 pub use prepared_aggregation::{
     PreparedAggregationFailure, PreparedAggregationSetup, PreparedAggregationWork,
     PreparedPairNeighborhoodCandidate,
+};
+
+pub use prepared_cycle_quality::{
+    PreparedCycleScreenFailure, PreparedCycleScreenResult, PreparedCycleScreenSetup,
+    PreparedCycleScreenWork, PreparedCycleScreenWorkspace, PreparedLevelCycleQuality,
 };

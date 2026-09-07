@@ -49,6 +49,9 @@ mod component_layout_allocations;
 #[path = "support/provisional_replay_allocations.rs"]
 mod provisional_replay_allocations;
 
+#[path = "support/prepared_cycle_quality_allocations.rs"]
+mod prepared_cycle_quality_allocations;
+
 use multiway_mg::{
     CycleScreenedMapHierarchy, CycleScreenedMapHierarchyWorkspace, DensePseudoinverse,
     FactorAggregation, MultiwayError, Preconditioner, SymmetricMapPreconditioner, ThreeWayProblem,
@@ -263,6 +266,7 @@ fn main() -> Result<()> {
     incremental_hierarchy_allocations::run()?;
     component_layout_allocations::run()?;
     provisional_replay_allocations::run()?;
+    prepared_cycle_quality_allocations::run()?;
     prepared_map_allocations::run()?;
     prepared_cycle_allocations::run()?;
     prepared_pcg_allocations::run()?;
