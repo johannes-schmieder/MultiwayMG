@@ -198,3 +198,63 @@ fn large_terminal_and_excessive_depth_reject_before_factorization() {
         })
     ));
 }
+
+#[test]
+fn ragged_and_relabelled_transitions_use_one_bounded_disjoint_arena()
+-> Result<(), Box<dyn std::error::Error>> {
+    let counts = [7, 4, 3];
+    let tuples: Vec<_> = (0..7)
+        .flat_map(|i| (0..4).flat_map(move |j| (0..3).map(move |k| [i, j, k])))
+        .collect();
+    let topology = PreparedThreeWayTopology::try_from_collapsed(counts, &tuples)?;
+    let weights: Vec<_> = (0..tuples.len())
+        .map(|i| 2f64.powi(i as i32 % 9 - 4))
+        .collect();
+    for relabelled in [false, true] {
+        let first = if relabelled {
+            FactorAggregation::new(
+                counts,
+                [vec![2, 0, 1, 2, 0, 1, 2], vec![1, 0, 1, 0], vec![1, 0, 1]],
+            )?
+        } else {
+            FactorAggregation::consecutive_halving(counts)?
+        };
+        let second = FactorAggregation::consecutive_halving(first.coarse_counts())?;
+        let maps = vec![first, second];
+        let h = PreparedHierarchyTopology::try_new(&topology, maps.clone())?;
+        let fine = ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::Tuples(&weights))?;
+        let frames = HierarchyWeightFrames::try_new(&h, &fine)?;
+        let prepared = PreparedMapHierarchy::try_new(&frames, 1e-12)?;
+        let ordinary = CycleScreenedMapHierarchy::from_maps(
+            ThreeWayProblem::from_observations(counts, &tuples, &weights)?,
+            maps,
+            1e-12,
+        )?;
+        let mut pw = prepared.application_workspace()?;
+        let mut ow = ordinary.application_workspace()?;
+        assert_eq!(
+            pw.retained_payload_bytes()?,
+            prepared.workspace_required_bytes()?
+        );
+        for shift in 0..4 {
+            let rhs: Vec<_> = (0..prepared.dimension())
+                .map(|i| ((i + shift) as f64 * 0.17).cos())
+                .collect();
+            let mut a = vec![f64::NAN; rhs.len()];
+            let mut b = a.clone();
+            prepared.apply_with_workspace(&rhs, &mut a, &mut pw)?;
+            ordinary.apply_with_workspace(&rhs, &mut b, &mut ow)?;
+            bits(&a, &b);
+            let snapshot = a.clone();
+            assert!(
+                prepared
+                    .apply_with_workspace(&vec![f64::MAX; rhs.len()], &mut a, &mut pw)
+                    .is_err()
+            );
+            bits(&a, &snapshot);
+            prepared.apply_with_workspace(&rhs, &mut a, &mut pw)?;
+            bits(&a, &b);
+        }
+    }
+    Ok(())
+}

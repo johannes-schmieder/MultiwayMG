@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5e merged; M5f fused transfer evidence passes |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5f merged; M5g single-arena qualification |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -530,3 +530,41 @@ for measurement, not an implemented layout or selected default.
   retained memory is unchanged and no old/new paired timing gain is claimed.
   Final evidence-head review/CI and PR #51 merge remain before the next
   traversal-arena increment. M5 and M6–M10 remain open.
+
+
+- M5f PR #51 merged as `af3a93a842c613892d8236f511b303df77548ae7`
+  after final source `34078228626`/`34078228676` and PR
+  `34078231161`/`34078231123` workflows passed. Main matches reviewed tree
+  `a4eb615e20ada7aacc0f32b9f93b8fbc0033fa8e`. M5g implements the
+  [single prepared arena](ISSUE5_TRAVERSAL_ARENA.md), including the shared
+  image tail and root transaction buffer. Depth-d savings are `1+4d+image`
+  allocations and `24*(1+4d+image)` descriptor bytes, with all numerical elements
+  unchanged. Two-transition cycle/PCG/LSMR counts are 14/25/31 for every layout.
+  Required Rust1.85 checks and 90 Python tests pass. An initial identity fixture
+  was corrected to use the independent vector storage path because the ordinary
+  constructor requires reduction; its acceptance rule is unchanged. Version2
+  accounting declares no separate image descriptor while retaining frozen v1.
+  Release/protocol checks and source freeze precede regression collection;
+  M5g timing and final qualification remain open.
+
+- M5f post-merge workflows `34078600422`/`34078600434` passed. M5g
+  final required checks and release all/minimal complete solver/allocation gates
+  pass; the release probe passes 120 schema3/v2 comparisons. Historical Mac
+  and Linux M5f v1 artifacts and summaries independently reproduce unchanged.
+  Image-tail lookup is constant-time using nonincreasing mapped tuple counts.
+  Initial failed fixture logs and final passing checks are preserved. Commit
+  this source and v2 policy before the four-artifact regression campaign.
+
+
+- M5g measured source `c40f9e53fcd59b3d0466be6800795a1d16df6432`
+  passes [all four layout artifacts](../benchmarks/results/2026-09-06/prepared-layout-arena-v2/README.md):
+  7,920 processes and 72,300 certified measured columns. All corresponding M5f
+  input/numerical/work/fingerprint records match exactly, with only the derived
+  hierarchy/total descriptor reduction and declared image ABI24-to0. Grouping
+  admission, other payload and level inventory remain exact. No process, timeout,
+  rejection, RSS failure or measured retry occurred. Source
+  `34079679036`/`34079679035` and PR `34079732692`/`34079732651` passed.
+  Exact binary/raw artifacts are independently revalidated and archived with
+  every member rehashed. Final evidence-head CI and PR52 merge remain before
+  certificate-vector liveness. No old/new paired timing gain or layout default
+  is claimed; M5 and M6–M10 remain open.

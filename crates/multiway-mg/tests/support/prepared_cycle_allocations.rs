@@ -29,7 +29,7 @@ pub fn run() -> Result<()> {
     let mut scratch = hierarchy.application_workspace()?;
     let setup = GLOBAL.stats() - before;
     let retained = scratch.retained_payload_bytes()?;
-    assert_eq!(setup.allocations, 23);
+    assert_eq!(setup.allocations, 14);
     assert_eq!(setup.reallocations, 0);
     assert_eq!(setup.deallocations, 0);
     assert_eq!(setup.bytes_allocated, retained);
@@ -75,7 +75,7 @@ pub fn run() -> Result<()> {
     assert_eq!(released.bytes_deallocated, terminal);
     assert_eq!(released.allocations, 0);
     println!(
-        "complete prepared cycle: first/repeat32 and failure/recovery allocations=0; all 23 workspace arrays released exactly"
+        "complete prepared cycle: first/repeat32 and failure/recovery allocations=0; all 14 workspace arrays released exactly"
     );
     Ok(())
 }

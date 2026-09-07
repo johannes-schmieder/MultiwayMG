@@ -3,21 +3,21 @@ import copy
 import json
 import unittest
 import prepared_serial as base
-from prepared_layout import POLICY, FILES, MEMORY_SCOPES, schedule, effective_policy, parse_layout_output
+from prepared_layout import POLICY, schedule, effective_policy, parse_layout_output, POLICY_V1, source_files, memory_scopes
 from validate_prepared_layout import validate_manifest_pair, inventory
 from test_prepared_serial_evidence import fixture
 
 
-def layout_fixture():
+def layout_fixture(policy_path=POLICY):
     old,_,_=fixture(gated=True)
-    policy=json.loads((base.ROOT/POLICY).read_text())
+    policy=json.loads((base.ROOT/policy_path).read_text())
     policy.update(families=['uniform'],weights=['unit'],widths=[1])
     policy['profiles']['smoke']['depth']=2
-    hashes={name:base.sha(name.encode()) for name in FILES}
+    hashes={name:base.sha(name.encode()) for name in source_files(policy_path)}
     meta=copy.deepcopy(old['provenance']);meta.update(source_hashes=hashes,build_args=policy['build_args'])
     children={layout:dict(schema=1,scope=policy['scope'],profile='smoke',policy=policy,
-        layout=layout,policy_path=POLICY,policy_sha256=hashes[POLICY],provenance=meta,
-        memory_scopes=copy.deepcopy(MEMORY_SCOPES),runs=[]) for layout in policy['layouts']}
+        layout=layout,policy_path=policy_path,policy_sha256=hashes[policy_path],provenance=meta,
+        memory_scopes=copy.deepcopy(memory_scopes(policy)),runs=[]) for layout in policy['layouts']}
     manifest=dict(schema=1,scope='prepared_layout_pairing',policy=policy,profile='smoke',
         source_commit=meta['source_commit'],source_hashes=hashes,trace=[],total_ns=1)
     for attempt,(layout,index,case,kind,repeat,position,route) in enumerate(schedule(policy)):
@@ -32,13 +32,13 @@ def layout_fixture():
         retained=64*prefix+sum(8*(v+3)+8*e for e,v in levels[:prefix])
         image=dims['tuples'] if layout.endswith('image') else 0
         payload=p['payload_bytes'];payload['caller_arrays']=12*dims['tuples']+8*(2*dims['tuples']+dims['coefficients'])
-        payload['grouping']=retained;payload['hierarchy_workspace']=1000+8*image+(24 if image else 0)
+        payload['grouping']=retained;payload['hierarchy_workspace']=1000+8*image+(policy['layout_abi']['image_descriptor_bytes'] if image else 0)
         payload['total']=sum(v for k,v in payload.items() if k!='total')
         live=payload['caller_arrays']-8*dims['coefficients']+3000+64*prefix;peak=live
         for e,v in levels[:prefix]:
             array=8*(v+3)+8*e;peak=max(peak,live+array+8*(v//3));live+=array
         p['layout']=dict(name=layout,prefix=prefix,usize_bytes=8,group_descriptor_bytes=64,
-            image_descriptor_bytes=24,record_bytes=32768,retained=retained,
+            image_descriptor_bytes=policy['layout_abi']['image_descriptor_bytes'],record_bytes=32768,retained=retained,
             setup_bound=max(peak,live) if prefix else 0,image_len=image)
         p['layout_levels']=[dict(tuples=e,coefficients=v,index_bytes=4 if i<prefix else 0) for i,(e,v) in enumerate(levels)]
         children[layout]['runs'].append(run)
@@ -50,6 +50,16 @@ class LayoutTests(unittest.TestCase):
     def setUp(self):self.args=layout_fixture()
     def validate(self):return validate_manifest_pair(*self.args)
     def probe(self):return self.args[1]['all-image']['runs'][0]['probe']
+    def test_old_descriptor_and_new_arena_policies_remain_distinct_and_valid(self):
+        for path,descriptor in [(POLICY_V1,24),(POLICY,0)]:
+            self.args=layout_fixture(path)
+            self.assertTrue(self.validate()['complete_layout_gate_passed'])
+            self.assertEqual(self.probe()['layout']['image_descriptor_bytes'],descriptor)
+            self.probe()['layout']['image_descriptor_bytes']=24-descriptor
+            with self.assertRaises(ValueError):self.validate()
+    def test_unknown_revision_is_rejected(self):
+        self.args[2]['revision']=3
+        with self.assertRaises(ValueError):self.validate()
     def test_complete_gate_still_selects_no_default_or_competitive_claim(self):
         r=self.validate();self.assertTrue(r['complete_layout_gate_passed'])
         self.assertEqual(r['processes'],60);self.assertEqual(r['paired_processes_compared'],48)
@@ -71,7 +81,7 @@ class LayoutTests(unittest.TestCase):
             with self.assertRaises(ValueError):self.validate()
     def test_live_cursor_peak_and_grouping_bytes_cannot_disappear(self):
         for key in ['setup_bound','retained','group_descriptor_bytes','image_descriptor_bytes']:
-            self.setUp();self.probe()['layout'][key]=0
+            self.setUp();self.probe()['layout'][key]=24 if key=='image_descriptor_bytes' else 0
             with self.assertRaises(ValueError):self.validate()
     def test_image_payload_and_unrelated_workspace_cannot_be_hidden(self):
         for key in ['hierarchy_workspace','outer_workspace','fine_topology']:

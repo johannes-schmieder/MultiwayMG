@@ -11,16 +11,29 @@ import time
 import prepared_serial as base
 
 ROOT = base.ROOT
-POLICY = 'benchmarks/policies/prepared-layout-v1.json'
-FILES = base.SOURCE_FILES + [POLICY, 'scripts/prepared_layout.py',
+POLICY_V1 = 'benchmarks/policies/prepared-layout-v1.json'
+POLICY = 'benchmarks/policies/prepared-layout-v2.json'
+def source_files(policy_path):
+    return base.SOURCE_FILES + [policy_path, 'scripts/prepared_layout.py',
     'scripts/validate_prepared_layout.py',
     'crates/multiway-mg/examples/support/prepared_layout.rs']
+FILES = source_files(POLICY)
+
+def policy_path_for(policy):
+    paths={1:POLICY_V1,2:POLICY}
+    if type(policy['revision']) is not int or policy['revision'] not in paths:
+        raise ValueError('unknown layout policy revision')
+    return paths[policy['revision']]
 PHASES = base.PHASES[:4] + ['grouping'] + base.PHASES[4:]
 PAYLOAD = base.PAYLOAD[:-1] + ['grouping', 'total']
-MEMORY_SCOPES = dict(base.MEMORY_SCOPES,
+MEMORY_SCOPES_V1 = dict(base.MEMORY_SCOPES,
     grouping='separate structural owner; requested setup peak includes all live input/fine-frame/structural arrays and one current cursor',
     tuple_image='one maximum-E vector and descriptor per explicit image workspace; no image for scalar/rows',
     benchmark_record='fixed inline record size is reported; stack copies, alignment and allocator metadata remain unmeasured')
+MEMORY_SCOPES = dict(MEMORY_SCOPES_V1,tuple_image='one maximum-E slice inside the shared result/traversal/image arena; no separate descriptor or allocation')
+
+def memory_scopes(policy):
+    return MEMORY_SCOPES_V1 if policy_path_for(policy)==POLICY_V1 else MEMORY_SCOPES
 
 def effective_policy(policy, profile):
     result = copy.deepcopy(policy)
