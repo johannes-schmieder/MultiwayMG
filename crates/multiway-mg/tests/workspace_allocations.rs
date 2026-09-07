@@ -5,6 +5,8 @@
 mod fixtures;
 #[path = "support/grouped_allocations.rs"]
 mod grouped_allocations;
+#[path = "support/grouped_hierarchy_allocations.rs"]
+mod grouped_hierarchy_allocations;
 #[path = "support/hierarchy_owner_allocations.rs"]
 mod hierarchy_owner_allocations;
 #[cfg(feature = "lsmr")]
@@ -244,6 +246,7 @@ fn main() -> Result<()> {
     weight_replay_allocations::run()?;
     operator_view_allocations::run()?;
     grouped_allocations::run()?;
+    grouped_hierarchy_allocations::run()?;
     hierarchy_owner_allocations::run()?;
     prepared_map_allocations::run()?;
     prepared_cycle_allocations::run()?;

@@ -20,11 +20,12 @@ remains the control. Instrumented shares do not establish layout speedups, and
 the current expansion still does not measure large out-of-cache/SCC behavior.
 
 [M5c primitives](ISSUE5_GROUPED_KERNELS.md) implement the grouping owner, stable
-operator alternatives and grouped MAP. Full hierarchy ownership/workspace
-integration and paired layout measurement remain the next boundary.
+operator alternatives and grouped MAP. [M5d complete integration](ISSUE5_GROUPED_HIERARCHY.md)
+adds explicit hierarchy grouping with shared image scratch; paired layout
+measurement remains the next boundary.
 
 A tuple image is consumed within one Gramian, before any recursive child action.
-M5d should reserve one shared maximum-E image per complete hierarchy workspace,
+M5d reserves one shared maximum-E image per complete hierarchy workspace,
 reused by every selected level and the outer PCG action; panel reuse later needs
 one E*K image per active workspace. Preserve scalar capacities by adding the
 image descriptor only for that explicit mode.

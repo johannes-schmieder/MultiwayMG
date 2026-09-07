@@ -114,6 +114,26 @@ pub enum MultiwayError {
         /// Numerical breakdown description.
         message: String,
     },
+    /// Allocation-free scalar breakdown from the shared untraced PCG recurrence.
+    #[error("PCG breakdown at iteration {iteration}: {context} is {value}")]
+    PcgMetricBreakdown {
+        /// Number of completed iterations before the breakdown.
+        iteration: usize,
+        /// Failed scalar quantity.
+        context: &'static str,
+        /// Nonpositive or non-finite value that caused the failure.
+        value: f64,
+    },
+    /// Allocation-free non-finite vector or norm diagnostic from untraced PCG.
+    #[error("PCG breakdown at iteration 0: {context} entry {index} is non-finite: {value}")]
+    PcgNonFinite {
+        /// Failed numerical boundary.
+        context: &'static str,
+        /// First non-finite entry, or zero for a scalar norm.
+        index: usize,
+        /// Non-finite value that caused the failure.
+        value: f64,
+    },
     /// A caller-owned workspace size or byte count overflowed.
     #[error("workspace size overflow in {context}")]
     WorkspaceSizeOverflow {
@@ -147,5 +167,59 @@ pub(crate) fn dimension(context: &'static str, expected: usize, actual: usize) -
         context,
         expected,
         actual,
+    }
+}
+
+// The ordinary owning API preserves its historical allocating error variant and
+// text. Prepared execution returns the structured variants without formatting.
+pub(crate) fn ordinary_pcg_error(error: MultiwayError) -> MultiwayError {
+    match error {
+        MultiwayError::PcgMetricBreakdown {
+            iteration,
+            context,
+            value,
+        } => MultiwayError::PcgBreakdown {
+            iteration,
+            message: format!("{context} is {value}"),
+        },
+        MultiwayError::PcgNonFinite {
+            context,
+            index,
+            value,
+        } => MultiwayError::PcgBreakdown {
+            iteration: 0,
+            message: format!("{context} entry {index} is non-finite: {value}"),
+        },
+        other => other,
+    }
+}
+
+#[cfg(test)]
+mod pcg_error_tests {
+    use super::*;
+    #[test]
+    fn ordinary_diagnostic_adapter_preserves_historical_variant_and_text() {
+        let error = ordinary_pcg_error(MultiwayError::PcgMetricBreakdown {
+            iteration: 3,
+            context: "search-direction curvature",
+            value: -2.0,
+        });
+        assert!(
+            matches!(error, MultiwayError::PcgBreakdown { iteration: 3, ref message }
+            if message == "search-direction curvature is -2")
+        );
+        let error = ordinary_pcg_error(MultiwayError::PcgNonFinite {
+            context: "PCG norm",
+            index: 0,
+            value: f64::INFINITY,
+        });
+        assert!(
+            matches!(error, MultiwayError::PcgBreakdown { iteration: 0, ref message }
+            if message == "PCG norm entry 0 is non-finite: inf")
+        );
+        assert!(matches!(
+            ordinary_pcg_error(MultiwayError::PayloadInventoryMismatch),
+            MultiwayError::PayloadInventoryMismatch
+        ));
     }
 }

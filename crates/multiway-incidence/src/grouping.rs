@@ -96,9 +96,8 @@ impl<'topology> PreparedTupleGrouping<'topology> {
         maximum_payload_bytes: usize,
         additional_live_payload_bytes: usize,
     ) -> Result<Self, IncidenceError> {
-        Self::build_with(
+        Self::build_with_hook(
             topology,
-            choose_width(topology.topology().tuple_count()),
             maximum_payload_bytes,
             additional_live_payload_bytes,
             &mut |_| Ok(()),
@@ -130,6 +129,24 @@ impl<'topology> PreparedTupleGrouping<'topology> {
             topology,
             choose_width(topology.topology().tuple_count()),
             additional_live_payload_bytes,
+        )
+    }
+
+    pub(crate) fn build_with_hook<F>(
+        topology: &'topology PreparedThreeWayTopology,
+        maximum_payload_bytes: usize,
+        additional_live_payload_bytes: usize,
+        before: &mut F,
+    ) -> Result<Self, IncidenceError>
+    where
+        F: FnMut(&'static str) -> Result<(), IncidenceError>,
+    {
+        Self::build_with(
+            topology,
+            choose_width(topology.topology().tuple_count()),
+            maximum_payload_bytes,
+            additional_live_payload_bytes,
+            before,
         )
     }
 

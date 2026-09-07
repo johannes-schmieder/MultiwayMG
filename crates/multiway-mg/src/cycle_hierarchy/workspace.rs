@@ -226,7 +226,10 @@ impl CycleScreenedMapHierarchy {
             solution,
             scratch,
             operator_levels,
-            terminal,
+            &mut cycle_kernel::CycleSharedScratch {
+                terminal,
+                image: &mut [],
+            },
         )
     }
 }
@@ -337,6 +340,7 @@ impl CycleActions for CycleScreenedMapHierarchy {
         rhs: &[f64],
         x: &[f64],
         out: &mut [f64],
+        _image: &mut [f64],
     ) -> Result<(), MultiwayError> {
         self.problems[level].residual_into(rhs, x, out)?;
         Ok(())

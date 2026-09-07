@@ -169,14 +169,16 @@ pub fn solve_projected_pcg<P: Preconditioner + ?Sized>(
         ));
     }
 
-    crate::pcg_kernel::ensure_finite("PCG right-hand side", rhs)?;
+    crate::pcg_kernel::ensure_finite("PCG right-hand side", rhs)
+        .map_err(crate::error::ordinary_pcg_error)?;
     let mut storage = crate::pcg_kernel::PcgStorage::try_new(dimension)?;
     let mut actions = OrdinaryPcgActions {
         problem,
         preconditioner,
         projection: problem.components().try_projection_workspace()?,
     };
-    let diagnostics = crate::pcg_kernel::solve(&mut actions, rhs, options, &mut storage)?;
+    let diagnostics = crate::pcg_kernel::solve(&mut actions, rhs, options, &mut storage)
+        .map_err(crate::error::ordinary_pcg_error)?;
     Ok(PcgResult {
         solution: storage.solution,
         iterations: diagnostics.iterations,

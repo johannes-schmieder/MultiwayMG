@@ -163,6 +163,7 @@ impl<'owner> PreparedPcgWorkspace<'owner> {
             fine.retained_payload_bytes()?,
             frames.retained_payload_bytes()?,
             hierarchy.retained_payload_bytes()?,
+            hierarchy.grouping_payload_bytes()?,
             hierarchy.workspace_required_bytes()?,
             fine.topology().projection_workspace_required_bytes()?,
             PreparedCertificateWorkspace::required_payload_bytes(fine)?,
@@ -257,8 +258,14 @@ pub fn solve_prepared_pcg_least_squares<'workspace>(
     ensure_finite(targets, "prepared PCG targets")?;
     workspace.last_work = PreparedPcgWorkReport::default();
     workspace.last_work.rhs_adjoint_applications = 1;
-    fine.operator_view()
-        .rhs_from_targets_into(targets, &mut workspace.rhs)?;
+    let original = fine.operator_view();
+    if let Some(grouping) = hierarchy.level_grouping(0) {
+        original
+            .with_grouping(grouping)?
+            .rhs_from_targets_into(targets, &mut workspace.rhs)?;
+    } else {
+        original.rhs_from_targets_into(targets, &mut workspace.rhs)?;
+    }
     pcg_kernel::ensure_finite("PCG right-hand side", &workspace.rhs)?;
     let mut actions = PreparedPcgActions {
         view: fine.operator_view(),
@@ -374,12 +381,24 @@ impl PcgActions for PreparedPcgActions<'_, '_> {
     }
     fn gramian(&mut self, x: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
         self.work.gramian_applications += 1;
-        self.view.apply_gramian(x, out)?;
+        self.hierarchy
+            .fine_gramian_with_workspace(x, out, self.hierarchy_scratch)?;
         Ok(())
     }
     fn residual(&mut self, rhs: &[f64], x: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
         self.work.gramian_applications += 1;
-        self.view.residual_into(rhs, x, out)?;
+        if rhs.len() != self.view.dimension() {
+            return Err(crate::error::dimension(
+                "prepared PCG residual RHS",
+                self.view.dimension(),
+                rhs.len(),
+            ));
+        }
+        self.hierarchy
+            .fine_gramian_with_workspace(x, out, self.hierarchy_scratch)?;
+        for (value, &right) in out.iter_mut().zip(rhs) {
+            *value = right - *value;
+        }
         Ok(())
     }
 }

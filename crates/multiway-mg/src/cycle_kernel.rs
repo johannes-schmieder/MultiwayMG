@@ -3,6 +3,13 @@ use crate::{DensePseudoinverseWorkspace, MultiwayError};
 
 pub(crate) const FRAME_BUFFERS: usize = 4;
 
+// Neither modal terminal scratch nor the tuple image is live across another
+// operator action. One shared image is reborrowed throughout recursion.
+pub(crate) struct CycleSharedScratch<'a> {
+    pub(crate) terminal: &'a mut DensePseudoinverseWorkspace,
+    pub(crate) image: &'a mut [f64],
+}
+
 pub(crate) trait CycleActions {
     type LevelScratch;
     fn level_count(&self) -> usize;
@@ -26,6 +33,7 @@ pub(crate) trait CycleActions {
         rhs: &[f64],
         x: &[f64],
         out: &mut [f64],
+        image: &mut [f64],
     ) -> Result<(), MultiwayError>;
     fn restrict(&self, level: usize, fine: &[f64], coarse: &mut [f64])
     -> Result<(), MultiwayError>;
@@ -46,7 +54,7 @@ pub(crate) fn apply_level<A: CycleActions>(
     solution: &mut [f64],
     scratch: &mut [Vec<f64>],
     operator_levels: &mut [A::LevelScratch],
-    terminal: &mut DensePseudoinverseWorkspace,
+    shared: &mut CycleSharedScratch<'_>,
 ) -> Result<(), MultiwayError> {
     #[cfg(feature = "profiling")]
     let _profile_span =
@@ -63,7 +71,7 @@ pub(crate) fn apply_level<A: CycleActions>(
         .split_first_mut()
         .expect("prepared operator level");
     if level + 1 == actions.level_count() {
-        actions.terminal(rhs, solution, terminal)?;
+        actions.terminal(rhs, solution, shared.terminal)?;
         actions.project(level, solution, state)?;
         return Ok(());
     }
@@ -74,7 +82,7 @@ pub(crate) fn apply_level<A: CycleActions>(
     compatible_rhs.copy_from_slice(rhs);
     actions.project(level, compatible_rhs, state)?;
     actions.smooth(level, compatible_rhs, solution, state)?;
-    actions.residual(level, compatible_rhs, solution, residual)?;
+    actions.residual(level, compatible_rhs, solution, residual, shared.image)?;
     actions.restrict(level, residual, coarse_rhs)?;
     actions.project(level + 1, coarse_rhs, &mut children[0])?;
     apply_level(
@@ -84,13 +92,13 @@ pub(crate) fn apply_level<A: CycleActions>(
         coarse_solution,
         child_scratch,
         children,
-        terminal,
+        shared,
     )?;
     // The pre-residual is dead after restriction. Reuse its storage for the
     // prolongated correction, then overwrite it with the post-residual.
     actions.prolong(level, coarse_solution, residual)?;
     add_assign(solution, residual);
-    actions.residual(level, compatible_rhs, solution, residual)?;
+    actions.residual(level, compatible_rhs, solution, residual, shared.image)?;
     // The compatible RHS dies after that residual. The post smoother copies
     // its input into private scratch before publishing its correction here.
     actions.smooth(level, residual, compatible_rhs, state)?;

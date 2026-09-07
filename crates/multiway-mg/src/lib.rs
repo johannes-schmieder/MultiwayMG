@@ -148,8 +148,8 @@ pub use pcg_trace::{
 };
 pub use preconditioner::Preconditioner;
 pub use prepared_hierarchy::{
-    PREPARED_DENSE_TERMINAL_LIMIT, PREPARED_HIERARCHY_LEVEL_LIMIT, PreparedHierarchyPayloadReport,
-    PreparedHierarchyWorkspace, PreparedMapHierarchy,
+    GroupedGramianMode, PREPARED_DENSE_TERMINAL_LIMIT, PREPARED_HIERARCHY_LEVEL_LIMIT,
+    PreparedHierarchyPayloadReport, PreparedHierarchyWorkspace, PreparedMapHierarchy,
 };
 pub use prepared_pcg::{
     PreparedPcgOptions, PreparedPcgPayloadReport, PreparedPcgReport, PreparedPcgResult,

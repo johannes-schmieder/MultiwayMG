@@ -146,8 +146,10 @@ validated attribution and level inventory for larger development inputs. Its
 pass complete accounting/certification and prioritize grouped MAP/Gramian trials.
 Instrumented times are diagnostic. [Stable grouped kernels](ISSUE5_GROUPED_KERNELS.md)
 now provide explicit row-gather/tuple-image operators and grouped MAP with the
-same arithmetic and scratch. Complete-solve integration and measured layout
-selection remain M5 work. The [preserved scalar baselines](../benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
+same arithmetic and scratch. [Explicit complete grouped hierarchies](ISSUE5_GROUPED_HIERARCHY.md)
+now connect them to prepared PCG and native/gated LSMR, with one shared optional
+image and separate grouping admission. Paired measurement and layout selection
+remain M5 work. The [preserved scalar baselines](../benchmarks/results/2026-09-06/prepared-serial-m5c-scalar/README.md)
 retain exact M5a numerical/work/payload results on Mac and Linux.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

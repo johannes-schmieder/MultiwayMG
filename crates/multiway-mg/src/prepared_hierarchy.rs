@@ -5,7 +5,8 @@ use crate::{
     cycle_kernel::{self, CycleActions, FRAME_BUFFERS},
 };
 use multiway_incidence::{
-    HierarchyWeightFrames, PreparedStructuralProjectionWorkspace, ThreeWayWeightFrame,
+    HierarchyWeightFrames, PreparedHierarchyGrouping, PreparedStructuralProjectionWorkspace,
+    PreparedTupleGrouping, ThreeWayWeightFrame,
 };
 
 /// Hard bound for this serial prototype's whole dense terminal.
@@ -13,6 +14,16 @@ use multiway_incidence::{
 pub const PREPARED_DENSE_TERMINAL_LIMIT: usize = 256;
 /// Hard bound on recursive call depth, including the fine and terminal levels.
 pub const PREPARED_HIERARCHY_LEVEL_LIMIT: usize = 64;
+
+/// Explicit Gramian arithmetic for selected grouped hierarchy levels.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GroupedGramianMode {
+    /// Stable row gather with no tuple-image scratch.
+    RowGather,
+    /// Compute a weighted tuple image once, then gather it by row.
+    /// One maximum-E image is shared by all levels and outer PCG actions.
+    TupleImage,
+}
 
 /// One immutable fixed symmetric V-cycle for the exact current numerical frames.
 ///
@@ -22,10 +33,30 @@ pub const PREPARED_HIERARCHY_LEVEL_LIMIT: usize = 64;
 /// admits at most 64 levels and a whole terminal of at most 256 coefficients
 /// before dense assembly. This is supplied-map execution, not automatic quality
 /// admission or permission to reuse an old factorization for changed weights.
+///
+/// ```compile_fail
+/// use multiway_incidence::{PreparedThreeWayTopology, PreparedHierarchyTopology,
+///     PreparedHierarchyGrouping, HierarchyWeightFrames, ThreeWayWeightFrame, WeightFrameInput};
+/// use multiway_mg::{PreparedMapHierarchy, GroupedGramianMode};
+/// let t = PreparedThreeWayTopology::try_from_collapsed([1;3], &[[0;3]]).unwrap();
+/// let h = PreparedHierarchyTopology::try_new(&t, vec![]).unwrap();
+/// let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples).unwrap();
+/// let frames = HierarchyWeightFrames::try_new(&h, &f).unwrap();
+/// let numerical = {
+///     let groups = PreparedHierarchyGrouping::try_new(&h, 0).unwrap();
+///     PreparedMapHierarchy::try_new_with_grouping(
+///         &frames, &groups, GroupedGramianMode::RowGather, 1e-12).unwrap()
+/// };
+/// assert_eq!(numerical.dimension(), 3);
+/// ```
 #[derive(Debug)]
 pub struct PreparedMapHierarchy<'state> {
     frames: &'state HierarchyWeightFrames<'state, 'state, 'state>,
     terminal: DensePseudoinverse,
+    grouping: Option<(
+        &'state PreparedHierarchyGrouping<'state, 'state>,
+        GroupedGramianMode,
+    )>,
 }
 
 /// Complete caller-owned scratch bound to an exact numerical hierarchy owner.
@@ -79,7 +110,9 @@ pub struct PreparedHierarchyPayloadReport {
     pub coarse_frame_payload_bytes: usize,
     /// Dense spectral factors and inverse eigenvalues.
     pub terminal_payload_bytes: usize,
-    /// Caller-owned traversal, projection, MAP and modal scratch plus descriptors.
+    /// Borrowed optional grouping arrays/descriptors, counted once at that owner.
+    pub grouping_payload_bytes: usize,
+    /// Caller-owned traversal, projection, MAP, optional shared image and modal scratch plus descriptors.
     pub workspace_payload_bytes: usize,
     /// Other live array payload explicitly declared by the caller.
     pub additional_live_payload_bytes: usize,
@@ -98,6 +131,32 @@ impl<'state> PreparedMapHierarchy<'state> {
         frames: &'state HierarchyWeightFrames<'_, '_, '_>,
         relative_tolerance: f64,
     ) -> Result<Self, MultiwayError> {
+        Self::build(frames, relative_tolerance, None)
+    }
+
+    /// Build with an explicit structural grouping and Gramian mode.
+    ///
+    /// Exact structural identity is checked before terminal construction. Groups
+    /// may be shared across weight replays; the terminal always uses these current
+    /// numerical frames. A zero-prefix grouping executes scalar actions. No
+    /// automatic layout, fallback or stale numerical reuse is introduced.
+    pub fn try_new_with_grouping(
+        frames: &'state HierarchyWeightFrames<'_, '_, '_>,
+        grouping: &'state PreparedHierarchyGrouping<'_, '_>,
+        mode: GroupedGramianMode,
+        relative_tolerance: f64,
+    ) -> Result<Self, MultiwayError> {
+        grouping.validate_for(frames.hierarchy())?;
+        Self::build(frames, relative_tolerance, Some((grouping, mode)))
+    }
+    fn build(
+        frames: &'state HierarchyWeightFrames<'_, '_, '_>,
+        relative_tolerance: f64,
+        grouping: Option<(
+            &'state PreparedHierarchyGrouping<'state, 'state>,
+            GroupedGramianMode,
+        )>,
+    ) -> Result<Self, MultiwayError> {
         if frames.level_count() > PREPARED_HIERARCHY_LEVEL_LIMIT {
             return Err(MultiwayError::InvalidOption {
                 name: "prepared_hierarchy_levels",
@@ -115,13 +174,53 @@ impl<'state> PreparedMapHierarchy<'state> {
             });
         }
         let terminal = DensePseudoinverse::from_frame(last, relative_tolerance)?;
-        Ok(Self { frames, terminal })
+        Ok(Self {
+            frames,
+            terminal,
+            grouping,
+        })
     }
 
     /// Exact borrowed immutable numerical replay owner.
     #[must_use]
     pub const fn frames(&self) -> &'state HierarchyWeightFrames<'state, 'state, 'state> {
         self.frames
+    }
+    /// Optional borrowed structural grouping, with no numerical state inside it.
+    #[must_use]
+    pub fn grouping(&self) -> Option<&'state PreparedHierarchyGrouping<'state, 'state>> {
+        self.grouping.map(|(g, _)| g)
+    }
+    /// Explicit requested Gramian mode; None denotes scalar execution.
+    #[must_use]
+    pub fn grouped_gramian_mode(&self) -> Option<GroupedGramianMode> {
+        self.grouping.map(|(_, mode)| mode)
+    }
+    /// Actual borrowed grouping payload, charged separately from this owner's terminal.
+    pub fn grouping_payload_bytes(&self) -> Result<usize, MultiwayError> {
+        self.grouping()
+            .map_or(Ok(0), |g| Ok(g.retained_payload_bytes()?))
+    }
+    /// Selected level grouping; terminal and unselected levels return None.
+    pub(crate) fn level_grouping(&self, level: usize) -> Option<&PreparedTupleGrouping<'_>> {
+        self.grouping().and_then(|g| g.level(level))
+    }
+    /// Maximum tuple-image length shared across all selected levels; zero in other modes.
+    #[must_use]
+    pub fn tuple_image_len(&self) -> usize {
+        if self.grouped_gramian_mode() != Some(GroupedGramianMode::TupleImage) {
+            return 0;
+        }
+        (0..self.grouping().expect("grouped mode").grouped_levels())
+            .map(|level| self.frame_at(level).weights().len())
+            .max()
+            .unwrap_or(0)
+    }
+    fn complete_buffer_count(&self) -> Result<usize, MultiwayError> {
+        add(
+            buffer_count(self.depth())?,
+            usize::from(self.tuple_image_len() > 0),
+        )
     }
     /// Fine coefficient dimension.
     #[must_use]
@@ -146,10 +245,11 @@ impl<'state> PreparedMapHierarchy<'state> {
     /// Requested exclusive payload for a fresh complete application workspace.
     pub fn workspace_required_bytes(&self) -> Result<usize, MultiwayError> {
         let mut total = add(
-            bytes::<Vec<f64>>(buffer_count(self.depth())?)?,
+            bytes::<Vec<f64>>(self.complete_buffer_count()?)?,
             bytes::<LevelScratch<'_>>(self.frames.level_count())?,
         )?;
         total = add(total, bytes::<f64>(self.dimension())?)?;
+        total = add(total, bytes::<f64>(self.tuple_image_len())?)?;
         total = add(total, self.terminal.workspace_required_bytes()?)?;
         for level in 0..self.frames.level_count() {
             let frame = self.frame_at(level);
@@ -206,10 +306,10 @@ impl<'state> PreparedMapHierarchy<'state> {
         }
         workspace.validate_for(self)?;
         finite(rhs, "prepared hierarchy rhs")?;
-        let (solution, scratch) = workspace
-            .buffers
-            .split_first_mut()
-            .expect("prepared result buffer");
+        let base_count = buffer_count(self.depth())?;
+        let (traversal, images) = workspace.buffers.split_at_mut(base_count);
+        let image = images.first_mut().map_or(&mut [][..], Vec::as_mut_slice);
+        let (solution, scratch) = traversal.split_first_mut().expect("prepared result buffer");
         cycle_kernel::apply_level(
             workspace.owner,
             0,
@@ -217,7 +317,10 @@ impl<'state> PreparedMapHierarchy<'state> {
             solution,
             scratch,
             &mut workspace.levels,
-            &mut workspace.terminal,
+            &mut cycle_kernel::CycleSharedScratch {
+                terminal: &mut workspace.terminal,
+                image,
+            },
         )?;
         finite(solution, "prepared hierarchy solution")?;
         output.copy_from_slice(solution);
@@ -237,6 +340,50 @@ impl<'state> PreparedMapHierarchy<'state> {
         Ok(())
     }
 
+    // Reuse the one hierarchy image for outer PCG; it is dead between actions.
+    pub(crate) fn fine_gramian_with_workspace(
+        &self,
+        x: &[f64],
+        out: &mut [f64],
+        workspace: &mut PreparedHierarchyWorkspace<'_>,
+    ) -> Result<(), MultiwayError> {
+        workspace.validate_for(self)?;
+        let base = buffer_count(self.depth())?;
+        let image = workspace
+            .buffers
+            .get_mut(base)
+            .map_or(&mut [][..], Vec::as_mut_slice);
+        self.gramian_at(0, x, out, image)
+    }
+    fn gramian_at(
+        &self,
+        level: usize,
+        x: &[f64],
+        out: &mut [f64],
+        image: &mut [f64],
+    ) -> Result<(), MultiwayError> {
+        let original = self.frame_at(level).operator_view();
+        if let Some(grouping) = self.level_grouping(level) {
+            let grouped = original.with_grouping(grouping)?;
+            if self.grouped_gramian_mode() == Some(GroupedGramianMode::TupleImage) {
+                let required = original.tuple_count();
+                if image.len() < required {
+                    return Err(crate::error::dimension(
+                        "shared hierarchy tuple image",
+                        required,
+                        image.len(),
+                    ));
+                }
+                grouped.apply_gramian_with_image(x, out, &mut image[..required])?;
+            } else {
+                grouped.apply_gramian(x, out)?;
+            }
+        } else {
+            original.apply_gramian(x, out)?;
+        }
+        Ok(())
+    }
+
     /// Count every direct retained owner and declared other live payload once.
     pub fn payload_report(
         &self,
@@ -250,6 +397,7 @@ impl<'state> PreparedMapHierarchy<'state> {
             fine_frame_payload_bytes: self.frames.fine().retained_payload_bytes()?,
             coarse_frame_payload_bytes: self.frames.retained_payload_bytes()?,
             terminal_payload_bytes: self.retained_payload_bytes()?,
+            grouping_payload_bytes: self.grouping_payload_bytes()?,
             workspace_payload_bytes: workspace.retained_payload_bytes()?,
             additional_live_payload_bytes,
             total_payload_bytes: 0,
@@ -260,6 +408,7 @@ impl<'state> PreparedMapHierarchy<'state> {
             report.fine_frame_payload_bytes,
             report.coarse_frame_payload_bytes,
             report.terminal_payload_bytes,
+            report.grouping_payload_bytes,
             report.workspace_payload_bytes,
             additional_live_payload_bytes,
         ] {
@@ -282,7 +431,7 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
         F: FnMut(&'static str) -> Result<(), MultiwayError>,
     {
         owner.workspace_required_bytes()?;
-        let mut buffers = reserve(buffer_count(owner.depth())?, before)?;
+        let mut buffers = reserve(owner.complete_buffer_count()?, before)?;
         buffers.push(vector(owner.dimension(), before)?);
         let mut levels = reserve(owner.frames.level_count(), before)?;
         for level in 0..owner.frames.level_count() {
@@ -300,6 +449,9 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
                 None
             };
             levels.push(LevelScratch { projection, map });
+        }
+        if owner.tuple_image_len() > 0 {
+            buffers.push(vector(owner.tuple_image_len(), before)?);
         }
         before("prepared cycle terminal workspace")?;
         Ok(Self {
@@ -365,11 +517,14 @@ impl<'state> CycleActions for PreparedMapHierarchy<'state> {
         out: &mut [f64],
         scratch: &mut Self::LevelScratch,
     ) -> Result<(), MultiwayError> {
-        PreparedSymmetricMap::new(self.frame_at(level)).apply_with_workspace(
-            rhs,
-            out,
-            scratch.map.as_mut().expect("prepared MAP level"),
-        )
+        let map = PreparedSymmetricMap::new(self.frame_at(level));
+        let workspace = scratch.map.as_mut().expect("prepared MAP level");
+        if let Some(grouping) = self.level_grouping(level) {
+            map.with_grouping(grouping)?
+                .apply_with_workspace(rhs, out, workspace)
+        } else {
+            map.apply_with_workspace(rhs, out, workspace)
+        }
     }
     fn residual(
         &self,
@@ -377,10 +532,19 @@ impl<'state> CycleActions for PreparedMapHierarchy<'state> {
         rhs: &[f64],
         x: &[f64],
         out: &mut [f64],
+        image: &mut [f64],
     ) -> Result<(), MultiwayError> {
-        self.frame_at(level)
-            .operator_view()
-            .residual_into(rhs, x, out)?;
+        if rhs.len() != self.frame_at(level).diagonal().len() {
+            return Err(crate::error::dimension(
+                "prepared grouped residual RHS",
+                self.frame_at(level).diagonal().len(),
+                rhs.len(),
+            ));
+        }
+        self.gramian_at(level, x, out, image)?;
+        for (value, &right) in out.iter_mut().zip(rhs) {
+            *value = right - *value;
+        }
         finite(out, "prepared hierarchy residual")
     }
     fn restrict(
@@ -490,47 +654,65 @@ mod tests {
         .unwrap();
         let fine = ThreeWayWeightFrame::try_new(&topology, WeightFrameInput::UnitTuples).unwrap();
         let frames = HierarchyWeightFrames::try_new(&structural, &fine).unwrap();
-        let hierarchy = PreparedMapHierarchy::try_new(&frames, 1e-12).unwrap();
-        let mut old = hierarchy.application_workspace().unwrap();
-        let rhs = [1.0; 12];
-        let mut expected = [0.0; 12];
-        hierarchy
-            .apply_with_workspace(&rhs, &mut expected, &mut old)
+        let groups = PreparedHierarchyGrouping::try_new(&structural, 2).unwrap();
+        for hierarchy in [
+            PreparedMapHierarchy::try_new(&frames, 1e-12).unwrap(),
+            PreparedMapHierarchy::try_new_with_grouping(
+                &frames,
+                &groups,
+                GroupedGramianMode::RowGather,
+                1e-12,
+            )
+            .unwrap(),
+            PreparedMapHierarchy::try_new_with_grouping(
+                &frames,
+                &groups,
+                GroupedGramianMode::TupleImage,
+                1e-12,
+            )
+            .unwrap(),
+        ] {
+            let mut old = hierarchy.application_workspace().unwrap();
+            let rhs = [1.0; 12];
+            let mut expected = [0.0; 12];
+            hierarchy
+                .apply_with_workspace(&rhs, &mut expected, &mut old)
+                .unwrap();
+            let mut calls = 0;
+            PreparedHierarchyWorkspace::build_with(&hierarchy, &mut |_| {
+                calls += 1;
+                Ok(())
+            })
             .unwrap();
-        let mut calls = 0;
-        PreparedHierarchyWorkspace::build_with(&hierarchy, &mut |_| {
-            calls += 1;
-            Ok(())
-        })
-        .unwrap();
-        assert_eq!(calls, 23);
-        for unwind in [false, true] {
-            for fail_at in 0..calls {
-                let mut reached = 0;
-                let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-                    PreparedHierarchyWorkspace::build_with(&hierarchy, &mut |context| {
-                        reached += 1;
-                        if reached == fail_at + 1 {
-                            assert!(!unwind, "injected complete cycle setup unwind");
-                            return Err(MultiwayError::WorkspaceNotPrepared { context });
-                        }
-                        Ok(())
-                    })
-                }));
-                assert_eq!(reached, fail_at + 1);
-                if unwind {
-                    assert!(result.is_err());
-                } else {
-                    assert!(result.unwrap().is_err());
+            assert_eq!(calls, 23 + usize::from(hierarchy.tuple_image_len() > 0));
+            for unwind in [false, true] {
+                for fail_at in 0..calls {
+                    let mut reached = 0;
+                    let result = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
+                        PreparedHierarchyWorkspace::build_with(&hierarchy, &mut |context| {
+                            reached += 1;
+                            if reached == fail_at + 1 {
+                                assert!(!unwind, "injected complete cycle setup unwind");
+                                return Err(MultiwayError::WorkspaceNotPrepared { context });
+                            }
+                            Ok(())
+                        })
+                    }));
+                    assert_eq!(reached, fail_at + 1);
+                    if unwind {
+                        assert!(result.is_err());
+                    } else {
+                        assert!(result.unwrap().is_err());
+                    }
+                    for buffer in &mut old.buffers {
+                        buffer.fill(f64::NAN);
+                    }
+                    let mut actual = [0.0; 12];
+                    hierarchy
+                        .apply_with_workspace(&rhs, &mut actual, &mut old)
+                        .unwrap();
+                    assert_eq!(actual, expected);
                 }
-                for buffer in &mut old.buffers {
-                    buffer.fill(f64::NAN);
-                }
-                let mut actual = [0.0; 12];
-                hierarchy
-                    .apply_with_workspace(&rhs, &mut actual, &mut old)
-                    .unwrap();
-                assert_eq!(actual, expected);
             }
         }
         assert!(buffer_count(usize::MAX).is_err());
