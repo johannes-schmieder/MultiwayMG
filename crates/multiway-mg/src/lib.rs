@@ -38,7 +38,9 @@ mod pcg;
 mod pcg_kernel;
 mod pcg_trace;
 mod preconditioner;
+mod prepared_action;
 mod prepared_aggregation;
+mod prepared_baseline;
 mod prepared_cycle_quality;
 mod prepared_hierarchy;
 #[cfg(feature = "lsmr")]
@@ -204,3 +206,7 @@ pub use prepared_cycle_quality::{
     PreparedCycleScreenFailure, PreparedCycleScreenResult, PreparedCycleScreenSetup,
     PreparedCycleScreenWork, PreparedCycleScreenWorkspace, PreparedLevelCycleQuality,
 };
+
+pub use prepared_action::PreparedSolverAction;
+
+pub use prepared_baseline::{PreparedBaseline, PreparedBaselineKind, PreparedBaselineWorkspace};

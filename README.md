@@ -95,7 +95,14 @@ map/cycle references and 66 certified diagnostic solves per route pass; seven
 of 22 quality screens reject and remain recorded. This is an explicit candidate
 choice, with no default promotion. Its 7,920-process supplied-map regression
 exactly matches M6e numerical/work/payload/layout records; it does not time the
-new candidate. Component-local automatic construction remains the next stage. See the
+new candidate. [Scalable prepared baselines](docs/ISSUE5_SCALABLE_BASELINES.md)
+share the existing certified solver code through statically dispatched owners.
+Identity/diagonal/MAP need zero/two/four action arrays plus an optional image;
+large solves, exact layouts and allocation gates pass. Fourteen native baseline
+candidates miss the original certificate; gating certifies all 48 checked cases.
+All required/release checks pass. The shared hierarchy path passes 7,920 supplied-map regression processes with
+exact M6f numerical/work/payload/layout records. Component-local automatic
+construction remains the next stage. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 ## The problem

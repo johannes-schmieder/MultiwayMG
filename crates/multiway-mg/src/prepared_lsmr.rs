@@ -1,7 +1,7 @@
 //! Complete serial prepared LSMR with independent original-operator acceptance.
 use crate::{
     CertificateWorkReport, LeastSquaresStopReason, MultiwayError, PreparedCertificateWorkspace,
-    PreparedHierarchyPayloadReport, PreparedHierarchyWorkspace, PreparedMapHierarchy,
+    PreparedHierarchyPayloadReport, PreparedMapHierarchy, PreparedSolverAction,
     certificate::{bytes, ensure_finite, vector},
     certify_prepared_normal_equations,
 };
@@ -58,7 +58,7 @@ pub struct PreparedLsmrWorkReport {
     pub weighted_incidence_applications: usize,
     /// Weighted adjoint actions inside the recurrence and its audit.
     pub weighted_adjoint_applications: usize,
-    /// Complete fixed hierarchy applications, including failed attempts.
+    /// Complete fixed action applications (hierarchy or explicit baseline), including failed attempts.
     pub hierarchy_applications: usize,
     /// Original-operator actions in final independent certification.
     pub certificate: CertificateWorkReport,
@@ -130,7 +130,7 @@ pub struct PreparedGatedLsmrResult<'workspace> {
 /// Complete retained payload for a prepared LSMR solve and declared caller state.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct PreparedLsmrPayloadReport {
-    /// All hierarchy owners and its complete application workspace; additional=0.
+    /// All action owners and complete application workspace; additional=0.
     pub hierarchy: PreparedHierarchyPayloadReport,
     /// Outer LSMR, projection, candidate, weighted-target and certificate arrays.
     pub outer_workspace_payload_bytes: usize,
@@ -140,15 +140,20 @@ pub struct PreparedLsmrPayloadReport {
     pub total_payload_bytes: usize,
 }
 
-/// Caller-owned complete serial solve storage attached to one exact hierarchy.
+/// Caller-owned complete serial solve storage attached to one exact fixed action.
 ///
 /// Weights, topology and factors are borrowed. The workspace owns every mutable
 /// recurrence, hierarchy, projection and certificate buffer. No pool or automatic
 /// rebind is used. Targets must be in canonical unique-tuple order. Repeated RHS
 /// calls reuse all storage; the returned coefficients borrow that storage.
-pub struct PreparedLsmrWorkspace<'owner> {
-    hierarchy: &'owner PreparedMapHierarchy<'owner>,
-    hierarchy_scratch: PreparedHierarchyWorkspace<'owner>,
+/// The default owner remains the supplied-map hierarchy. Explicit baseline
+/// owners use the same recurrence, gate, final certificate and error accounting.
+pub struct PreparedLsmrWorkspace<
+    'owner,
+    P: PreparedSolverAction + 'owner = PreparedMapHierarchy<'owner>,
+> {
+    hierarchy: &'owner P,
+    hierarchy_scratch: P::Workspace<'owner>,
     recurrence: MlsmrWorkspace,
     projection: PreparedStructuralProjectionWorkspace<'owner>,
     certificate: PreparedCertificateWorkspace<'owner, 'owner>,
@@ -158,7 +163,7 @@ pub struct PreparedLsmrWorkspace<'owner> {
     last_work: PreparedLsmrWorkReport,
     last_gate_work: PreparedLsmrGateWorkReport,
 }
-impl std::fmt::Debug for PreparedLsmrWorkspace<'_> {
+impl<P: PreparedSolverAction> std::fmt::Debug for PreparedLsmrWorkspace<'_, P> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.debug_struct("PreparedLsmrWorkspace")
             .field("options", &self.options)
@@ -168,10 +173,10 @@ impl std::fmt::Debug for PreparedLsmrWorkspace<'_> {
             .finish_non_exhaustive()
     }
 }
-impl<'owner> PreparedLsmrWorkspace<'owner> {
+impl<'owner, P: PreparedSolverAction + 'owner> PreparedLsmrWorkspace<'owner, P> {
     /// Fallibly allocate complete scratch using the supplied fixed configuration.
     pub fn try_new(
-        hierarchy: &'owner PreparedMapHierarchy<'owner>,
+        hierarchy: &'owner P,
         options: PreparedLsmrOptions,
     ) -> Result<Self, MultiwayError> {
         Self::try_new_with_payload_budget(hierarchy, options, usize::MAX, 0)
@@ -181,7 +186,7 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
     /// Includes immutable owners and all new mutable arrays. Add other live
     /// buffers/generations explicitly. This is not an allocator quota or RSS cap.
     pub fn try_new_with_payload_budget(
-        hierarchy: &'owner PreparedMapHierarchy<'owner>,
+        hierarchy: &'owner P,
         options: PreparedLsmrOptions,
         maximum_payload_bytes: usize,
         additional_live_payload_bytes: usize,
@@ -195,8 +200,8 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
                 budget: maximum_payload_bytes,
             });
         }
-        let fine = hierarchy.frames().fine();
-        Ok(Self {
+        let fine = hierarchy.fine_frame();
+        let result = Self {
             hierarchy,
             hierarchy_scratch: hierarchy.application_workspace()?,
             recurrence: MlsmrWorkspace::try_new(
@@ -212,26 +217,28 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
             options,
             last_work: PreparedLsmrWorkReport::default(),
             last_gate_work: PreparedLsmrGateWorkReport::default(),
-        })
+        };
+        let actual = result
+            .payload_report(additional_live_payload_bytes)?
+            .total_payload_bytes;
+        if actual > maximum_payload_bytes {
+            return Err(MultiwayError::PayloadBudgetExceeded {
+                required: actual,
+                budget: maximum_payload_bytes,
+            });
+        }
+        Ok(result)
     }
     /// Complete requested construction payload including exact immutable owners.
     pub fn setup_payload_bound(
-        hierarchy: &PreparedMapHierarchy<'_>,
+        hierarchy: &P,
         options: PreparedLsmrOptions,
         additional_live_payload_bytes: usize,
     ) -> Result<usize, MultiwayError> {
         let options = options.validate()?;
-        let frames = hierarchy.frames();
-        let fine = frames.fine();
+        let fine = hierarchy.fine_frame();
         let mut total = additional_live_payload_bytes;
-        for part in [
-            frames.hierarchy().fine().retained_payload_bytes()?,
-            frames.hierarchy().retained_payload_bytes()?,
-            fine.retained_payload_bytes()?,
-            frames.retained_payload_bytes()?,
-            hierarchy.retained_payload_bytes()?,
-            hierarchy.grouping_payload_bytes()?,
-            hierarchy.workspace_required_bytes()?,
+        for part in hierarchy.requested_payload_parts()?.into_iter().chain([
             fine.topology().projection_workspace_required_bytes()?,
             PreparedCertificateWorkspace::required_payload_bytes(fine)?,
             bytes(fine.weights().len())?,
@@ -242,7 +249,7 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
                 options.local_size,
             )
             .map_err(MultiwayError::PreparedLsmr)?,
-        ] {
+        ]) {
             total = add(total, part)?;
         }
         Ok(total)
@@ -267,7 +274,7 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
     }
 
     /// Exact hierarchy validation, without preparation or allocation.
-    pub fn validate_for(&self, hierarchy: &PreparedMapHierarchy<'_>) -> Result<(), MultiwayError> {
+    pub fn validate_for(&self, hierarchy: &P) -> Result<(), MultiwayError> {
         if !core::ptr::eq(self.hierarchy, hierarchy) {
             return Err(MultiwayError::WorkspaceNotPrepared {
                 context: "prepared LSMR hierarchy",
@@ -279,7 +286,8 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
     pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
         add(
             self.outer_payload_bytes()?,
-            self.hierarchy_scratch.retained_payload_bytes()?,
+            self.hierarchy
+                .workspace_payload_bytes(&self.hierarchy_scratch)?,
         )
     }
     /// Full retained lifetime inventory with explicitly declared caller state.
@@ -323,10 +331,10 @@ impl<'owner> PreparedLsmrWorkspace<'owner> {
 /// A successful return may have `accepted=false`; native stopping is preserved
 /// separately. Numerical errors return no candidate and the same workspace can
 /// solve a later RHS. Action counts remain available after admitted failures.
-pub fn solve_prepared_least_squares<'workspace>(
-    hierarchy: &PreparedMapHierarchy<'_>,
+pub fn solve_prepared_least_squares<'workspace, P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
-    workspace: &'workspace mut PreparedLsmrWorkspace<'_>,
+    workspace: &'workspace mut PreparedLsmrWorkspace<'_, P>,
 ) -> Result<PreparedLsmrResult<'workspace>, MultiwayError> {
     let report = solve_impl(hierarchy, targets, workspace, false)?;
     Ok(PreparedLsmrResult {
@@ -346,10 +354,10 @@ pub fn solve_prepared_least_squares<'workspace>(
 /// Every exit gets a fresh independent final certificate; inspect
 /// `report.solve.accepted`. Errors publish no candidate and preserve attempted
 /// work. The ordinary native route remains available without gate checks.
-pub fn solve_prepared_least_squares_with_certificate_gate<'workspace>(
-    hierarchy: &PreparedMapHierarchy<'_>,
+pub fn solve_prepared_least_squares_with_certificate_gate<'workspace, P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
-    workspace: &'workspace mut PreparedLsmrWorkspace<'_>,
+    workspace: &'workspace mut PreparedLsmrWorkspace<'_, P>,
 ) -> Result<PreparedGatedLsmrResult<'workspace>, MultiwayError> {
     let solve = solve_impl(hierarchy, targets, workspace, true)?;
     Ok(PreparedGatedLsmrResult {
@@ -361,10 +369,10 @@ pub fn solve_prepared_least_squares_with_certificate_gate<'workspace>(
     })
 }
 
-fn solve_impl(
-    hierarchy: &PreparedMapHierarchy<'_>,
+fn solve_impl<P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
-    workspace: &mut PreparedLsmrWorkspace<'_>,
+    workspace: &mut PreparedLsmrWorkspace<'_, P>,
     use_gate: bool,
 ) -> Result<PreparedLsmrReport, MultiwayError> {
     #[cfg(feature = "profiling")]
@@ -372,7 +380,7 @@ fn solve_impl(
         multiway_incidence::profiling::span(multiway_incidence::profiling::Phase::PreparedLsmr);
 
     workspace.validate_for(hierarchy)?;
-    let fine = workspace.hierarchy.frames().fine();
+    let fine = workspace.hierarchy.fine_frame();
     if targets.len() != fine.weights().len() {
         return Err(crate::error::dimension(
             "prepared LSMR targets",
@@ -397,7 +405,7 @@ fn solve_impl(
     )?;
     let mut operator = IncidenceAction {
         view: fine.operator_view(),
-        grouping: hierarchy.level_grouping(0),
+        grouping: hierarchy.fine_grouping(),
         forward: 0,
         adjoint: 0,
         error: None,
@@ -589,13 +597,13 @@ impl OperatorMut for IncidenceAction<'_> {
         capture(result.map_err(Into::into), &mut self.error)
     }
 }
-struct HierarchyAction<'borrow, 'owner> {
-    hierarchy: &'owner PreparedMapHierarchy<'owner>,
-    scratch: &'borrow mut PreparedHierarchyWorkspace<'owner>,
+struct HierarchyAction<'borrow, 'owner, P: PreparedSolverAction + 'owner> {
+    hierarchy: &'owner P,
+    scratch: &'borrow mut P::Workspace<'owner>,
     count: usize,
     error: Option<MultiwayError>,
 }
-impl OperatorMut for HierarchyAction<'_, '_> {
+impl<P: PreparedSolverAction> OperatorMut for HierarchyAction<'_, '_, P> {
     fn nrows(&self) -> usize {
         self.hierarchy.dimension()
     }
@@ -642,13 +650,13 @@ fn add(a: usize, b: usize) -> Result<usize, MultiwayError> {
 /// No allocation or concurrency is introduced by this scalar scheduling wrapper.
 ///
 /// This is independent scalar reuse, not fused panels or a block Krylov algorithm.
-pub fn solve_prepared_least_squares_batch_into(
-    hierarchy: &PreparedMapHierarchy<'_>,
+pub fn solve_prepared_least_squares_batch_into<P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
     columns: usize,
     coefficients: &mut [f64],
     reports: &mut [Option<PreparedLsmrReport>],
-    workspace: &mut PreparedLsmrWorkspace<'_>,
+    workspace: &mut PreparedLsmrWorkspace<'_, P>,
 ) -> Result<(), MultiwayError> {
     let (rows, dimension) = validate_batch(
         hierarchy,
@@ -679,13 +687,13 @@ pub fn solve_prepared_least_squares_batch_into(
 /// the failed/unprocessed output suffix is unchanged, its reports are `None`,
 /// and both workspace work getters retain the failed attempt. No allocation or
 /// parallelism is introduced; targets/coefficients are column-major.
-pub fn solve_prepared_least_squares_with_certificate_gate_batch_into(
-    hierarchy: &PreparedMapHierarchy<'_>,
+pub fn solve_prepared_least_squares_with_certificate_gate_batch_into<P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
     columns: usize,
     coefficients: &mut [f64],
     reports: &mut [Option<PreparedGatedLsmrReport>],
-    workspace: &mut PreparedLsmrWorkspace<'_>,
+    workspace: &mut PreparedLsmrWorkspace<'_, P>,
 ) -> Result<(), MultiwayError> {
     let (rows, dimension) = validate_batch(
         hierarchy,
@@ -708,13 +716,13 @@ pub fn solve_prepared_least_squares_with_certificate_gate_batch_into(
     }
     Ok(())
 }
-fn validate_batch(
-    hierarchy: &PreparedMapHierarchy<'_>,
+fn validate_batch<P: PreparedSolverAction>(
+    hierarchy: &P,
     targets: &[f64],
     columns: usize,
     coefficients: &[f64],
     reports_length: usize,
-    workspace: &PreparedLsmrWorkspace<'_>,
+    workspace: &PreparedLsmrWorkspace<'_, P>,
 ) -> Result<(usize, usize), MultiwayError> {
     workspace.validate_for(hierarchy)?;
     if !(1..=32).contains(&columns) {
@@ -724,7 +732,7 @@ fn validate_batch(
             actual: columns,
         });
     }
-    let rows = hierarchy.frames().fine().weights().len();
+    let rows = hierarchy.fine_frame().weights().len();
     let dimension = hierarchy.dimension();
     let target_length = rows
         .checked_mul(columns)
