@@ -10,7 +10,8 @@ use crate::{
 mod builder;
 pub use builder::{
     PreparedHierarchyAppendFailure, PreparedHierarchyAppendReport, PreparedHierarchyBuilder,
-    PreparedHierarchyLimits,
+    PreparedHierarchyLimits, PreparedProvisionalFailure, PreparedProvisionalFrame,
+    PreparedProvisionalSetup, ProvisionalFrameStage, ProvisionalWeightInput,
 };
 
 /// Live array-payload admission for a complete structural or replay build.

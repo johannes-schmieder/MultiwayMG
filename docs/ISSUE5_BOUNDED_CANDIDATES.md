@@ -60,7 +60,7 @@ unchanged. Partial validation/allocation errors publish no map.
 
 Compare complete parent maps against the independent legacy tree implementation
 on unit, dyadic and decimal weights; caps2/4/16 and affinities0/0.02/0.15/1;
-ragged disconnected blocks, hubs, a Latin-square extra-nullity fixture and a
+ragged disconnected blocks, hubs, a cyclic Latin-square structural-nullity control and a
 single tuple. Verify exact current-frame identity, deterministic reports, exact
 Galerkin coarse tuples/weights and unmodified originals. A separate 65,536-tuple,
 V=12,288 fixture checks finite legacy identity and a 49,152-proposal cap4 bound.
@@ -119,3 +119,8 @@ parent validation but does not time the new candidate stage or qualify an
 automatic hierarchy. Source `34084223619`/`34084223515` and PR
 `34084226689`/`34084226778` passed. Final evidence-head CI and PR54 merge
 remain before incremental structural admission begins. M6–M10 remain open.
+
+Qualification correction (2026-09-07): the cyclic Latin square has only structural
+nullity. See the [explicit rank audit and new nested controls](ISSUE5_PROVISIONAL_REPLAY.md).
+This corrects the former additional-nullity description; raw frozen evidence is
+unchanged. The new nested regression is part of M6d, not the older measured source.

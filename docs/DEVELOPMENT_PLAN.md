@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a/M6b merged; M6c component permutations |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6c merged; M6d provisional replay |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -719,3 +719,30 @@ for measurement, not an implemented layout or selected default.
   remain. Next integrate component-local structural prefixes, one-transition
   provisional replay, bounded numerical terminals and actual recursive screening.
   M6–M10 remain open, scalar stays default and campaign holdout is untouched.
+
+- M6c PR56 merged as `b92756893ce6593bd9d0631b889bc045e9ccd03f` after final
+  source `34089976994`/`34089976977` and PR `34089979851`/`34089979811`
+  workflows passed. Actual main matches reviewed tree
+  `7861f207b9ebe649f49c9c38a8a8cdf943b91bc3`. M6d now integrates a short-lived
+  provisional owner that replays one accepted transition, moves weights into
+  shared frame finishing and releases owned predecessors before finishing.
+  Existing owner-bound replay contracts remain unchanged.
+
+- M6c post-merge workflows `34090546979`/`34090547025` passed. M6d successive
+  provisional replay and complete fresh-reference tests pass. The rank audit
+  corrected earlier Latin-square descriptions: the full cyclic 8x8 control has
+  rank 22 of 24 and only structural nullity. Added explicit nested-factor rank,
+  nonconstant null-vector, candidate, permutation and complete-solver controls;
+  see `ISSUE5_PROVISIONAL_REPLAY.md`. Raw frozen evidence is unchanged. Initial
+  test scaffolding had a missing constructor argument and a misdirected component
+  test edit; both are corrected and failed logs preserved. Full qualification
+  is rerunning before source freeze; automatic construction remains open.
+
+- M6d final required Rust 1.85 checks and all 90 Python validators pass. Release
+  all/minimal provisional/full-solver/allocator and component tests, private
+  numerical and reservation failures, parent/candidate gates and all 120 actual
+  protocol comparisons pass. Self-review checked staged ownership and payload,
+  shared numerical finishing, exact predecessor topology, raw-weight semantics,
+  failure cleanup, original certification and rank-control evidence. Freeze
+  this source before unchanged Mac smoke/development/expanded and Linux smoke
+  regression; the supplied-map harness does not time provisional construction.

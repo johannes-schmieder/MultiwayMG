@@ -41,7 +41,7 @@ Required Rust 1.85 checks and 90 Python validators pass. Release component tests
 in all/minimal configurations, private allocation-error/unwind/width/budget
 checks, complete solvers/allocators and 120 actual protocol comparisons pass.
 Component fixtures include ragged/interleaved labels, connected and separated
-singletons, duplicate observations and disconnected Latin extra nullity. Local
+singletons, duplicate observations and disconnected Latin controls. Local
 weighted Gramians exactly match the original restriction. Initial fixture and
 lifetime-lint corrections are preserved beside passing final logs; no measured
 run was repeated because of them.
@@ -56,3 +56,8 @@ M6 remains open for component-local structural/numerical construction, bounded
 terminals, bottom-up actual-cycle screening and the complete automatic driver;
 M7–M10 follow. The temporary inverse saving is a proved array-lifetime choice,
 not a demonstrated competitive solve or 25% RSS qualification.
+
+Qualification correction (2026-09-07): the cyclic Latin square has only structural
+nullity. See the [explicit rank audit and new nested controls](../../../../docs/ISSUE5_PROVISIONAL_REPLAY.md).
+This corrects the former additional-nullity description; raw frozen evidence is
+unchanged. The new nested regression is part of M6d, not the older measured source.

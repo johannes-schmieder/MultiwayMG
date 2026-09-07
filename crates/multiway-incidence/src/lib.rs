@@ -35,7 +35,8 @@ pub use factor_pair::FactorPair;
 pub use hierarchy::{
     HierarchyWeightFrames, PreparedHierarchyAppendFailure, PreparedHierarchyAppendReport,
     PreparedHierarchyBudget, PreparedHierarchyBuilder, PreparedHierarchyLimits,
-    PreparedHierarchyTopology,
+    PreparedHierarchyTopology, PreparedProvisionalFailure, PreparedProvisionalFrame,
+    PreparedProvisionalSetup, ProvisionalFrameStage, ProvisionalWeightInput,
 };
 pub use operator_view::ThreeWayOperatorView;
 pub use prepared::{

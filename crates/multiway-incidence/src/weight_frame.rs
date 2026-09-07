@@ -237,6 +237,12 @@ impl WeightFrameBinding<'_, '_> {
 }
 
 impl<'topology> ThreeWayWeightFrame<'topology> {
+    // Only the explicitly provisional owner exposes consumption into raw values.
+    // No frame or generation binding survives this internal ownership transfer.
+    pub(crate) fn into_tuple_weights(self) -> Vec<f64> {
+        self.weights
+    }
+
     /// Build and validate a new immutable numerical generation.
     ///
     /// Observation inputs must use the prepared original-row order; tuple inputs

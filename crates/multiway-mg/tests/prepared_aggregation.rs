@@ -120,6 +120,12 @@ fn finite_legacy_maps_match_on_ragged_disconnected_hubs_and_extra_nullity() {
             .flat_map(|i| (0..8).map(move |j| [i, j, (i + j) % 8]))
             .collect(),
     );
+    compare(
+        [4, 3, 3],
+        (0..4)
+            .flat_map(|i| (0..3).map(move |j| [i, j, j]))
+            .collect(),
+    );
     compare([1; 3], vec![[0; 3]]);
 }
 #[test]

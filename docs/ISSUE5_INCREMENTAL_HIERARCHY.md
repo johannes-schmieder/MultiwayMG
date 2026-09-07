@@ -84,7 +84,7 @@ generations and 32 RHS including zero columns. Canonical keys, parent maps,
 merge-group ordering, component correspondences, replay weights/diagonals,
 complete PCG and certificate-gated LSMR coefficients and full solve/work reports
 match exactly; every compared solve certifies. Ragged disconnected/relabelled
-and Latin extra-nullity structures are checked separately.
+and Latin structural-nullity controls are checked separately.
 
 The isolated allocator process verifies two initial descriptor allocations,
 ten reservations per append, no reallocations, exact retained accounting,
@@ -118,3 +118,8 @@ rejections, timeouts, RSS failures or measured retries occurred. Source and PR
 workflows passed; independently revalidated binary/raw artifacts and every
 archive member are preserved. Final evidence-head CI and PR55 merge remain.
 These supplied-map measurements do not invoke or time the incremental builder.
+
+Qualification correction (2026-09-07): the cyclic Latin square has only structural
+nullity. See the [explicit rank audit and new nested controls](ISSUE5_PROVISIONAL_REPLAY.md).
+This corrects the former additional-nullity description; raw frozen evidence is
+unchanged. The new nested regression is part of M6d, not the older measured source.

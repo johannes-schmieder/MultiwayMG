@@ -77,6 +77,11 @@ regression exactly matches M6a numerical/work/payload/layout records.
 keep inverse recoding temporary and use no new arrays for connected input.
 All 7,920 existing-solver regression processes exactly match M6b numerical/work/
 payload/layout records; component setup is not timed by that supplied-map route.
+[One-transition provisional replay](docs/ISSUE5_PROVISIONAL_REPLAY.md)
+consumes predecessor weights before finishing the next frame, with separate
+stage admission and unchanged complete replay ownership. Required and release
+numerical, allocation and lifetime gates pass. Explicit nested-factor
+rank controls correct the earlier Latin-square additional-nullity description.
 Component-local numerical construction and recursive screening remain the next stages. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
