@@ -81,7 +81,7 @@ fn all_explicit_prefixes_and_image_modes_match_scalar_recursive_solvers()
                 );
                 let old = scalar_workspace.payload_report(123)?;
                 let image_bytes = if grouped.tuple_image_len() > 0 {
-                    8 * grouped.tuple_image_len() + core::mem::size_of::<Vec<f64>>()
+                    8 * grouped.tuple_image_len()
                 } else {
                     0
                 };

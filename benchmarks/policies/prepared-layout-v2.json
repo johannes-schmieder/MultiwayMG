@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "scope": "prepared_layout_development_only",
+  "families": [
+    "uniform",
+    "communities",
+    "chain"
+  ],
+  "weights": [
+    "unit",
+    "heterogeneous"
+  ],
+  "widths": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    17,
+    32
+  ],
+  "routes": [
+    "pcg",
+    "lsmr-gated"
+  ],
+  "repetitions": 5,
+  "warmups": 1,
+  "seeds": [
+    10001
+  ],
+  "profiles": {
+    "smoke": {
+      "levels": 16,
+      "draws": 512,
+      "depth": 1
+    },
+    "development": {
+      "levels": 128,
+      "draws": 16384,
+      "depth": 3
+    },
+    "expanded": {
+      "levels": 4096,
+      "draws": 65536,
+      "depth": 8,
+      "widths": [
+        1
+      ]
+    }
+  },
+  "certificate_tolerance": 1e-08,
+  "native_tolerance": 1e-08,
+  "max_iterations": 1000,
+  "local_window": 8,
+  "pcg_recompute_interval": 25,
+  "terminal_relative_tolerance": 1e-12,
+  "process_budget_bytes": 1073741824,
+  "timeout_seconds": 60,
+  "workers": 1,
+  "map": "contiguous_halving_supplied",
+  "input_boundary": "canonical_unique_tuples",
+  "warmup_scope": "separate_process_os_cache_only",
+  "build_args": [
+    "cargo",
+    "build",
+    "--locked",
+    "--release",
+    "-p",
+    "multiway-mg",
+    "--no-default-features",
+    "--features",
+    "lsmr",
+    "--example",
+    "prepared_serial_benchmark"
+  ],
+  "revision": 2,
+  "eligible_routes": [
+    "pcg",
+    "lsmr-gated"
+  ],
+  "comparison": "explicit five-layout complete-cost development comparison; no automatic default",
+  "layouts": [
+    "scalar",
+    "fine-row",
+    "all-row",
+    "fine-image",
+    "all-image"
+  ],
+  "layout_abi": {
+    "usize_bytes": 8,
+    "group_descriptor_bytes": 64,
+    "image_descriptor_bytes": 0
+  },
+  "grouping_setup": "after structural maps and before coarse numerical frames; all current borrowed/input owners charged",
+  "expanded_scope": "single RHS only; larger multi-RHS and default selection remain later gates",
+  "execution_order": "routes rotate by repeat; layouts rotate by case index + repeat + stable route index, giving every layout each position once per five measured repetitions",
+  "benchmark_record_scope": "fixed inline bytes reported and repeated for the same binary; stack copies/runtime/allocator metadata unmeasured",
+  "tuple_image_storage": "tail of one contiguous result/traversal/image arena; no separate descriptor or allocation"
+}

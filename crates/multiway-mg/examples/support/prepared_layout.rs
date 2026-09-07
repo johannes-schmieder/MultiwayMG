@@ -114,7 +114,7 @@ impl Record {
             self.prefix,
             size_of::<usize>(),
             size_of::<PreparedTupleGrouping<'_>>(),
-            size_of::<Vec<f64>>(),
+            0, // image is a slice of the existing arena, with no separate descriptor
             record_bytes
         );
         println!("phase\tgrouping\t{}", self.nanos);

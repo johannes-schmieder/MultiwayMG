@@ -9,7 +9,7 @@ from pathlib import Path
 import struct
 import subprocess
 import prepared_serial as base
-from prepared_layout import FILES, POLICY, PHASES, PAYLOAD, MEMORY_SCOPES, effective_policy, schedule, parse_layout_output
+from prepared_layout import PHASES, PAYLOAD, effective_policy, schedule, parse_layout_output, source_files, policy_path_for, memory_scopes
 from validate_prepared_serial import (require, integer, hash_string, load, no_nonfinite,
     check_probe, validate_manifest, numerical_signature)
 
@@ -99,7 +99,7 @@ def _validate_manifest_pair(manifest,children,policy,hashes):
         require(child['provenance']==metadata,'different layout binary/compiler/hardware provenance')
         record_sizes.update(r['probe']['layout']['record_bytes'] for r in child['runs'] if r['status']=='returned')
         summaries[layout]=validate_manifest(child,effective,hashes,evidence_scope=effective['scope'],
-            policy_paths=(POLICY,),memory_scopes=MEMORY_SCOPES,summary_phase_names=PHASES,
+            policy_paths=(policy_path_for(policy),),memory_scopes=memory_scopes(policy),summary_phase_names=PHASES,
             probe_checker=lambda p,r,pol,layout=layout:check_layout_probe(p,r,pol,profile,layout))
     require(len(record_sizes)<=1,'nonrepeatable fixed benchmark record size')
     expected=list(schedule(effective)); require(len(manifest['trace'])==len(expected),'missing paired attempts')
@@ -166,10 +166,11 @@ def validate_directory(directory):
     directory=Path(directory); manifest=load(directory/'manifest.json')
     commit=manifest['source_commit'];hash_string(commit,40)
     def git(*args):return subprocess.check_output(['git',*args],cwd=base.ROOT)
-    source={name:git('show',f'{commit}:{name}') for name in FILES}
+    policy_path=policy_path_for(manifest['policy'])
+    source={name:git('show',f'{commit}:{name}') for name in source_files(policy_path)}
     hashes={name:base.sha(value) for name,value in source.items()}
     require(hashes['scripts/prepared_serial.py']==base.sha((base.ROOT/'scripts/prepared_serial.py').read_bytes()),'use the measured source input generator')
-    policy=json.loads(source[POLICY]); require(policy['layouts']==['scalar','fine-row','all-row','fine-image','all-image'],'unknown layout protocol')
+    policy=json.loads(source[policy_path]); require(policy['layouts']==['scalar','fine-row','all-row','fine-image','all-image'],'unknown layout protocol')
     tree=git('rev-parse',f'{commit}^{{tree}}').decode().strip()
     children={layout:load(directory/layout/'manifest.json') for layout in policy['layouts']}
     binary=base.sha((directory/'prepared_serial_benchmark').read_bytes());build=base.sha((directory/'build.log').read_bytes())

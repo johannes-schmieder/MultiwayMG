@@ -160,7 +160,9 @@ cases. Small smoke regressions are retained; scalar remains default. The
 [fused transfer increment](ISSUE5_FUSED_TRANSFER.md) removes one temporary store/read
 per coefficient at each cycle transition while preserving the retained scratch. Its 7,920-process
 regression exactly preserves M5e numerical/work/payload records; no cross-revision
-timing gain is claimed. See the
+timing gain is claimed. The next [single-arena workspace](ISSUE5_TRAVERSAL_ARENA.md)
+consolidates result, traversal and optional image storage with checked disjoint
+slices and fewer allocations. Its versioned accounting retains all prior evidence. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

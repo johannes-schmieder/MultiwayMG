@@ -51,13 +51,55 @@ pub(crate) trait CycleActions {
     ) -> Result<(), MultiwayError>;
 }
 
+// A private storage adapter keeps the arithmetic recurrence common while the
+// prepared owner uses one flat arena and the ordinary owner retains its vectors.
+// Splitting consumes the borrow; frame slices and child tails cannot overlap.
+pub(crate) trait CycleScratch<'a>: Sized {
+    fn split_frame(self, fine: usize, coarse: usize) -> ([&'a mut [f64]; 4], Self);
+}
+impl<'a> CycleScratch<'a> for &'a mut [Vec<f64>] {
+    fn split_frame(self, fine: usize, coarse: usize) -> ([&'a mut [f64]; 4], Self) {
+        let (frame, children) = self.split_at_mut(FRAME_BUFFERS);
+        let [rhs, residual, coarse_rhs, coarse_solution] = frame else {
+            unreachable!("prepared ordinary cycle frame");
+        };
+        debug_assert_eq!(
+            [
+                rhs.len(),
+                residual.len(),
+                coarse_rhs.len(),
+                coarse_solution.len()
+            ],
+            [fine, fine, coarse, coarse]
+        );
+        (
+            [
+                rhs.as_mut_slice(),
+                residual.as_mut_slice(),
+                coarse_rhs.as_mut_slice(),
+                coarse_solution.as_mut_slice(),
+            ],
+            children,
+        )
+    }
+}
+impl<'a> CycleScratch<'a> for &'a mut [f64] {
+    fn split_frame(self, fine: usize, coarse: usize) -> ([&'a mut [f64]; 4], Self) {
+        let (rhs, tail) = self.split_at_mut(fine);
+        let (residual, tail) = tail.split_at_mut(fine);
+        let (coarse_rhs, tail) = tail.split_at_mut(coarse);
+        let (coarse_solution, tail) = tail.split_at_mut(coarse);
+        ([rhs, residual, coarse_rhs, coarse_solution], tail)
+    }
+}
+
 // Disjoint tails lend scratch to children without moving buffers on errors/unwind.
-pub(crate) fn apply_level<A: CycleActions>(
+pub(crate) fn apply_level<'a, A: CycleActions, S: CycleScratch<'a>>(
     actions: &A,
     level: usize,
     rhs: &[f64],
     solution: &mut [f64],
-    scratch: &mut [Vec<f64>],
+    scratch: S,
     operator_levels: &mut [A::LevelScratch],
     shared: &mut CycleSharedScratch<'_>,
 ) -> Result<(), MultiwayError> {
@@ -80,10 +122,8 @@ pub(crate) fn apply_level<A: CycleActions>(
         actions.project(level, solution, state)?;
         return Ok(());
     }
-    let (frame, child_scratch) = scratch.split_at_mut(FRAME_BUFFERS);
-    let [compatible_rhs, residual, coarse_rhs, coarse_solution] = frame else {
-        unreachable!("a prepared nonterminal frame has four buffers");
-    };
+    let ([compatible_rhs, residual, coarse_rhs, coarse_solution], child_scratch) =
+        scratch.split_frame(actions.dimension_at(level), actions.dimension_at(level + 1));
     compatible_rhs.copy_from_slice(rhs);
     actions.project(level, compatible_rhs, state)?;
     actions.smooth(level, compatible_rhs, solution, state)?;

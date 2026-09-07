@@ -2,7 +2,7 @@
 use crate::{
     DensePseudoinverse, DensePseudoinverseWorkspace, MultiwayError, PreparedMapWorkspace,
     PreparedSymmetricMap,
-    cycle_kernel::{self, CycleActions, FRAME_BUFFERS},
+    cycle_kernel::{self, CycleActions},
 };
 use multiway_incidence::{
     HierarchyWeightFrames, PreparedHierarchyGrouping, PreparedStructuralProjectionWorkspace,
@@ -61,7 +61,7 @@ pub struct PreparedMapHierarchy<'state> {
 
 /// Complete caller-owned scratch bound to an exact numerical hierarchy owner.
 ///
-/// Owns traversal vectors, prepared per-level projection/MAP scratch and modal
+/// Owns one flat result/traversal/image arena, per-level projection/MAP scratch and modal
 /// terminal storage. No pool, implicit preparation, mutation of the hierarchy or
 /// allocation occurs on application. All active values are initialized each call.
 /// ```compile_fail
@@ -81,7 +81,7 @@ pub struct PreparedMapHierarchy<'state> {
 #[derive(Debug)]
 pub struct PreparedHierarchyWorkspace<'owner> {
     owner: &'owner PreparedMapHierarchy<'owner>,
-    buffers: Vec<Vec<f64>>,
+    arena: Vec<f64>,
     levels: Vec<LevelScratch<'owner>>,
     terminal: DensePseudoinverseWorkspace,
 }
@@ -208,19 +208,29 @@ impl<'state> PreparedMapHierarchy<'state> {
     /// Maximum tuple-image length shared across all selected levels; zero in other modes.
     #[must_use]
     pub fn tuple_image_len(&self) -> usize {
-        if self.grouped_gramian_mode() != Some(GroupedGramianMode::TupleImage) {
-            return 0;
+        // Every nonempty selected prefix starts at the fine level, and mapping
+        // tuples through a function then deduplicating cannot increase E. The
+        // maximum is therefore the fine count, with no per-action level scan.
+        match self.grouping {
+            Some((groups, GroupedGramianMode::TupleImage)) if groups.grouped_levels() > 0 => {
+                self.frames.fine().weights().len()
+            }
+            _ => 0,
         }
-        (0..self.grouping().expect("grouped mode").grouped_levels())
-            .map(|level| self.frame_at(level).weights().len())
-            .max()
-            .unwrap_or(0)
     }
-    fn complete_buffer_count(&self) -> Result<usize, MultiwayError> {
-        add(
-            buffer_count(self.depth())?,
-            usize::from(self.tuple_image_len() > 0),
-        )
+    fn traversal_elements(&self) -> Result<usize, MultiwayError> {
+        (0..self.depth()).try_fold(self.dimension(), |total, level| {
+            add(
+                total,
+                frame_elements(
+                    self.frame_at(level).diagonal().len(),
+                    self.frame_at(level + 1).diagonal().len(),
+                )?,
+            )
+        })
+    }
+    fn arena_elements(&self) -> Result<usize, MultiwayError> {
+        add(self.traversal_elements()?, self.tuple_image_len())
     }
     /// Fine coefficient dimension.
     #[must_use]
@@ -245,11 +255,9 @@ impl<'state> PreparedMapHierarchy<'state> {
     /// Requested exclusive payload for a fresh complete application workspace.
     pub fn workspace_required_bytes(&self) -> Result<usize, MultiwayError> {
         let mut total = add(
-            bytes::<Vec<f64>>(self.complete_buffer_count()?)?,
             bytes::<LevelScratch<'_>>(self.frames.level_count())?,
+            bytes::<f64>(self.arena_elements()?)?,
         )?;
-        total = add(total, bytes::<f64>(self.dimension())?)?;
-        total = add(total, bytes::<f64>(self.tuple_image_len())?)?;
         total = add(total, self.terminal.workspace_required_bytes()?)?;
         for level in 0..self.frames.level_count() {
             let frame = self.frame_at(level);
@@ -258,13 +266,6 @@ impl<'state> PreparedMapHierarchy<'state> {
                 frame.topology().projection_workspace_required_bytes()?,
             )?;
             if level < self.depth() {
-                let n = frame.diagonal().len();
-                let m = self.frame_at(level + 1).diagonal().len();
-                let count = add(
-                    n.checked_mul(2).ok_or_else(overflow)?,
-                    m.checked_mul(2).ok_or_else(overflow)?,
-                )?;
-                total = add(total, bytes::<f64>(count)?)?;
                 total = add(
                     total,
                     PreparedSymmetricMap::new(frame).workspace_required_bytes()?,
@@ -306,10 +307,9 @@ impl<'state> PreparedMapHierarchy<'state> {
         }
         workspace.validate_for(self)?;
         finite(rhs, "prepared hierarchy rhs")?;
-        let base_count = buffer_count(self.depth())?;
-        let (traversal, images) = workspace.buffers.split_at_mut(base_count);
-        let image = images.first_mut().map_or(&mut [][..], Vec::as_mut_slice);
-        let (solution, scratch) = traversal.split_first_mut().expect("prepared result buffer");
+        let image_start = workspace.arena.len() - self.tuple_image_len();
+        let (traversal, image) = workspace.arena.split_at_mut(image_start);
+        let (solution, scratch) = traversal.split_at_mut(self.dimension());
         cycle_kernel::apply_level(
             workspace.owner,
             0,
@@ -348,11 +348,8 @@ impl<'state> PreparedMapHierarchy<'state> {
         workspace: &mut PreparedHierarchyWorkspace<'_>,
     ) -> Result<(), MultiwayError> {
         workspace.validate_for(self)?;
-        let base = buffer_count(self.depth())?;
-        let image = workspace
-            .buffers
-            .get_mut(base)
-            .map_or(&mut [][..], Vec::as_mut_slice);
+        let image_start = workspace.arena.len() - self.tuple_image_len();
+        let image = &mut workspace.arena[image_start..];
         self.gramian_at(0, x, out, image)
     }
     fn gramian_at(
@@ -431,32 +428,23 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
         F: FnMut(&'static str) -> Result<(), MultiwayError>,
     {
         owner.workspace_required_bytes()?;
-        let mut buffers = reserve(owner.complete_buffer_count()?, before)?;
-        buffers.push(vector(owner.dimension(), before)?);
+        let arena = vector(owner.arena_elements()?, before)?;
         let mut levels = reserve(owner.frames.level_count(), before)?;
         for level in 0..owner.frames.level_count() {
             let frame = owner.frame_at(level);
             before("prepared cycle projection")?;
             let projection = frame.topology().try_projection_workspace()?;
             let map = if level < owner.depth() {
-                let fine = frame.diagonal().len();
-                let coarse = owner.frame_at(level + 1).diagonal().len();
-                for count in [fine, fine, coarse, coarse] {
-                    buffers.push(vector(count, before)?);
-                }
                 Some(PreparedSymmetricMap::new(frame).workspace_with(before)?)
             } else {
                 None
             };
             levels.push(LevelScratch { projection, map });
         }
-        if owner.tuple_image_len() > 0 {
-            buffers.push(vector(owner.tuple_image_len(), before)?);
-        }
         before("prepared cycle terminal workspace")?;
         Ok(Self {
             owner,
-            buffers,
+            arena,
             levels,
             terminal: owner.terminal.application_workspace()?,
         })
@@ -473,13 +461,10 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
     /// Complete exclusive scratch capacities, including heap descriptors.
     pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
         let mut total = add(
-            bytes::<Vec<f64>>(self.buffers.capacity())?,
+            bytes::<f64>(self.arena.capacity())?,
             bytes::<LevelScratch<'_>>(self.levels.capacity())?,
         )?;
         total = add(total, self.terminal.retained_bytes()?)?;
-        for buffer in &self.buffers {
-            total = add(total, bytes::<f64>(buffer.capacity())?)?;
-        }
         for level in &self.levels {
             total = add(total, level.projection.retained_payload_bytes()?)?;
             if let Some(map) = &level.map {
@@ -585,10 +570,9 @@ impl<'state> CycleActions for PreparedMapHierarchy<'state> {
     }
 }
 
-fn buffer_count(depth: usize) -> Result<usize, MultiwayError> {
-    depth
-        .checked_mul(FRAME_BUFFERS)
-        .and_then(|n| n.checked_add(1))
+fn frame_elements(fine: usize, coarse: usize) -> Result<usize, MultiwayError> {
+    fine.checked_add(coarse)
+        .and_then(|n| n.checked_mul(2))
         .ok_or_else(overflow)
 }
 fn bytes<T>(count: usize) -> Result<usize, MultiwayError> {
@@ -644,6 +628,71 @@ mod tests {
         FactorAggregation, PreparedHierarchyTopology, PreparedThreeWayTopology, WeightFrameInput,
     };
     #[test]
+    fn identity_and_ragged_frames_match_independent_vector_storage() {
+        let counts = [3, 2, 4];
+        let tuples: Vec<_> = (0..3)
+            .flat_map(|i| (0..2).flat_map(move |j| (0..4).map(move |k| [i, j, k])))
+            .collect();
+        let t = PreparedThreeWayTopology::try_from_collapsed(counts, &tuples).unwrap();
+        let h = PreparedHierarchyTopology::try_new(
+            &t,
+            vec![
+                FactorAggregation::identity(counts).unwrap(),
+                FactorAggregation::consecutive_halving(counts).unwrap(),
+            ],
+        )
+        .unwrap();
+        let fine = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples).unwrap();
+        let frames = HierarchyWeightFrames::try_new(&h, &fine).unwrap();
+        let groups = PreparedHierarchyGrouping::try_new(&h, 2).unwrap();
+        for mode in [
+            GroupedGramianMode::RowGather,
+            GroupedGramianMode::TupleImage,
+        ] {
+            let owner =
+                PreparedMapHierarchy::try_new_with_grouping(&frames, &groups, mode, 1e-12).unwrap();
+            let mut actual = owner.application_workspace().unwrap();
+            let mut reference = owner.application_workspace().unwrap();
+            let mut vectors = Vec::new();
+            for level in 0..owner.depth() {
+                let n = owner.frame_at(level).diagonal().len();
+                let m = owner.frame_at(level + 1).diagonal().len();
+                for count in [n, n, m, m] {
+                    vectors.push(vec![f64::NAN; count]);
+                }
+            }
+            let mut image = vec![f64::NAN; owner.tuple_image_len()];
+            for column in 0..4 {
+                let rhs: Vec<_> = (0..owner.dimension())
+                    .map(|i| ((i + column) as f64 * 0.23).sin())
+                    .collect();
+                let mut a = vec![f64::NAN; rhs.len()];
+                let mut b = a.clone();
+                actual.arena.fill(f64::NAN);
+                owner
+                    .apply_with_workspace(&rhs, &mut a, &mut actual)
+                    .unwrap();
+                cycle_kernel::apply_level(
+                    &owner,
+                    0,
+                    &rhs,
+                    &mut b,
+                    vectors.as_mut_slice(),
+                    &mut reference.levels,
+                    &mut cycle_kernel::CycleSharedScratch {
+                        terminal: &mut reference.terminal,
+                        image: &mut image,
+                    },
+                )
+                .unwrap();
+                assert_eq!(
+                    a.iter().map(|x| x.to_bits()).collect::<Vec<_>>(),
+                    b.iter().map(|x| x.to_bits()).collect::<Vec<_>>()
+                );
+            }
+        }
+    }
+    #[test]
     fn all_workspace_reservation_failures_and_poisoned_scratch_recover() {
         let tuples: Vec<_> = (0..4)
             .flat_map(|i| (0..4).flat_map(move |j| (0..4).map(move |k| [i, j, k])))
@@ -689,7 +738,7 @@ mod tests {
                 Ok(())
             })
             .unwrap();
-            assert_eq!(calls, 23 + usize::from(hierarchy.tuple_image_len() > 0));
+            assert_eq!(calls, 14);
             for unwind in [false, true] {
                 for fail_at in 0..calls {
                     let mut reached = 0;
@@ -709,9 +758,7 @@ mod tests {
                     } else {
                         assert!(result.unwrap().is_err());
                     }
-                    for buffer in &mut old.buffers {
-                        buffer.fill(f64::NAN);
-                    }
+                    old.arena.fill(f64::NAN);
                     let mut actual = [0.0; 12];
                     hierarchy
                         .apply_with_workspace(&rhs, &mut actual, &mut old)
@@ -720,7 +767,9 @@ mod tests {
                 }
             }
         }
-        assert!(buffer_count(usize::MAX).is_err());
+        assert!(frame_elements(usize::MAX, 1).is_err());
+        assert!(frame_elements(usize::MAX / 2, 1).is_err());
+        assert!(bytes::<f64>(isize::MAX as usize / 8 + 1).is_err());
         assert!(bytes::<f64>(usize::MAX).is_err());
     }
 }
