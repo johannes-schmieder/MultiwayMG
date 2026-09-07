@@ -29,7 +29,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M2 | Frame-bound matrix-free operator views sharing existing arithmetic, exact-owner checks, static validation before mutation, zero-allocation operators, adjoint/Galerkin tests. | Complete: PR #36, main `f6a634a` |
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
-| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5f merged; M5g single-arena qualification |
+| M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | In progress: M5a–M5g merged; M5h certificate-vector qualification |
 | M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Planned |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
@@ -568,3 +568,23 @@ for measurement, not an implemented layout or selected default.
   every member rehashed. Final evidence-head CI and PR52 merge remain before
   certificate-vector liveness. No old/new paired timing gain or layout default
   is claimed; M5 and M6–M10 remain open.
+
+
+- M5g PR52 merged as `d4b83ce717af6180ab2c174be2b75a3a541b4d6b` after final source
+  `34080904773`/`34080904820` and PR `34080906157`/`34080906155` passed.
+  Main matches reviewed tree `2c3d6f407565e65040615eb2a2f0f7f2e151c542`.
+  M5h [certificate liveness](ISSUE5_CERTIFICATE_LIVENESS.md) removes one V
+  vector after its norm is retained, preserving both adjoints, failure precedence
+  and fresh final certification. Complete two-transition PCG/LSMR arrays become
+  24/30 in every layout; cycle stays14. Run complete checks, commit source and
+  collect unchanged v2 regressions before evidence claims. Prior diagnostic
+  certificate shares support prioritizing scalable construction over speculative
+  target caching after this exact reduction; cache remains an evaluated separate
+  hypothesis. M5h and M6–M10 remain open.
+
+- M5h required local checks and all 90 Python tests pass, including the new
+  fault-precedence and exact two-array certificate gates. Release all/minimal
+  complete solvers/allocators, release private fault checks and 120 actual
+  protocol comparisons pass. Preserve the logs and commit source before the
+  unchanged four-artifact v2 regression; only the derived 8V outer-workspace
+  reduction is permitted against M5g.

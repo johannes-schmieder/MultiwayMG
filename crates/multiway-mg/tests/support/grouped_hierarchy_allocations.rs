@@ -115,7 +115,7 @@ pub fn run() -> Result<()> {
             let payload = workspace.payload_report(17)?;
             let workspace_bytes =
                 payload.hierarchy.workspace_payload_bytes + payload.outer_workspace_payload_bytes;
-            assert_eq!(setup.allocations, 25);
+            assert_eq!(setup.allocations, 24);
             assert_eq!(setup.deallocations, 0);
             assert_eq!(setup.reallocations, 0);
             assert_eq!(setup.bytes_allocated, workspace_bytes);
@@ -156,7 +156,7 @@ pub fn run() -> Result<()> {
             drop(workspace);
             let released = GLOBAL.stats() - before;
             assert_eq!(released.bytes_deallocated, workspace_bytes);
-            assert_eq!(released.deallocations, 25);
+            assert_eq!(released.deallocations, 24);
             assert_eq!(released.allocations, 0);
             #[cfg(feature = "lsmr")]
             {
@@ -184,7 +184,7 @@ pub fn run() -> Result<()> {
                 let payload = workspace.payload_report(17)?;
                 let workspace_bytes = payload.hierarchy.workspace_payload_bytes
                     + payload.outer_workspace_payload_bytes;
-                assert_eq!(setup.allocations, 31);
+                assert_eq!(setup.allocations, 30);
                 assert_eq!(setup.deallocations, 0);
                 assert_eq!(setup.reallocations, 0);
                 assert_eq!(setup.bytes_allocated, workspace_bytes);
@@ -236,7 +236,7 @@ pub fn run() -> Result<()> {
                 drop(workspace);
                 let released = GLOBAL.stats() - before;
                 assert_eq!(released.bytes_deallocated, workspace_bytes);
-                assert_eq!(released.deallocations, 31);
+                assert_eq!(released.deallocations, 30);
                 assert_eq!(released.allocations, 0);
             }
             let before = GLOBAL.stats();

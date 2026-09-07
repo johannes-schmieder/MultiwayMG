@@ -61,7 +61,9 @@ timing gain is claimed. The [single-arena workspace](docs/ISSUE5_TRAVERSAL_ARENA
 consolidates result, traversal and optional image storage with checked disjoint
 slices and fewer allocations. All 7,920 regression processes preserve M5f
 numerical/work records with exactly derived descriptor savings; versioned
-accounting retains all prior evidence. See the
+accounting retains all prior evidence. The next [certificate liveness increment](docs/ISSUE5_CERTIFICATE_LIVENESS.md)
+reuses the coefficient vector after retaining its norm, with unchanged adjoint
+work and failure precedence. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 ## The problem

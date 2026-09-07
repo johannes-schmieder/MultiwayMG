@@ -16,9 +16,10 @@ pub struct CertificateWorkReport {
 /// Caller-owned certificate arrays bound to one exact immutable numerical frame.
 ///
 /// Targets are in canonical tuple order, not raw observation order. The workspace
-/// owns one tuple residual and two coefficient vectors, with no numerical operator
-/// copies. A certificate is `||B'W(y-Bx)|| / ||B'Wy||`; native solver flags play no
-/// role. Zero/zero is zero. Unrepresentable products, norms or ratios fail closed.
+/// owns one tuple residual and one coefficient vector, with no numerical operator
+/// copies. The coefficient vector holds the gradient, then the reference RHS;
+/// only its norm remains live across reuse. A certificate is
+/// `||B'W(y-Bx)|| / ||B'Wy||`; native solver flags play no role. Zero/zero is zero. Unrepresentable products, norms or ratios fail closed.
 #[derive(Debug)]
 pub struct PreparedCertificateWorkspace<'frame, 'topology> {
     binding: WeightFrameBinding<'frame, 'topology>,
@@ -73,7 +74,6 @@ pub fn certify_prepared_normal_equations(
 pub(crate) struct CertificateScratch {
     residual: Vec<f64>,
     gradient: Vec<f64>,
-    reference: Vec<f64>,
     work: CertificateWorkReport,
 }
 impl CertificateScratch {
@@ -82,17 +82,14 @@ impl CertificateScratch {
         Ok(Self {
             residual: vector(rows)?,
             gradient: vector(cols)?,
-            reference: vector(cols)?,
             work: CertificateWorkReport::default(),
         })
     }
     fn required_payload_bytes(rows: usize, cols: usize) -> Result<usize, MultiwayError> {
-        bytes(rows)?
-            .checked_add(bytes(cols)?.checked_mul(2).ok_or_else(overflow)?)
-            .ok_or_else(overflow)
+        bytes(rows)?.checked_add(bytes(cols)?).ok_or_else(overflow)
     }
     fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
-        [&self.residual, &self.gradient, &self.reference]
+        [&self.residual, &self.gradient]
             .iter()
             .try_fold(0usize, |total, v| {
                 total.checked_add(bytes(v.capacity())?).ok_or_else(overflow)
@@ -183,12 +180,16 @@ pub(crate) fn certify<O: CertificateOperator>(
     validate_weighted_products(operator.weights(), targets)?;
     scratch.work.adjoint_applications += 1;
     operator.rhs(&scratch.residual, &mut scratch.gradient)?;
+    // Only the scalar gradient norm must survive the reference action. Delay
+    // resolving its finite-input error until after that action, preserving the
+    // original error precedence and both attempted adjoint counts on failure.
+    let numerator =
+        ensure_finite(&scratch.gradient, "certificate gradient").map(|()| norm(&scratch.gradient));
     scratch.work.adjoint_applications += 1;
-    operator.rhs(targets, &mut scratch.reference)?;
-    ensure_finite(&scratch.gradient, "certificate gradient")?;
-    ensure_finite(&scratch.reference, "certificate reference")?;
-    let numerator = norm(&scratch.gradient);
-    let denominator = norm(&scratch.reference);
+    operator.rhs(targets, &mut scratch.gradient)?;
+    let numerator = numerator?;
+    ensure_finite(&scratch.gradient, "certificate reference")?;
+    let denominator = norm(&scratch.gradient);
     ensure_finite(&[numerator, denominator], "certificate norms")?;
     let residual = if denominator == 0.0 && numerator == 0.0 {
         0.0
@@ -255,5 +256,112 @@ pub(crate) fn bytes(count: usize) -> Result<usize, MultiwayError> {
 fn overflow() -> MultiwayError {
     MultiwayError::WorkspaceSizeOverflow {
         context: "certificate workspace",
+    }
+}
+
+#[cfg(test)]
+mod liveness_tests {
+    use super::*;
+    use std::cell::Cell;
+
+    // Deliberate action faults test precedence, not numerical benchmark evidence.
+    struct Faults {
+        gradient: [f64; 3],
+        reference: [f64; 3],
+        reference_error: bool,
+        calls: Cell<usize>,
+    }
+    impl CertificateOperator for Faults {
+        fn rows(&self) -> usize {
+            1
+        }
+        fn cols(&self) -> usize {
+            3
+        }
+        fn weights(&self) -> &[f64] {
+            &[1.0]
+        }
+        fn incidence(&self, _: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+            out.fill(0.0);
+            Ok(())
+        }
+        fn rhs(&self, _: &[f64], out: &mut [f64]) -> Result<(), MultiwayError> {
+            let call = self.calls.get() + 1;
+            self.calls.set(call);
+            if call == 2 && self.reference_error {
+                return Err(MultiwayError::NumericalFailure {
+                    context: "injected reference action",
+                });
+            }
+            out.copy_from_slice(if call == 1 {
+                &self.gradient
+            } else {
+                &self.reference
+            });
+            Ok(())
+        }
+    }
+    #[test]
+    fn reusing_gradient_storage_preserves_failure_precedence_and_attempted_work() {
+        for (gradient, reference, action_error, context) in [
+            (
+                [f64::INFINITY; 3],
+                [0.0; 3],
+                true,
+                "injected reference action",
+            ),
+            (
+                [f64::INFINITY; 3],
+                [f64::NAN; 3],
+                false,
+                "certificate gradient",
+            ),
+            (
+                [f64::MAX; 3],
+                [f64::INFINITY; 3],
+                false,
+                "certificate reference",
+            ),
+            ([f64::MAX; 3], [1.0; 3], false, "certificate norms"),
+            ([1.0; 3], [0.0; 3], false, "certificate relative residual"),
+            (
+                [f64::from_bits(1); 3],
+                [f64::MAX, 0.0, 0.0],
+                false,
+                "certificate ratio underflow",
+            ),
+        ] {
+            let op = Faults {
+                gradient,
+                reference,
+                reference_error: action_error,
+                calls: Cell::new(0),
+            };
+            let mut scratch = CertificateScratch::try_new(1, 3).unwrap();
+            let error = certify(&op, &[0.0], &[0.0; 3], &mut scratch).unwrap_err();
+            assert!(
+                matches!(error,MultiwayError::NumericalFailure{context:actual} if actual==context)
+            );
+            assert_eq!(op.calls.get(), 2);
+            assert_eq!(
+                scratch.work,
+                CertificateWorkReport {
+                    incidence_applications: 1,
+                    adjoint_applications: 2
+                }
+            );
+            let good = Faults {
+                gradient: [1.0, 2.0, 3.0],
+                reference: [2.0, 4.0, 6.0],
+                reference_error: false,
+                calls: Cell::new(0),
+            };
+            assert_eq!(
+                certify(&good, &[0.0], &[0.0; 3], &mut scratch)
+                    .unwrap()
+                    .to_bits(),
+                0.5f64.to_bits()
+            );
+        }
     }
 }
