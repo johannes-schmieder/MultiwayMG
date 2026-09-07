@@ -1,0 +1,154 @@
+[
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3579942,
+    "archive_sha256": "71e343540ae7f4726df086e0e1eec6adc33b692f88ee8131ff48337784fb5079",
+    "binary_sha256": "0660ae62c019b48590c0cdba811ffd96fdb323a2fab8ca03c454abee502f7f73",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "scalable_baseline_existing_solver_regression",
+    "label": "mac-smoke",
+    "m6f_input_numerical_work_fingerprint_exact": true,
+    "m6f_layout_manifest_sha256": "582148b6006de71b69bf29adbec15b71706e6b8bc642624361286f84ca40afce",
+    "m6f_layout_processes_compared": 2520,
+    "m6f_layout_source": "31b202e10c65cee77a079fb574f1408e778901db",
+    "m6f_payload_exact": true,
+    "manifest_sha256": "a68caea69dd4bd69419d254958a7f28dccac5cd797cbd3206801d2d0ae7a6ce2",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-baseline-5660b97.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-smoke-baseline-5660b97.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/all-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.358443964245336,
+        "stored": 1.3584439642453363
+      }
+    ],
+    "source_commit": "5660b97693443e7d2b05610b17d2d1a1a56ca67f",
+    "source_tree": "88f8c80a6d22246d706d35488f976add218567af",
+    "summary_sha256": "7fe1259a3f3bf478e09048bb8321da5069b06df1eb4b6b05f21e21bdcbcf0095"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3797729,
+    "archive_sha256": "ac8e7d62507a69e0120ac78b66276f6bc867ac7e852640442f5340f6a5a30dfc",
+    "binary_sha256": "0660ae62c019b48590c0cdba811ffd96fdb323a2fab8ca03c454abee502f7f73",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "scalable_baseline_existing_solver_regression",
+    "label": "mac-development",
+    "m6f_input_numerical_work_fingerprint_exact": true,
+    "m6f_layout_manifest_sha256": "7e54ef9e29e9dce4334de7e61f1c8121eba436b0f23dc3ee66576822146ed95e",
+    "m6f_layout_processes_compared": 2520,
+    "m6f_layout_source": "31b202e10c65cee77a079fb574f1408e778901db",
+    "m6f_payload_exact": true,
+    "manifest_sha256": "5e78b865d17018b2758ac67ab0f27c2990892c768a38d7b5b28a2054697ed509",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-baseline-5660b97.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-development-baseline-5660b97.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/fine-row/pcg/process_geomean",
+        "recomputed": 1.1548871369158134,
+        "stored": 1.1548871369158131
+      },
+      {
+        "path": "/balanced/all-row/pcg/process_geomean",
+        "recomputed": 1.309177000458264,
+        "stored": 1.3091770004582637
+      },
+      {
+        "path": "/balanced/fine-image/pcg/process_geomean",
+        "recomputed": 1.2091654730132455,
+        "stored": 1.2091654730132453
+      },
+      {
+        "path": "/balanced/fine-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.2588703313302774,
+        "stored": 1.2588703313302776
+      }
+    ],
+    "source_commit": "5660b97693443e7d2b05610b17d2d1a1a56ca67f",
+    "source_tree": "88f8c80a6d22246d706d35488f976add218567af",
+    "summary_sha256": "a7524a009680938ff42235352ae7ddabb4ae9191d7f1a9b25e0009d4ea958435"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 616291,
+    "archive_sha256": "14fb419691e33180a25d0700205699e0450582b5b0cbf13d1f5593b4a771edc1",
+    "binary_sha256": "0660ae62c019b48590c0cdba811ffd96fdb323a2fab8ca03c454abee502f7f73",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": null,
+    "kind": "scalable_baseline_existing_solver_regression",
+    "label": "mac-expanded",
+    "m6f_input_numerical_work_fingerprint_exact": true,
+    "m6f_layout_manifest_sha256": "3dd7412b5d56f63bc995fddf69789eaa2bbd5d3fcbd3b2739abddd0a103c9312",
+    "m6f_layout_processes_compared": 360,
+    "m6f_layout_source": "31b202e10c65cee77a079fb574f1408e778901db",
+    "m6f_payload_exact": true,
+    "manifest_sha256": "c2064d6136a4e24a6ff62daac908d558fc45e4f60ca91e42ec6f21f507df08fb",
+    "paired_processes_compared": 288,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-expanded-baseline-5660b97.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/mac-expanded-baseline-5660b97.tar.gz",
+    "processes": 360,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/all-image/pcg/inner_geomean",
+        "recomputed": 1.240071917802505,
+        "stored": 1.2400719178025053
+      }
+    ],
+    "source_commit": "5660b97693443e7d2b05610b17d2d1a1a56ca67f",
+    "source_tree": "88f8c80a6d22246d706d35488f976add218567af",
+    "summary_sha256": "4b505215eb5d30804dd63b109f2428d27477a935ef0902e66b31ef6884216b62"
+  },
+  {
+    "all_layouts_exact": true,
+    "archive_bytes": 3638296,
+    "archive_sha256": "2a1202fbbb3bd9c139b8cda9d61718316bf9f497857b364e3c82f4e8adcc2867",
+    "binary_sha256": "d15f3ca904f59dd9cd8867058db9178c120276bdea1388786c7a38c51fb9a3e7",
+    "competitive_qualification": false,
+    "complete_layout_gate_passed": true,
+    "default_layout_selected": false,
+    "github_run": 34107489091,
+    "kind": "scalable_baseline_existing_solver_regression",
+    "label": "linux-smoke",
+    "m6f_input_numerical_work_fingerprint_exact": true,
+    "m6f_layout_manifest_sha256": "acd053b8af8a1c8f9dac3df3b0f23c621c80efcca3d508c3366a9dbe2ef3e03c",
+    "m6f_layout_processes_compared": 2520,
+    "m6f_layout_source": "31b202e10c65cee77a079fb574f1408e778901db",
+    "m6f_payload_exact": true,
+    "manifest_sha256": "97e419d3f999ebf60ab70cec47f146565ae37348988a1040bfee15a3d2b5405d",
+    "paired_processes_compared": 2016,
+    "policy_sha256": "4c165206f80d42533fa2f6068e72aac7c518b8006ee0f33dbfbd4434c96c4c1e",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-baseline-5660b97.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-06-implementation/serial-benchmark/linux-smoke-baseline-5660b97.tar.gz",
+    "processes": 2520,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/balanced/fine-row/lsmr-gated/inner_geomean",
+        "recomputed": 1.1557730847842054,
+        "stored": 1.1557730847842052
+      },
+      {
+        "path": "/balanced/fine-image/lsmr-gated/inner_geomean",
+        "recomputed": 1.2098296089756801,
+        "stored": 1.2098296089756804
+      }
+    ],
+    "source_commit": "5660b97693443e7d2b05610b17d2d1a1a56ca67f",
+    "source_tree": "88f8c80a6d22246d706d35488f976add218567af",
+    "summary_sha256": "01332a9838ab876b6b79f4c415bb9f0d1d6b13304699f2adc8d21a8cd0169d70"
+  }
+]

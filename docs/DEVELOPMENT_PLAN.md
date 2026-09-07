@@ -869,3 +869,19 @@ for measurement, not an implemented layout or selected default.
   Freeze source before unchanged Mac smoke/development/expanded and Linux smoke
   regression. That supplied-map harness does not time the new baseline or the
   forthcoming component-local automatic driver. M6–M10 remain open.
+
+- M6g frozen source `5660b97693443e7d2b05610b17d2d1a1a56ca67f` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-07/prepared-layout-scalable-baselines/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layout
+  comparisons and 7,920 exact M6f input/numerical/work/payload/layout records.
+  No errors, rejections, timeouts, RSS failures or measured retries occurred.
+  Source `34107489091`/`34107489103` and PR `34107513260`/`34107513287`
+  passed. Copies and every archived member independently revalidate.
+  8 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+  Final evidence-head CI and PR60 merge remain. This checks the generalized
+  hierarchy path, not baseline economics or automatic construction. Next build
+  terminal-first component-local execution, bounded hierarchy attempts, actual
+  screens and charged fallback. A one-shot batch can release each small dense
+  factor after all K component solves, keeping the temporary linear inverse until
+  final global certification. M6–M10 remain open; scalar stays default and
+  calibration/campaign holdout remain untouched.

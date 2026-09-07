@@ -203,7 +203,9 @@ share the existing certified solver code through statically dispatched owners.
 Identity/diagonal/MAP need zero/two/four action arrays plus an optional image;
 large solves, exact layouts and allocation gates pass. Fourteen native baseline
 candidates miss the original certificate; gating certifies all 48 checked cases.
-Final required/release qualification is underway. Component-local automatic construction remains the next stage. See the
+All required/release checks pass. The shared hierarchy path passes 7,920 supplied-map regression processes with
+exact M6f numerical/work/payload/layout records. Component-local automatic
+construction remains the next stage. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

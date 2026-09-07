@@ -113,3 +113,12 @@ construction economics. Next compose terminal-first component-local construction
 bounded candidates, full current-weight replay, actual-cycle screens and charged
 baseline fallback. M6–M10 remain open. No automatic/default/competitive promotion,
 calibration or campaign-holdout result is introduced here.
+
+
+Frozen source `5660b97` passes the [four-artifact supplied-map regression](../benchmarks/results/2026-09-07/prepared-layout-scalable-baselines/README.md):
+7,920 processes, 72,300 certified measured columns, 6,336 exact layout comparisons
+and exact M6f input/numerical/work/payload/layout records. No measured retries or
+failed gates occurred. Copies and every archived member independently revalidate.
+8 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14. Receipts record every difference; raw numerical/certificate/work/payload comparisons remain exact.
+Source/PR checks passed; final evidence-head checks and PR60 merge remain. These
+measurements exercise the shared hierarchy path, not baseline economics.
