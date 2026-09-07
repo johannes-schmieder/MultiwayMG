@@ -6,6 +6,9 @@ use thiserror::Error;
 #[derive(Debug, Clone, PartialEq, Error)]
 #[non_exhaustive]
 pub enum IncidenceError {
+    /// A provisional replay requires an accepted structural transition.
+    #[error("hierarchy has no accepted transition to replay")]
+    HierarchyTransitionMissing,
     /// A component index is outside the exact structural partition.
     #[error("component index {component} is outside component count {count}")]
     ComponentIndexOutOfBounds {

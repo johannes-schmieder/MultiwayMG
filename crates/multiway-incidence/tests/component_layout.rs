@@ -194,3 +194,27 @@ fn duplicate_observations_and_disconnected_extra_nullity() {
     let t = PreparedThreeWayTopology::try_from_collapsed([16; 3], &keys).unwrap();
     check(&t);
 }
+
+#[test]
+fn nested_factor_has_explicit_nonstructural_null_vectors() {
+    let mut keys: Vec<_> = (0..4)
+        .flat_map(|i| (0..3).map(move |j| [i, j, j]))
+        .collect();
+    keys.push([4, 3, 3]);
+    let t = PreparedThreeWayTopology::try_from_collapsed([5, 4, 4], &keys).unwrap();
+    check(&t);
+    assert_eq!(t.component_factor_sizes().len(), 2);
+    let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples).unwrap();
+    // Each vector sums to zero within its factor and is therefore independent
+    // of the constant factor-shift modes. The two vectors are independent.
+    for second in [1, 2] {
+        let mut x = [0.; 13];
+        x[5] = 1.;
+        x[5 + second] = -1.;
+        x[9] = -1.;
+        x[9 + second] = 1.;
+        let mut y = [7.; 13];
+        f.operator_view().apply_incidence(&x, &mut y).unwrap();
+        assert_eq!(y, [0.; 13]);
+    }
+}

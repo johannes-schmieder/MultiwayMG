@@ -76,7 +76,7 @@ reconstructed source owners. Borrowed views and recoders cannot survive moving
 or dropping their structural owners.
 
 Tests cover connected/ragged/interleaved layouts, separated singleton components,
-original duplicate observations and disconnected Latin extra nullity. Every
+original duplicate observations and disconnected Latin controls. Every
 source level and canonical tuple occurs exactly once, each ID row is ascending,
 local keys are sorted unique, and scatter/gather composes to identity. Local
 weighted Gramians agree bitwise with restrictions of the original operator.
@@ -125,3 +125,8 @@ rejections, timeouts, RSS failures or measured retries occurred. Source/PR
 workflows passed; independently revalidated binary/raw copies and every archived
 member are preserved. Final evidence-head CI and PR56 merge remain. These
 supplied-map measurements do not invoke or time component layout construction.
+
+Qualification correction (2026-09-07): the cyclic Latin square has only structural
+nullity. See the [explicit rank audit and new nested controls](ISSUE5_PROVISIONAL_REPLAY.md).
+This corrects the former additional-nullity description; raw frozen evidence is
+unchanged. The new nested regression is part of M6d, not the older measured source.

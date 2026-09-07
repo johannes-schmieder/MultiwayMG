@@ -337,3 +337,9 @@ fn limit(context: &'static str, actual: usize, maximum: usize) -> Result<(), Inc
 #[cfg(test)]
 #[path = "builder_tests.rs"]
 mod tests;
+
+mod provisional;
+pub use provisional::{
+    PreparedProvisionalFailure, PreparedProvisionalFrame, PreparedProvisionalSetup,
+    ProvisionalFrameStage, ProvisionalWeightInput,
+};
