@@ -1,0 +1,301 @@
+{
+  "checks": {
+    "required-slices": [
+      {
+        "name": "format",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exit": 0,
+        "seconds": 0.5423402499873191
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--workspace",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit": 0,
+        "seconds": 2.0762724578380585
+      },
+      {
+        "name": "all",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--workspace",
+          "--all-features"
+        ],
+        "exit": 0,
+        "seconds": 207.7066295829136
+      },
+      {
+        "name": "minimal",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--workspace",
+          "--no-default-features"
+        ],
+        "exit": 0,
+        "seconds": 65.14274762501009
+      },
+      {
+        "name": "docs",
+        "command": [
+          "cargo",
+          "doc",
+          "--locked",
+          "--workspace",
+          "--all-features",
+          "--no-deps"
+        ],
+        "exit": 0,
+        "seconds": 1.0578762078657746
+      },
+      {
+        "name": "python",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "scripts",
+          "-p",
+          "test_*.py"
+        ],
+        "exit": 0,
+        "seconds": 35.06631083297543
+      },
+      {
+        "name": "automatic-probe-unit",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--example",
+          "prepared_automatic_benchmark"
+        ],
+        "exit": 0,
+        "seconds": 0.657967290841043
+      },
+      {
+        "name": "diagnostic-probe-unit",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--example",
+          "prepared_automatic_diagnostic"
+        ],
+        "exit": 0,
+        "seconds": 0.631445209030062
+      }
+    ],
+    "release-slices": [
+      {
+        "name": "all",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--test",
+          "operator_workspaces",
+          "--test",
+          "workspace_allocations",
+          "--test",
+          "automatic_allocation_peaks",
+          "--test",
+          "prepared_automatic",
+          "--test",
+          "prepared_baseline",
+          "--test",
+          "prepared_hierarchy",
+          "--test",
+          "prepared_grouped_hierarchy",
+          "--test",
+          "prepared_cycle_quality",
+          "--test",
+          "prepared_pcg",
+          "--test",
+          "prepared_lsmr",
+          "--test",
+          "hierarchy_workspace",
+          "--test",
+          "cycle_probe"
+        ],
+        "exit": 0,
+        "seconds": 18.668171499855816
+      },
+      {
+        "name": "dense-all",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--lib",
+          "dense::traversal_tests"
+        ],
+        "exit": 0,
+        "seconds": 3.7100745420902967
+      },
+      {
+        "name": "minimal",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--no-default-features",
+          "--test",
+          "operator_workspaces",
+          "--test",
+          "workspace_allocations",
+          "--test",
+          "automatic_allocation_peaks",
+          "--test",
+          "prepared_automatic",
+          "--test",
+          "prepared_baseline",
+          "--test",
+          "prepared_hierarchy",
+          "--test",
+          "prepared_grouped_hierarchy",
+          "--test",
+          "prepared_cycle_quality",
+          "--test",
+          "prepared_pcg",
+          "--test",
+          "prepared_lsmr",
+          "--test",
+          "hierarchy_workspace",
+          "--test",
+          "cycle_probe"
+        ],
+        "exit": 0,
+        "seconds": 6.710496542043984
+      },
+      {
+        "name": "dense-minimal",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--no-default-features",
+          "--lib",
+          "dense::traversal_tests"
+        ],
+        "exit": 0,
+        "seconds": 3.1614395421929657
+      },
+      {
+        "name": "debug-protocol",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/debug-probe.py",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/release-slices/debug-protocol"
+        ],
+        "exit": 0,
+        "seconds": 32.8004197080154
+      },
+      {
+        "name": "release-protocol",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/release-probe.py",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/release-slices/release-protocol"
+        ],
+        "exit": 0,
+        "seconds": 20.63052545906976
+      }
+    ]
+  },
+  "protocols": {
+    "debug": {
+      "binary_sha256": {
+        "instrumented": "013a7d9125feaf7d054c047f26d2cd6061e6d97751a71fe5d3d5c787d36e87e8",
+        "legacy": "7f2601042b4d79b2fc07c35faf91912bdb9382438df8a743c64705020bc7f1c3",
+        "reference": "63630df87ae517b4b60b0aba9982e2f55c55554dfa746513cee0e897b5ec7afb"
+      },
+      "checks": {
+        "cli": 10,
+        "layout": 900,
+        "legacy": 225,
+        "malformed": 26,
+        "paired": 1125
+      },
+      "complete": true,
+      "performance_measurement": false,
+      "processes": 2250
+    },
+    "release": {
+      "binary_sha256": {
+        "instrumented": "847a01086dce162bcdac8bd6f8aeeee9114bd7aa1a8eb89a10d4bcf473880726",
+        "legacy": "38eeef396ecd091d774dcce34438e77188a738564f0d10489e362e2c30d4e7e4",
+        "reference": "2bca3dd0a929663fecb9551323b1f4282f52046a04ccfced4c5736ae5f7745e2"
+      },
+      "checks": {
+        "cli": 10,
+        "layout": 900,
+        "legacy": 225,
+        "malformed": 26,
+        "paired": 1125
+      },
+      "complete": true,
+      "performance_measurement": false,
+      "processes": 2250
+    }
+  },
+  "previous_source": "8655c351d022d48f8e51adc6406e56149ab12e8c",
+  "log_sha256": {
+    "required-slices/all.log": "6f4775e7fcfb916dfbc8b4330b8fb829f7287db1a698edb939093389adfe0d71",
+    "required-slices/automatic-probe-unit.log": "ce605dc55d5c72292e7ccef37281d2fe13ebd6c32d4c07243822de6b58257bac",
+    "required-slices/clippy.log": "0421a212525d5a6ee107ba975102143b40841161c1f761d4f2eda7c903dde2aa",
+    "required-slices/diagnostic-probe-unit.log": "eb5f01693690ac96eb5e8ad035b45ea8a17f85055368b1e2c2fcc7eb16d0fabc",
+    "required-slices/docs.log": "b6e85904af225a079976ac69c76e3fbf41b7709f754385e37c1a34544006a85e",
+    "required-slices/format.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "required-slices/minimal.log": "1993a6b756a9356be4b9d8b9512fc837e7a7a451cc57a719efd435fe348ba47c",
+    "required-slices/python.log": "972fdee7e3eabc6afeaee3e00e3d8b2ebb5cf3a2fd49660750e53648855b85b5",
+    "release-slices/all.log": "966acaff7afb88950a34cb97a4623946b3b0c4260db01a332ec66a6d03901f80",
+    "release-slices/debug-protocol.log": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a",
+    "release-slices/dense-all.log": "41ecef6b6d2f8bd32ba9e35a09e4baf54117a4032a9ee142e48f1fdca2588b97",
+    "release-slices/dense-minimal.log": "3b9a2273c8f0dc5c902e8540c51e7e36eb55843531fd962348a1e18579634f89",
+    "release-slices/minimal.log": "c1397e860348da944a7c3cd38bd7f5318262bfa2c5d645935717acf1554d07ef",
+    "release-slices/release-protocol.log": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a"
+  },
+  "dense_source_sha256": "d03c310b6c895c8b56882b2cbca66ecd1f5775dbf84b158eb9e2dbc2e167708d",
+  "change": "general matrix column iterator to plain contiguous slice; no arithmetic/storage/policy change; no timing observations of revised candidate before commit"
+}

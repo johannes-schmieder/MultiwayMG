@@ -311,7 +311,7 @@ impl DensePseudoinverse {
         out.fill(0.0);
         for (mode, &modal_value) in modal.iter().enumerate() {
             let column = self.eigenvectors.column(mode);
-            for (value, &coefficient) in out.iter_mut().zip(column.iter()) {
+            for (value, &coefficient) in out.iter_mut().zip(column.as_slice().iter()) {
                 *value = coefficient.mul_add(modal_value, *value);
             }
         }

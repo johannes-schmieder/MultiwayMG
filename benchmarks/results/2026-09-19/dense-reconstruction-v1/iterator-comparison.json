@@ -1,0 +1,23 @@
+{
+  "source": "8655c351d022d48f8e51adc6406e56149ab12e8c",
+  "exact_m6l_mac_smoke_records": 15120,
+  "exact_cross_platform_micro_records": 192,
+  "mac_micro_balanced_geomean": 0.6135542240567315,
+  "linux_micro_balanced_geomean": 0.9919463530777192,
+  "smoke_journal_sha256": "7938fb22980cda6cfb6a1ac5bc2ad971ea041db57fbac66dbbff2744c68049d5",
+  "withdrawn_development": {
+    "status": "withdrawn_incomplete",
+    "source": "8655c351d022d48f8e51adc6406e56149ab12e8c",
+    "stopped_at": "2026-09-19T13:34:05.746644+00:00",
+    "collector_pid": 9801,
+    "completed_journal_attempts": 2154,
+    "last_completed_index": 2153,
+    "journal_sha256": "3d7022cfca7b478c0cc3cc7fc266562aef7cbfc158e25ae5e112af51897e3ac1",
+    "manifest_sha256": "4ef5843ede35fb54b23c3e9d069b74cef5d08a492b0b571691edc0a342b71eee",
+    "completed_process_wall_ns": 147764251434,
+    "reason": "All sixteen frozen ARM microbenchmark dimension aggregates regressed; assembly shows general matrix-iterator bookkeeping and scalar FMAs. Stop this rejected candidate before further full development collection; revise to plain contiguous column slices.",
+    "eligibility": "No complete development summary or speed claim. Original manifest/journal/raw files unchanged. An in-flight interrupted process may have no complete raw output or timing; missing cost is unavailable, never zero. Completed microbenchmark and smoke are retained. Revised source is a new candidate, not a retry of this source."
+  },
+  "competitive_qualification": false,
+  "retained": false
+}

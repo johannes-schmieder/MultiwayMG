@@ -89,3 +89,34 @@ pass. Both debug/release actual protocols pass1,125 exact pairs,225 legacy and
 900 layout comparisons,26 malformed inputs and10 CLI checks. See the
 [source qualification](../benchmarks/results/2026-09-19/dense-reconstruction-qualification/README.md).
 Source freeze precedes all performance measurements.
+
+## Rejected general-iterator revision
+
+Source `8655c351d022d48f8e51adc6406e56149ab12e8c` uses nalgebra's general
+column iterator. Its complete fixed Mac microbenchmark regresses at all sixteen
+dimensions: balanced old/new time ratio0.613554 (about1.63x slower). Actual ARM
+assembly retains per-element iterator state/branches and scalar FMAs. The Linux
+microbenchmark is near parity at0.991946, with every size retained. Its provider
+ZIP digest was independently verified and its complete summary recomputes exactly.
+
+Mac smoke completes all15,120 processes and144,000 measured columns with zero
+failures. The unfinished Mac development run was explicitly withdrawn after the
+negative microbenchmark/assembly diagnosis:2,154 journaled attempts remain,
+with147.764251434 seconds of completed process cost. Its original manifest,
+journal and raw files are unchanged. A possibly interrupted in-flight attempt
+has unavailable complete output/cost, not zero cost. No complete development
+summary, selected-subset aggregate or speed claim is made for this revision.
+All completed and partial evidence is preserved separately.
+
+The next source revision retains the same column traversal but uses the column's
+plain contiguous slice, removing the general matrix iterator. This changes no
+matrix storage, FMA order, work policy or experiment schedule. It is a distinct
+candidate with fresh collection directories, not a retry or replacement of the
+rejected revision. New correctness/release checks and frozen platform measurements
+must qualify it. Preliminary compilation now emits vector FMAs on ARM; assembly
+of the exact measured executable must confirm that after the source freeze.
+
+The plain-slice revision passes all repeated required/135 Python, release and
+actual debug/release protocol gates. Both protocols retain1,125 exact pairs.
+[Rejected-revision evidence](../benchmarks/results/2026-09-19/dense-reconstruction-v1/README.md)
+and independently verified copies/archives are preserved before the new freeze.

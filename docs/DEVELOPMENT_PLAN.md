@@ -1130,3 +1130,10 @@ for measurement, not an implemented layout or selected default.
   ARM/generic-x86 assembly and complete automatic smoke/development regression
   must qualify it before retention. No rank, routing, layout default or terminal
   admission policy changes; later campaign milestones remain open.
+
+- M6m first source `8655c35`, PR66, is rejected for performance: general matrix
+  iteration yields ARM application ratio0.613554 at unchanged arithmetic, with
+  all16 dimensions slower; Linux0.991946 is near parity. Preserve completed
+  micro/smoke data and the explicitly withdrawn2,154-attempt development run.
+  Revise to plain contiguous column slices, retaining storage/FMA order and
+  repeating qualification as a new source candidate, without overwriting data.

@@ -18,3 +18,9 @@ These are correctness/allocation gates, not a speedup claim. The frozen
 require preserved platform samples, assembly inspection and charged automatic
 regression before retaining the candidate. No rank, storage, numerical policy,
 default, calibration or holdout changes.
+
+The plain-slice revision repeats all required/135 Python and release/protocol
+gates successfully; see `checks-slices.json`. The first iterator version's
+checks are retained above, separately from its rejected performance evidence in
+[the result record](../dense-reconstruction-v1/README.md). New measurements follow
+a fresh source freeze; no prior negative records are replaced.

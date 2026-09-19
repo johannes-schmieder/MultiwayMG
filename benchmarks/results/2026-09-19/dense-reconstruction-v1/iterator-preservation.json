@@ -1,0 +1,42 @@
+[
+  {
+    "name": "mac-micro",
+    "files": 6,
+    "raw_bytes": 2133731,
+    "archive_bytes": 832803,
+    "archive_sha256": "46c8a42aeaaabda8ca7dcc6cb8990e625d10d842c3496c31325b3bccd506a433",
+    "copy_and_every_member_exact": true,
+    "complete_validation": true,
+    "manifest_sha256": "bbf6f5fa7ab79406966902b9a6701ea355ca66954ec2eb9f0dd9419f1eaa8984"
+  },
+  {
+    "name": "linux-micro",
+    "files": 6,
+    "raw_bytes": 2485563,
+    "archive_bytes": 933684,
+    "archive_sha256": "9065f89577da16a911f547deb2b67b6b53a9390b57f7a1fcae07e9dde16acbf7",
+    "copy_and_every_member_exact": true,
+    "complete_validation": true,
+    "manifest_sha256": "7d32b66e440485e45e9ee7325fd3705f3e137d72c09aa1c5e4b385e65cb1fee8"
+  },
+  {
+    "name": "mac-smoke",
+    "files": 30245,
+    "raw_bytes": 161225317,
+    "archive_bytes": 9216415,
+    "archive_sha256": "764e94c6ec830f3ecacb8fa486da9778aefcdfae09beae6a9c597bde24741bc7",
+    "copy_and_every_member_exact": true,
+    "complete_validation": true,
+    "manifest_sha256": "c3daf4a5eaa1e4fb59d0d89b5877538a4d98bc5b5464ed8f705987588be60c72"
+  },
+  {
+    "name": "mac-development-incomplete",
+    "files": 4312,
+    "raw_bytes": 22523000,
+    "archive_bytes": 1900885,
+    "archive_sha256": "8023ea1066f1318c5da092f71f836290fb211eb36351695a97a7d9ed2162caaf",
+    "copy_and_every_member_exact": true,
+    "complete_validation": false,
+    "manifest_sha256": "4ef5843ede35fb54b23c3e9d069b74cef5d08a492b0b571691edc0a342b71eee"
+  }
+]
