@@ -1,0 +1,10 @@
+f4a611d61287e2375c1812232f1df1ac451605a1
+event=push sha=f4a611d61287e2375c1812232f1df1ac451605a1 run=35449932569
+rustc 1.85.0 (4d91de4e4 2025-02-17)
+binary: rustc
+commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688
+commit-date: 2025-02-17
+host: aarch64-apple-darwin
+release: 1.85.0
+LLVM version: 19.1.7
+Darwin sat12-dp152-6b4ca741-e91e-4ef6-a6cd-e5f6e583fbcf-EA0992AF8E6B.local 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:16:43 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_VMAPPLE arm64

@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6m merged; M6n canonical pair ordering in qualification; terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6m merged; M6n canonical pair ordering qualified; final delivery pending; terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1167,3 +1167,21 @@ for measurement, not an implemented layout or selected default.
   All six visit orders, floating-point reductions, capacities and admission
   boundaries stay fixed. Required/release gates and complete automatic regression
   must qualify it before retention; no unpaired timing speedup claim.
+
+- M6n source `f4a611d`, PR67, preserves all 45,360 complete M6m schedule/input/
+  numerical/work/memory/routing signatures and certifies all 432,000 measured
+  columns. Required/release checks and all 36 source/PR jobs pass. Six allocation
+  logs preserve 39 controls and four denials; originals/copies/archive members
+  validate, with 15 Linux derived-geomean archival roundoffs recorded separately.
+  Full development all-image/automatic-scalar is 1.247244x; versus grouped MAP it
+  is 0.556642x overall (about 1.80x slower), with every whole family negative.
+  All 17 comparisons and full costs remain in the canonical evidence. No paired
+  source-change speedup or default/competitive promotion. Final evidence-head
+  CI, guarded merge and actual-main verification precede the next increment.
+- Next implement the [sparse-terminal boundary plan](ISSUE5_SPARSE_TERMINAL_BOUNDARY.md):
+  serial caller-owned within action scratch first, then explicit factor-memory/
+  permutation-scratch and checked construction/fill boundaries, then a separately
+  qualified fixed-generation terminal policy above 256. An outer workspace alone
+  cannot make opaque local factors admitted or allocation-free. Full numerical
+  range preservation is distinct from structural factor-shift projection. M7–M10
+  and their frozen acceptance/resource limits remain unchanged.

@@ -236,10 +236,12 @@ All45,360 complete-process regression records preserve exact numerical/work/
 memory signatures and432,000 measured columns certify. Complete development
 still trails grouped MAP by1.81x; no competitive or default promotion follows.
 See the [dense evidence](../benchmarks/results/2026-09-19/dense-reconstruction-v1/README.md)
-and the earlier [complete evidence](../benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md). The next
+and the earlier [complete evidence](../benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md). The qualified
 [canonical pair-order increment](ISSUE5_CANONICAL_PAIR_ORDER.md) replaces one redundant sort with a reset
-of the existing index array. It preserves reduction order and storage; complete
-qualification remains required before retention.
+of the existing index array. All 45,360 regression records preserve exact results
+and all 432,000 measured columns certify. Current development remains about 1.80x
+slower than grouped MAP; no paired sort-removal speedup is inferred. Next is the
+[sparse-terminal memory and execution boundary](ISSUE5_SPARSE_TERMINAL_BOUNDARY.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

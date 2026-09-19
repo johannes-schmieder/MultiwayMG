@@ -80,3 +80,35 @@ All required Rust1.85/135 Python checks and eight release scientific/protocol
 groups pass before source freeze. Both actual protocols retain1,125 exact pairs.
 See [source qualification](../benchmarks/results/2026-09-19/canonical-pair-order-qualification/README.md).
 M6m post-merge CI35449392966/35449392967 passes all18 jobs.
+
+
+## Complete frozen result
+
+Measured source `f4a611d61287e2375c1812232f1df1ac451605a1`, tree
+`4f7376c270d919a4108259e7ae6576b936357e48`, passes all 36 source/PR jobs:
+35449932557/35449932569 and 35449934477/35449934536. Three complete collections
+retain 45,360 processes and 432,000 certified measured columns, with zero failed
+warmups or measurements. Every scheduled input, mathematical, work, payload,
+layout and routing signature matches retained M6m exactly. All six Linux/macOS/
+Windows debug/release logs preserve 39 allocator controls, four zero-allocation
+denials and 6,240 certified columns per configuration.
+
+Originals, independent copies and every deterministic archive member validate.
+Provider ZIP sizes and SHA256 digests match fresh GitHub metadata. Mac summaries
+recompute exactly; 15 Linux derived geometric means differ only within the
+predeclared 1e-14 archival bound. Original summaries and all raw/scientific fields
+are preserved. See [all 17 comparisons and full memory/family results](../benchmarks/results/2026-09-19/canonical-pair-order-v1/README.md).
+
+On Mac development, automatic all-image versus automatic scalar is 1.247244x.
+Against grouped MAP it is 0.556642x overall, 0.406319x for one RHS and 0.586626x
+for repeated RHS: about 1.80x slower overall. Every whole-family comparison is
+negative. Nine internal quality rejections retain their work and baseline
+fallback. Smoke has only small direct terminals and does not exercise candidate
+construction. Cross-revision timings are unpaired and establish no sort-removal
+speedup. No expanded rerun was triggered: numerical/work/routing/capacity fields
+are unchanged and canonical order/admission/failure and size-boundary gates pass.
+
+The change removes one provably redundant comparison sort without adding memory;
+it does not establish competitiveness or finish M6. Final evidence-head review,
+all source/PR CI and guarded actual-main verification remain the delivery gates.
+Next follow the [sparse-terminal boundary plan](ISSUE5_SPARSE_TERMINAL_BOUNDARY.md).
