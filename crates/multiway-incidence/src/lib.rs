@@ -40,7 +40,8 @@ pub use hierarchy::{
 };
 pub use operator_view::ThreeWayOperatorView;
 pub use prepared::{
-    ObservationGroups, PreparedThreeWayTopology, PreparedTopologyBinding, PreparedTopologySource,
+    ObservationGroups, PreparedComponentRoot, PreparedThreeWayTopology, PreparedTopologyBinding,
+    PreparedTopologySource,
 };
 pub use problem::ThreeWayProblem;
 pub use symbolic::{PreparedCoarseTupleMap, PreparedPairEdgeMap, TupleMergeGroups};

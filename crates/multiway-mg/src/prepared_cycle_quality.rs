@@ -363,7 +363,10 @@ fn energy_norm(
     }
     Ok(energy.max(0.).sqrt())
 }
-fn validate(o: CycleQualityOptions, c: CycleQualityCriteria) -> Result<(), MultiwayError> {
+pub(crate) fn validate(
+    o: CycleQualityOptions,
+    c: CycleQualityCriteria,
+) -> Result<(), MultiwayError> {
     if o.test_vectors == 0
         || o.test_vectors > 16
         || o.power_iterations == 0

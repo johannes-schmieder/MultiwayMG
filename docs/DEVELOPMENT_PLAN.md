@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6f merged; M6g scalable baseline execution |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6g merged; M6h component driver in qualification |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -885,3 +885,58 @@ for measurement, not an implemented layout or selected default.
   factor after all K component solves, keeping the temporary linear inverse until
   final global certification. M6–M10 remain open; scalar stays default and
   calibration/campaign holdout remain untouched.
+
+- M6g PR60 merged as `b4d396af3f6e67c9890723c0aacb6eff08bf3c4c`; actual
+  main matches reviewed tree `2cc5769a666be327372a4c7ae774e1d664b14ce2`.
+  Final source `34108724210`/`34108724219` and PR
+  `34108726364`/`34108726397` passed. Source `5660b97` and evidence `d98901e`
+  preserve all four complete regression artifacts and 72,300 certificates.
+  Eight derived timing geomeans differ within the existing archival-only
+  tolerance; raw comparisons are exact. Inventory is 206,529 files. M6h now
+  implements the actual terminal-first component driver, including directly
+  consumed local roots, shared bounded dense arithmetic and charged fallback.
+
+- M6g post-merge `34109338249`/`34109340979` passed. M6h component roots,
+  direct matrix/RHS assembly and the complete one-shot driver compile. Initial
+  private reservation/budget/recovery, independent local-root/current-weight/RHS
+  references and four complete-driver scientific tests pass. The driver includes
+  terminal-first K-column scheduling, all-singleton layout bypass, fresh bounded
+  hierarchy attempts and actual screens, local baseline recovery and final
+  original-problem certification/fallback. Qualification is ongoing; no complete
+  M6 or competitive/default promotion is claimed.
+
+- 2026-09-19: resumed the interrupted M6h branch; origin/main remains `b4d396a`.
+  Preserved the starting patch/untracked files outside the source repository.
+  The explicit component driver passes seven complete scientific tests and
+  isolated peak-allocation checks, including n=256 dense terminals, recursive
+  setup, failed construction, forty small components and two large local roots.
+  Allocation records remain identical for K=1,2,4,8,16,17,32 and repeated calls;
+  no net allocations survive. Observed heap peaks plus existing owners/caller
+  arrays fit the admission bounds. Compile-time lifetime and integrated budget/
+  nonconvergence checks extend the initial private reservation/failure gates.
+  Required/release qualification is ongoing. See ISSUE5_COMPONENT_DRIVER.md;
+  M6 economics and M7–M10 remain open. No calibration/holdout was consumed.
+
+- M6h required Rust1.85/90 Python and seven release check groups pass, including
+  all 120 actual protocol comparisons. Eleven isolated peak controls have exact
+  debug/release and first/repeated/K1–32 allocation records; all 1,980 columns
+  per configuration certify and all temporary allocations are released.
+  Seven complete scientific tests retain construction/screen rejection and
+  final nonconvergence independently of completion. Two compile-fail lifetimes
+  and private reservation/error/unwind/exact-budget gates pass. Self-review
+  covers ownership, unchanged arithmetic, live admission and acceptance scopes;
+  it is not external review. Freeze source before compatibility measurements.
+  M6 economics and M7–M10 remain open; calibration/holdout remain untouched.
+
+- M6h frozen source `654ddd16b6a66442c74fe98bc5d5fb12a25d6514` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-19/prepared-layout-component-driver/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layouts and
+  7,920 exact M6g input/numerical/work/payload/layout records. No errors,
+  rejections, timeouts, RSS failures or measured retries occurred. Copies and
+  every archived member independently revalidate. 1 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14; receipts record every difference. Raw numerical/work/payload comparisons remain exact.
+  Source `35426610749`/`35426610758` and PR `35426643488`/`35426643483` pass.
+  All six cross-platform debug/release peak records match the local reference.
+  Final evidence-head checks and PR61 merge remain. This regression checks shared
+  existing-solver arithmetic, not automatic economics. Next qualify completely
+  charged automatic/component-disabled/global-baseline development routes.
+  M6–M10 remain open; scalar stays default and campaign holdout is untouched.

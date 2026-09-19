@@ -1,0 +1,34 @@
+[
+  {
+    "databaseId": 35426610749,
+    "event": "push",
+    "headSha": "654ddd16b6a66442c74fe98bc5d5fb12a25d6514",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35426610749"
+  },
+  {
+    "databaseId": 35426610758,
+    "event": "push",
+    "headSha": "654ddd16b6a66442c74fe98bc5d5fb12a25d6514",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35426610758"
+  },
+  {
+    "databaseId": 35426643488,
+    "event": "pull_request",
+    "headSha": "654ddd16b6a66442c74fe98bc5d5fb12a25d6514",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35426643488"
+  },
+  {
+    "databaseId": 35426643483,
+    "event": "pull_request",
+    "headSha": "654ddd16b6a66442c74fe98bc5d5fb12a25d6514",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35426643483"
+  }
+]

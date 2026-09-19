@@ -1,7 +1,7 @@
 //! Component permutations preserve original coordinates, bits and local operators.
 use multiway_incidence::{
-    PreparedComponentLayout, PreparedComponentRecoding, PreparedHierarchyBudget,
-    PreparedThreeWayTopology, ThreeWayWeightFrame, WeightFrameInput,
+    PreparedComponentLayout, PreparedComponentRecoding, PreparedComponentRoot,
+    PreparedHierarchyBudget, PreparedThreeWayTopology, ThreeWayWeightFrame, WeightFrameInput,
 };
 const B: PreparedHierarchyBudget = PreparedHierarchyBudget::UNLIMITED;
 fn bits(a: &[f64], b: &[f64]) {
@@ -44,6 +44,12 @@ fn check(t: &PreparedThreeWayTopology) {
     let mut seen_tuples = vec![0; e];
     let weights: Vec<_> = (0..e).map(|i| 2f64.powi((i % 11) as i32 - 5)).collect();
     let fine = ThreeWayWeightFrame::try_new(t, WeightFrameInput::Tuples(&weights)).unwrap();
+    let target: Vec<_> = (0..e).map(|i| (i as f64 * 0.17).cos()).collect();
+    let mut global_rhs = vec![0.; v];
+    fine.operator_view()
+        .rhs_from_targets_into(&target, &mut global_rhs)
+        .unwrap();
+    let wrong_frame = ThreeWayWeightFrame::try_new(&other, WeightFrameInput::UnitTuples).unwrap();
     for c in 0..a.component_count() {
         let view = a.component(c).unwrap();
         assert!(view.factor_levels(3).is_none());
@@ -73,6 +79,20 @@ fn check(t: &PreparedThreeWayTopology) {
         view.scatter_tuple_values(&ly, &mut sy).unwrap();
         let mut keys = vec![[0; 3]; view.tuple_count()];
         r.write_keys_into(c, &mut keys).unwrap();
+        let mut visited = vec![];
+        r.for_each_key(c, |id, key| visited.push((id, key)))
+            .unwrap();
+        assert_eq!(
+            visited,
+            tuple_ids
+                .iter()
+                .copied()
+                .zip(keys.iter().copied())
+                .collect::<Vec<_>>()
+        );
+        let mut called = false;
+        assert!(r.for_each_key(usize::MAX, |_, _| called = true).is_err());
+        assert!(!called);
         assert!(keys.windows(2).all(|k| k[0] < k[1]));
         for (i, key) in keys.iter().enumerate() {
             for q in 0..3 {
@@ -89,6 +109,55 @@ fn check(t: &PreparedThreeWayTopology) {
         let mut w = vec![0.; view.tuple_count()];
         view.gather_tuple_values(&weights, &mut w).unwrap();
         let frame = ThreeWayWeightFrame::try_new(&local, WeightFrameInput::Tuples(&w)).unwrap();
+        let root = PreparedComponentRoot::try_new(&r, c, B).unwrap();
+        assert_eq!(root.component().index(), c);
+        assert_eq!(root.topology().topology(), local.topology());
+        assert_eq!(root.topology().component_labels(), local.component_labels());
+        assert_eq!(
+            root.topology().component_factor_sizes(),
+            local.component_factor_sizes()
+        );
+        let root_frame = root.try_weight_frame(&fine, B).unwrap();
+        bits(root_frame.weights(), frame.weights());
+        bits(
+            root_frame.square_root_weights(),
+            frame.square_root_weights(),
+        );
+        bits(root_frame.diagonal(), frame.diagonal());
+        // Original-coordinate RHS touches only this component and is identical
+        // to the matching restriction of the independently computed full RHS.
+        let untouched = f64::from_bits(0x7ff8_0000_0000_0042);
+        let mut partial = vec![untouched; v];
+        view.rhs_from_targets_in_global(&fine, &target, &mut partial)
+            .unwrap();
+        for i in 0..v {
+            assert_eq!(
+                partial[i].to_bits(),
+                if t.component_labels()[i] == c {
+                    global_rhs[i].to_bits()
+                } else {
+                    untouched.to_bits()
+                }
+            );
+        }
+        let saved = partial.clone();
+        assert!(
+            view.rhs_from_targets_in_global(&wrong_frame, &target, &mut partial)
+                .is_err()
+        );
+        bits(&partial, &saved);
+        assert!(
+            view.rhs_from_targets_in_global(&fine, &target[..e - 1], &mut partial)
+                .is_err()
+        );
+        bits(&partial, &saved);
+        let mut short_rhs = vec![untouched; v - 1];
+        assert!(
+            view.rhs_from_targets_in_global(&fine, &target, &mut short_rhs)
+                .is_err()
+        );
+        assert!(short_rhs.iter().all(|x| x.to_bits() == untouched.to_bits()));
+
         let z: Vec<_> = (0..view.dimension())
             .map(|i| (i as f64 * 0.19).sin())
             .collect();
@@ -106,6 +175,12 @@ fn check(t: &PreparedThreeWayTopology) {
             .apply_gramian(&z, &mut actual)
             .unwrap();
         bits(&actual, &expected);
+        root_frame
+            .operator_view()
+            .apply_gramian(&z, &mut actual)
+            .unwrap();
+        bits(&actual, &expected);
+
         // Both malformed lengths are checked before writes, independently.
         let before = lx.clone();
         assert!(view.gather_coefficients(&x[..v - 1], &mut lx).is_err());
@@ -216,5 +291,59 @@ fn nested_factor_has_explicit_nonstructural_null_vectors() {
         let mut y = [7.; 13];
         f.operator_view().apply_incidence(&x, &mut y).unwrap();
         assert_eq!(y, [0.; 13]);
+    }
+}
+
+#[test]
+fn local_root_replays_current_weights_after_inverse_is_dropped() {
+    let keys = [
+        [0, 0, 1],
+        [0, 2, 3],
+        [1, 1, 0],
+        [2, 0, 1],
+        [2, 2, 3],
+        [3, 3, 2],
+    ];
+    let t = PreparedThreeWayTopology::try_from_collapsed([4; 3], &keys).unwrap();
+    let layout = PreparedComponentLayout::try_new(&t, B).unwrap();
+    let inverse = PreparedComponentRecoding::try_new(&layout, B).unwrap();
+    let roots: Vec<_> = (0..layout.component_count())
+        .map(|c| PreparedComponentRoot::try_new(&inverse, c, B).unwrap())
+        .collect();
+    drop(inverse);
+    for generation in 0..16 {
+        let weights: Vec<_> = (0..keys.len())
+            .map(|i| {
+                if generation % 2 == 0 {
+                    2f64.powi(((i + generation) % 13) as i32 - 6)
+                } else {
+                    (i + generation + 1) as f64 / 7.0
+                }
+            })
+            .collect();
+        let source = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&weights)).unwrap();
+        for root in &roots {
+            let frame = root.try_weight_frame(&source, B).unwrap();
+            let mut local_weights = vec![0.; root.component().tuple_count()];
+            root.component()
+                .gather_tuple_values(&weights, &mut local_weights)
+                .unwrap();
+            let reference = ThreeWayWeightFrame::try_new(
+                root.topology(),
+                WeightFrameInput::Tuples(&local_weights),
+            )
+            .unwrap();
+            bits(frame.weights(), reference.weights());
+            bits(frame.square_root_weights(), reference.square_root_weights());
+            bits(frame.diagonal(), reference.diagonal());
+            let x: Vec<_> = (0..frame.diagonal().len())
+                .map(|i| (i as f64 * 0.37).sin())
+                .collect();
+            let mut a = vec![0.; x.len()];
+            let mut b = a.clone();
+            frame.operator_view().apply_gramian(&x, &mut a).unwrap();
+            reference.operator_view().apply_gramian(&x, &mut b).unwrap();
+            bits(&a, &b);
+        }
     }
 }

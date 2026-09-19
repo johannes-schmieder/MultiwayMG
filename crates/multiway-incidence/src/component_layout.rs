@@ -314,6 +314,48 @@ impl<'layout> PreparedComponentView<'layout, '_> {
     pub fn tuple_count(&self) -> usize {
         self.tuple_ids().len()
     }
+    /// Accumulate this component's B'Wy in its original global coordinates.
+    ///
+    /// Validate the exact original frame and complete lengths before any writes.
+    /// Other components' output is untouched. Uses the ordinary weighted-RHS
+    /// multiplication/addition order and requires no inverse or local key copy.
+    /// As with the ordinary RHS kernel, finite input/result validation belongs
+    /// to the solver; arithmetic may produce nonfinite values.
+    pub fn rhs_from_targets_in_global(
+        &self,
+        frame: &crate::ThreeWayWeightFrame<'_>,
+        targets: &[f64],
+        output: &mut [f64],
+    ) -> Result<(), IncidenceError> {
+        frame.validate_for(self.layout.topology)?;
+        length(
+            "component original targets",
+            frame.weights().len(),
+            targets.len(),
+        )?;
+        length(
+            "component original RHS",
+            frame.diagonal().len(),
+            output.len(),
+        )?;
+        let source = self.layout.topology.topology();
+        for q in 0..3 {
+            let offset = source.offsets()[q];
+            self.factor_levels(q)
+                .unwrap()
+                .for_each(|id| output[offset + id] = 0.0);
+        }
+        self.tuple_ids().for_each(|id| {
+            crate::kernels::accumulate_weighted_target(
+                source,
+                source.tuples()[id],
+                frame.weights()[id],
+                targets[id],
+                output,
+            );
+        });
+        Ok(())
+    }
     /// Gather factor-major coefficients; validate both lengths before writes.
     pub fn gather_coefficients<T: Copy>(
         &self,
@@ -518,6 +560,39 @@ impl<'layout, 'topology> PreparedComponentRecoding<'layout, 'topology> {
     /// Largest admitted requested or actual-capacity setup payload.
     pub const fn setup_peak_payload_bound(&self) -> usize {
         self.setup_peak_payload_bound
+    }
+    /// Visit source tuple IDs and monotone local keys without allocating.
+    ///
+    /// Invalid component IDs reject before any callback. Original owners remain
+    /// immutable even if a caller callback fails or unwinds. The valid callback
+    /// sequence follows the component's original canonical tuple order.
+    pub fn for_each_key(
+        &self,
+        component: usize,
+        mut visit: impl FnMut(usize, [u32; 3]),
+    ) -> Result<(), IncidenceError> {
+        let view =
+            self.layout
+                .component(component)
+                .ok_or(IncidenceError::ComponentIndexOutOfBounds {
+                    component,
+                    count: self.layout.component_count(),
+                })?;
+        let source = self.layout.topology.topology();
+        if self.layout.is_identity() {
+            for (id, &key) in source.tuples().iter().enumerate() {
+                visit(id, key);
+            }
+        } else {
+            view.tuple_ids().for_each(|id| {
+                let key = source.tuples()[id];
+                visit(
+                    id,
+                    core::array::from_fn(|q| self.inverse[source.offsets()[q] + key[q] as usize]),
+                );
+            });
+        }
+        Ok(())
     }
     /// Recode local keys after validating component ID and complete output length.
     ///
