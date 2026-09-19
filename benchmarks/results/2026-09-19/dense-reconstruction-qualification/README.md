@@ -38,3 +38,10 @@ columns per configuration. Provider digests and artifact provenance are in the
 [measurement evidence](../dense-reconstruction-v1/README.md). Final evidence-head
 CI and guarded self-review remain a separate merge gate; self-review is not
 independent external approval.
+
+## Merged checkpoint
+
+PR66 merged as98ad3e5836a3f8374711a2e4195f64e9238d7214 after all36 final
+source/PR jobs passed for85897fc. Actual clean main matches reviewed tree
+59802754ae0d694ff2b529c1273cf3553ee10d9c. `final-ci.json` and
+`merge-receipt.json` preserve the final job and guarded merge records.

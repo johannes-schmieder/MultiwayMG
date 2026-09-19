@@ -1,0 +1,23 @@
+[
+  {
+    "baseline_journal_sha256": "e58588b0bc56975eed4a47903fec2acc87b62fa29094fd26358907b27337b859",
+    "baseline_source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "exact_m6m_records": 15120,
+    "label": "mac-smoke",
+    "new_journal_sha256": "a471ff7145eaa07884908151da24aa9b0032eb786c2ffa08d180963bc16905bb"
+  },
+  {
+    "baseline_journal_sha256": "e340795e29343fd437db15b201b6fa787c33982afd047981c972cf0ff50a6e8e",
+    "baseline_source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "exact_m6m_records": 15120,
+    "label": "mac-development",
+    "new_journal_sha256": "05a5ddfded1e6481c27376dcd9b74e48d402ac70676619af8dac7ce51388c7cb"
+  },
+  {
+    "baseline_journal_sha256": "dc35a9b27f3958ee4d397d25bf1971a1e9a0f0345e46c468af29931a36cb4154",
+    "baseline_source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "exact_m6m_records": 15120,
+    "label": "linux-smoke",
+    "new_journal_sha256": "e71f24bdf54a1b664bc7634af5a1fed5b5515d2153914a186fb3b5a71e8aaeaf"
+  }
+]

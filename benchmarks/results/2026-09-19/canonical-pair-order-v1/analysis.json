@@ -1,0 +1,482 @@
+[
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 1.0771318394669709,
+        "family": "uniform",
+        "repeated": 1.0951068934608559,
+        "single": 0.9753106547145275
+      },
+      {
+        "all": 1.0740406798217823,
+        "family": "communities",
+        "repeated": 1.0910039678049746,
+        "single": 0.9776583981705581
+      },
+      {
+        "all": 1.072549583886269,
+        "family": "chain",
+        "repeated": 1.0879269990020788,
+        "single": 0.9847434994501552
+      },
+      {
+        "all": 1.1076077787872995,
+        "family": "pair-dominant",
+        "repeated": 1.1239710086030998,
+        "single": 1.0143114412210097
+      },
+      {
+        "all": 1.0712987288024773,
+        "family": "nested",
+        "repeated": 1.0854486949750715,
+        "single": 0.990189512179
+      },
+      {
+        "all": 1.0492598187023565,
+        "family": "hubs",
+        "repeated": 1.0564632928596849,
+        "single": 1.0070587834807412
+      },
+      {
+        "all": 1.0663274449774762,
+        "family": "ragged",
+        "repeated": 1.0795368088063604,
+        "single": 0.9903971458608569
+      },
+      {
+        "all": 1.032554284131546,
+        "family": "tensor",
+        "repeated": 1.0398492690688814,
+        "single": 0.9898466220649141
+      },
+      {
+        "all": 1.0710128553249711,
+        "family": "worker-firm-occupation",
+        "repeated": 1.0786822496437232,
+        "single": 1.026128127789589
+      },
+      {
+        "all": 1.0710773172587913,
+        "family": "exporter-importer-product",
+        "repeated": 1.0833902751038471,
+        "single": 1.0000832594867903
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 50,
+      "dense_components": 50,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 1,
+      "global_projection": 40,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 1,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2457600
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2457600
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2473984
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2424832
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 4456,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 2424832
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 2408448
+      }
+    ],
+    "profile": "mac-smoke"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 0.4129559631836813,
+        "family": "uniform",
+        "repeated": 0.43821298725856694,
+        "single": 0.2892109456014012
+      },
+      {
+        "all": 0.6634452216127824,
+        "family": "communities",
+        "repeated": 0.7137567508384837,
+        "single": 0.42789195375411854
+      },
+      {
+        "all": 0.6185252195630855,
+        "family": "chain",
+        "repeated": 0.6678866068800566,
+        "single": 0.3901983934271756
+      },
+      {
+        "all": 0.540887689401787,
+        "family": "pair-dominant",
+        "repeated": 0.5643580383803724,
+        "single": 0.4192001096497545
+      },
+      {
+        "all": 0.7770368296043808,
+        "family": "nested",
+        "repeated": 0.8169237394375843,
+        "single": 0.575442754901784
+      },
+      {
+        "all": 0.45983268672911287,
+        "family": "hubs",
+        "repeated": 0.4798916305624017,
+        "single": 0.355909697233682
+      },
+      {
+        "all": 0.8964528061475764,
+        "family": "ragged",
+        "repeated": 0.965741967154074,
+        "single": 0.5734893937932313
+      },
+      {
+        "all": 0.403486802621749,
+        "family": "tensor",
+        "repeated": 0.4221653428124852,
+        "single": 0.30754585250081923
+      },
+      {
+        "all": 0.535816280637893,
+        "family": "worker-firm-occupation",
+        "repeated": 0.5517496859552101,
+        "single": 0.4494265965865269
+      },
+      {
+        "all": 0.4499602747033511,
+        "family": "exporter-importer-product",
+        "repeated": 0.4642016798931341,
+        "single": 0.37323208077055936
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 29,
+      "baseline_components": 9,
+      "candidate_accepted_pairs": 10877,
+      "candidate_pair_entries": 1232190,
+      "candidate_proposals": 604813,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 2970660,
+      "candidate_unique_candidates": 227604,
+      "components": 108,
+      "dense_components": 14,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 0,
+      "global_projection": 40,
+      "hierarchy_attempts": 38,
+      "hierarchy_rejections": 9,
+      "large_components": 38,
+      "provisional_input_tuples": 186954,
+      "quality_rejections": 9,
+      "rejections": 9,
+      "screen_cycle": 1028,
+      "screen_defects": 1028,
+      "screen_energy": 1208,
+      "screen_gramian": 1208,
+      "screen_projections": 2236,
+      "singleton_components": 56,
+      "structural_attempts": 56,
+      "structural_input_tuples": 495110
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 7816764,
+        "maximum_grouping_bytes": 249528,
+        "maximum_requested_bytes": 7816764,
+        "maximum_rss_bytes": 11075584
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 7682084,
+        "maximum_grouping_bytes": 249528,
+        "maximum_requested_bytes": 7682084,
+        "maximum_rss_bytes": 11173888
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 7706484,
+        "maximum_grouping_bytes": 139248,
+        "maximum_requested_bytes": 7706484,
+        "maximum_rss_bytes": 10911744
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 7571804,
+        "maximum_grouping_bytes": 139248,
+        "maximum_requested_bytes": 7571804,
+        "maximum_rss_bytes": 10813440
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 7432556,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 7432556,
+        "maximum_rss_bytes": 10371072
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 6204928,
+        "maximum_grouping_bytes": 139184,
+        "maximum_requested_bytes": 6204928,
+        "maximum_rss_bytes": 8830976
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 6065744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 6065744,
+        "maximum_rss_bytes": 8667136
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 6204928,
+        "maximum_grouping_bytes": 139184,
+        "maximum_requested_bytes": 6204928,
+        "maximum_rss_bytes": 8634368
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 6065744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 6065744,
+        "maximum_rss_bytes": 8454144
+      }
+    ],
+    "profile": "mac-development"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 1.357656972991149,
+        "family": "uniform",
+        "repeated": 1.4288348842022776,
+        "single": 0.9991670719550382
+      },
+      {
+        "all": 1.2591413241975788,
+        "family": "communities",
+        "repeated": 1.3117661522438546,
+        "single": 0.9848788673186132
+      },
+      {
+        "all": 1.3478412943957734,
+        "family": "chain",
+        "repeated": 1.4211775958366828,
+        "single": 0.9808016566929332
+      },
+      {
+        "all": 1.4155454224607067,
+        "family": "pair-dominant",
+        "repeated": 1.503273435578411,
+        "single": 0.9868218781421039
+      },
+      {
+        "all": 1.2720025933823549,
+        "family": "nested",
+        "repeated": 1.327447969136003,
+        "single": 0.9847158601485478
+      },
+      {
+        "all": 1.1428702458493898,
+        "family": "hubs",
+        "repeated": 1.1760605083586024,
+        "single": 0.9624994335951309
+      },
+      {
+        "all": 1.2440339656009156,
+        "family": "ragged",
+        "repeated": 1.2866586437985692,
+        "single": 1.0163554354076552
+      },
+      {
+        "all": 1.13754385383357,
+        "family": "tensor",
+        "repeated": 1.1695463303021685,
+        "single": 0.9631023763975649
+      },
+      {
+        "all": 1.2035393159237393,
+        "family": "worker-firm-occupation",
+        "repeated": 1.247627761552399,
+        "single": 0.9698661322979615
+      },
+      {
+        "all": 1.228327683952066,
+        "family": "exporter-importer-product",
+        "repeated": 1.2774617977806235,
+        "single": 0.9707606219873863
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 50,
+      "dense_components": 50,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 1,
+      "global_projection": 40,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 1,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3510272
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3543040
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3551232
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3534848
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3485696
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3522560
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3547136
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 4456,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 3567616
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 3579904
+      }
+    ],
+    "profile": "linux-smoke"
+  }
+]

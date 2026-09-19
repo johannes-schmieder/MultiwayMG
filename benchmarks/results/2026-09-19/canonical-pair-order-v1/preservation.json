@@ -1,0 +1,132 @@
+[
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6n/preserved/mac-smoke.tar.gz",
+    "archive_bytes": 8806088,
+    "archive_sha256": "0b0c331079a8d852a85622d343bea9b387006cdeb26b995c18d7be9e6d817c8b",
+    "binary_sha256": "482cc4362bb5dfc7028d8135e08ac447b9992fec674bbb427abf09a47619fb92",
+    "complete_validation": true,
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [],
+    "files": 30245,
+    "journal_sha256": "a471ff7145eaa07884908151da24aa9b0032eb786c2ffa08d180963bc16905bb",
+    "label": "mac-smoke",
+    "manifest_sha256": "791b55fb7e20b05b4f6216efce4aa91dd3a69aeadeb1f4efb826d62401a48a9b",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6n/preserved/mac-smoke.tar.gz",
+    "raw_bytes": 161243598,
+    "source_commit": "f4a611d61287e2375c1812232f1df1ac451605a1",
+    "source_tree": "4f7376c270d919a4108259e7ae6576b936357e48",
+    "summary_sha256": "7ed83d291dff16f9381bbc6c07783d3d6277d6eb356b7f160cdd57f4c19fc335"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6n/preserved/mac-development.tar.gz",
+    "archive_bytes": 10742504,
+    "archive_sha256": "ffbf2c2ef2ed194389d66f5f6ed4274d896061914f4a92f659e9d5b73cac2a6a",
+    "binary_sha256": "482cc4362bb5dfc7028d8135e08ac447b9992fec674bbb427abf09a47619fb92",
+    "complete_validation": true,
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [],
+    "files": 30245,
+    "journal_sha256": "05a5ddfded1e6481c27376dcd9b74e48d402ac70676619af8dac7ce51388c7cb",
+    "label": "mac-development",
+    "manifest_sha256": "b8964d316915b71b5c1424c98bf57641b61d0e264ce7089777c568a09ee578b0",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6n/preserved/mac-development.tar.gz",
+    "raw_bytes": 164202495,
+    "source_commit": "f4a611d61287e2375c1812232f1df1ac451605a1",
+    "source_tree": "4f7376c270d919a4108259e7ae6576b936357e48",
+    "summary_sha256": "0730fc0fe8911f04c90b0eebfa3bbce2c5d06fd80d4ccedd91e3ac2349d9bb89"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6n/preserved/linux-smoke.tar.gz",
+    "archive_bytes": 8596437,
+    "archive_sha256": "1576b18094ad29d833a53cd6cf0314882dbde60397ff0002dcc53f5e76ad59fb",
+    "binary_sha256": "2feeab78236a641a11904377ddf09295a485ba07ef8866736595977430e78340",
+    "complete_validation": true,
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [
+      {
+        "path": "/cells/24/comparisons/1/paired_process_geomean",
+        "recomputed": 1.358591546954803,
+        "stored": 1.3585915469548033
+      },
+      {
+        "path": "/cells/31/comparisons/6/paired_process_geomean",
+        "recomputed": 1.2351197315912774,
+        "stored": 1.2351197315912776
+      },
+      {
+        "path": "/cells/76/comparisons/7/paired_process_geomean",
+        "recomputed": 1.674778677609255,
+        "stored": 1.6747786776092553
+      },
+      {
+        "path": "/cells/79/comparisons/10/paired_process_geomean",
+        "recomputed": 1.1088666611043987,
+        "stored": 1.108866661104399
+      },
+      {
+        "path": "/cells/81/comparisons/14/paired_process_geomean",
+        "recomputed": 1.8792437086217753,
+        "stored": 1.879243708621775
+      },
+      {
+        "path": "/cells/86/comparisons/15/paired_process_geomean",
+        "recomputed": 1.2082856272303377,
+        "stored": 1.208285627230338
+      },
+      {
+        "path": "/cells/89/comparisons/9/paired_process_geomean",
+        "recomputed": 2.2335330792519215,
+        "stored": 2.233533079251921
+      },
+      {
+        "path": "/cells/96/comparisons/0/paired_process_geomean",
+        "recomputed": 2.673293911135749,
+        "stored": 2.6732939111357497
+      },
+      {
+        "path": "/cells/96/comparisons/3/paired_process_geomean",
+        "recomputed": 2.688521271144408,
+        "stored": 2.6885212711444084
+      },
+      {
+        "path": "/cells/168/comparisons/7/paired_process_geomean",
+        "recomputed": 0.9995692890982367,
+        "stored": 0.9995692890982366
+      },
+      {
+        "path": "/cells/174/comparisons/9/paired_process_geomean",
+        "recomputed": 1.8841683799766837,
+        "stored": 1.8841683799766835
+      },
+      {
+        "path": "/cells/204/comparisons/9/paired_process_geomean",
+        "recomputed": 1.073166106972068,
+        "stored": 1.0731661069720682
+      },
+      {
+        "path": "/cells/231/comparisons/10/paired_process_geomean",
+        "recomputed": 0.9802102051423324,
+        "stored": 0.9802102051423323
+      },
+      {
+        "path": "/cells/256/comparisons/6/paired_process_geomean",
+        "recomputed": 1.444971842114776,
+        "stored": 1.4449718421147761
+      },
+      {
+        "path": "/cells/275/comparisons/7/paired_process_geomean",
+        "recomputed": 1.072946245361607,
+        "stored": 1.0729462453616068
+      }
+    ],
+    "files": 30245,
+    "journal_sha256": "e71f24bdf54a1b664bc7634af5a1fed5b5515d2153914a186fb3b5a71e8aaeaf",
+    "label": "linux-smoke",
+    "manifest_sha256": "d32ca28cd1cec2d1164ad089096004fac6e6571c95fdfd35364ea8d306172543",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6n/preserved/linux-smoke.tar.gz",
+    "raw_bytes": 161693966,
+    "source_commit": "f4a611d61287e2375c1812232f1df1ac451605a1",
+    "source_tree": "4f7376c270d919a4108259e7ae6576b936357e48",
+    "summary_sha256": "136ef9a01e5cc927423ac34462b03bf30288ed761d274acd0f20e776b7f3cf01"
+  }
+]

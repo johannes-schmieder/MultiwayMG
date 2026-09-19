@@ -1,0 +1,1830 @@
+[
+  {
+    "conclusion": "success",
+    "databaseId": 35449392967,
+    "event": "push",
+    "headSha": "98ad3e5836a3f8374711a2e4195f64e9238d7214",
+    "jobs": [
+      {
+        "completedAt": "2026-09-19T14:41:47Z",
+        "conclusion": "success",
+        "databaseId": 105913800203,
+        "name": "Prepared allocations (ubuntu-latest)",
+        "startedAt": "2026-09-19T14:39:13Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:15Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:26Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:28Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:28Z",
+            "conclusion": "success",
+            "name": "Record exact source and platform",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:45Z",
+            "conclusion": "success",
+            "name": "Run isolated debug and release allocation gates",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:46Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 7,
+            "startedAt": "2026-09-19T14:41:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:46Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 13,
+            "startedAt": "2026-09-19T14:41:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:46Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 14,
+            "startedAt": "2026-09-19T14:41:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:46Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-09-19T14:41:46Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392967/job/105913800203"
+      },
+      {
+        "completedAt": "2026-09-19T14:43:14Z",
+        "conclusion": "success",
+        "databaseId": 105913800303,
+        "name": "Prepared allocations (windows-latest)",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:16Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:23Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:34Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:23Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Record exact source and platform",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:43:09Z",
+            "conclusion": "success",
+            "name": "Run isolated debug and release allocation gates",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:43:10Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 7,
+            "startedAt": "2026-09-19T14:43:09Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:43:11Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 13,
+            "startedAt": "2026-09-19T14:43:10Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:43:13Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 14,
+            "startedAt": "2026-09-19T14:43:11Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:43:13Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-09-19T14:43:13Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392967/job/105913800303"
+      },
+      {
+        "completedAt": "2026-09-19T14:42:21Z",
+        "conclusion": "success",
+        "databaseId": 105913800329,
+        "name": "Prepared allocations (macos-latest)",
+        "startedAt": "2026-09-19T14:39:20Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:22Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:26Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:34Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:39Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:39Z",
+            "conclusion": "success",
+            "name": "Record exact source and platform",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:16Z",
+            "conclusion": "success",
+            "name": "Run isolated debug and release allocation gates",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:39Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:18Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 7,
+            "startedAt": "2026-09-19T14:42:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:18Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 13,
+            "startedAt": "2026-09-19T14:42:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:18Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 14,
+            "startedAt": "2026-09-19T14:42:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:19Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-09-19T14:42:18Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392967/job/105913800329"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392967",
+    "workflowName": "Complete MAP cycle allocation contract"
+  },
+  {
+    "conclusion": "success",
+    "databaseId": 35449392966,
+    "event": "push",
+    "headSha": "98ad3e5836a3f8374711a2e4195f64e9238d7214",
+    "jobs": [
+      {
+        "completedAt": "2026-09-19T14:39:46Z",
+        "conclusion": "success",
+        "databaseId": 105913800179,
+        "name": "Compatible-relaxation map-quality matrix",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:22Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:30Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:32Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Run compatible-relaxation matrix",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:45Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:45Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 11,
+            "startedAt": "2026-09-19T14:39:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:45Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 12,
+            "startedAt": "2026-09-19T14:39:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:45Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-09-19T14:39:45Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800179"
+      },
+      {
+        "completedAt": "2026-09-19T14:39:46Z",
+        "conclusion": "success",
+        "databaseId": 105913800249,
+        "name": "Oracle quotient-space spectral matrix",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:16Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:31Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:43Z",
+            "conclusion": "success",
+            "name": "Run oracle spectral matrix",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 11,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 12,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 13,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800249"
+      },
+      {
+        "completedAt": "2026-09-19T14:39:51Z",
+        "conclusion": "success",
+        "databaseId": 105913800285,
+        "name": "Issue 2 deterministic two-grid and resolution gate",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:26Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:26Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:46Z",
+            "conclusion": "success",
+            "name": "Run deterministic matrices twice",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:46Z",
+            "conclusion": "success",
+            "name": "Verify byte-identical deterministic evidence",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Run phase-separated setup and apply diagnostics",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Evaluate issue 2 acceptance gates",
+            "number": 8,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:48Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 9,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:49Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 17,
+            "startedAt": "2026-09-19T14:39:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:49Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 18,
+            "startedAt": "2026-09-19T14:39:49Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:49Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 19,
+            "startedAt": "2026-09-19T14:39:49Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800285"
+      },
+      {
+        "completedAt": "2026-09-19T14:39:50Z",
+        "conclusion": "success",
+        "databaseId": 105913800294,
+        "name": "Manufactured feasibility probes",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:22Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:32Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:44Z",
+            "conclusion": "success",
+            "name": "Run planted feasibility probe",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:45Z",
+            "conclusion": "success",
+            "name": "Run structural feasibility matrix",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:46Z",
+            "conclusion": "success",
+            "name": "Run recursive scaling probe",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 8,
+            "startedAt": "2026-09-19T14:39:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 15,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 16,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 17,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800294"
+      },
+      {
+        "completedAt": "2026-09-19T14:47:05Z",
+        "conclusion": "success",
+        "databaseId": 105913800305,
+        "name": "Format, lint, test, and document",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:16Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:21Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:33Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:33Z",
+            "conclusion": "success",
+            "name": "Check formatting",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:42Z",
+            "conclusion": "success",
+            "name": "Lint all targets and features",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:44:44Z",
+            "conclusion": "success",
+            "name": "Test all features",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:46:05Z",
+            "conclusion": "success",
+            "name": "Test minimal feature set",
+            "number": 8,
+            "startedAt": "2026-09-19T14:44:44Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:46:58Z",
+            "conclusion": "success",
+            "name": "Test evidence validators",
+            "number": 9,
+            "startedAt": "2026-09-19T14:46:05Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:47:01Z",
+            "conclusion": "success",
+            "name": "Test prepared benchmark input boundary",
+            "number": 10,
+            "startedAt": "2026-09-19T14:46:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:47:02Z",
+            "conclusion": "success",
+            "name": "Build documentation",
+            "number": 11,
+            "startedAt": "2026-09-19T14:47:01Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:47:03Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 21,
+            "startedAt": "2026-09-19T14:47:02Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:47:03Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 22,
+            "startedAt": "2026-09-19T14:47:03Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:47:03Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 23,
+            "startedAt": "2026-09-19T14:47:03Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800305"
+      },
+      {
+        "completedAt": "2026-09-19T14:39:50Z",
+        "conclusion": "success",
+        "databaseId": 105913800320,
+        "name": "Issue 4 certified pair-local economics",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:15Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:27Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Record reproducibility metadata",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:35Z",
+            "conclusion": "success",
+            "name": "Test pair-local algebra and accounting",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:46Z",
+            "conclusion": "success",
+            "name": "Build release benchmark",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:46Z",
+            "conclusion": "success",
+            "name": "Run frozen smoke matrix",
+            "number": 8,
+            "startedAt": "2026-09-19T14:39:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Validate evidence and report conditional crossovers",
+            "number": 9,
+            "startedAt": "2026-09-19T14:39:46Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 10,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:47Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 19,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:48Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 20,
+            "startedAt": "2026-09-19T14:39:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:48Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 21,
+            "startedAt": "2026-09-19T14:39:48Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800320"
+      },
+      {
+        "completedAt": "2026-09-19T14:41:01Z",
+        "conclusion": "success",
+        "databaseId": 105913800354,
+        "name": "Complete automatic cost diagnostic contract",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:15Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:27Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:37Z",
+            "conclusion": "success",
+            "name": "Build separate debug reference and profile probes",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:07Z",
+            "conclusion": "success",
+            "name": "Check actual debug diagnostic protocols",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:37Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:36Z",
+            "conclusion": "success",
+            "name": "Collect separate release reference and instrumented smoke",
+            "number": 7,
+            "startedAt": "2026-09-19T14:40:07Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:45Z",
+            "conclusion": "success",
+            "name": "Check actual release diagnostic protocols",
+            "number": 8,
+            "startedAt": "2026-09-19T14:40:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:47Z",
+            "conclusion": "success",
+            "name": "Validate complete diagnostic smoke",
+            "number": 9,
+            "startedAt": "2026-09-19T14:40:45Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 10,
+            "startedAt": "2026-09-19T14:40:47Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 19,
+            "startedAt": "2026-09-19T14:40:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 20,
+            "startedAt": "2026-09-19T14:40:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 21,
+            "startedAt": "2026-09-19T14:40:59Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800354"
+      },
+      {
+        "completedAt": "2026-09-19T14:41:02Z",
+        "conclusion": "success",
+        "databaseId": 105913800358,
+        "name": "Complete automatic grouped-layout economics contract",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:28Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:30Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:28Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:35Z",
+            "conclusion": "success",
+            "name": "Collect complete uninstrumented paired layout smoke",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:43Z",
+            "conclusion": "success",
+            "name": "Validate complete paired layout smoke",
+            "number": 6,
+            "startedAt": "2026-09-19T14:40:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 7,
+            "startedAt": "2026-09-19T14:40:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 13,
+            "startedAt": "2026-09-19T14:40:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 14,
+            "startedAt": "2026-09-19T14:40:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:59Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-09-19T14:40:59Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800358"
+      },
+      {
+        "completedAt": "2026-09-19T14:40:56Z",
+        "conclusion": "success",
+        "databaseId": 105913800368,
+        "name": "Complete automatic and baseline development smoke",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:16Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:21Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:32Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:36Z",
+            "conclusion": "success",
+            "name": "Build uninstrumented debug protocol fixture",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:43Z",
+            "conclusion": "success",
+            "name": "Verify debug construction, controls and failure records",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:36Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:30Z",
+            "conclusion": "success",
+            "name": "Collect committed uninstrumented five-route smoke",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:43Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:35Z",
+            "conclusion": "success",
+            "name": "Verify release construction, controls and failure records",
+            "number": 8,
+            "startedAt": "2026-09-19T14:40:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:41Z",
+            "conclusion": "success",
+            "name": "Require complete accounting, repeatability and original certification",
+            "number": 9,
+            "startedAt": "2026-09-19T14:40:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:53Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 10,
+            "startedAt": "2026-09-19T14:40:41Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:53Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 19,
+            "startedAt": "2026-09-19T14:40:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:53Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 20,
+            "startedAt": "2026-09-19T14:40:53Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:53Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 21,
+            "startedAt": "2026-09-19T14:40:53Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800368"
+      },
+      {
+        "completedAt": "2026-09-19T14:40:03Z",
+        "conclusion": "success",
+        "databaseId": 105913800384,
+        "name": "Issue 4 whole-system Schwarz work matrix",
+        "startedAt": "2026-09-19T14:39:15Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:18Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:23Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:30Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:23Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:42Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:42Z",
+            "conclusion": "success",
+            "name": "Record reproducibility metadata",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:48Z",
+            "conclusion": "success",
+            "name": "Test whole-system harness and evidence validator",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:42Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:58Z",
+            "conclusion": "success",
+            "name": "Build release benchmark",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:48Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:58Z",
+            "conclusion": "success",
+            "name": "Run whole-system smoke matrix",
+            "number": 8,
+            "startedAt": "2026-09-19T14:39:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:58Z",
+            "conclusion": "success",
+            "name": "Validate evidence and summarize work ratios",
+            "number": 9,
+            "startedAt": "2026-09-19T14:39:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:59Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 10,
+            "startedAt": "2026-09-19T14:39:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:00Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 19,
+            "startedAt": "2026-09-19T14:39:59Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:00Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 20,
+            "startedAt": "2026-09-19T14:40:00Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:00Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 21,
+            "startedAt": "2026-09-19T14:40:00Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800384"
+      },
+      {
+        "completedAt": "2026-09-19T14:41:37Z",
+        "conclusion": "success",
+        "databaseId": 105913800394,
+        "name": "Prepared serial evidence (gated)",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:22Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:32Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:29Z",
+            "conclusion": "success",
+            "name": "Collect the frozen serial development smoke",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:30Z",
+            "conclusion": "success",
+            "name": "Validate complete evidence, including scientific rejections",
+            "number": 6,
+            "startedAt": "2026-09-19T14:41:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:31Z",
+            "conclusion": "success",
+            "name": "Require complete candidate-route certification",
+            "number": 7,
+            "startedAt": "2026-09-19T14:41:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:34Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 8,
+            "startedAt": "2026-09-19T14:41:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:34Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 15,
+            "startedAt": "2026-09-19T14:41:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:34Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 16,
+            "startedAt": "2026-09-19T14:41:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:41:34Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 17,
+            "startedAt": "2026-09-19T14:41:34Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800394"
+      },
+      {
+        "completedAt": "2026-09-19T14:40:20Z",
+        "conclusion": "success",
+        "databaseId": 105913800428,
+        "name": "Dense terminal reconstruction contract",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:22Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:31Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:31Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:06Z",
+            "conclusion": "success",
+            "name": "Check release dense arithmetic and real eigensystem references",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:31Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:14Z",
+            "conclusion": "success",
+            "name": "Collect and reconstruct frozen old and streaming applications",
+            "number": 6,
+            "startedAt": "2026-09-19T14:40:06Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:15Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 7,
+            "startedAt": "2026-09-19T14:40:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:18Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 13,
+            "startedAt": "2026-09-19T14:40:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:19Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 14,
+            "startedAt": "2026-09-19T14:40:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:19Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-09-19T14:40:19Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800428"
+      },
+      {
+        "completedAt": "2026-09-19T14:42:37Z",
+        "conclusion": "success",
+        "databaseId": 105913800462,
+        "name": "Prepared serial diagnostic kernel profile",
+        "startedAt": "2026-09-19T14:39:15Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:18Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:22Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:18Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:30Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:22Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:32Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:30Z",
+            "conclusion": "success",
+            "name": "Collect the explicit diagnostic smoke",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:32Z",
+            "conclusion": "success",
+            "name": "Validate complete profiles and independent certificates",
+            "number": 6,
+            "startedAt": "2026-09-19T14:42:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:34Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 7,
+            "startedAt": "2026-09-19T14:42:32Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:35Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 13,
+            "startedAt": "2026-09-19T14:42:34Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:35Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 14,
+            "startedAt": "2026-09-19T14:42:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:35Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 15,
+            "startedAt": "2026-09-19T14:42:35Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800462"
+      },
+      {
+        "completedAt": "2026-09-19T14:40:22Z",
+        "conclusion": "success",
+        "databaseId": 105913800463,
+        "name": "Prepared serial evidence (native)",
+        "startedAt": "2026-09-19T14:39:14Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:16Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:14Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:21Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:16Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:29Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:30Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:29Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:19Z",
+            "conclusion": "success",
+            "name": "Collect the frozen serial development smoke",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:19Z",
+            "conclusion": "success",
+            "name": "Validate complete evidence, including scientific rejections",
+            "number": 6,
+            "startedAt": "2026-09-19T14:40:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:19Z",
+            "conclusion": "skipped",
+            "name": "Require complete candidate-route certification",
+            "number": 7,
+            "startedAt": "2026-09-19T14:40:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:21Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 8,
+            "startedAt": "2026-09-19T14:40:19Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:21Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 15,
+            "startedAt": "2026-09-19T14:40:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:21Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 16,
+            "startedAt": "2026-09-19T14:40:21Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:40:21Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 17,
+            "startedAt": "2026-09-19T14:40:21Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800463"
+      },
+      {
+        "completedAt": "2026-09-19T14:43:00Z",
+        "conclusion": "success",
+        "databaseId": 105913800505,
+        "name": "Complete paired grouped-layout smoke",
+        "startedAt": "2026-09-19T14:39:15Z",
+        "status": "completed",
+        "steps": [
+          {
+            "completedAt": "2026-09-19T14:39:17Z",
+            "conclusion": "success",
+            "name": "Set up job",
+            "number": 1,
+            "startedAt": "2026-09-19T14:39:15Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:20Z",
+            "conclusion": "success",
+            "name": "Run actions/checkout@v4",
+            "number": 2,
+            "startedAt": "2026-09-19T14:39:17Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:27Z",
+            "conclusion": "success",
+            "name": "Run dtolnay/rust-toolchain@stable",
+            "number": 3,
+            "startedAt": "2026-09-19T14:39:20Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:30Z",
+            "conclusion": "success",
+            "name": "Run Swatinem/rust-cache@v2",
+            "number": 4,
+            "startedAt": "2026-09-19T14:39:27Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:33Z",
+            "conclusion": "success",
+            "name": "Build the debug layout protocol fixture",
+            "number": 5,
+            "startedAt": "2026-09-19T14:39:30Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:39:35Z",
+            "conclusion": "success",
+            "name": "Verify debug protocol, original numerical identity and failures",
+            "number": 6,
+            "startedAt": "2026-09-19T14:39:33Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:52Z",
+            "conclusion": "success",
+            "name": "Collect committed uninstrumented five-layout smoke",
+            "number": 7,
+            "startedAt": "2026-09-19T14:39:35Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:54Z",
+            "conclusion": "success",
+            "name": "Require full accounting, exact pairing and independent certification",
+            "number": 8,
+            "startedAt": "2026-09-19T14:42:52Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:58Z",
+            "conclusion": "success",
+            "name": "Run actions/upload-artifact@v4",
+            "number": 9,
+            "startedAt": "2026-09-19T14:42:54Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:58Z",
+            "conclusion": "success",
+            "name": "Post Run Swatinem/rust-cache@v2",
+            "number": 17,
+            "startedAt": "2026-09-19T14:42:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:58Z",
+            "conclusion": "success",
+            "name": "Post Run actions/checkout@v4",
+            "number": 18,
+            "startedAt": "2026-09-19T14:42:58Z",
+            "status": "completed"
+          },
+          {
+            "completedAt": "2026-09-19T14:42:58Z",
+            "conclusion": "success",
+            "name": "Complete job",
+            "number": 19,
+            "startedAt": "2026-09-19T14:42:58Z",
+            "status": "completed"
+          }
+        ],
+        "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966/job/105913800505"
+      }
+    ],
+    "status": "completed",
+    "url": "https://github.com/johannes-schmieder/MultiwayMG/actions/runs/35449392966",
+    "workflowName": "Rust CI"
+  }
+]
