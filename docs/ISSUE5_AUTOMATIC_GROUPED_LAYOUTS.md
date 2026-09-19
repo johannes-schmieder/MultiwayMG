@@ -101,3 +101,8 @@ records, including the identity-control negatives. New grouped timing requires
 its own committed matched policy with full costs and larger development controls.
 M6 terminal/admission decisions, M7 parallelism, M8 panels, M9 changing-weight
 policy and M10 competitive qualification remain open.
+
+M6j source `49fcf60` also passes [complete scalar compatibility](../benchmarks/results/2026-09-19/prepared-automatic-grouped-compatibility/README.md):
+25,200 exact M6i numerical/work/payload records, including all identity negatives.
+All 39 allocator records and four denied-group controls match on Linux, macOS
+and Windows in debug/release. The frozen probe does not invoke grouped execution.

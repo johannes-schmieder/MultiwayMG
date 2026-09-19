@@ -1014,3 +1014,24 @@ for measurement, not an implemented layout or selected default.
   rejection assertions and Clippy pass. Freeze this source before existing
   scalar compatibility collection and cross-platform CI. New grouped timing
   remains a separate follow-up; no default or competitive promotion.
+
+- M6j source `49fcf604d386b86b977dfacf55562c6d2abff334`, PR63: source Rust/
+  allocation CI35432625825/35432625827 and PR CI35432628126/35432628025 pass.
+  Mac smoke/development and Linux smoke preserve 25,200 exact M6i signatures
+  and 239,925/240,000 certified measured columns. The same 75 identity failures
+  in 35 measured processes plus seven warmups remain explicit; no other failed
+  route, timeout, protocol error, RSS violation or measured retry. Thirty-nine
+  allocation records and four zero-allocation denials match local records in
+  debug/release on Linux, macOS and Windows. This frozen scalar probe makes no
+  grouped performance claim. Evidence-head checks/guarded merge follow.
+- Next M6k diagnoses complete automatic costs with opt-in fixed-size disjoint
+  phase counters, separately from the frozen kernel protocol and authoritative
+  timings. Charge structural/provisional preparation, grouping, full replay,
+  terminal factors, screening, solver setup/application, original certification,
+  fallback and unattributed bookkeeping/destruction. Preserve errors and exact
+  uninstrumented numerical/work/layout references. Then preregister a separate
+  grouped full-cost comparison with matched scalar/row MAP controls and larger
+  development cases; identical baseline image aliases need no duplicate timing
+  arms. Keep numerical-policy changes distinct from layout-only comparisons.
+  M6 sparse terminal/admission, M7 deterministic bounded CPU execution, M8 RHS
+  panels, M9 fresh-weight replay and M10 frozen competitive qualification remain.

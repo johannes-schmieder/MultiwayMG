@@ -1,0 +1,68 @@
+[
+  {
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "91418d09f016fd97291f87ce5d8b1800cac849a3fdcfd39676a0fbc2ffbeb7dc",
+    "platform": "ubuntu-latest",
+    "profile": "debug",
+    "run": 35432625827,
+    "sha256": "7e97599f2f142b279b17beb065c276245cd33f5de314e95e3051c99042e3ac25",
+    "source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "zero_allocation_denials": 4
+  },
+  {
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "91418d09f016fd97291f87ce5d8b1800cac849a3fdcfd39676a0fbc2ffbeb7dc",
+    "platform": "ubuntu-latest",
+    "profile": "release",
+    "run": 35432625827,
+    "sha256": "e3009d5e7788ece9dc04b14ffd00e06d50f4da14a6f5a552171397ba8ede356a",
+    "source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "zero_allocation_denials": 4
+  },
+  {
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "1c07f1676488f255aa69a2e9930b97f5f9dfdf72473223cf8749d07e6a5951c4",
+    "platform": "macos-latest",
+    "profile": "debug",
+    "run": 35432625827,
+    "sha256": "9824b4629752540de60b508e2fb832dabd25ad7b221deb676e21908111e61722",
+    "source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "zero_allocation_denials": 4
+  },
+  {
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "1c07f1676488f255aa69a2e9930b97f5f9dfdf72473223cf8749d07e6a5951c4",
+    "platform": "macos-latest",
+    "profile": "release",
+    "run": 35432625827,
+    "sha256": "07f8cbaa437ed7c8de35160b2427e0573735d42bf1054c2f4fb4506d295f28e6",
+    "source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "zero_allocation_denials": 4
+  },
+  {
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "386b2e45a12b740e7623a5f6a05f88312d25abe758cbe544146b5dd87d7ef042",
+    "platform": "windows-latest",
+    "profile": "debug",
+    "run": 35432625827,
+    "sha256": "179dd6a9e4f1e4194e7d1d7bb4e8ca427d8ef0ef463ac6f777b26ebdb1390e3b",
+    "source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "zero_allocation_denials": 4
+  },
+  {
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "386b2e45a12b740e7623a5f6a05f88312d25abe758cbe544146b5dd87d7ef042",
+    "platform": "windows-latest",
+    "profile": "release",
+    "run": 35432625827,
+    "sha256": "6cdebdd0913753b79348733c0775d9dce144a509e319054f44d0f60d9f021c9a",
+    "source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "zero_allocation_denials": 4
+  }
+]

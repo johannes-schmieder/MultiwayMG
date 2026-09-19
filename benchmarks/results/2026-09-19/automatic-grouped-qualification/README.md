@@ -35,7 +35,8 @@ layout protocol passes 120 comparisons. See [check receipts](checks.json) and
 
 Logs and initial failed lint/development checks are preserved under
 `$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6j` (current machine
-`/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6j`). Exact-source CI,
-cross-platform peak comparison and frozen scalar cost regression follow source
-freeze. New grouped performance needs a separate committed comparison policy.
+`/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6j`). All exact-source/PR CI passes. [Cross-platform receipts](cross-platform.json)
+match every control in Linux/macOS/Windows debug/release. The [frozen scalar
+compatibility evidence](../prepared-automatic-grouped-compatibility/README.md)
+retains 25,200 exact M6i numerical/work/payload records and its known negatives. New grouped performance needs a separate committed comparison policy.
 M6 remains open and no default or competitive claim is made.
