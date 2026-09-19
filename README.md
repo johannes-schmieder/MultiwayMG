@@ -121,8 +121,8 @@ platform allocation qualification passes; [scalar compatibility evidence](benchm
 preserves all 25,200 M6i records, including known negatives. Grouped economics
 and terminal/admission decisions remain open in M6. [Separate automatic cost diagnostics](docs/ISSUE5_AUTOMATIC_DIAGNOSTICS.md)
 now preserve [6,480 diagnostic processes](benchmarks/results/2026-09-19/prepared-automatic-diagnostic-v1/README.md)
-with exact uninstrumented references and no speedup claim. A separate full-cost
-grouped experiment follows. See the
+with exact uninstrumented references and no speedup claim. A separate [full-cost grouped experiment](docs/ISSUE5_AUTOMATIC_LAYOUT_ECONOMICS.md)
+is now under qualification, with fixed numerical policy and larger development inputs. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 ## The problem

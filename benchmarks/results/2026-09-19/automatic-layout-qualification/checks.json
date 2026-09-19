@@ -1,0 +1,136 @@
+{
+  "checks": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "name": "format",
+      "seconds": 0.6855138340033591
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "name": "clippy",
+      "seconds": 2.6150956249330193
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-features"
+      ],
+      "exit": 0,
+      "name": "all",
+      "seconds": 208.23099641688168
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "name": "minimal",
+      "seconds": 59.21911058318801
+    },
+    {
+      "command": [
+        "cargo",
+        "doc",
+        "--locked",
+        "--workspace",
+        "--all-features",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "name": "docs",
+      "seconds": 1.0202460000291467
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0,
+      "name": "python",
+      "seconds": 34.089036874938756
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-unit",
+      "seconds": 0.6462369579821825
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_diagnostic"
+      ],
+      "exit": 0,
+      "name": "diagnostic-probe-unit",
+      "seconds": 0.6265087500214577
+    }
+  ],
+  "log_sha256": {
+    "required-v1/all.log": "8888ac779575e034cadc6831645b1a297e5f922356abda1fd2232594ab842ac4",
+    "required-v1/automatic-probe-unit.log": "fbe3ec1f41d2ac87eac187d54aacb4ecdaea5b005d4efc94c3b38b34e05d5023",
+    "required-v1/clippy.log": "ab663dc81241d7bb369026be9b9a6e6f4fb6acedc1623365f51e190be113ec52",
+    "required-v1/diagnostic-probe-unit.log": "2d8c8e7958eedc7193688f69f2191ee408ca7927922ec4e6334249852903f2e3",
+    "required-v1/docs.log": "25484a2ca9f9d46b59e3f54fad765e22e1d3bce2f19091a3df3b9de0b18c799e",
+    "required-v1/format.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "required-v1/minimal.log": "70f04f9bfa4bdcaf443afd426515b2f2835c1ee11ea571c7b191378681c6de4a",
+    "required-v1/python.log": "0d3fb622d2b2d6f35dd087835c025cb211d3c39d0e272676dc458dc3dd8d458a"
+  },
+  "new_layout_tests": 11,
+  "probe_qualification": "unchanged M6k schema2 probe and Rust dependency tree; existing release/debug actual protocol and allocation evidence applies",
+  "python_tests": 126,
+  "rust_source_unchanged_since": "04b2184e70dc5954ce97d63d7a96b9023f052f2f",
+  "scope": "local Rust1.85 required and layout-validator qualification; no source-frozen performance collection yet",
+  "source_sha256": {
+    "benchmarks/policies/prepared-automatic-layout-v1.json": "0a33eb4d68d8dd19d8c09b8661011daec8388d47247e350a29ca2640a73e10f1",
+    "scripts/automatic_layout_protocol.py": "7c3d4f5f8804fc8ab174ccea1f4d64f8b6f1493d386428bbfd1a1a8329954e3b",
+    "scripts/prepared_automatic_layout.py": "922a31c3b602722b103936d1de225795ed1bb89673c35f9625fff2c253f453d8",
+    "scripts/test_prepared_automatic_layout.py": "9880dbc2e4ce32b0a362a2260b0668337d048d891781febaca685eb511bfea01",
+    "scripts/validate_prepared_automatic_layout.py": "9f4bd251f427a94175d70b1a1de5b0b632553ceec008d263e8813842f17c7f3a"
+  }
+}

@@ -1072,3 +1072,17 @@ for measurement, not an implemented layout or selected default.
   the current numerical policy during layout comparisons and retain M6i/M6j
   negative economics. Subsequent terminal-depth/admission or screening policy
   candidates must use separate evidence; instrumentation is not a selector.
+
+- M6k PR64 merged as `04b2184e70dc5954ce97d63d7a96b9023f052f2f`; clean main
+  equals reviewed tree `25571d67155a4ad3f597ba458278b7a82cbec842`. Final source
+  CI35436752292/35436752284 and PR CI35436754785/35436754800 all passed, as did
+  post-merge CI35437114171/35437114180.
+- M6l begins the separately frozen [complete layout experiment](ISSUE5_AUTOMATIC_LAYOUT_ECONOMICS.md).
+  Nine explicit arms share unchanged numerical parameters and the qualified
+  uninstrumented schema2 executable. One warmup/five rotated repeats require
+  complete warmup/measurement certification before any paired comparison.
+  Existing smoke/development K1–32 and expanded512^3 or2048/128/64,65,536draws,
+  K1/8/32 stay within the unchanged boundary; topology-only preflight tops out
+  at69,487 unique tuples. All required Rust1.85 gates and 126 Python tests
+  (eleven new layout tests) pass. Source freeze and Mac/Linux collection follow. No Rust source or default
+  changes; subsequent numerical-policy candidates remain separate.
