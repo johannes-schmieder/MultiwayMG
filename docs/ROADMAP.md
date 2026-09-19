@@ -213,7 +213,11 @@ payload/layout records; cross-platform allocation CI passes.
 A separate [complete automatic benchmark](ISSUE5_AUTOMATIC_BENCHMARK.md)
 now compares five explicit construction/control routes across ten development
 families, with failed work, process cost, memory and original certificates charged.
-Automatic-versus-baseline economics remain open within M6. See the
+The [first complete automatic evidence](../benchmarks/results/2026-09-19/prepared-automatic-v1/README.md)
+retains all 25,200 processes and 239,925 certified measured columns, with 75
+identity-control column rejections preserved. Automatic construction is 1.85x
+slower than MAP on the bounded Mac development matrix despite reduced iterative
+work; grouped application and setup admission are next. M6 remains open. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

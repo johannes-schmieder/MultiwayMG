@@ -136,3 +136,15 @@ Run `python3 scripts/prepared_automatic.py <fresh-directory> --profile smoke`
 Permanent Linux CI preserves the complete smoke and both protocol qualifications.
 Any negative result remains in the versioned evidence and informs the next
 increment; policy changes require a new version before new measurements.
+
+## Frozen v1 outcome
+
+The [three complete artifacts](../benchmarks/results/2026-09-19/prepared-automatic-v1/README.md)
+retain 25,200 processes and 239,925 certified measured columns. Automatic,
+component-disabled MAP, MAP and diagonal certify all measured columns; identity
+misses 75 original certificates in 35 measured development processes. The
+all-control development gate is false and identity has no full aggregate.
+Mac automatic development speedup is 0.5409x versus MAP, despite useful
+iteration reductions. No family-wide development win is established. Preserve
+these negatives and the complete policy before explicit grouped application,
+phase diagnosis, larger development and terminal/admission trials.

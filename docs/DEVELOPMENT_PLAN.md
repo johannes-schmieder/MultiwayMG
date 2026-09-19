@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6h merged; M6i automatic economics qualification |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6h merged; M6i measured automatic economics; M6j grouped application/admission next |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -970,3 +970,21 @@ for measurement, not an implemented layout or selected default.
   checks in each debug/release configuration. Freeze the new policy and source
   before collecting complete Mac smoke/development and Linux smoke evidence.
   No automatic performance, default or competitive claim is made yet.
+
+- M6i frozen source `bc0267c48512607bab5a61ddf41c65e4ec88d36d` passes raw
+  accounting/repeatability validation across [three complete artifacts](../benchmarks/results/2026-09-19/prepared-automatic-v1/README.md):
+  25,200 processes and 239,925/240,000 certified measured columns. All candidate,
+  component-disabled, MAP and diagonal columns certify; identity rejects 75
+  columns in 35 measured nested/heterogeneous processes plus seven warmups.
+  Its full development gate remains false; failed costs are preserved. No
+  timeout/protocol/RSS failure or measured retry occurred. Source/PR workflows
+  35429720359/35429720334/35429722277/35429722256 pass. Every copied raw artifact
+  and archive member revalidates; summaries match exactly with no rounding waiver.
+  Automatic costs 1.8488x MAP overall on bounded Mac development (0.3751x single,
+  0.5749x repeated speedup). Per-cell counts show 203 accepted and 63 rejected
+  hierarchies; reduced iterative work does not cover full construction/cycle cost.
+  Next M6j connects explicit grouped application to the automatic and matched
+  baseline routes with charged grouping/image ownership, separate diagnosis and
+  scalar reference gates before terminal/admission or larger development trials.
+  Final evidence-head CI/merge remain; M6–M10 and competitive/default selection
+  remain open. No calibration or holdout was consumed.

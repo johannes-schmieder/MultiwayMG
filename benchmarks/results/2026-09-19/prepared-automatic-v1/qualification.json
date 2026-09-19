@@ -1,0 +1,345 @@
+{
+  "release-v1": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--features",
+        "lsmr",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-debug-build",
+      "seconds": 0.039987749999999996
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "scripts/check_prepared_automatic_probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/debug/examples/prepared_automatic_benchmark",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6i/release-v1/automatic-debug-protocol"
+      ],
+      "exit": 0,
+      "name": "automatic-debug-protocol",
+      "seconds": 3.754491417
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--test",
+        "prepared_automatic",
+        "--test",
+        "automatic_allocation_peaks",
+        "--test",
+        "prepared_baseline",
+        "--test",
+        "prepared_grouped_hierarchy",
+        "--test",
+        "prepared_hierarchy",
+        "--test",
+        "prepared_pcg",
+        "--test",
+        "prepared_lsmr",
+        "--test",
+        "workspace_allocations"
+      ],
+      "exit": 0,
+      "name": "complete-all",
+      "seconds": 16.840596416
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--all-features",
+        "--test",
+        "component_layout"
+      ],
+      "exit": 0,
+      "name": "components-all",
+      "seconds": 0.8132487079999997
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--test",
+        "prepared_automatic",
+        "--test",
+        "automatic_allocation_peaks",
+        "--test",
+        "prepared_baseline",
+        "--test",
+        "prepared_grouped_hierarchy",
+        "--test",
+        "prepared_hierarchy",
+        "--test",
+        "prepared_pcg",
+        "--test",
+        "prepared_lsmr",
+        "--test",
+        "workspace_allocations"
+      ],
+      "exit": 0,
+      "name": "complete-minimal",
+      "seconds": 12.455745375000003
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--no-default-features",
+        "--test",
+        "component_layout"
+      ],
+      "exit": 0,
+      "name": "components-minimal",
+      "seconds": 1.879377667
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--all-features",
+        "--lib",
+        "component_root"
+      ],
+      "exit": 0,
+      "name": "component-private",
+      "seconds": 2.8076562910000007
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--features",
+        "lsmr",
+        "--example",
+        "prepared_serial_benchmark"
+      ],
+      "exit": 0,
+      "name": "probe-build",
+      "seconds": 2.9871089170000005
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "scripts/check_prepared_layout_probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/release/examples/prepared_serial_benchmark",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6i/release-v1/protocol"
+      ],
+      "exit": 0,
+      "name": "protocol",
+      "seconds": 1.2356702920000018
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-unit",
+      "seconds": 0.05211529200000342
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--features",
+        "lsmr",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-build",
+      "seconds": 0.5550921250000016
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "scripts/check_prepared_automatic_probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/release/examples/prepared_automatic_benchmark",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6i/release-v1/automatic-protocol"
+      ],
+      "exit": 0,
+      "name": "automatic-protocol",
+      "seconds": 2.425189208000006
+    }
+  ],
+  "required-v1": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "name": "format",
+      "seconds": 0.660036625
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "name": "clippy",
+      "seconds": 0.7524289590000001
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-features"
+      ],
+      "exit": 0,
+      "name": "all",
+      "seconds": 142.578797334
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "name": "minimal",
+      "seconds": 64.41293525
+    },
+    {
+      "command": [
+        "cargo",
+        "doc",
+        "--locked",
+        "--workspace",
+        "--all-features",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "name": "docs",
+      "seconds": 0.9838702079999848
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0,
+      "name": "python",
+      "seconds": 12.807544791999987
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-unit",
+      "seconds": 0.6070623340000054
+    }
+  ],
+  "source_ci": [
+    {
+      "conclusion": "success",
+      "databaseId": 35429722256,
+      "event": "pull_request",
+      "headSha": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+      "status": "completed",
+      "workflowName": "Complete MAP cycle allocation contract"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 35429722277,
+      "event": "pull_request",
+      "headSha": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+      "status": "completed",
+      "workflowName": "Rust CI"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 35429720334,
+      "event": "push",
+      "headSha": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+      "status": "completed",
+      "workflowName": "Complete MAP cycle allocation contract"
+    },
+    {
+      "conclusion": "success",
+      "databaseId": 35429720359,
+      "event": "push",
+      "headSha": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+      "status": "completed",
+      "workflowName": "Rust CI"
+    }
+  ],
+  "source_commit": "bc0267c48512607bab5a61ddf41c65e4ec88d36d"
+}
