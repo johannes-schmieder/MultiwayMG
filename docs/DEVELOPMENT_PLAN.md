@@ -927,3 +927,16 @@ for measurement, not an implemented layout or selected default.
   covers ownership, unchanged arithmetic, live admission and acceptance scopes;
   it is not external review. Freeze source before compatibility measurements.
   M6 economics and M7–M10 remain open; calibration/holdout remain untouched.
+
+- M6h frozen source `654ddd16b6a66442c74fe98bc5d5fb12a25d6514` passes
+  [all four supplied-map artifacts](../benchmarks/results/2026-09-19/prepared-layout-component-driver/README.md):
+  7,920 processes, 72,300 certified measured columns, 6,336 exact layouts and
+  7,920 exact M6g input/numerical/work/payload/layout records. No errors,
+  rejections, timeouts, RSS failures or measured retries occurred. Copies and
+  every archived member independently revalidate. 1 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14; receipts record every difference. Raw numerical/work/payload comparisons remain exact.
+  Source `35426610749`/`35426610758` and PR `35426643488`/`35426643483` pass.
+  All six cross-platform debug/release peak records match the local reference.
+  Final evidence-head checks and PR61 merge remain. This regression checks shared
+  existing-solver arithmetic, not automatic economics. Next qualify completely
+  charged automatic/component-disabled/global-baseline development routes.
+  M6–M10 remain open; scalar stays default and campaign holdout is untouched.

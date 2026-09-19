@@ -121,3 +121,13 @@ preserve eleven debug/release-identical peak controls and 1,980 certified column
 per configuration. Self-review covers owner lifetimes, shared arithmetic,
 admission/failure semantics and measurement scope; it is not external review.
 Source freeze precedes the unchanged supplied-map compatibility regression.
+
+
+Frozen source `654ddd1` passes the [four-artifact compatibility regression](../benchmarks/results/2026-09-19/prepared-layout-component-driver/README.md):
+7,920 processes, 72,300 certified measured columns, 6,336 exact layouts and exact
+M6g input/numerical/work/payload/layout records. No failed gates or measured
+retries occurred. Copies and every archive member independently revalidate.
+1 derived timing geomeans differ under local recomputation within the existing archival-only relative tolerance of 1e-14; receipts record every difference. Raw numerical/work/payload comparisons remain exact.
+Source/PR CI passed; all six Linux/macOS/Windows debug/release peak controls
+exactly match local qualification. Final evidence-head checks and PR61 merge
+remain. Automatic route economics are not measured by that supplied-map harness.

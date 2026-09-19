@@ -1,0 +1,38 @@
+[
+  {
+    "log": "allocation-ci/allocation-evidence-macos-latest/debug-all.txt",
+    "sha256": "2c0d7638b561ac255c4b8334a96658163680a727fec794e2c0d60a7cd3d498bd",
+    "records": 11,
+    "exact_local_reference": true
+  },
+  {
+    "log": "allocation-ci/allocation-evidence-macos-latest/release-all.txt",
+    "sha256": "3a1009dce7b7f8da5970c26646fc53b417512ea7bddd17e39a5ac046319cda49",
+    "records": 11,
+    "exact_local_reference": true
+  },
+  {
+    "log": "allocation-ci/allocation-evidence-ubuntu-latest/debug-all.txt",
+    "sha256": "e1a9d21505b3fa3158da98b00d362eef006e6542285a108233f967435ce9e5c8",
+    "records": 11,
+    "exact_local_reference": true
+  },
+  {
+    "log": "allocation-ci/allocation-evidence-ubuntu-latest/release-all.txt",
+    "sha256": "5c9decb2f5ab085e1ce6278955ee6fd7e1bc07dcd2a720e34d2c46db4aeeb7c2",
+    "records": 11,
+    "exact_local_reference": true
+  },
+  {
+    "log": "allocation-ci/allocation-evidence-windows-latest/debug-all.txt",
+    "sha256": "452bd9c634e3765746cc6265326d23289efe222dfefffad200dc5e6dafdef7df",
+    "records": 11,
+    "exact_local_reference": true
+  },
+  {
+    "log": "allocation-ci/allocation-evidence-windows-latest/release-all.txt",
+    "sha256": "9b04dfbf7fdba1f6ea82d6ac5d5cb9317659fc3c0693f492b12fdeb64f280f86",
+    "records": 11,
+    "exact_local_reference": true
+  }
+]

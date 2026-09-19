@@ -105,6 +105,8 @@ exact M6f numerical/work/payload/layout records. The [terminal-first component d
 small direct terminals, bounded recursive construction, actual-cycle screening,
 shared LSMR execution and independent full-problem certification/fallback.
 Required Rust1.85, scientific, peak-memory and release gates pass.
+Its 7,920-process compatibility regression preserves exact M6g numerical/work/
+payload/layout records; cross-platform allocation CI passes.
 Automatic-versus-baseline economics remain open within M6. See the
 [complete evidence](benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
