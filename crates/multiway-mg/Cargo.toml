@@ -135,3 +135,7 @@ required-features = ["lsmr"]
 name = "automatic_allocation_peaks"
 path = "tests/automatic_allocation_peaks.rs"
 harness = false
+
+[[example]]
+name = "prepared_automatic_benchmark"
+required-features = ["lsmr"]
