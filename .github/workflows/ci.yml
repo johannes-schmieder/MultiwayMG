@@ -435,3 +435,34 @@ jobs:
             ${{ runner.temp }}/automatic-diagnostic-smoke/
             ${{ runner.temp }}/automatic-diagnostic-validation.json
           if-no-files-found: error
+
+  prepared-automatic-layout:
+    name: Complete automatic grouped-layout economics contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      RAYON_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Collect complete uninstrumented paired layout smoke
+        run: python3 scripts/prepared_automatic_layout.py "$RUNNER_TEMP/automatic-layout-smoke" --profile smoke
+      - name: Validate complete paired layout smoke
+        run: python3 scripts/validate_prepared_automatic_layout.py "$RUNNER_TEMP/automatic-layout-smoke" --require-certification > "$RUNNER_TEMP/automatic-layout-validation.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: automatic-layout-smoke
+          path: |
+            ${{ runner.temp }}/automatic-layout-smoke/
+            ${{ runner.temp }}/automatic-layout-validation.json
+          if-no-files-found: error

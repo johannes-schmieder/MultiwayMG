@@ -1,0 +1,262 @@
+[
+  {
+    "family": "uniform",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 66531,
+    "components": 1,
+    "k32_input_bytes": 18362588,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "uniform",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 69487,
+    "components": 1,
+    "k32_input_bytes": 19178444,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "communities",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 66248,
+    "components": 1,
+    "k32_input_bytes": 18284480,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "communities",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 67670,
+    "components": 1,
+    "k32_input_bytes": 18676952,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "chain",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 33097,
+    "components": 1,
+    "k32_input_bytes": 9134804,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "chain",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 58065,
+    "components": 1,
+    "k32_input_bytes": 16025972,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "pair-dominant",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 59112,
+    "components": 1,
+    "k32_input_bytes": 16314944,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "pair-dominant",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 62280,
+    "components": 1,
+    "k32_input_bytes": 17189312,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "nested",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 58990,
+    "components": 1,
+    "k32_input_bytes": 16281272,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "nested",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 61408,
+    "components": 1,
+    "k32_input_bytes": 16948640,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "hubs",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 62274,
+    "components": 1,
+    "k32_input_bytes": 17187656,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "hubs",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 56656,
+    "components": 1,
+    "k32_input_bytes": 15637088,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "ragged",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 50320,
+    "components": 128,
+    "k32_input_bytes": 13888352,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "ragged",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 51396,
+    "components": 16,
+    "k32_input_bytes": 14185328,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "tensor",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 58734,
+    "components": 1,
+    "k32_input_bytes": 16210616,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "tensor",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 59661,
+    "components": 1,
+    "k32_input_bytes": 16466468,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "worker-firm-occupation",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 3649,
+    "components": 1,
+    "k32_input_bytes": 1007156,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "worker-firm-occupation",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 9725,
+    "components": 1,
+    "k32_input_bytes": 2684132,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "exporter-importer-product",
+    "shape": "balanced",
+    "counts": [
+      512,
+      512,
+      512
+    ],
+    "tuples": 45360,
+    "components": 1,
+    "k32_input_bytes": 12519392,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  },
+  {
+    "family": "exporter-importer-product",
+    "shape": "unbalanced",
+    "counts": [
+      2048,
+      128,
+      64
+    ],
+    "tuples": 48414,
+    "components": 1,
+    "k32_input_bytes": 13362296,
+    "scope": "topology-only proposed development preflight; no solver or timing data"
+  }
+]

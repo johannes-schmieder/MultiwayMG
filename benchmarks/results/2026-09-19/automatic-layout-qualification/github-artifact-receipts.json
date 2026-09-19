@@ -1,0 +1,42 @@
+[
+  {
+    "github_digest": "sha256:6bf9c31b98bceb24610d27d1baddf121266312dcad48f407e1f8e574400fb730",
+    "id": 10583001222,
+    "independent_sha256": "6bf9c31b98bceb24610d27d1baddf121266312dcad48f407e1f8e574400fb730",
+    "name": "automatic-layout-smoke",
+    "provider_digest_verified": true,
+    "run": 35437783030,
+    "source": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "zip_bytes": 35701075
+  },
+  {
+    "github_digest": "sha256:7b40e1e2b4c9d3da8ef1d0d7e747cd1bbab55e786a1aa657ad558e7826c1268d",
+    "id": 10583445730,
+    "independent_sha256": "7b40e1e2b4c9d3da8ef1d0d7e747cd1bbab55e786a1aa657ad558e7826c1268d",
+    "name": "allocation-evidence-macos-latest",
+    "provider_digest_verified": true,
+    "run": 35437783035,
+    "source": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "zip_bytes": 17848
+  },
+  {
+    "github_digest": "sha256:5675278b79da809de79012b4fc17f7379954ec3613e2b6c77437de74788b9734",
+    "id": 10583390778,
+    "independent_sha256": "5675278b79da809de79012b4fc17f7379954ec3613e2b6c77437de74788b9734",
+    "name": "allocation-evidence-ubuntu-latest",
+    "provider_digest_verified": true,
+    "run": 35437783035,
+    "source": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "zip_bytes": 17778
+  },
+  {
+    "github_digest": "sha256:ceebacc99ae3123fd123c7847b1e2f65dc22cc3b24aa3c4813b4fbfe911c001c",
+    "id": 10582572721,
+    "independent_sha256": "ceebacc99ae3123fd123c7847b1e2f65dc22cc3b24aa3c4813b4fbfe911c001c",
+    "name": "allocation-evidence-windows-latest",
+    "provider_digest_verified": true,
+    "run": 35437783035,
+    "source": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "zip_bytes": 17731
+  }
+]

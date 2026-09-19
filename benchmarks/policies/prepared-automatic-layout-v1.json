@@ -1,0 +1,276 @@
+{
+  "families": [
+    "uniform",
+    "communities",
+    "chain",
+    "pair-dominant",
+    "nested",
+    "hubs",
+    "ragged",
+    "tensor",
+    "worker-firm-occupation",
+    "exporter-importer-product"
+  ],
+  "shapes": [
+    "balanced",
+    "unbalanced"
+  ],
+  "weights": [
+    "unit",
+    "heterogeneous"
+  ],
+  "seeds": [
+    10001
+  ],
+  "profiles": {
+    "smoke": {
+      "balanced": [
+        16,
+        16,
+        16
+      ],
+      "unbalanced": [
+        32,
+        8,
+        4
+      ],
+      "draws": 512,
+      "widths": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        17,
+        32
+      ]
+    },
+    "development": {
+      "balanced": [
+        128,
+        128,
+        128
+      ],
+      "unbalanced": [
+        512,
+        32,
+        16
+      ],
+      "draws": 16384,
+      "widths": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        17,
+        32
+      ]
+    },
+    "expanded": {
+      "balanced": [
+        512,
+        512,
+        512
+      ],
+      "unbalanced": [
+        2048,
+        128,
+        64
+      ],
+      "draws": 65536,
+      "widths": [
+        1,
+        8,
+        32
+      ]
+    }
+  },
+  "parameters": {
+    "native_tolerance": 1e-08,
+    "certificate_tolerance": 1e-08,
+    "terminal_relative_tolerance": 1e-12,
+    "minimum_affinity": 0.02,
+    "maximum_estimated_energy_factor": 0.8,
+    "maximum_observed_energy_factor": 1.05,
+    "maximum_structural_defect": 1e-10,
+    "correction_damping": 1.0,
+    "relative_zero_tolerance": 1e-13,
+    "max_iterations": 1000,
+    "local_window": 8,
+    "maximum_transitions": 8,
+    "maximum_tuple_multiplier": 4,
+    "maximum_coefficient_multiplier": 3,
+    "test_vectors": 2,
+    "power_iterations": 8,
+    "tail_iterations": 4,
+    "screen_seed": 5573008032362218289,
+    "process_budget_bytes": 1073741824,
+    "usize_bytes": 8,
+    "report_slot_bytes": 32
+  },
+  "timeout_seconds": 60,
+  "process_budget_bytes": 1073741824,
+  "workers": 1,
+  "input_boundary": "canonical_unique_tuples",
+  "schema": 1,
+  "scope": "prepared_automatic_layout_complete_cost",
+  "widths": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    17,
+    32
+  ],
+  "repetitions": 5,
+  "arms": [
+    {
+      "route": "automatic",
+      "layout": "scalar",
+      "name": "automatic/scalar"
+    },
+    {
+      "route": "automatic",
+      "layout": "fine-row",
+      "name": "automatic/fine-row"
+    },
+    {
+      "route": "automatic",
+      "layout": "all-row",
+      "name": "automatic/all-row"
+    },
+    {
+      "route": "automatic",
+      "layout": "fine-image",
+      "name": "automatic/fine-image"
+    },
+    {
+      "route": "automatic",
+      "layout": "all-image",
+      "name": "automatic/all-image"
+    },
+    {
+      "route": "components-map",
+      "layout": "scalar",
+      "name": "components-map/scalar"
+    },
+    {
+      "route": "components-map",
+      "layout": "all-row",
+      "name": "components-map/all-row"
+    },
+    {
+      "route": "global-map",
+      "layout": "scalar",
+      "name": "global-map/scalar"
+    },
+    {
+      "route": "global-map",
+      "layout": "all-row",
+      "name": "global-map/all-row"
+    }
+  ],
+  "comparison": "prespecified complete-cost paired process ratios; each comparison requires every warmup and measured pair to certify and satisfy RSS budget; no winner selection",
+  "phases": "all six complete cold-call phases, overhead, failed work and full process cost; profiler disabled",
+  "order": "rotate nine arms by case+repeat, one warmup and five measured repetitions; pair by identical case/repeat",
+  "baseline_alias_scope": "fine/all row/image baseline aliases allocate identical single fine rows with no image; all-row represents grouped baselines",
+  "seed_scope": "only development seed 10001; calibration and holdout untouched",
+  "failure_scope": "preserve every warmup/measured attempt, raw failure and charged time; any failed partner/warmup invalidates that whole-cell comparison",
+  "build_args": [
+    "cargo",
+    "build",
+    "--locked",
+    "--release",
+    "-p",
+    "multiway-mg",
+    "--no-default-features",
+    "--features",
+    "lsmr",
+    "--example",
+    "prepared_automatic_diagnostic"
+  ],
+  "warmups": 1,
+  "comparisons": [
+    {
+      "candidate": "automatic/scalar",
+      "control": "global-map/scalar"
+    },
+    {
+      "candidate": "automatic/scalar",
+      "control": "global-map/all-row"
+    },
+    {
+      "candidate": "automatic/fine-row",
+      "control": "automatic/scalar"
+    },
+    {
+      "candidate": "automatic/fine-row",
+      "control": "global-map/scalar"
+    },
+    {
+      "candidate": "automatic/fine-row",
+      "control": "global-map/all-row"
+    },
+    {
+      "candidate": "automatic/all-row",
+      "control": "automatic/scalar"
+    },
+    {
+      "candidate": "automatic/all-row",
+      "control": "global-map/scalar"
+    },
+    {
+      "candidate": "automatic/all-row",
+      "control": "global-map/all-row"
+    },
+    {
+      "candidate": "automatic/fine-image",
+      "control": "automatic/scalar"
+    },
+    {
+      "candidate": "automatic/fine-image",
+      "control": "global-map/scalar"
+    },
+    {
+      "candidate": "automatic/fine-image",
+      "control": "global-map/all-row"
+    },
+    {
+      "candidate": "automatic/all-image",
+      "control": "automatic/scalar"
+    },
+    {
+      "candidate": "automatic/all-image",
+      "control": "global-map/scalar"
+    },
+    {
+      "candidate": "automatic/all-image",
+      "control": "global-map/all-row"
+    },
+    {
+      "candidate": "components-map/scalar",
+      "control": "global-map/scalar"
+    },
+    {
+      "candidate": "components-map/all-row",
+      "control": "global-map/all-row"
+    },
+    {
+      "candidate": "global-map/all-row",
+      "control": "global-map/scalar"
+    }
+  ],
+  "hard_families": [
+    "communities",
+    "chain",
+    "pair-dominant",
+    "nested",
+    "worker-firm-occupation",
+    "exporter-importer-product"
+  ],
+  "observer_scope": "reuse schema2 diagnostic executable only with lsmr and profiling disabled; no regions and zero automatic/kernel profiler capacities",
+  "size_scope": "expanded is larger bounded development, not out-of-cache qualification; no calibration/holdout or competitive gate",
+  "aggregation": "equal family/width geometric means over the complete shape/weight grid; single and repeated RHS, all ten and hard six reported separately"
+}

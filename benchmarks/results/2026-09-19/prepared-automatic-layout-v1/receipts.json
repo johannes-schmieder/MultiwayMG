@@ -1,0 +1,139 @@
+[
+  {
+    "archive_bytes": 9926804,
+    "archive_sha256": "62a928fd2115eb0ff85141a22afcdb082cd5c9ecffedede6004cd7eec85d8d01",
+    "binary_sha256": "a836dbf42a99727980ae2b0765f44d12274094a00f49fb1682e45491e575a99f",
+    "certified_measured_columns": 144000,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "failed_measured_runs": 0,
+    "failed_warmup_runs": 0,
+    "github_run": null,
+    "journal_sha256": "336ea6d6b187aece9bddbc885e76943e73e95ffe77b9fc3272dba2757588a5e2",
+    "label": "mac-smoke",
+    "manifest_sha256": "4f0c8b7b003b6c317a91a07d567abc4381e001c51b68ffdc714ca79f2bc87588",
+    "policy_sha256": "0a33eb4d68d8dd19d8c09b8661011daec8388d47247e350a29ca2640a73e10f1",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/mac-smoke-layout-3a1edb6.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/mac-smoke-layout-3a1edb6.tar.gz",
+    "processes": 15120,
+    "recomputed_derived_timing_rounding": [],
+    "recomputed_summary_exact": true,
+    "source_commit": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "source_tree": "a57d5e25d295efe96f2085f9d2a717d798309189",
+    "summary_sha256": "81b9039b7e07784f6ddc515b310f4c8ce9c6fc788f842a0451228990410622f9"
+  },
+  {
+    "archive_bytes": 11965960,
+    "archive_sha256": "761aa2d2d0d456661b90649164a2e894e5d89bd6e4b904502f0865d3f80a861c",
+    "binary_sha256": "a836dbf42a99727980ae2b0765f44d12274094a00f49fb1682e45491e575a99f",
+    "certified_measured_columns": 144000,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "failed_measured_runs": 0,
+    "failed_warmup_runs": 0,
+    "github_run": null,
+    "journal_sha256": "79db07fea58c01258637c06c6538a67edf259f17cb4a7c67c85f6d866d72a3bf",
+    "label": "mac-development",
+    "manifest_sha256": "8980f6bc67374411f2037be3aadedcd87e578f0174831e1c645647519f535da8",
+    "policy_sha256": "0a33eb4d68d8dd19d8c09b8661011daec8388d47247e350a29ca2640a73e10f1",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/mac-development-layout-3a1edb6.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/mac-development-layout-3a1edb6.tar.gz",
+    "processes": 15120,
+    "recomputed_derived_timing_rounding": [],
+    "recomputed_summary_exact": true,
+    "source_commit": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "source_tree": "a57d5e25d295efe96f2085f9d2a717d798309189",
+    "summary_sha256": "ec6ef4cac23e2c9d922293f8dcdbc2c5f33d832c1e63effc2956c6022f211285"
+  },
+  {
+    "archive_bytes": 6136366,
+    "archive_sha256": "9b551272af5898d8759b01759195fb2d75f1e98cc55aace73fd73f2d684fa298",
+    "binary_sha256": "a836dbf42a99727980ae2b0765f44d12274094a00f49fb1682e45491e575a99f",
+    "certified_measured_columns": 73800,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "failed_measured_runs": 0,
+    "failed_warmup_runs": 0,
+    "github_run": null,
+    "journal_sha256": "0ac800984d9595775ae7fc0f03456a91b6c848eec1ab02b318feac14b4d68dfa",
+    "label": "mac-expanded",
+    "manifest_sha256": "cfbca6363e2686b42855c9c9c843ea4117f000d124bfb1ac031d5b5bbf855e1e",
+    "policy_sha256": "0a33eb4d68d8dd19d8c09b8661011daec8388d47247e350a29ca2640a73e10f1",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/mac-expanded-layout-3a1edb6.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/mac-expanded-layout-3a1edb6.tar.gz",
+    "processes": 6480,
+    "recomputed_derived_timing_rounding": [],
+    "recomputed_summary_exact": true,
+    "source_commit": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "source_tree": "a57d5e25d295efe96f2085f9d2a717d798309189",
+    "summary_sha256": "02525014c63e3758a7578e6ceee0747bbd03d7fbc8c8ae63a3830b959fc79bb4"
+  },
+  {
+    "archive_bytes": 9843113,
+    "archive_sha256": "c270d375023686eae40be961967e5224803f67fb3df8012c3c265e83bf8ca616",
+    "binary_sha256": "9eacff5cdd1282f6f35882bde69509591735cb96820e248a5a145f9359474309",
+    "certified_measured_columns": 144000,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "failed_measured_runs": 0,
+    "failed_warmup_runs": 0,
+    "github_run": 35437783030,
+    "journal_sha256": "80cab148c3bc3096bae4c69886a81e0bfa8cdf62cee0b0a070e4d82d686d4a5a",
+    "label": "linux-smoke",
+    "manifest_sha256": "5eb50af66d5d89108332f008b1bb40d7fdc31280c24982d60772074f0c8b8ca5",
+    "policy_sha256": "0a33eb4d68d8dd19d8c09b8661011daec8388d47247e350a29ca2640a73e10f1",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/linux-smoke-layout-3a1edb6.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6l/automatic-layout/linux-smoke-layout-3a1edb6.tar.gz",
+    "processes": 15120,
+    "recomputed_derived_timing_rounding": [
+      {
+        "path": "/cells/5/comparisons/10/paired_process_geomean",
+        "recomputed": 1.5047480785472407,
+        "stored": 1.504748078547241
+      },
+      {
+        "path": "/cells/40/comparisons/13/paired_process_geomean",
+        "recomputed": 2.0436623637792044,
+        "stored": 2.043662363779204
+      },
+      {
+        "path": "/cells/79/comparisons/0/paired_process_geomean",
+        "recomputed": 1.1851878403003413,
+        "stored": 1.1851878403003415
+      },
+      {
+        "path": "/cells/240/comparisons/11/paired_process_geomean",
+        "recomputed": 1.0097075342675434,
+        "stored": 1.0097075342675437
+      },
+      {
+        "path": "/cells/250/comparisons/12/paired_process_geomean",
+        "recomputed": 1.3451035453495945,
+        "stored": 1.3451035453495943
+      },
+      {
+        "path": "/cells/266/comparisons/0/paired_process_geomean",
+        "recomputed": 0.9829771069798651,
+        "stored": 0.982977106979865
+      },
+      {
+        "path": "/cells/267/comparisons/12/paired_process_geomean",
+        "recomputed": 1.001719243571069,
+        "stored": 1.0017192435710691
+      },
+      {
+        "path": "/balanced/12/subsets/hard/single_rhs_geomean",
+        "recomputed": 0.9947479205951971,
+        "stored": 0.9947479205951972
+      }
+    ],
+    "recomputed_summary_exact": false,
+    "source_commit": "3a1edb6837c02959828811730abdaad6a3f96b78",
+    "source_tree": "a57d5e25d295efe96f2085f9d2a717d798309189",
+    "summary_sha256": "bf51ac2f79499102e95e0c972ae41ba698fc3fcc23a0020d655f689ed90d15b6"
+  }
+]

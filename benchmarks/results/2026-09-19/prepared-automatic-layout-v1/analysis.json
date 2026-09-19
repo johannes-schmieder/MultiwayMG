@@ -1,0 +1,642 @@
+[
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 1.0827850938214794,
+        "family": "uniform",
+        "repeated": 1.100648662072225,
+        "single": 0.9815300921137127
+      },
+      {
+        "all": 1.0771567458777809,
+        "family": "communities",
+        "repeated": 1.089557179744956,
+        "single": 1.0056623197108154
+      },
+      {
+        "all": 1.0758651163695652,
+        "family": "chain",
+        "repeated": 1.0897974840447642,
+        "single": 0.9959326683777121
+      },
+      {
+        "all": 1.123685463047034,
+        "family": "pair-dominant",
+        "repeated": 1.1396304448897616,
+        "single": 1.0325927723046193
+      },
+      {
+        "all": 1.0762534589201536,
+        "family": "nested",
+        "repeated": 1.091992428225436,
+        "single": 0.9864706295783967
+      },
+      {
+        "all": 1.044058683908346,
+        "family": "hubs",
+        "repeated": 1.0507456329608367,
+        "single": 1.004821241942837
+      },
+      {
+        "all": 1.0723876398425,
+        "family": "ragged",
+        "repeated": 1.081056671284969,
+        "single": 1.0218139583723045
+      },
+      {
+        "all": 1.0417485463770768,
+        "family": "tensor",
+        "repeated": 1.050863437842605,
+        "single": 0.9886956633069075
+      },
+      {
+        "all": 1.0708596886207058,
+        "family": "worker-firm-occupation",
+        "repeated": 1.082488696666356,
+        "single": 1.003662669816638
+      },
+      {
+        "all": 1.065512331019581,
+        "family": "exporter-importer-product",
+        "repeated": 1.0765961810919287,
+        "single": 1.0013648692639887
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 50,
+      "dense_components": 50,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 1,
+      "global_projection": 40,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 1,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2408448
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2424832
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2424832
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2424832
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 4456,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 2408448
+      }
+    ],
+    "profile": "mac-smoke"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 0.394609766100869,
+        "family": "uniform",
+        "repeated": 0.42026017127836973,
+        "single": 0.2704365618697569
+      },
+      {
+        "all": 0.6469455752869955,
+        "family": "communities",
+        "repeated": 0.6976363025857749,
+        "single": 0.41143364013897826
+      },
+      {
+        "all": 0.5860332304643484,
+        "family": "chain",
+        "repeated": 0.6311294139180337,
+        "single": 0.3756169437282845
+      },
+      {
+        "all": 0.5315437344585244,
+        "family": "pair-dominant",
+        "repeated": 0.5549231632259155,
+        "single": 0.4105593090099026
+      },
+      {
+        "all": 0.7711532508371142,
+        "family": "nested",
+        "repeated": 0.8124975757864432,
+        "single": 0.5637056825296692
+      },
+      {
+        "all": 0.4436650769174506,
+        "family": "hubs",
+        "repeated": 0.463642521068794,
+        "single": 0.34063334568972387
+      },
+      {
+        "all": 0.8719366067294225,
+        "family": "ragged",
+        "repeated": 0.9371737413320002,
+        "single": 0.565553518171153
+      },
+      {
+        "all": 0.3889477781746354,
+        "family": "tensor",
+        "repeated": 0.40682734597028636,
+        "single": 0.29701490225795824
+      },
+      {
+        "all": 0.5014650361340405,
+        "family": "worker-firm-occupation",
+        "repeated": 0.5150632534932666,
+        "single": 0.42709177169354456
+      },
+      {
+        "all": 0.4251158652134997,
+        "family": "exporter-importer-product",
+        "repeated": 0.4394167595186047,
+        "single": 0.34857118982683616
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 29,
+      "baseline_components": 9,
+      "candidate_accepted_pairs": 10877,
+      "candidate_pair_entries": 1232190,
+      "candidate_proposals": 604813,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 2970660,
+      "candidate_unique_candidates": 227604,
+      "components": 108,
+      "dense_components": 14,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 0,
+      "global_projection": 40,
+      "hierarchy_attempts": 38,
+      "hierarchy_rejections": 9,
+      "large_components": 38,
+      "provisional_input_tuples": 186954,
+      "quality_rejections": 9,
+      "rejections": 9,
+      "screen_cycle": 1028,
+      "screen_defects": 1028,
+      "screen_energy": 1208,
+      "screen_gramian": 1208,
+      "screen_projections": 2236,
+      "singleton_components": 56,
+      "structural_attempts": 56,
+      "structural_input_tuples": 495110
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 7816764,
+        "maximum_grouping_bytes": 249528,
+        "maximum_requested_bytes": 7816764,
+        "maximum_rss_bytes": 10698752
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 7682084,
+        "maximum_grouping_bytes": 249528,
+        "maximum_requested_bytes": 7682084,
+        "maximum_rss_bytes": 10584064
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 7706484,
+        "maximum_grouping_bytes": 139248,
+        "maximum_requested_bytes": 7706484,
+        "maximum_rss_bytes": 10633216
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 7571804,
+        "maximum_grouping_bytes": 139248,
+        "maximum_requested_bytes": 7571804,
+        "maximum_rss_bytes": 10502144
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 7432556,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 7432556,
+        "maximum_rss_bytes": 10371072
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 6204928,
+        "maximum_grouping_bytes": 139184,
+        "maximum_requested_bytes": 6204928,
+        "maximum_rss_bytes": 8814592
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 6065744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 6065744,
+        "maximum_rss_bytes": 8503296
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 6204928,
+        "maximum_grouping_bytes": 139184,
+        "maximum_requested_bytes": 6204928,
+        "maximum_rss_bytes": 8585216
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 6065744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 6065744,
+        "maximum_rss_bytes": 8437760
+      }
+    ],
+    "profile": "mac-development"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 0.16574900198559533,
+        "family": "uniform",
+        "repeated": 0.23996559504564058,
+        "single": 0.07907784170322997
+      },
+      {
+        "all": 0.467543829149321,
+        "family": "communities",
+        "repeated": 0.6780730709068362,
+        "single": 0.2222869638081083
+      },
+      {
+        "all": 0.8769292210306325,
+        "family": "chain",
+        "repeated": 1.2101211376128933,
+        "single": 0.46050667715595917
+      },
+      {
+        "all": 0.517344211549695,
+        "family": "pair-dominant",
+        "repeated": 0.638044724246067,
+        "single": 0.3401234210497926
+      },
+      {
+        "all": 0.7342781437125517,
+        "family": "nested",
+        "repeated": 0.882599117610306,
+        "single": 0.5082235976116549
+      },
+      {
+        "all": 0.21077933408522953,
+        "family": "hubs",
+        "repeated": 0.2911792574387541,
+        "single": 0.11044936313019547
+      },
+      {
+        "all": 0.3115862788786761,
+        "family": "ragged",
+        "repeated": 0.438963345660119,
+        "single": 0.156992338821053
+      },
+      {
+        "all": 0.18240239274413628,
+        "family": "tensor",
+        "repeated": 0.26098465446838864,
+        "single": 0.08909670617843224
+      },
+      {
+        "all": 0.45080376979681286,
+        "family": "worker-firm-occupation",
+        "repeated": 0.5163851418190006,
+        "single": 0.34356992662108865
+      },
+      {
+        "all": 0.2401472564718061,
+        "family": "exporter-importer-product",
+        "repeated": 0.3379674936040349,
+        "single": 0.12125035713744803
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 32,
+      "baseline_components": 12,
+      "candidate_accepted_pairs": 65497,
+      "candidate_pair_entries": 13838562,
+      "candidate_proposals": 6845228,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 31251468,
+      "candidate_unique_candidates": 2711482,
+      "components": 324,
+      "dense_components": 32,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 0,
+      "global_projection": 40,
+      "hierarchy_attempts": 44,
+      "hierarchy_rejections": 12,
+      "large_components": 44,
+      "provisional_input_tuples": 4203970,
+      "quality_rejections": 12,
+      "rejections": 12,
+      "screen_cycle": 2156,
+      "screen_defects": 2156,
+      "screen_energy": 2474,
+      "screen_gramian": 2474,
+      "screen_projections": 4630,
+      "singleton_components": 248,
+      "structural_attempts": 143,
+      "structural_input_tuples": 5208578
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 37647224,
+        "maximum_grouping_bytes": 1887584,
+        "maximum_requested_bytes": 37647224,
+        "maximum_rss_bytes": 42156032
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 37091328,
+        "maximum_grouping_bytes": 1887584,
+        "maximum_requested_bytes": 37091328,
+        "maximum_rss_bytes": 41287680
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 36333544,
+        "maximum_grouping_bytes": 573904,
+        "maximum_requested_bytes": 36333544,
+        "maximum_rss_bytes": 40976384
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 35777648,
+        "maximum_grouping_bytes": 573904,
+        "maximum_requested_bytes": 35777648,
+        "maximum_rss_bytes": 40878080
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 35203744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 35203744,
+        "maximum_rss_bytes": 40288256
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 25571712,
+        "maximum_grouping_bytes": 573840,
+        "maximum_requested_bytes": 25571712,
+        "maximum_rss_bytes": 28508160
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 24997872,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 24997872,
+        "maximum_rss_bytes": 27967488
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 25571712,
+        "maximum_grouping_bytes": 573840,
+        "maximum_requested_bytes": 25571712,
+        "maximum_rss_bytes": 27869184
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 24997872,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 24997872,
+        "maximum_rss_bytes": 27312128
+      }
+    ],
+    "profile": "mac-expanded"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 1.3626512711620415,
+        "family": "uniform",
+        "repeated": 1.436840559469486,
+        "single": 0.9913833177581839
+      },
+      {
+        "all": 1.2627004285657752,
+        "family": "communities",
+        "repeated": 1.317490432803906,
+        "single": 0.9786276316753486
+      },
+      {
+        "all": 1.3490031335401105,
+        "family": "chain",
+        "repeated": 1.4214260515166526,
+        "single": 0.9857007442371428
+      },
+      {
+        "all": 1.4215433991729052,
+        "family": "pair-dominant",
+        "repeated": 1.508540411416733,
+        "single": 0.995357674006734
+      },
+      {
+        "all": 1.2732238505108748,
+        "family": "nested",
+        "repeated": 1.3294868369609782,
+        "single": 0.9822659891490588
+      },
+      {
+        "all": 1.142535362779014,
+        "family": "hubs",
+        "repeated": 1.1787790429334477,
+        "single": 0.9473121761735079
+      },
+      {
+        "all": 1.2557853638296854,
+        "family": "ragged",
+        "repeated": 1.3037213491252666,
+        "single": 1.0029961247511998
+      },
+      {
+        "all": 1.1432626507074786,
+        "family": "tensor",
+        "repeated": 1.1780878464621667,
+        "single": 0.9548959602670695
+      },
+      {
+        "all": 1.2053356072800456,
+        "family": "worker-firm-occupation",
+        "repeated": 1.2513079900082942,
+        "single": 0.962876525117301
+      },
+      {
+        "all": 1.227176373177007,
+        "family": "exporter-importer-product",
+        "repeated": 1.2758033135644657,
+        "single": 0.97195585845388
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 50,
+      "dense_components": 50,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 1,
+      "global_projection": 40,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 1,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3469312
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3514368
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3534848
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3559424
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3485696
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3514368
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3510272
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 4456,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 3559424
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 3559424
+      }
+    ],
+    "profile": "linux-smoke"
+  }
+]
