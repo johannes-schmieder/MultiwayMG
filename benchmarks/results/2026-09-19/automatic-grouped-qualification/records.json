@@ -1,0 +1,1037 @@
+{
+  "baseline_image_row_allocation_records_exact": true,
+  "certified_columns_per_configuration": 6240,
+  "controls": 39,
+  "denied_group_allocations": 0,
+  "denied_group_controls": 4,
+  "log_sha256": {
+    "release-v1/complete-all.log": "1cfba574349fbceedd2d62b63b6f94ede46ded4209b3bfb256f683fee5f837e7",
+    "required-v1/all.log": "5cbaf7c0c01ad5fe82fcb4e60c465d5bd618bf1113d494757d3e784f9510ad56"
+  },
+  "records": [
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 31200,
+        "bytes_total": 31200,
+        "count_current": 0,
+        "count_max": 3,
+        "count_total": 3
+      },
+      "changed_weights": false,
+      "coefficients": 900,
+      "layout": "Scalar",
+      "route_counts": [
+        300,
+        0,
+        0,
+        0
+      ],
+      "tuples": 300
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 704,
+        "bytes_total": 976,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 6,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 8
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 273504,
+        "bytes_total": 280720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 130,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 504
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 1046504,
+        "bytes_total": 1060720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 255,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 1004
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 1054704,
+        "bytes_total": 1068976,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 256,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 1008
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 424392,
+        "bytes_total": 737868,
+        "count_current": 0,
+        "count_max": 65,
+        "count_total": 114
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 193520,
+        "bytes_total": 214104,
+        "count_current": 0,
+        "count_max": 20,
+        "count_total": 23
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 730208,
+        "bytes_total": 1251630,
+        "count_current": 0,
+        "count_max": 85,
+        "count_total": 154
+      },
+      "changed_weights": false,
+      "coefficients": 1028,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 386032,
+        "bytes_total": 427096,
+        "count_current": 0,
+        "count_max": 20,
+        "count_total": 23
+      },
+      "changed_weights": false,
+      "coefficients": 1028,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 7360,
+        "bytes_total": 43216,
+        "count_current": 0,
+        "count_max": 9,
+        "count_total": 288
+      },
+      "changed_weights": false,
+      "coefficients": 240,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        40,
+        0,
+        0
+      ],
+      "tuples": 320
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 531120,
+        "bytes_total": 1672776,
+        "count_current": 0,
+        "count_max": 77,
+        "count_total": 248
+      },
+      "changed_weights": false,
+      "coefficients": 1032,
+      "layout": "Scalar",
+      "route_counts": [
+        0,
+        0,
+        2,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 273504,
+        "bytes_total": 280720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 130,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 0,
+        "grouped_levels_built": 0,
+        "grouping_attempts": 0,
+        "maximum_grouping_payload_bytes": 0,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 504
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 273504,
+        "bytes_total": 280720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 130,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 0,
+        "grouped_levels_built": 0,
+        "grouping_attempts": 0,
+        "maximum_grouping_payload_bytes": 0,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 504
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 273504,
+        "bytes_total": 280720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 130,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 0,
+        "grouped_levels_built": 0,
+        "grouping_attempts": 0,
+        "maximum_grouping_payload_bytes": 0,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 504
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 273504,
+        "bytes_total": 280720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "changed_weights": false,
+      "coefficients": 130,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 0,
+        "grouped_levels_built": 0,
+        "grouping_attempts": 0,
+        "maximum_grouping_payload_bytes": 0,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 504
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 444992,
+        "bytes_total": 758484,
+        "count_current": 0,
+        "count_max": 68,
+        "count_total": 118
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20600,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 447292,
+        "bytes_total": 763090,
+        "count_current": 0,
+        "count_max": 68,
+        "count_total": 118
+      },
+      "changed_weights": true,
+      "coefficients": 516,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20600,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 214056,
+        "bytes_total": 234656,
+        "count_current": 0,
+        "count_max": 22,
+        "count_total": 26
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20536,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 449192,
+        "bytes_total": 762692,
+        "count_current": 0,
+        "count_max": 70,
+        "count_total": 121
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 24800,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 451508,
+        "bytes_total": 767314,
+        "count_current": 0,
+        "count_max": 70,
+        "count_total": 121
+      },
+      "changed_weights": true,
+      "coefficients": 516,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 24816,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 214056,
+        "bytes_total": 234656,
+        "count_current": 0,
+        "count_max": 22,
+        "count_total": 26
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20536,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 461376,
+        "bytes_total": 791252,
+        "count_current": 0,
+        "count_max": 68,
+        "count_total": 118
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20600,
+        "maximum_tuple_image_len": 2048,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 463676,
+        "bytes_total": 795858,
+        "count_current": 0,
+        "count_max": 68,
+        "count_total": 118
+      },
+      "changed_weights": true,
+      "coefficients": 516,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20600,
+        "maximum_tuple_image_len": 2048,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 214056,
+        "bytes_total": 234656,
+        "count_current": 0,
+        "count_max": 22,
+        "count_total": 26
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20536,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 465576,
+        "bytes_total": 795460,
+        "count_current": 0,
+        "count_max": 70,
+        "count_total": 121
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 24800,
+        "maximum_tuple_image_len": 2048,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 467892,
+        "bytes_total": 800082,
+        "count_current": 0,
+        "count_max": 70,
+        "count_total": 121
+      },
+      "changed_weights": true,
+      "coefficients": 516,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 24816,
+        "maximum_tuple_image_len": 2048,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 214056,
+        "bytes_total": 234656,
+        "count_current": 0,
+        "count_max": 22,
+        "count_total": 26
+      },
+      "changed_weights": false,
+      "coefficients": 516,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 20536,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 771288,
+        "bytes_total": 1292726,
+        "count_current": 0,
+        "count_max": 88,
+        "count_total": 158
+      },
+      "changed_weights": false,
+      "coefficients": 1028,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 41080,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 783784,
+        "bytes_total": 1305238,
+        "count_current": 0,
+        "count_max": 92,
+        "count_total": 164
+      },
+      "changed_weights": false,
+      "coefficients": 1028,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 3,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 53576,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 804056,
+        "bytes_total": 1358262,
+        "count_current": 0,
+        "count_max": 88,
+        "count_total": 158
+      },
+      "changed_weights": false,
+      "coefficients": 1028,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 1,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 41080,
+        "maximum_tuple_image_len": 4096,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 816552,
+        "bytes_total": 1370774,
+        "count_current": 0,
+        "count_max": 92,
+        "count_total": 164
+      },
+      "changed_weights": false,
+      "coefficients": 1028,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 1,
+        "grouped_levels_built": 3,
+        "grouping_attempts": 1,
+        "maximum_grouping_payload_bytes": 53576,
+        "maximum_tuple_image_len": 4096,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 357148,
+        "bytes_total": 1081448,
+        "count_current": 0,
+        "count_max": 60,
+        "count_total": 183
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10360,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        2,
+        0
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 161180,
+        "bytes_total": 335812,
+        "count_current": 0,
+        "count_max": 34,
+        "count_total": 79
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "FineRow",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10296,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        0,
+        2
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 357148,
+        "bytes_total": 1081448,
+        "count_current": 0,
+        "count_max": 60,
+        "count_total": 183
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10360,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        2,
+        0
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 161180,
+        "bytes_total": 335812,
+        "count_current": 0,
+        "count_max": 34,
+        "count_total": 79
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "AllRow",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10296,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        0,
+        2
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 357148,
+        "bytes_total": 1114216,
+        "count_current": 0,
+        "count_max": 60,
+        "count_total": 183
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10360,
+        "maximum_tuple_image_len": 1024,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        2,
+        0
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 161180,
+        "bytes_total": 335812,
+        "count_current": 0,
+        "count_max": 34,
+        "count_total": 79
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "FineImage",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10296,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        0,
+        2
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 357148,
+        "bytes_total": 1114216,
+        "count_current": 0,
+        "count_max": 60,
+        "count_total": 183
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10360,
+        "maximum_tuple_image_len": 1024,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        2,
+        0
+      ],
+      "tuples": 2057
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 161180,
+        "bytes_total": 335812,
+        "count_current": 0,
+        "count_max": 34,
+        "count_total": 79
+      },
+      "changed_weights": false,
+      "coefficients": 529,
+      "layout": "AllImage",
+      "layout_inventory": {
+        "completed_groupings": 2,
+        "grouped_levels_built": 2,
+        "grouping_attempts": 2,
+        "maximum_grouping_payload_bytes": 10296,
+        "maximum_tuple_image_len": 0,
+        "rejected_groupings": 0
+      },
+      "route_counts": [
+        1,
+        1,
+        0,
+        2
+      ],
+      "tuples": 2057
+    }
+  ],
+  "repetitions": 2,
+  "scalar_m6h_records_exact": true,
+  "scope": "isolated LSMR-enabled debug/release requested heap; not comparative timing",
+  "source_sha256": {
+    "crates/multiway-mg/src/lib.rs": "6477f977bddf34b7d0dac9b6791919c7c065ab04e581e1f33845ae0d454cfbf0",
+    "crates/multiway-mg/src/prepared_automatic.rs": "e80de36927b4668a8608b1ff27e60e9c6edb5005701cbb9f7504a0ab179bff2b",
+    "crates/multiway-mg/src/prepared_automatic/hierarchy.rs": "66637a02e564c3a7f8409b56cf8adb8494bdf281111ad70cb60e8d7425d914b8",
+    "crates/multiway-mg/src/prepared_automatic/layout.rs": "e45829fb781670f741a108397c905cbaa1a8fd664d6e0af9521e9895671e9b9a",
+    "crates/multiway-mg/tests/automatic_allocation_peaks.rs": "39088e91dc3a6bc8f7cdb52ea9f74849e30454ea2d1b30645d08e0fb2405203c",
+    "crates/multiway-mg/tests/prepared_automatic.rs": "a036228a3d20d30e8d93a6e1ecccc8ff0b43f28bc50ad89cd1f5bcb3cec5d99d"
+  },
+  "widths": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    17,
+    32
+  ]
+}

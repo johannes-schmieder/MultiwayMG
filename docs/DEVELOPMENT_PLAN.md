@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6h merged; M6i measured automatic economics; M6j grouped application/admission next |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6h merged; M6i measured automatic economics; M6j grouped application qualified locally |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -919,7 +919,7 @@ for measurement, not an implemented layout or selected default.
 
 - M6h required Rust1.85/90 Python and seven release check groups pass, including
   all 120 actual protocol comparisons. Eleven isolated peak controls have exact
-  debug/release and first/repeated/K1–32 allocation records; all 1,980 columns
+  debug/release and first/repeated/K1–32 allocation records; all 1,760 columns
   per configuration certify and all temporary allocations are released.
   Seven complete scientific tests retain construction/screen rejection and
   final nonconvergence independently of completion. Two compile-fail lifetimes
@@ -988,3 +988,29 @@ for measurement, not an implemented layout or selected default.
   scalar reference gates before terminal/admission or larger development trials.
   Final evidence-head CI/merge remain; M6–M10 and competitive/default selection
   remain open. No calibration or holdout was consumed.
+
+- M6i PR62 merged as `7c7e7aabec338369603525da2aa78d0fef7923f6`; verified
+  main exactly matches reviewed tree `b58fa75c9856ead3344785d648d98355fa82cd1f`.
+  Final source CI35430772604/35430772586, PR CI35430774119/35430774113 and
+  post-merge CI35431107486/35431107498 pass. M6j now adds an explicit grouped
+  automatic entry point, separate bounded layout progress and component-scoped
+  group admission, preserving the scalar API and progress ABI. Grouped LSMR
+  baselines do not allocate unused Gramian images; only hierarchy cycles retain
+  one shared image. Four scientific tests and initial peak checks pass; full
+  qualification follows. No new performance/default claim.
+- M6j review corrects M6h's derived column tally: 11 controls * 2 repetitions *
+  sum(1,2,4,8,16,17,32) = 1,760, not the previously reported 1,980. The result
+  metadata retains the original count/hash and correction. Raw measurements,
+  allocation records and pass/fail outcomes are unchanged.
+
+- M6j local qualification passes required Rust1.85/105 Python checks and twelve
+  release/scientific groups, including 241 automatic/control protocol checks
+  per debug/release and 120 old layout protocol comparisons. Four new scientific
+  tests preserve exact scalar numerical/work results across layouts, K, changed
+  weights, components, rejected screens and original/global fallback. Thirty-nine
+  allocator controls certify 6,240 columns per LSMR-enabled configuration with
+  exact debug/release, K and repetition records; all eleven M6h scalar records
+  are unchanged. Four denied group controls allocate nothing. Final explicit
+  rejection assertions and Clippy pass. Freeze this source before existing
+  scalar compatibility collection and cross-platform CI. New grouped timing
+  remains a separate follow-up; no default or competitive promotion.

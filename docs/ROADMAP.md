@@ -217,7 +217,10 @@ The [first complete automatic evidence](../benchmarks/results/2026-09-19/prepare
 retains all 25,200 processes and 239,925 certified measured columns, with 75
 identity-control column rejections preserved. Automatic construction is 1.85x
 slower than MAP on the bounded Mac development matrix despite reduced iterative
-work; grouped application and setup admission are next. M6 remains open. See the
+work. [Explicit grouped automatic execution](ISSUE5_AUTOMATIC_GROUPED_LAYOUTS.md)
+now connects row/image layouts to component-scoped ownership and matched
+baselines, with no dead baseline image or default promotion. Full qualification
+and new grouped economics remain in progress. M6 remains open. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

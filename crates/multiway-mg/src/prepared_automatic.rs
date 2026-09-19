@@ -13,6 +13,27 @@ use multiway_incidence::{
     PreparedComponentView, PreparedHierarchyBudget, ThreeWayWeightFrame,
 };
 mod hierarchy;
+mod layout;
+pub use layout::{
+    PreparedAutomaticGroupingLocation, PreparedAutomaticGroupingScope, PreparedAutomaticLayout,
+    PreparedAutomaticLayoutProgress,
+};
+
+struct Progress<'a> {
+    inner: &'a mut PreparedAutomaticProgress,
+    layout: &'a mut PreparedAutomaticLayoutProgress,
+}
+impl std::ops::Deref for Progress<'_> {
+    type Target = PreparedAutomaticProgress;
+    fn deref(&self) -> &Self::Target {
+        self.inner
+    }
+}
+impl std::ops::DerefMut for Progress<'_> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.inner
+    }
+}
 
 /// Explicit construction/screening policy for large components; no timed routing.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -190,10 +211,69 @@ pub struct PreparedAutomaticProgress {
 /// time decisions occur. A returned error retains progress and report semantics.
 pub fn solve_prepared_automatic_batch_into(
     frame: &ThreeWayWeightFrame<'_>,
-    mut batch: PreparedAutomaticBatch<'_>,
+    batch: PreparedAutomaticBatch<'_>,
     options: PreparedAutomaticOptions,
     budget: PreparedHierarchyBudget,
     progress: &mut PreparedAutomaticProgress,
+) -> Result<(), MultiwayError> {
+    let mut layout = PreparedAutomaticLayoutProgress::default();
+    run(
+        frame,
+        batch,
+        options,
+        budget,
+        &mut Progress {
+            inner: progress,
+            layout: &mut layout,
+        },
+        PreparedAutomaticLayout::Scalar,
+    )
+}
+
+/// Complete automatic execution with an explicit, separately charged kernel layout.
+///
+/// Uses the same component, construction, quality and certificate policy as the
+/// scalar entry point. Fine/all prefixes affect nonterminal hierarchy levels;
+/// large-component and final global baselines group their single fine level.
+/// Those LSMR baselines need no Gramian tuple image and allocate none.
+/// Dense/singleton execution needs no grouping. There is no layout selector or
+/// silent scalar recovery: rejected group setup follows ordinary typed hierarchy/
+/// component fallback, and failed final group setup returns its error.
+///
+/// Groups and at most one shared tuple image belong to the current component.
+/// Their capacities, setup cursor and failed attempts are included in admission.
+/// Original certificates remain scalar. Both progress records and caller outputs
+/// keep their prior values on static validation failure; after admission the
+/// ordinary partial-output/accepted-report contract applies.
+pub fn solve_prepared_automatic_batch_into_with_layout(
+    frame: &ThreeWayWeightFrame<'_>,
+    batch: PreparedAutomaticBatch<'_>,
+    options: PreparedAutomaticOptions,
+    budget: PreparedHierarchyBudget,
+    selected_layout: PreparedAutomaticLayout,
+    progress: &mut PreparedAutomaticProgress,
+    layout_progress: &mut PreparedAutomaticLayoutProgress,
+) -> Result<(), MultiwayError> {
+    run(
+        frame,
+        batch,
+        options,
+        budget,
+        &mut Progress {
+            inner: progress,
+            layout: layout_progress,
+        },
+        selected_layout,
+    )
+}
+
+fn run(
+    frame: &ThreeWayWeightFrame<'_>,
+    mut batch: PreparedAutomaticBatch<'_>,
+    options: PreparedAutomaticOptions,
+    budget: PreparedHierarchyBudget,
+    progress: &mut Progress<'_>,
+    selected_layout: PreparedAutomaticLayout,
 ) -> Result<(), MultiwayError> {
     validate(frame, &batch, options)?;
     let caller = add(
@@ -207,9 +287,13 @@ pub fn solve_prepared_automatic_batch_into(
         )?,
     )?;
     let base = add(caller, fine_payload(frame)?)?;
-    *progress = PreparedAutomaticProgress {
+    *progress.inner = PreparedAutomaticProgress {
         components: frame.topology().component_factor_sizes().len(),
         ..PreparedAutomaticProgress::default()
+    };
+    *progress.layout = PreparedAutomaticLayoutProgress {
+        requested_layout: selected_layout,
+        ..PreparedAutomaticLayoutProgress::default()
     };
     batch.reports.fill(None);
     admit(base, budget.maximum_payload_bytes, progress)?;
@@ -319,7 +403,7 @@ fn components(
     options: PreparedAutomaticOptions,
     maximum: usize,
     caller: usize,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     let topology = frame.topology();
     if progress.components == frame.weights().len() {
@@ -444,7 +528,7 @@ fn dense_columns(
     view: PreparedComponentView<'_, '_>,
     terminal: &DensePseudoinverse,
     batch: &mut PreparedAutomaticBatch<'_>,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     // Explicit 6KiB maximum stack scratch, independent of component/RHS counts.
     let mut rhs = [0.; PREPARED_DENSE_TERMINAL_LIMIT];
@@ -474,7 +558,7 @@ fn large(
     options: PreparedAutomaticOptions,
     maximum: usize,
     other: usize,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     if options.hierarchy.is_some() {
         increment(&mut progress.hierarchy_attempts, 1)?;
@@ -489,7 +573,20 @@ fn large(
     // The attempted hierarchy/replay/screen/solver owners died before fallback.
     progress.stage = PreparedAutomaticStage::ComponentSolve;
     increment(&mut progress.baseline_components, 1)?;
+    let groups = layout::baseline_groups(
+        frame,
+        maximum,
+        other,
+        PreparedAutomaticGroupingScope::ComponentBaseline,
+        progress,
+    )?;
     let owner = PreparedBaseline::new(frame, options.fallback);
+    let owner = match &groups {
+        // LSMR uses the grouped weighted adjoint and MAP rows, never the fine
+        // Gramian action. Its baseline therefore needs no tuple-image buffer.
+        Some(groups) => owner.with_grouping(groups, crate::GroupedGramianMode::RowGather)?,
+        None => owner,
+    };
     solve_columns(&owner, view, batch, options.lsmr, maximum, other, progress)
 }
 
@@ -500,7 +597,7 @@ fn solve_columns<P: PreparedSolverAction>(
     options: PreparedLsmrOptions,
     maximum: usize,
     other: usize,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     let gathered = if view.is_some() {
         owner.fine_frame().weights().len()
@@ -562,7 +659,7 @@ fn certify_columns(
     options: PreparedAutomaticOptions,
     maximum: usize,
     base: usize,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<[bool; 32], MultiwayError> {
     let topology = frame.topology();
     admit(
@@ -636,9 +733,22 @@ fn global_fallback(
     maximum: usize,
     other: usize,
     selected: &[bool; 32],
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
+    let groups = layout::baseline_groups(
+        frame,
+        maximum,
+        other,
+        PreparedAutomaticGroupingScope::GlobalBaseline,
+        progress,
+    )?;
     let owner = PreparedBaseline::new(frame, options.fallback);
+    let owner = match &groups {
+        // LSMR uses the grouped weighted adjoint and MAP rows, never the fine
+        // Gramian action. Its baseline therefore needs no tuple-image buffer.
+        Some(groups) => owner.with_grouping(groups, crate::GroupedGramianMode::RowGather)?,
+        None => owner,
+    };
     admit(
         PreparedLsmrWorkspace::setup_payload_bound(&owner, options.lsmr, other)?,
         maximum,
@@ -693,7 +803,7 @@ fn global_fallback(
     Ok(())
 }
 
-fn reject(source: MultiwayError, p: &mut PreparedAutomaticProgress) -> Result<(), MultiwayError> {
+fn reject(source: MultiwayError, p: &mut Progress<'_>) -> Result<(), MultiwayError> {
     increment(&mut p.rejections, 1)?;
     p.last_rejection = Some(PreparedAutomaticRejection {
         component: p.component,
@@ -705,7 +815,7 @@ fn reject(source: MultiwayError, p: &mut PreparedAutomaticProgress) -> Result<()
 fn solve_work(
     w: PreparedLsmrWorkReport,
     g: PreparedLsmrGateWorkReport,
-    p: &mut PreparedAutomaticProgress,
+    p: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     increment(
         &mut p.solve_work.weighted_incidence_applications,
@@ -753,11 +863,7 @@ fn payload_budget(
         additional_live_payload_bytes,
     }
 }
-fn admit(
-    required: usize,
-    maximum: usize,
-    p: &mut PreparedAutomaticProgress,
-) -> Result<(), MultiwayError> {
+fn admit(required: usize, maximum: usize, p: &mut Progress<'_>) -> Result<(), MultiwayError> {
     p.maximum_requested_payload_bytes = p.maximum_requested_payload_bytes.max(required);
     if required > maximum {
         return Err(MultiwayError::PayloadBudgetExceeded {
