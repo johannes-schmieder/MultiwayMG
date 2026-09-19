@@ -1,0 +1,396 @@
+{
+  "balanced": [
+    {
+      "candidate": "automatic/scalar",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.098179980395598,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.117095908120989,
+          "single_rhs_geomean": 0.991224185980343
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.107146245604261,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.1285113950567889,
+          "single_rhs_geomean": 0.9871865951908627
+        }
+      }
+    },
+    {
+      "candidate": "automatic/scalar",
+      "control": "global-map/all-row",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.065801538489956,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0792177848576714,
+          "single_rhs_geomean": 0.9887348405473684
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0756538311488575,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0905476622340544,
+          "single_rhs_geomean": 0.9904665018441552
+        }
+      }
+    },
+    {
+      "candidate": "automatic/fine-row",
+      "control": "automatic/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0001676102944153,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0003103158076003,
+          "single_rhs_geomean": 0.9993118046431306
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0018203780460935,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0022984866185887,
+          "single_rhs_geomean": 0.9989565121410446
+        }
+      }
+    },
+    {
+      "candidate": "automatic/fine-row",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0983640466654332,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.1174425606398846,
+          "single_rhs_geomean": 0.9905420300979347
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.1091616703235738,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.1311052633972516,
+          "single_rhs_geomean": 0.9861564779642576
+        }
+      }
+    },
+    {
+      "candidate": "automatic/fine-row",
+      "control": "global-map/all-row",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0659801777996105,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.079552683196156,
+          "single_rhs_geomean": 0.9880543978209287
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0776119277682772,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0930542714426323,
+          "single_rhs_geomean": 0.9894329620747788
+        }
+      }
+    },
+    {
+      "candidate": "automatic/all-row",
+      "control": "automatic/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.000608500326991,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 0.99990742985634,
+          "single_rhs_geomean": 1.0048252576732024
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0022896439014355,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0013809435560252,
+          "single_rhs_geomean": 1.0077591887369295
+        }
+      }
+    },
+    {
+      "candidate": "automatic/all-row",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0988482232727634,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.116992498392292,
+          "single_rhs_geomean": 0.9960070980896084
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.109681216253506,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.1300698055956935,
+          "single_rhs_geomean": 0.9948463623015154
+        }
+      }
+    },
+    {
+      "candidate": "automatic/all-row",
+      "control": "global-map/all-row",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0664500790746343,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0791178815122864,
+          "single_rhs_geomean": 0.9935057409234821
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0781166953834032,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0920536470007547,
+          "single_rhs_geomean": 0.9981517183695703
+        }
+      }
+    },
+    {
+      "candidate": "automatic/fine-image",
+      "control": "automatic/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0019042410076973,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0009848860750865,
+          "single_rhs_geomean": 1.00743812979092
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.001424020659587,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0005941306661594,
+          "single_rhs_geomean": 1.0064178350951494
+        }
+      }
+    },
+    {
+      "candidate": "automatic/fine-image",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.1002711797480995,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.1181961203254334,
+          "single_rhs_geomean": 0.998597040127564
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.1087228447311857,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.1291818782837024,
+          "single_rhs_geomean": 0.9935221959669396
+        }
+      }
+    },
+    {
+      "candidate": "automatic/fine-image",
+      "control": "global-map/all-row",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0678310814856153,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0802806914259633,
+          "single_rhs_geomean": 0.9960891786201644
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0771855844269773,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0911955900430959,
+          "single_rhs_geomean": 0.9968231525202603
+        }
+      }
+    },
+    {
+      "candidate": "automatic/all-image",
+      "control": "automatic/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0008650975575977,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0000067594205782,
+          "single_rhs_geomean": 1.006030620058502
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0016385446856704,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0007479350020256,
+          "single_rhs_geomean": 1.006998871946049
+        }
+      }
+    },
+    {
+      "candidate": "automatic/all-image",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0991300132144408,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.117103459042058,
+          "single_rhs_geomean": 0.9972018824387886
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.1089603542012556,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.1293554482293366,
+          "single_rhs_geomean": 0.9940957877574595
+        }
+      }
+    },
+    {
+      "candidate": "automatic/all-image",
+      "control": "global-map/all-row",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0667235607977872,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0792250797445746,
+          "single_rhs_geomean": 0.9946975247093133
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0774163380175072,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0913633210020164,
+          "single_rhs_geomean": 0.9973986500574135
+        }
+      }
+    },
+    {
+      "candidate": "components-map/scalar",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0983117603460708,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.1165608511997305,
+          "single_rhs_geomean": 0.9949128907242566
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.1090673993563775,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.1294845914382983,
+          "single_rhs_geomean": 0.9940854407745348
+        }
+      }
+    },
+    {
+      "candidate": "components-map/all-row",
+      "control": "global-map/all-row",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.064272752123471,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0776686179105697,
+          "single_rhs_geomean": 0.9873228449572283
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0765696313148094,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.0911046798357311,
+          "single_rhs_geomean": 0.9933364276481242
+        }
+      }
+    },
+    {
+      "candidate": "global-map/all-row",
+      "control": "global-map/scalar",
+      "subsets": {
+        "all": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0303794287551098,
+          "expected_cells": 280,
+          "qualified_cells": 280,
+          "repeated_rhs_geomean": 1.0350977567223034,
+          "single_rhs_geomean": 1.0025177078129426
+        },
+        "hard": {
+          "complete_coverage": true,
+          "equal_family_width_geomean": 1.0292774622684773,
+          "expected_cells": 168,
+          "qualified_cells": 168,
+          "repeated_rhs_geomean": 1.034811621846003,
+          "single_rhs_geomean": 0.9966885233905584
+        }
+      }
+    }
+  ],
+  "certified_measured_columns": 144000,
+  "competitive_qualification": false,
+  "complete_certification_gate_passed": true,
+  "cpu_measurement_scope": "OS printed user+system, often 0.01-second resolution; zero means below resolution; no CPU speedup inferred",
+  "default_selected": false,
+  "exact_route_math_work_checks": 14280,
+  "expected_measured_columns": 144000,
+  "failed_measured_runs": 0,
+  "failed_process_seconds": 0.0,
+  "failed_warmup_runs": 0,
+  "fixed_configuration_records": 2520,
+  "measured_process_seconds": 69.611102192,
+  "performance_measurement": true,
+  "processes": 15120,
+  "profile": "smoke",
+  "schema": 1,
+  "scope": "prepared_automatic_layout_complete_cost",
+  "warmup_process_seconds": 14.164872844
+}

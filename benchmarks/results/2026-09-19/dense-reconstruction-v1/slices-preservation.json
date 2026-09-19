@@ -1,0 +1,186 @@
+[
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/mac-micro.tar.gz",
+    "archive_bytes": 824201,
+    "archive_sha256": "4f44ac1186d62bb54daefde8e6504be95dd1be0f8e792dd882411332674da487",
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [],
+    "files": 6,
+    "independent_complete_validation": true,
+    "label": "mac-micro",
+    "manifest_sha256": "515a39af28ac7cc96cfba7d8775190859e69ab0d7d35f013626dadf8bbb2828a",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/mac-micro.tar.gz",
+    "raw_bytes": 2133842,
+    "source_commit": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "source_tree": "50c9adc72b7452b2cd906dd5d914801670846dc6",
+    "summary_exact": true,
+    "summary_sha256": "cd5bca598eee44055fc17b7f0f041bbdd2ed88ddd0ee8ac6e936143e386a1581"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/linux-micro.tar.gz",
+    "archive_bytes": 925041,
+    "archive_sha256": "4de1d34ee503423966c4a9878c49e32333cd0c6ba497c4bfbc20703be7f7d6a4",
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [],
+    "files": 6,
+    "independent_complete_validation": true,
+    "label": "linux-micro",
+    "manifest_sha256": "9c3f90cf3b0d4abf3a3abcd583f26786740abbe2a6b263642a6deb03d7b264f9",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/linux-micro.tar.gz",
+    "raw_bytes": 2477628,
+    "source_commit": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "source_tree": "50c9adc72b7452b2cd906dd5d914801670846dc6",
+    "summary_exact": true,
+    "summary_sha256": "bd9ed7c6ebeb60eef447b8919330b332db62915465fd5800b98471a257f7a828"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/mac-smoke.tar.gz",
+    "archive_bytes": 8695309,
+    "archive_sha256": "5fec688d5b1fc7794497c529836022491af616f9cf7341a3c10240a086642664",
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [],
+    "files": 30245,
+    "independent_complete_validation": true,
+    "label": "mac-smoke",
+    "manifest_sha256": "7f13bd53b3dc916cbef03aeb15d04980462f775fcba28516d7f874fdcf208bb2",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/mac-smoke.tar.gz",
+    "raw_bytes": 161221077,
+    "source_commit": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "source_tree": "50c9adc72b7452b2cd906dd5d914801670846dc6",
+    "summary_exact": true,
+    "summary_sha256": "af4e6c5892df9875deaadb408a4b4232a73e9e48fcc9f577ee7a9dfcedb71118"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/mac-development.tar.gz",
+    "archive_bytes": 10735109,
+    "archive_sha256": "7103ec9dbb867c63f513a3e280f0dbc01d32a71f512e2334f3d7c94e6b8f0ed5",
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [],
+    "files": 30245,
+    "independent_complete_validation": true,
+    "label": "mac-development",
+    "manifest_sha256": "aac906c92ab0df269e5ea8100afb522acb6896df2ce9ca0097f4afb748117d66",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/mac-development.tar.gz",
+    "raw_bytes": 164192208,
+    "source_commit": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "source_tree": "50c9adc72b7452b2cd906dd5d914801670846dc6",
+    "summary_exact": true,
+    "summary_sha256": "4a2911f7a053bfa264400e12d8d43cb7d5a40acaf816199b33cd8b44e7c6ba93"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/linux-smoke.tar.gz",
+    "archive_bytes": 8581053,
+    "archive_sha256": "e9646c12fcd23b597931876956e9f2157c009da6c815f332854bfdebff176bef",
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [
+      {
+        "path": "/cells/7/comparisons/15/paired_process_geomean",
+        "recomputed": 1.0019359488483517,
+        "stored": 1.0019359488483515
+      },
+      {
+        "path": "/cells/111/comparisons/10/paired_process_geomean",
+        "recomputed": 1.901367019099972,
+        "stored": 1.9013670190999719
+      },
+      {
+        "path": "/cells/141/comparisons/15/paired_process_geomean",
+        "recomputed": 0.9818121147163812,
+        "stored": 0.9818121147163811
+      },
+      {
+        "path": "/cells/165/comparisons/5/paired_process_geomean",
+        "recomputed": 1.0155600334218553,
+        "stored": 1.015560033421855
+      },
+      {
+        "path": "/cells/200/comparisons/4/paired_process_geomean",
+        "recomputed": 1.1865762253382464,
+        "stored": 1.1865762253382466
+      },
+      {
+        "path": "/cells/201/comparisons/2/paired_process_geomean",
+        "recomputed": 0.9924579098448365,
+        "stored": 0.9924579098448366
+      },
+      {
+        "path": "/cells/253/comparisons/12/paired_process_geomean",
+        "recomputed": 0.9891495983231627,
+        "stored": 0.9891495983231626
+      },
+      {
+        "path": "/cells/266/comparisons/1/paired_process_geomean",
+        "recomputed": 0.9599615471364574,
+        "stored": 0.9599615471364573
+      }
+    ],
+    "files": 30245,
+    "independent_complete_validation": true,
+    "label": "linux-smoke",
+    "manifest_sha256": "bb058f70ec05aad3e37e74390a3f3663e89c5cccb74c304323dba9a8e2f9a929",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/linux-smoke.tar.gz",
+    "raw_bytes": 161690741,
+    "source_commit": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "source_tree": "50c9adc72b7452b2cd906dd5d914801670846dc6",
+    "summary_exact": false,
+    "summary_sha256": "924811c0df50c64aedaba7b9edfabc04decc3735efae44097c450feed560549e"
+  },
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/iterator-linux-smoke.tar.gz",
+    "archive_bytes": 8626402,
+    "archive_sha256": "a5e8b41d7e6cfbd989a0f0b0bb27b944d5e2dbef0b67417293e066f4f2d2531c",
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [
+      {
+        "path": "/cells/45/comparisons/15/paired_process_geomean",
+        "recomputed": 1.1192077323264304,
+        "stored": 1.1192077323264302
+      },
+      {
+        "path": "/cells/48/comparisons/4/paired_process_geomean",
+        "recomputed": 1.4037536974088514,
+        "stored": 1.4037536974088516
+      },
+      {
+        "path": "/cells/119/comparisons/11/paired_process_geomean",
+        "recomputed": 0.9977015850563641,
+        "stored": 0.997701585056364
+      },
+      {
+        "path": "/cells/137/comparisons/14/paired_process_geomean",
+        "recomputed": 1.4449229509240749,
+        "stored": 1.4449229509240746
+      },
+      {
+        "path": "/cells/192/comparisons/7/paired_process_geomean",
+        "recomputed": 1.1311936163257728,
+        "stored": 1.1311936163257725
+      },
+      {
+        "path": "/cells/243/comparisons/13/paired_process_geomean",
+        "recomputed": 1.2378716904687874,
+        "stored": 1.2378716904687876
+      },
+      {
+        "path": "/cells/251/comparisons/8/paired_process_geomean",
+        "recomputed": 1.0093289611206135,
+        "stored": 1.0093289611206138
+      },
+      {
+        "path": "/balanced/13/subsets/hard/equal_family_width_geomean",
+        "recomputed": 1.2822419104191114,
+        "stored": 1.2822419104191116
+      }
+    ],
+    "files": 30245,
+    "independent_complete_validation": true,
+    "label": "iterator-linux-smoke",
+    "manifest_sha256": "c8090ef726993e72058ee5da5a2fee879c51c9a786011678f5f5f18304fefb5b",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6m/slices-preserved/iterator-linux-smoke.tar.gz",
+    "raw_bytes": 161726916,
+    "source_commit": "8655c351d022d48f8e51adc6406e56149ab12e8c",
+    "source_tree": "09b85cd7968795ed56bd57166733ba2bee33d4ac",
+    "summary_exact": false,
+    "summary_sha256": "45c48499dc22253d1acd88bf3a602fecf50ce58960c9f24b015a6145852a2c07"
+  }
+]

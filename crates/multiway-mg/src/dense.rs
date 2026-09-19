@@ -306,12 +306,14 @@ impl DensePseudoinverse {
             }
             *modal_value = sum * self.inverse_eigenvalues[mode];
         }
-        for (row, value) in out.iter_mut().enumerate() {
-            let mut sum = 0.0;
-            for (mode, &modal_value) in modal.iter().enumerate() {
-                sum = self.eigenvectors[(row, mode)].mul_add(modal_value, sum);
+        // Q is column-major. Stream each column and update independent output
+        // entries, retaining each entry's ascending-mode FMA order exactly.
+        out.fill(0.0);
+        for (mode, &modal_value) in modal.iter().enumerate() {
+            let column = self.eigenvectors.column(mode);
+            for (value, &coefficient) in out.iter_mut().zip(column.as_slice().iter()) {
+                *value = coefficient.mul_add(modal_value, *value);
             }
-            *value = sum;
         }
         Ok(())
     }
@@ -357,3 +359,6 @@ fn accumulate_tuple(values: &mut [f64], n: usize, indices: [usize; 3], weight: f
         }
     }
 }
+
+#[cfg(test)]
+mod traversal_tests;

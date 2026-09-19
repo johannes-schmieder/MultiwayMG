@@ -1,0 +1,74 @@
+[
+  {
+    "baseline_sha256": "55c599b788ccd74e8f714dda96d26b3dab2d66ed8d64bad9e53d850f83165d8d",
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "d32047b3b576fc3bceb56ce903bbcb29dba7707417155a4fe0a54a5be2a224bd",
+    "platform": "ubuntu-latest",
+    "profile": "debug",
+    "run": 35446761654,
+    "sha256": "274944097924a174123be507a875384b5280e34f39d565c0c38e4fa1cf5b7ac7",
+    "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "zero_allocation_denials": 4
+  },
+  {
+    "baseline_sha256": "12772fc0c37544f3a631cb2ab8c8fc406a11fc90f118187b4bbe5693ca7ad82b",
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "d32047b3b576fc3bceb56ce903bbcb29dba7707417155a4fe0a54a5be2a224bd",
+    "platform": "ubuntu-latest",
+    "profile": "release",
+    "run": 35446761654,
+    "sha256": "bfa9cb2e2b155d39e0ef01761e8aaaceac08d7348ea81775764892d1255d5dbd",
+    "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "zero_allocation_denials": 4
+  },
+  {
+    "baseline_sha256": "43bad9f1882006c9f409e55d8dd0c82d2856198eea7ab5ddd05c9052a5c00c55",
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "cfc1395547d015bb188904e7e30e72b796c9bcd94909d9d98e3a756b9672812f",
+    "platform": "macos-latest",
+    "profile": "debug",
+    "run": 35446761654,
+    "sha256": "652904c37f89e83c5c155d0f5361c5150a6631875a7e9e04b2929adbb932fde4",
+    "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "zero_allocation_denials": 4
+  },
+  {
+    "baseline_sha256": "5c43294bff34d6485beab7be8247af2be11c78e4d064ec915d5c3c165e93d0fb",
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "cfc1395547d015bb188904e7e30e72b796c9bcd94909d9d98e3a756b9672812f",
+    "platform": "macos-latest",
+    "profile": "release",
+    "run": 35446761654,
+    "sha256": "180f60c54c38d3e7abbba69cc9681fc819d9fddfd0d0d934c72d0810f33bfc73",
+    "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "zero_allocation_denials": 4
+  },
+  {
+    "baseline_sha256": "4e27adba6f478f31fe9d690c3472f3656875810879936babef351f28f9dbca00",
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "847f6dbde3ec1484b37c3072cd819b89451a531f76b74bebc2c081fe992a1f05",
+    "platform": "windows-latest",
+    "profile": "debug",
+    "run": 35446761654,
+    "sha256": "6947169511b6b264b8c0d0c5193b5ce3f5b13bcf2d584374a06c994b724ab02d",
+    "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "zero_allocation_denials": 4
+  },
+  {
+    "baseline_sha256": "10b6ab9e9d6f236a593f1ec156dbada7f21f385fbf7fb9452d41dadf73715fdd",
+    "certified_columns": 6240,
+    "exact_controls": 39,
+    "metadata_sha256": "847f6dbde3ec1484b37c3072cd819b89451a531f76b74bebc2c081fe992a1f05",
+    "platform": "windows-latest",
+    "profile": "release",
+    "run": 35446761654,
+    "sha256": "fb72b24bcad983dd0570e0a45c3a358f4f1a1d917f93d77e3d8fc210e97e015a",
+    "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+    "zero_allocation_denials": 4
+  }
+]

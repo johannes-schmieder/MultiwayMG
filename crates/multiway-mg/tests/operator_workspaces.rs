@@ -220,3 +220,47 @@ fn terminal_matches_independent_prechange_reference_and_reuses_anonymous_scratch
         bits(&bad_out, &before);
     }
 }
+
+#[test]
+fn terminal_traversal_matches_old_eigensystems_at_cap_and_tail_sizes() {
+    let mut workspace = DensePseudoinverseWorkspace::new();
+    let mut problems = Vec::new();
+    for n in [31, 32, 33, 255, 256, 257] {
+        let tuples: Vec<_> = (0..n - 2).map(|i| [0, 0, i as u32]).collect();
+        let weights: Vec<_> = (0..n - 2).map(|i| (i % 7 + 1) as f64).collect();
+        problems
+            .push(ThreeWayProblem::from_observations([1, 1, n - 2], &tuples, &weights).unwrap());
+    }
+    // Two components with additional null directions beyond factor shifts.
+    problems.push(
+        ThreeWayProblem::from_observations(
+            [4, 4, 2],
+            &[[0, 0, 0], [1, 1, 0], [2, 2, 1], [3, 3, 1]],
+            &[1.0, 8.0, 3.0, 5.0],
+        )
+        .unwrap(),
+    );
+    for problem in problems {
+        let terminal = DensePseudoinverse::from_problem(&problem, 1.0e-12).unwrap();
+        let reference =
+            old_dense::AllocatingTerminalReference::from_problem(&problem, 1.0e-12).unwrap();
+        assert_eq!(terminal.rank(), reference.rank());
+        assert_eq!(
+            terminal.threshold().to_bits(),
+            reference.threshold().to_bits()
+        );
+        workspace.try_prepare_for(&terminal).unwrap();
+        let retained = workspace.retained_bytes().unwrap();
+        for scale in [1.0, -0.25, 0.0] {
+            let input = rhs(problem.dimension(), scale);
+            let mut expected = vec![0.0; input.len()];
+            let mut actual = vec![f64::NAN; input.len()];
+            reference.solve_into(&input, &mut expected).unwrap();
+            terminal
+                .solve_into_with_workspace(&input, &mut actual, &mut workspace)
+                .unwrap();
+            bits(&actual, &expected);
+            assert_eq!(workspace.retained_bytes().unwrap(), retained);
+        }
+    }
+}

@@ -1,0 +1,2117 @@
+{
+  "balanced_geomean": 0.6135542240567315,
+  "cells": [
+    {
+      "dimension": 3,
+      "paired_geomean": 0.6122873774840956,
+      "paired_ratios": [
+        0.6203237534765609,
+        0.6378553619385814,
+        0.5884475568159306,
+        0.6078216657124375,
+        0.6080677485984066
+      ]
+    },
+    {
+      "dimension": 6,
+      "paired_geomean": 0.5370752783521049,
+      "paired_ratios": [
+        0.530878858866264,
+        0.530240706161942,
+        0.5390008630717851,
+        0.5555878114503245,
+        0.530108960102262
+      ]
+    },
+    {
+      "dimension": 9,
+      "paired_geomean": 0.5303099486910394,
+      "paired_ratios": [
+        0.5499287877658274,
+        0.5011134626243079,
+        0.535050654683197,
+        0.5500724721709188,
+        0.517120240164323
+      ]
+    },
+    {
+      "dimension": 16,
+      "paired_geomean": 0.4731742938714353,
+      "paired_ratios": [
+        0.46039777377004676,
+        0.4838974923433143,
+        0.47183782230602417,
+        0.4735476373120589,
+        0.47649977739127125
+      ]
+    },
+    {
+      "dimension": 31,
+      "paired_geomean": 0.5002000905848646,
+      "paired_ratios": [
+        0.49200576980392685,
+        0.5201310964011261,
+        0.49658796561308977,
+        0.4974741567570939,
+        0.4953008806077327
+      ]
+    },
+    {
+      "dimension": 32,
+      "paired_geomean": 0.5015890923396922,
+      "paired_ratios": [
+        0.5005680037664614,
+        0.4992551814787658,
+        0.49956203554576023,
+        0.5122817579635063,
+        0.49642818817624923
+      ]
+    },
+    {
+      "dimension": 33,
+      "paired_geomean": 0.5084592118621691,
+      "paired_ratios": [
+        0.498327672235094,
+        0.507910604458087,
+        0.504802513464991,
+        0.5005200985868042,
+        0.5314168062015504
+      ]
+    },
+    {
+      "dimension": 63,
+      "paired_geomean": 0.6029836564605855,
+      "paired_ratios": [
+        0.6013894041075102,
+        0.6039447272425565,
+        0.6069686945846405,
+        0.6026297686480584,
+        0.6000091393960771
+      ]
+    },
+    {
+      "dimension": 64,
+      "paired_geomean": 0.6116926938061364,
+      "paired_ratios": [
+        0.6041688046783803,
+        0.6035801796360987,
+        0.6075618552056828,
+        0.6097024866363085,
+        0.6339641984695852
+      ]
+    },
+    {
+      "dimension": 65,
+      "paired_geomean": 0.5771564051134427,
+      "paired_ratios": [
+        0.5700418809248871,
+        0.5657863172483306,
+        0.5779687824836813,
+        0.5846993639346919,
+        0.587585933529256
+      ]
+    },
+    {
+      "dimension": 127,
+      "paired_geomean": 0.6958107478910355,
+      "paired_ratios": [
+        0.6952615049005111,
+        0.7001777408009682,
+        0.6981450967087467,
+        0.6996441608322874,
+        0.6859244344122771
+      ]
+    },
+    {
+      "dimension": 128,
+      "paired_geomean": 0.7011589674812788,
+      "paired_ratios": [
+        0.7051562839601365,
+        0.698693515883858,
+        0.6995137591784572,
+        0.7017952009321794,
+        0.7006541769439194
+      ]
+    },
+    {
+      "dimension": 129,
+      "paired_geomean": 0.6975852850754575,
+      "paired_ratios": [
+        0.7019450873471138,
+        0.6985735089175266,
+        0.7207887025969217,
+        0.6751549877668375,
+        0.6922450390820077
+      ]
+    },
+    {
+      "dimension": 255,
+      "paired_geomean": 0.8027311999189873,
+      "paired_ratios": [
+        0.8040949097969377,
+        0.8034244910198819,
+        0.7951842876465284,
+        0.8025479640578819,
+        0.808461883285805
+      ]
+    },
+    {
+      "dimension": 256,
+      "paired_geomean": 0.8120530709670245,
+      "paired_ratios": [
+        0.8121842274828407,
+        0.8121163643394911,
+        0.8173096252859513,
+        0.8076139786600288,
+        0.8110708843546951
+      ]
+    },
+    {
+      "dimension": 257,
+      "paired_geomean": 0.8112710972709101,
+      "paired_ratios": [
+        0.7955741792492035,
+        0.81523192862882,
+        0.8323761592116715,
+        0.8062881512864398,
+        0.807343306450308
+      ]
+    }
+  ],
+  "competitive_qualification": false,
+  "cost_scope": "preallocated complete dense application only; excludes factorization/setup; full harness process wall and RSS separately recorded",
+  "default_selected": false,
+  "measured_samples": 160,
+  "process_wall_ns": 2656806083,
+  "records": [
+    {
+      "arm": "old",
+      "dimension": 3,
+      "elapsed_ns": 15684542,
+      "iterations": 932067,
+      "kind": "warmup",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 3,
+      "elapsed_ns": 19793333,
+      "iterations": 932067,
+      "kind": "warmup",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 3,
+      "elapsed_ns": 18606750,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 3,
+      "elapsed_ns": 11542209,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 3,
+      "elapsed_ns": 11608250,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 3,
+      "elapsed_ns": 18198875,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 3,
+      "elapsed_ns": 17263292,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 3,
+      "elapsed_ns": 10158542,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 3,
+      "elapsed_ns": 10218166,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 3,
+      "elapsed_ns": 16811125,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 3,
+      "elapsed_ns": 16945000,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 3,
+      "elapsed_ns": 10303708,
+      "iterations": 932067,
+      "kind": "measure",
+      "modal": "cead4db5a58d4f4b",
+      "output": "b12c4bfb5fb6f9e8",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 6,
+      "elapsed_ns": 13409875,
+      "iterations": 233016,
+      "kind": "warmup",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 6,
+      "elapsed_ns": 7189167,
+      "iterations": 233016,
+      "kind": "warmup",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 6,
+      "elapsed_ns": 6996917,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 6,
+      "elapsed_ns": 13179875,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 6,
+      "elapsed_ns": 13254750,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 6,
+      "elapsed_ns": 7028208,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 6,
+      "elapsed_ns": 7181917,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 6,
+      "elapsed_ns": 13324500,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 6,
+      "elapsed_ns": 13210333,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 6,
+      "elapsed_ns": 7339500,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 6,
+      "elapsed_ns": 7191834,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 6,
+      "elapsed_ns": 13566709,
+      "iterations": 233016,
+      "kind": "measure",
+      "modal": "c3e807958bdfb75a",
+      "output": "d8371d110ff5737e",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 9,
+      "elapsed_ns": 6473833,
+      "iterations": 103563,
+      "kind": "warmup",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 9,
+      "elapsed_ns": 12545833,
+      "iterations": 103563,
+      "kind": "warmup",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 9,
+      "elapsed_ns": 12433959,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 9,
+      "elapsed_ns": 6837792,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 9,
+      "elapsed_ns": 6272792,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 9,
+      "elapsed_ns": 12517708,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 9,
+      "elapsed_ns": 12572875,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 9,
+      "elapsed_ns": 6727125,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 9,
+      "elapsed_ns": 6864125,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 9,
+      "elapsed_ns": 12478583,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 9,
+      "elapsed_ns": 12658000,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 9,
+      "elapsed_ns": 6545708,
+      "iterations": 103563,
+      "kind": "measure",
+      "modal": "76847cee90e572c1",
+      "output": "f60f54e91b462f57",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 16,
+      "elapsed_ns": 12896292,
+      "iterations": 32768,
+      "kind": "warmup",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 16,
+      "elapsed_ns": 5911667,
+      "iterations": 32768,
+      "kind": "warmup",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 16,
+      "elapsed_ns": 5935333,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 16,
+      "elapsed_ns": 12891750,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 16,
+      "elapsed_ns": 12890042,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 16,
+      "elapsed_ns": 6237459,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 16,
+      "elapsed_ns": 6134875,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 16,
+      "elapsed_ns": 13002084,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 16,
+      "elapsed_ns": 13036000,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 16,
+      "elapsed_ns": 6173167,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 16,
+      "elapsed_ns": 6209666,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 16,
+      "elapsed_ns": 13031834,
+      "iterations": 32768,
+      "kind": "measure",
+      "modal": "1d554b63c5caccd7",
+      "output": "3b97c430ca92f763",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 31,
+      "elapsed_ns": 6681291,
+      "iterations": 8729,
+      "kind": "warmup",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 31,
+      "elapsed_ns": 13317333,
+      "iterations": 8729,
+      "kind": "warmup",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 31,
+      "elapsed_ns": 13316917,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 31,
+      "elapsed_ns": 6552000,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 31,
+      "elapsed_ns": 6836083,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 31,
+      "elapsed_ns": 13143000,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 31,
+      "elapsed_ns": 13182458,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 31,
+      "elapsed_ns": 6546250,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 31,
+      "elapsed_ns": 6564959,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 31,
+      "elapsed_ns": 13196583,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 31,
+      "elapsed_ns": 13229500,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 31,
+      "elapsed_ns": 6552583,
+      "iterations": 8729,
+      "kind": "measure",
+      "modal": "a8be70bc750dd06d",
+      "output": "972e7af41cdd2199",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 32,
+      "elapsed_ns": 13300958,
+      "iterations": 8192,
+      "kind": "warmup",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 32,
+      "elapsed_ns": 6665709,
+      "iterations": 8192,
+      "kind": "warmup",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 32,
+      "elapsed_ns": 6664208,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 32,
+      "elapsed_ns": 13313292,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 32,
+      "elapsed_ns": 13286458,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 32,
+      "elapsed_ns": 6633333,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 32,
+      "elapsed_ns": 6630000,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 32,
+      "elapsed_ns": 13271625,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 32,
+      "elapsed_ns": 13264917,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 32,
+      "elapsed_ns": 6795375,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 32,
+      "elapsed_ns": 6749458,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 32,
+      "elapsed_ns": 13596041,
+      "iterations": 8192,
+      "kind": "measure",
+      "modal": "d028efbc71480840",
+      "output": "c1b40646e4393169",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 33,
+      "elapsed_ns": 7277166,
+      "iterations": 7703,
+      "kind": "warmup",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 33,
+      "elapsed_ns": 14295125,
+      "iterations": 7703,
+      "kind": "warmup",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 33,
+      "elapsed_ns": 14114458,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 33,
+      "elapsed_ns": 7033625,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 33,
+      "elapsed_ns": 7038583,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 33,
+      "elapsed_ns": 13857917,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 33,
+      "elapsed_ns": 13925000,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 33,
+      "elapsed_ns": 7029375,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 33,
+      "elapsed_ns": 7056958,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 33,
+      "elapsed_ns": 14099250,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 33,
+      "elapsed_ns": 14109375,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 33,
+      "elapsed_ns": 7497959,
+      "iterations": 7703,
+      "kind": "measure",
+      "modal": "2c6c7d0c15db7814",
+      "output": "5b5c15272a061021",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 63,
+      "elapsed_ns": 15610416,
+      "iterations": 2113,
+      "kind": "warmup",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 63,
+      "elapsed_ns": 8975417,
+      "iterations": 2113,
+      "kind": "warmup",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 63,
+      "elapsed_ns": 8916500,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 63,
+      "elapsed_ns": 14826500,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 63,
+      "elapsed_ns": 14848834,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 63,
+      "elapsed_ns": 8967875,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 63,
+      "elapsed_ns": 8899375,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 63,
+      "elapsed_ns": 14662000,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 63,
+      "elapsed_ns": 14653000,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 63,
+      "elapsed_ns": 8830334,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 63,
+      "elapsed_ns": 8784084,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 63,
+      "elapsed_ns": 14639917,
+      "iterations": 2113,
+      "kind": "measure",
+      "modal": "14b1a3a8d368b5d1",
+      "output": "efaa1269d8529fb0",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 64,
+      "elapsed_ns": 8967083,
+      "iterations": 2048,
+      "kind": "warmup",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 64,
+      "elapsed_ns": 14747459,
+      "iterations": 2048,
+      "kind": "warmup",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 64,
+      "elapsed_ns": 14772292,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 64,
+      "elapsed_ns": 8924958,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 64,
+      "elapsed_ns": 8902833,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 64,
+      "elapsed_ns": 14750042,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 64,
+      "elapsed_ns": 14739584,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 64,
+      "elapsed_ns": 8955209,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 64,
+      "elapsed_ns": 8981959,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 64,
+      "elapsed_ns": 14731708,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 64,
+      "elapsed_ns": 15009917,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 64,
+      "elapsed_ns": 9515750,
+      "iterations": 2048,
+      "kind": "measure",
+      "modal": "f4ffeaa37ad462d3",
+      "output": "1252c0b038808ad5",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 65,
+      "elapsed_ns": 15328750,
+      "iterations": 1985,
+      "kind": "warmup",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 65,
+      "elapsed_ns": 9053209,
+      "iterations": 1985,
+      "kind": "warmup",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 65,
+      "elapsed_ns": 9012125,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 65,
+      "elapsed_ns": 15809584,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 65,
+      "elapsed_ns": 15874000,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 65,
+      "elapsed_ns": 8981292,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 65,
+      "elapsed_ns": 9127042,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 65,
+      "elapsed_ns": 15791583,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 65,
+      "elapsed_ns": 15426875,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 65,
+      "elapsed_ns": 9020084,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 65,
+      "elapsed_ns": 8944625,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 65,
+      "elapsed_ns": 15222667,
+      "iterations": 1985,
+      "kind": "measure",
+      "modal": "afb7828a13f2b006",
+      "output": "9e887893c6c813dd",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 127,
+      "elapsed_ns": 11642750,
+      "iterations": 520,
+      "kind": "warmup",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 127,
+      "elapsed_ns": 16546125,
+      "iterations": 520,
+      "kind": "warmup",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 127,
+      "elapsed_ns": 16561334,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 127,
+      "elapsed_ns": 11514458,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 127,
+      "elapsed_ns": 11571750,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 127,
+      "elapsed_ns": 16526875,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 127,
+      "elapsed_ns": 16553208,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 127,
+      "elapsed_ns": 11556541,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 127,
+      "elapsed_ns": 11567042,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 127,
+      "elapsed_ns": 16532750,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 127,
+      "elapsed_ns": 16877709,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 127,
+      "elapsed_ns": 11576833,
+      "iterations": 520,
+      "kind": "measure",
+      "modal": "dafc0ea1247adb02",
+      "output": "c25c36740d264907",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 128,
+      "elapsed_ns": 16562875,
+      "iterations": 512,
+      "kind": "warmup",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 128,
+      "elapsed_ns": 11598417,
+      "iterations": 512,
+      "kind": "warmup",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 128,
+      "elapsed_ns": 11611750,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 128,
+      "elapsed_ns": 16466917,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 128,
+      "elapsed_ns": 16561625,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 128,
+      "elapsed_ns": 11571500,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 128,
+      "elapsed_ns": 11562875,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 128,
+      "elapsed_ns": 16529875,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 128,
+      "elapsed_ns": 16518708,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 128,
+      "elapsed_ns": 11592750,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 128,
+      "elapsed_ns": 11424750,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 128,
+      "elapsed_ns": 16305833,
+      "iterations": 512,
+      "kind": "measure",
+      "modal": "8c211e20c3050f8e",
+      "output": "18f5956d8e78de65",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 129,
+      "elapsed_ns": 11457500,
+      "iterations": 504,
+      "kind": "warmup",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 129,
+      "elapsed_ns": 16350750,
+      "iterations": 504,
+      "kind": "warmup",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 129,
+      "elapsed_ns": 16321375,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 129,
+      "elapsed_ns": 11456709,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 129,
+      "elapsed_ns": 11465541,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 129,
+      "elapsed_ns": 16412791,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 129,
+      "elapsed_ns": 16543625,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 129,
+      "elapsed_ns": 11924458,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 129,
+      "elapsed_ns": 11817125,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 129,
+      "elapsed_ns": 17502833,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 129,
+      "elapsed_ns": 16537917,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 129,
+      "elapsed_ns": 11448291,
+      "iterations": 504,
+      "kind": "measure",
+      "modal": "ca98d3ee374bea68",
+      "output": "17b78e46a061a78a",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 255,
+      "elapsed_ns": 17559959,
+      "iterations": 129,
+      "kind": "warmup",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 255,
+      "elapsed_ns": 14129625,
+      "iterations": 129,
+      "kind": "warmup",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 255,
+      "elapsed_ns": 14116958,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 255,
+      "elapsed_ns": 17556333,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 255,
+      "elapsed_ns": 17547542,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 255,
+      "elapsed_ns": 14098125,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 255,
+      "elapsed_ns": 14109750,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 255,
+      "elapsed_ns": 17744000,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 255,
+      "elapsed_ns": 17821209,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 255,
+      "elapsed_ns": 14302375,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 255,
+      "elapsed_ns": 14321667,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 255,
+      "elapsed_ns": 17714709,
+      "iterations": 129,
+      "kind": "measure",
+      "modal": "898e1cf940ce8d9f",
+      "output": "78daf856258a4c39",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 256,
+      "elapsed_ns": 14475875,
+      "iterations": 128,
+      "kind": "warmup",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 256,
+      "elapsed_ns": 17678167,
+      "iterations": 128,
+      "kind": "warmup",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 256,
+      "elapsed_ns": 17847500,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 256,
+      "elapsed_ns": 14495458,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 256,
+      "elapsed_ns": 14464875,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 256,
+      "elapsed_ns": 17811333,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 1
+    },
+    {
+      "arm": "stream",
+      "dimension": 256,
+      "elapsed_ns": 17828208,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 256,
+      "elapsed_ns": 14571166,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 2
+    },
+    {
+      "arm": "old",
+      "dimension": 256,
+      "elapsed_ns": 14437917,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 256,
+      "elapsed_ns": 17877250,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 3
+    },
+    {
+      "arm": "stream",
+      "dimension": 256,
+      "elapsed_ns": 17833625,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 4
+    },
+    {
+      "arm": "old",
+      "dimension": 256,
+      "elapsed_ns": 14464334,
+      "iterations": 128,
+      "kind": "measure",
+      "modal": "48f6cb53b204e804",
+      "output": "dc016b0740df57db",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 257,
+      "elapsed_ns": 17798417,
+      "iterations": 127,
+      "kind": "warmup",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 257,
+      "elapsed_ns": 14357208,
+      "iterations": 127,
+      "kind": "warmup",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 0
+    },
+    {
+      "arm": "old",
+      "dimension": 257,
+      "elapsed_ns": 14358125,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 257,
+      "elapsed_ns": 18047500,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 0
+    },
+    {
+      "arm": "stream",
+      "dimension": 257,
+      "elapsed_ns": 18046500,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 257,
+      "elapsed_ns": 14712083,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 1
+    },
+    {
+      "arm": "old",
+      "dimension": 257,
+      "elapsed_ns": 14825833,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 257,
+      "elapsed_ns": 17811458,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 2
+    },
+    {
+      "arm": "stream",
+      "dimension": 257,
+      "elapsed_ns": 17820500,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 257,
+      "elapsed_ns": 14368458,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 3
+    },
+    {
+      "arm": "old",
+      "dimension": 257,
+      "elapsed_ns": 14370375,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 4
+    },
+    {
+      "arm": "stream",
+      "dimension": 257,
+      "elapsed_ns": 17799584,
+      "iterations": 127,
+      "kind": "measure",
+      "modal": "b05e850cb3aece1f",
+      "output": "a566e69d139620b3",
+      "repeat": 4
+    }
+  ],
+  "resources": {
+    "method": "darwin_time_l",
+    "peak_rss_bytes": 3063808,
+    "scope": "isolated_process_including_startup_teardown",
+    "system_seconds": 0.02,
+    "user_seconds": 2.39
+  },
+  "samples": 192,
+  "scope": "dense_application_microbenchmark_only"
+}
