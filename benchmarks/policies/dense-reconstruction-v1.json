@@ -1,0 +1,58 @@
+{
+  "schema": 1,
+  "scope": "dense_application_microbenchmark_only",
+  "dimensions": [
+    3,
+    6,
+    9,
+    16,
+    31,
+    32,
+    33,
+    63,
+    64,
+    65,
+    127,
+    128,
+    129,
+    255,
+    256,
+    257
+  ],
+  "arms": [
+    "old",
+    "stream"
+  ],
+  "warmups": 1,
+  "repetitions": 5,
+  "operation_budget": 16777216,
+  "workers": 1,
+  "timeout_seconds": 120,
+  "process_budget_bytes": 1073741824,
+  "build_args": [
+    "cargo",
+    "test",
+    "--locked",
+    "--release",
+    "-p",
+    "multiway-mg",
+    "--no-default-features",
+    "--features",
+    "lsmr",
+    "--lib",
+    "--no-run",
+    "--message-format=json"
+  ],
+  "test_args": [
+    "--exact",
+    "dense::traversal_tests::benchmark_dense_traversal",
+    "--ignored",
+    "--nocapture",
+    "--test-threads=1"
+  ],
+  "aggregation": "paired old/stream elapsed ratios; geometric mean across five repetitions and equal dimensions; retain every sample",
+  "cost_scope": "preallocated complete dense application only; excludes factorization/setup; full harness process wall and RSS separately recorded",
+  "arithmetic": "same private coefficient table, inverse eigenvalues and RHS for both functions; every output and modal bit checked in Rust; real eigensystem reference separate",
+  "default_selected": false,
+  "competitive_qualification": false
+}

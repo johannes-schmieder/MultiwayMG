@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6k merged; M6l complete grouped economics qualified; terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6l merged; M6m dense reconstruction in qualification; terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1119,3 +1119,14 @@ for measurement, not an implemented layout or selected default.
   and five regression tests. Repaired validation accepts all1,080 exact pairs
   and29,520 columns from that original artifact. No benchmark or policy changes;
   fresh final-source and PR gates are required before merge.
+
+- M6l PR65 merged as `4fdce09` with actual clean main matching reviewed tree
+  `f25d821`. All34 final source/PR jobs pass (35444513174/35444513177,
+  35444516200/35444516201). The earlier diagnostic-clock failure/artifact and
+  repaired validation remain preserved; all131 Python and required checks pass.
+- M6m [dense reconstruction](ISSUE5_DENSE_RECONSTRUCTION.md) streams existing
+  column-major eigenvectors with unchanged per-output FMA order and buffers.
+  Fixed old/candidate application trials, exact private/public references,
+  ARM/generic-x86 assembly and complete automatic smoke/development regression
+  must qualify it before retention. No rank, routing, layout default or terminal
+  admission policy changes; later campaign milestones remain open.

@@ -1,0 +1,308 @@
+{
+  "checks": {
+    "required-v1": [
+      {
+        "name": "format",
+        "command": [
+          "cargo",
+          "fmt",
+          "--all",
+          "--",
+          "--check"
+        ],
+        "exit": 0,
+        "seconds": 0.5096696249675006
+      },
+      {
+        "name": "clippy",
+        "command": [
+          "cargo",
+          "clippy",
+          "--locked",
+          "--workspace",
+          "--all-targets",
+          "--all-features",
+          "--",
+          "-D",
+          "warnings"
+        ],
+        "exit": 0,
+        "seconds": 0.0868252501823008
+      },
+      {
+        "name": "all",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--workspace",
+          "--all-features"
+        ],
+        "exit": 0,
+        "seconds": 209.36676920810714
+      },
+      {
+        "name": "minimal",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--workspace",
+          "--no-default-features"
+        ],
+        "exit": 0,
+        "seconds": 64.80053375009447
+      },
+      {
+        "name": "docs",
+        "command": [
+          "cargo",
+          "doc",
+          "--locked",
+          "--workspace",
+          "--all-features",
+          "--no-deps"
+        ],
+        "exit": 0,
+        "seconds": 0.8879820830188692
+      },
+      {
+        "name": "python",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "scripts",
+          "-p",
+          "test_*.py"
+        ],
+        "exit": 0,
+        "seconds": 34.93696366599761
+      },
+      {
+        "name": "automatic-probe-unit",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--example",
+          "prepared_automatic_benchmark"
+        ],
+        "exit": 0,
+        "seconds": 0.6011446670163423
+      },
+      {
+        "name": "diagnostic-probe-unit",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--example",
+          "prepared_automatic_diagnostic"
+        ],
+        "exit": 0,
+        "seconds": 0.7445711251348257
+      }
+    ],
+    "release-v1": [
+      {
+        "name": "all",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--test",
+          "operator_workspaces",
+          "--test",
+          "workspace_allocations",
+          "--test",
+          "automatic_allocation_peaks",
+          "--test",
+          "prepared_automatic",
+          "--test",
+          "prepared_baseline",
+          "--test",
+          "prepared_hierarchy",
+          "--test",
+          "prepared_grouped_hierarchy",
+          "--test",
+          "prepared_cycle_quality",
+          "--test",
+          "prepared_pcg",
+          "--test",
+          "prepared_lsmr",
+          "--test",
+          "hierarchy_workspace",
+          "--test",
+          "cycle_probe"
+        ],
+        "exit": 0,
+        "seconds": 19.170698083937168
+      },
+      {
+        "name": "dense-all",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--all-features",
+          "--lib",
+          "dense::traversal_tests"
+        ],
+        "exit": 0,
+        "seconds": 3.639547917060554
+      },
+      {
+        "name": "minimal",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--no-default-features",
+          "--test",
+          "operator_workspaces",
+          "--test",
+          "workspace_allocations",
+          "--test",
+          "automatic_allocation_peaks",
+          "--test",
+          "prepared_automatic",
+          "--test",
+          "prepared_baseline",
+          "--test",
+          "prepared_hierarchy",
+          "--test",
+          "prepared_grouped_hierarchy",
+          "--test",
+          "prepared_cycle_quality",
+          "--test",
+          "prepared_pcg",
+          "--test",
+          "prepared_lsmr",
+          "--test",
+          "hierarchy_workspace",
+          "--test",
+          "cycle_probe"
+        ],
+        "exit": 0,
+        "seconds": 4.5873905420303345
+      },
+      {
+        "name": "dense-minimal",
+        "command": [
+          "cargo",
+          "test",
+          "--locked",
+          "--release",
+          "-p",
+          "multiway-mg",
+          "--no-default-features",
+          "--lib",
+          "dense::traversal_tests"
+        ],
+        "exit": 0,
+        "seconds": 3.102752667153254
+      },
+      {
+        "name": "debug-protocol",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/debug-probe.py",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/release-v1/debug-protocol"
+        ],
+        "exit": 0,
+        "seconds": 34.53658116608858
+      },
+      {
+        "name": "release-protocol",
+        "command": [
+          "/opt/homebrew/bin/python3",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/release-probe.py",
+          "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/release-v1/release-protocol"
+        ],
+        "exit": 0,
+        "seconds": 21.177513416856527
+      }
+    ]
+  },
+  "protocols": {
+    "debug": {
+      "binary_sha256": {
+        "instrumented": "28caf9f6fd814071dad6095378e5c77ed62376bfead5dcf5ef3dafcbbd29741b",
+        "legacy": "734d68819a94091d41eebb449f87b4d1c55779108b39d7fa829251f7e3bb4616",
+        "reference": "126ced40c6581ac1afbe3a421511ddf44a285138996f32361e7eac3e06e901a7"
+      },
+      "checks": {
+        "cli": 10,
+        "layout": 900,
+        "legacy": 225,
+        "malformed": 26,
+        "paired": 1125
+      },
+      "complete": true,
+      "performance_measurement": false,
+      "processes": 2250
+    },
+    "release": {
+      "binary_sha256": {
+        "instrumented": "12c09b95114f73681a511fd0d180224fc2797de83c203378dea109cd67f9bf09",
+        "legacy": "88a2d5662906416fef4019182ace81b71f681b5d7d68d9038f1307003102b749",
+        "reference": "35ca4999742932397de580392bca52b4c15b5b510906fad4ae85f24171ad207d"
+      },
+      "checks": {
+        "cli": 10,
+        "layout": 900,
+        "legacy": 225,
+        "malformed": 26,
+        "paired": 1125
+      },
+      "complete": true,
+      "performance_measurement": false,
+      "processes": 2250
+    }
+  },
+  "old_application_matches_verified_base": true,
+  "base": "4fdce09efb33b0382ba32bb6ad679faa7b892d76",
+  "log_sha256": {
+    "required-v1/all.log": "3167cebe84fab73f5677166c32225c65c1ad19c9abfd13b3619c96cde1da8b3a",
+    "required-v1/automatic-probe-unit.log": "d490e93acf2014a807f7bbc6d6b4555e4a75293ce613ec0270909156a885fcae",
+    "required-v1/clippy.log": "ee1d3fffa2022e962e63e0dbe4d35c9c198450a20c29fc09030f635dbb38bfcd",
+    "required-v1/diagnostic-probe-unit.log": "6cb14fc681721da0ed91f86a344eb1839b924a4ec99f908b4dffb6fed6776d45",
+    "required-v1/docs.log": "48e2752eb6deb0c6f9adbbaedeac7a43681187b475c51cfda4ad24df609caca3",
+    "required-v1/format.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "required-v1/minimal.log": "a0b446330af93224c2400ab2c7c1ae1038bf58ff8a0137dc329583bcf38d9716",
+    "required-v1/python.log": "5cdb694db2b09d97cb4642f90939b23c1d02371938733f26fda77d9cf0a8ad23",
+    "release-v1/all.log": "c4bb091aa64ebc276297331132ecc9c310afd68cafd54d68032fc90ff500e97d",
+    "release-v1/debug-protocol.log": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a",
+    "release-v1/dense-all.log": "a53a7f78c02f82bfda1b7d07feac21a7cef57b06af86c37bf4ec569350431778",
+    "release-v1/dense-minimal.log": "0ecdd57832fac82bfe77aad2ac7a61491a3e0608658fb80c40f074bd53235a9d",
+    "release-v1/minimal.log": "512ab6c7cf31d57ff9ed554793f914819ab7c53194693b428052343fe6884ca2",
+    "release-v1/release-protocol.log": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a"
+  },
+  "source_sha256": {
+    "crates/multiway-mg/src/dense.rs": "0769e1846e881fe72a119f2cfebb483dd71592f0c0571af0ee5e4cfcae8af8ae",
+    "crates/multiway-mg/src/dense/traversal_tests.rs": "58c3a7c876cac5343eef82697cbb8a3606621900c55effd4123c00b614ef6317",
+    "crates/multiway-mg/tests/operator_workspaces.rs": "bd67cb5ab3b6077de80c32ca5bc7fa0746a77162326c2033a82c259b301cfbee",
+    "scripts/dense_reconstruction.py": "310323caa8c0238bcb774a7e239255fe63ce581bb6c3bde2d6c7f7afc50d61e8",
+    "scripts/test_dense_reconstruction.py": "ceb38097a36a8fb5781258ca76527cd30e6553c58b8b4b7628f73d4df9701361",
+    "benchmarks/policies/dense-reconstruction-v1.json": "dcf8c5626f4d97b0f7865e1b177c9114d9867bb85d6f233c839a56c33a5a047a"
+  }
+}

@@ -466,3 +466,32 @@ jobs:
             ${{ runner.temp }}/automatic-layout-smoke/
             ${{ runner.temp }}/automatic-layout-validation.json
           if-no-files-found: error
+
+  dense-reconstruction:
+    name: Dense terminal reconstruction contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Check release dense arithmetic and real eigensystem references
+        run: |
+          cargo test --locked --release -p multiway-mg --no-default-features --features lsmr --lib dense::traversal_tests
+          cargo test --locked --release -p multiway-mg --no-default-features --test operator_workspaces
+      - name: Collect and reconstruct frozen old and streaming applications
+        run: |
+          python3 scripts/dense_reconstruction.py "$RUNNER_TEMP/dense-reconstruction"
+          python3 scripts/dense_reconstruction.py --validate "$RUNNER_TEMP/dense-reconstruction" > "$RUNNER_TEMP/dense-reconstruction-validation.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: dense-reconstruction
+          path: |
+            ${{ runner.temp }}/dense-reconstruction/
+            ${{ runner.temp }}/dense-reconstruction-validation.json
+          if-no-files-found: error

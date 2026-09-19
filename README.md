@@ -125,8 +125,10 @@ with exact uninstrumented references and no speedup claim. A separate [full-cost
 now certifies 505,800 measured columns across 51,840 complete processes. All-level
 image improves automatic scalar by 1.23x/1.31x on Mac development/expanded, yet
 remains 1.86x/2.80x slower than matched grouped MAP. Complete costs and negative
-results are preserved; no default or competitive promotion follows. The next
-increment tests dense terminal traversal with unchanged arithmetic and storage. See the
+results are preserved; no default or competitive promotion follows. The current
+[dense reconstruction increment](docs/ISSUE5_DENSE_RECONSTRUCTION.md) tests
+contiguous eigenvector traversal with unchanged arithmetic and storage. Application
+measurements and full-cost regression must qualify it before retention. See the
 [complete evidence](benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md).
 
 ## The problem
