@@ -221,12 +221,16 @@ work. [Explicit grouped automatic execution](ISSUE5_AUTOMATIC_GROUPED_LAYOUTS.md
 now connects row/image layouts to component-scoped ownership and matched
 baselines, with no dead baseline image or default promotion. Local and three-
 platform allocation qualification passes; [scalar compatibility evidence](../benchmarks/results/2026-09-19/prepared-automatic-grouped-compatibility/README.md)
-preserves all 25,200 M6i records, including known negatives. Grouped economics
-and terminal/admission decisions remain open in M6. [Separate automatic cost diagnostics](ISSUE5_AUTOMATIC_DIAGNOSTICS.md)
+preserves all 25,200 M6i records, including known negatives. Terminal/admission
+decisions remain open in M6. [Separate automatic cost diagnostics](ISSUE5_AUTOMATIC_DIAGNOSTICS.md)
 now preserve [6,480 diagnostic processes](../benchmarks/results/2026-09-19/prepared-automatic-diagnostic-v1/README.md)
 with exact uninstrumented references and no speedup claim. A separate [full-cost grouped experiment](ISSUE5_AUTOMATIC_LAYOUT_ECONOMICS.md)
-is now under qualification, with fixed numerical policy and larger development inputs. See the
-[complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
+now certifies 505,800 measured columns across 51,840 complete processes. All-level
+image improves automatic scalar by 1.23x/1.31x on Mac development/expanded, yet
+remains 1.86x/2.80x slower than matched grouped MAP. Complete costs and negative
+results are preserved; no default or competitive promotion follows. The next
+increment tests dense terminal traversal with unchanged arithmetic and storage. See the
+[complete evidence](../benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

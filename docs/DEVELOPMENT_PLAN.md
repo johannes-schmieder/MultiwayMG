@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6h merged; M6i measured automatic economics; M6j grouped application qualified locally |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6k merged; M6l complete grouped economics qualified; terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1086,3 +1086,28 @@ for measurement, not an implemented layout or selected default.
   at69,487 unique tuples. All required Rust1.85 gates and 126 Python tests
   (eleven new layout tests) pass. Source freeze and Mac/Linux collection follow. No Rust source or default
   changes; subsequent numerical-policy candidates remain separate.
+
+- M6l frozen source `3a1edb6` (tree `a57d5e2`), PR65, passes source
+  CI35437783030/35437783035 and PR CI35437785190/35437785213. Four independently
+  preserved collections retain 51,840 processes and 505,800 certified measured
+  columns, with no failed warmups/measurements. All 15,120 overlapping M6j scalar
+  and 19,440 overlapping M6k reference signatures match exactly. Six platform/build
+  logs match 39 allocation controls and 4 denials. Mac summaries are exact; eight Linux
+  derived geomeans differ within archival-only tolerance, with all raw/scientific
+  fields exact. Provider ZIP digests and every archive member were verified.
+- The [complete layout result](ISSUE5_AUTOMATIC_LAYOUT_ECONOMICS.md) is negative
+  for competitiveness: all-image improves automatic scalar by 1.2321x/1.3128x on
+  development/expanded but remains 1.86x/2.80x slower than grouped MAP. Every
+  complete family aggregate is below grouped MAP; the expanded chain repeated-
+  RHS subset reaches 1.2101x but its full family is 0.8769x. Profile width mixes
+  differ. Component scheduling alone is near matched MAP. No default promotion,
+  calibration or holdout use. Final evidence-head review/CI precede guarded merge.
+- Next M6m tests dense reconstruction traversal while preserving each output's
+  ordered FMA chain and every memory/work/error boundary. Keep first-transform,
+  rank and numerical policy fixed initially; compare an independent old reference,
+  inspect assembly and rerun complete charged development. Separately consider
+  eliminating the canonical pair-marginal sort before new terminal/screen policies.
+  Explicit sparse-terminal memory/execution APIs remain required; do not wrap an
+  opaque pooled dependency and call it admitted. M7 fixed hub-segment reductions,
+  M8 bounded independent panels, M9 current-frame replay and M10 competitive
+  qualification remain open.

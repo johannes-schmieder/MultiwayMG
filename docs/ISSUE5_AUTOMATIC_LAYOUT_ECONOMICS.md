@@ -86,6 +86,55 @@ certificates, fixed-configuration/layout differences, failed warmup/measurement
 costs, actual process timeout/protocol errors, and expanded input/zero-lane bounds.
 All required Rust1.85 checks and all 126 Python tests now pass. See the
 [qualification receipts](../benchmarks/results/2026-09-19/automatic-layout-qualification/README.md).
-Exact-source CI and committed-source collection follow.
-M6 terminal/admission and screening choices, M7 parallelism, M8 panels, M9 weights
-and M10 competitive qualification remain open.
+Exact-source Rust/allocation CI35437783030/35437783035 and PR
+CI35437785190/35437785213 pass. Six Linux/macOS/Windows debug/release logs exactly
+match all 39 allocation controls and four denials.
+
+## Complete results and next increments
+
+The [four preserved collections](../benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md)
+retain 51,840 processes and 505,800 certified measured columns, with no failed
+warmups/measurements or RSS violations. All 15,120 overlapping M6j scalar and
+19,440 overlapping M6k reference process signatures match exactly; those sets
+overlap. Expanded records pass exact repeat and within-route layout checks.
+Three Mac summaries recompute exactly; eight Linux derived geometric means
+match within the preregistered archival-only tolerance. All raw/scientific data
+and every archive member are exact; all provider ZIP digests were verified.
+
+All-level image improves automatic scalar by 1.2321x on development and 1.3128x
+on expanded, but is 1.86x/2.80x slower than matched grouped global MAP. Its
+single/repeated ratios against that baseline are 0.3905/0.5654 and 0.1974/0.4797.
+Every whole-family aggregate remains below grouped MAP; expanded chain repeated
+RHS is a limited 1.2101x favorable subset, while its full family remains 0.8769x.
+All seventeen comparisons, memory scopes and negatives are reported. Smoke
+executes direct dense components, not multigrid hierarchies. Profile width mixes
+differ, so cross-profile differences do not isolate size effects.
+
+Component scheduling without hierarchy is near matched MAP (0.9877x/0.9797x).
+At K1, development accepts 29/rejects nine and expanded accepts 32/rejects twelve actual
+hierarchy screens. Thus optimize hierarchy setup/application while keeping its
+work and failed screens visible. The expanded all-image array maximum is
+37,647,224 bytes and RSS maximum 42,156,032 bytes; the 1GiB cap is not binding.
+
+1. Test dense reconstruction in native column-major order. Walking modes outside
+   output rows preserves each output's ascending-mode `mul_add` chain without a
+   transpose or new arrays. Keep first-transform/factorization/rank policy fixed;
+   compare independent old arithmetic, dimensions/tails, failures and allocation
+   records. Inspect candidate assembly and rerun charged smoke/development.
+2. Separately test avoiding the canonical `(factor0,factor1,id)` source-ID sort
+   during prepared candidate construction. Preserve source addition order, map
+   ties, work and budgets; canonicality belongs to the prepared topology boundary,
+   not arbitrary `ThreeWayTopology::new` input. Larger sorting schemes require
+   explicit extra-scratch admission and evidence.
+3. Evaluate terminal/admission and screening policies separately. The current
+   within/Schwarz API has opaque factor storage and pooled/implicit parallel
+   scratch; a sparse terminal needs checked setup/fill/retained accounting and
+   fixed caller-owned application before integration.
+
+The frozen ARM64 probe confirms scalar FMA with strided reconstruction loads.
+The generic Linux x86 probe calls scalar libm `fma` per operation; this does not
+establish software emulation inside libm. Any native-CPU build needs a separately
+declared policy and equally built controls. No compiler flag, default layout or
+numerical-policy change is made here. M6 remains open; M7 bounded deterministic
+parallelism, M8 independent RHS panels, M9 fresh-weight replay and M10 untouched
+competitive qualification follow.
