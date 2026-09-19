@@ -1,5 +1,5 @@
 {
-  "certified_columns_per_configuration": 1980,
+  "certified_columns_per_configuration": 1760,
   "checks": {
     "release-v1": [
       {
@@ -62,6 +62,14 @@
     "debug-all",
     "release-all"
   ],
+  "derived_count_correction": {
+    "corrected": 1760,
+    "formula": "11 controls * 2 repetitions * (1+2+4+8+16+17+32)",
+    "original_records_sha256": "515a9a60426a494dfd6a15dd3c445200e3c2022a3c26fc9d3aa6d4dffa1b1370",
+    "previously_reported": 1980,
+    "raw_measurements_changed": false,
+    "scope": "each debug/release configuration with lsmr enabled; minimal-feature runs exercise roots only"
+  },
   "log_sha256": {
     "release-v1/complete-all.log": "4f8c284c690f6bd8ac038f8ee0e8072dd9620e50a2fd56dd92f54a4b07130c10",
     "release-v1/complete-minimal.log": "b8e01769724164acd005b40dd7a1647ac48dcc46b10a2968a15f74541303f937",

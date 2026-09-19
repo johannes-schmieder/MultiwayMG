@@ -15,21 +15,25 @@ pub(super) fn solve(
     options: PreparedAutomaticOptions,
     maximum: usize,
     other: usize,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     let h = options.hierarchy.expect("explicit hierarchy attempt");
     progress.stage = PreparedAutomaticStage::Construction;
     let structure = structure(frame, h, maximum, other, progress)?;
+    let groups = layout::hierarchy_groups(&structure, frame, maximum, other, progress)?;
+    let group_bytes = groups
+        .as_ref()
+        .map_or(Ok(0), |g| g.retained_payload_bytes())?;
     progress.stage = PreparedAutomaticStage::NumericalReplay;
-    let budget = payload_budget(maximum, other);
+    let budget = payload_budget(maximum, add(other, group_bytes)?);
     admit(
-        HierarchyWeightFrames::setup_payload_bound(&structure, frame, other)?,
+        HierarchyWeightFrames::setup_payload_bound(&structure, frame, add(other, group_bytes)?)?,
         maximum,
         progress,
     )?;
     let frames = HierarchyWeightFrames::try_new_with_budget(&structure, frame, budget)?;
     let live = add(
-        add(other, fine_payload(frame)?)?,
+        add(add(other, group_bytes)?, fine_payload(frame)?)?,
         add(
             structure.retained_payload_bytes()?,
             frames.retained_payload_bytes()?,
@@ -51,7 +55,19 @@ pub(super) fn solve(
         maximum,
         progress,
     )?;
-    let owner = PreparedMapHierarchy::try_new(&frames, options.terminal_relative_tolerance)?;
+    let owner = match &groups {
+        Some(groups) => PreparedMapHierarchy::try_new_with_grouping(
+            &frames,
+            groups,
+            progress
+                .layout
+                .requested_layout
+                .mode()
+                .expect("grouped route"),
+            options.terminal_relative_tolerance,
+        )?,
+        None => PreparedMapHierarchy::try_new(&frames, options.terminal_relative_tolerance)?,
+    };
     let with_factor = add(live, owner.retained_payload_bytes()?)?;
     progress.stage = PreparedAutomaticStage::Screening;
     // Screen scratch and its application workspace die before the complete
@@ -63,13 +79,19 @@ pub(super) fn solve(
             progress,
         )?;
         let mut cycle = owner.application_workspace()?;
+        layout::record_image(&owner, progress);
         admit(
-            PreparedCycleScreenWorkspace::setup_payload_report(&owner, &cycle, budget)?
-                .total_payload_bound,
+            PreparedCycleScreenWorkspace::setup_payload_report(
+                &owner,
+                &cycle,
+                payload_budget(maximum, other),
+            )?
+            .total_payload_bound,
             maximum,
             progress,
         )?;
-        let mut screen = PreparedCycleScreenWorkspace::try_new(&owner, &cycle, budget)?;
+        let mut screen =
+            PreparedCycleScreenWorkspace::try_new(&owner, &cycle, payload_budget(maximum, other))?;
         admit(
             add(
                 owner.payload_report(&cycle, other)?.total_payload_bytes,
@@ -107,7 +129,7 @@ fn structure<'topology>(
     h: PreparedAutomaticHierarchyOptions,
     maximum: usize,
     other: usize,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<PreparedHierarchyTopology<'topology>, MultiwayError> {
     let limits = PreparedHierarchyLimits {
         maximum_transitions: h.maximum_transitions,
@@ -214,7 +236,7 @@ fn candidate(
     frame: &ThreeWayWeightFrame<'_>,
     h: PreparedAutomaticHierarchyOptions,
     budget: PreparedHierarchyBudget,
-    progress: &mut PreparedAutomaticProgress,
+    progress: &mut Progress<'_>,
 ) -> Result<FactorAggregation, MultiwayError> {
     let setup = match h.coverage {
         PreparedPairProposalCoverage::LegacyTopK => {
@@ -269,7 +291,7 @@ fn stagnated(h: &PreparedHierarchyTopology<'_>) -> MultiwayError {
 }
 fn candidate_work(
     w: crate::PreparedAggregationWork,
-    p: &mut PreparedAutomaticProgress,
+    p: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     increment(&mut p.candidate_work.tuple_visits, w.tuple_visits)?;
     increment(&mut p.candidate_work.pair_entries, w.pair_entries)?;
@@ -283,7 +305,7 @@ fn candidate_work(
 }
 fn screen_work(
     w: crate::PreparedCycleScreenWork,
-    p: &mut PreparedAutomaticProgress,
+    p: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
     increment(
         &mut p.screen_work.gramian_applications,

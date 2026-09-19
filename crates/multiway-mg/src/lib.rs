@@ -43,9 +43,11 @@ mod prepared_action;
 mod prepared_automatic;
 #[cfg(feature = "lsmr")]
 pub use prepared_automatic::{
-    PreparedAutomaticBatch, PreparedAutomaticColumnReport, PreparedAutomaticHierarchyOptions,
-    PreparedAutomaticOptions, PreparedAutomaticProgress, PreparedAutomaticRejection,
-    PreparedAutomaticStage, solve_prepared_automatic_batch_into,
+    PreparedAutomaticBatch, PreparedAutomaticColumnReport, PreparedAutomaticGroupingLocation,
+    PreparedAutomaticGroupingScope, PreparedAutomaticHierarchyOptions, PreparedAutomaticLayout,
+    PreparedAutomaticLayoutProgress, PreparedAutomaticOptions, PreparedAutomaticProgress,
+    PreparedAutomaticRejection, PreparedAutomaticStage, solve_prepared_automatic_batch_into,
+    solve_prepared_automatic_batch_into_with_layout,
 };
 mod prepared_aggregation;
 mod prepared_baseline;

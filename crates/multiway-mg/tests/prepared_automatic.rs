@@ -552,3 +552,424 @@ fn completed_fallback_keeps_nonconvergence_separate_from_acceptance() -> Result 
     execute(&f, &y, 2, options(), B)?;
     Ok(())
 }
+
+type LayoutResult = (
+    Vec<f64>,
+    Vec<Option<PreparedAutomaticColumnReport>>,
+    PreparedAutomaticProgress,
+    PreparedAutomaticLayoutProgress,
+);
+fn execute_layout(
+    frame: &ThreeWayWeightFrame<'_>,
+    y: &[f64],
+    k: usize,
+    o: PreparedAutomaticOptions,
+    b: PreparedHierarchyBudget,
+    layout: PreparedAutomaticLayout,
+) -> Result<LayoutResult> {
+    let mut x = vec![f64::NAN; frame.diagonal().len() * k];
+    let mut reports = vec![None; k];
+    let mut progress = PreparedAutomaticProgress::default();
+    let mut layouts = PreparedAutomaticLayoutProgress::default();
+    solve_prepared_automatic_batch_into_with_layout(
+        frame,
+        PreparedAutomaticBatch {
+            targets: y,
+            columns: k,
+            coefficients: &mut x,
+            reports: &mut reports,
+        },
+        o,
+        b,
+        layout,
+        &mut progress,
+        &mut layouts,
+    )?;
+    let mut certificate = PreparedCertificateWorkspace::try_new(frame)?;
+    for j in 0..k {
+        let value = certify_prepared_normal_equations(
+            frame.operator_view(),
+            &y[j * frame.weights().len()..(j + 1) * frame.weights().len()],
+            &x[j * frame.diagonal().len()..(j + 1) * frame.diagonal().len()],
+            &mut certificate,
+        )?;
+        assert!(reports[j].unwrap().accepted);
+        assert_eq!(
+            value.to_bits(),
+            reports[j]
+                .unwrap()
+                .certified_normal_equation_residual
+                .to_bits()
+        );
+    }
+    Ok((x, reports, progress, layouts))
+}
+const GROUPED: [PreparedAutomaticLayout; 4] = [
+    PreparedAutomaticLayout::FineRow,
+    PreparedAutomaticLayout::AllRow,
+    PreparedAutomaticLayout::FineImage,
+    PreparedAutomaticLayout::AllImage,
+];
+fn same_work(a: &PreparedAutomaticProgress, b: &PreparedAutomaticProgress) {
+    assert_eq!(a.candidate_work, b.candidate_work);
+    assert_eq!(a.structural_attempts, b.structural_attempts);
+    assert_eq!(a.provisional_input_tuples, b.provisional_input_tuples);
+    assert_eq!(a.screen_work, b.screen_work);
+    assert_eq!(a.last_quality_rejection, b.last_quality_rejection);
+    assert_eq!(a.solve_work, b.solve_work);
+    assert_eq!(a.gate_work, b.gate_work);
+    assert_eq!(a.global_certificate_work, b.global_certificate_work);
+    assert_eq!(a.accepted_hierarchies, b.accepted_hierarchies);
+    assert_eq!(a.hierarchy_rejections, b.hierarchy_rejections);
+    assert_eq!(a.baseline_components, b.baseline_components);
+    assert_eq!(a.global_fallback_columns, b.global_fallback_columns);
+    assert_eq!(a.rejections, b.rejections);
+}
+
+#[test]
+fn grouped_recursive_layouts_preserve_current_weight_numerics_at_every_prefix() -> Result {
+    for n in [512u32, 1024] {
+        let keys: Vec<_> = (0..n)
+            .flat_map(|i| (0..2).flat_map(move |j| (0..2).map(move |k| [i, j, k])))
+            .collect();
+        let t = PreparedThreeWayTopology::try_from_collapsed([n as usize, 2, 2], &keys)?;
+        for generation in 0..2 {
+            let weights: Vec<_> = (0..keys.len())
+                .map(|i| 1. + generation as f64 * (i % 7) as f64 / 8.)
+                .collect();
+            let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&weights))?;
+            for k in if n == 512 {
+                &[1, 2, 4, 8, 16, 17, 32][..]
+            } else {
+                &[3][..]
+            } {
+                let y = targets(&f, *k);
+                let (reference, rr, rp) = execute(&f, &y, *k, options(), B)?;
+                let (x, r, p, g) =
+                    execute_layout(&f, &y, *k, options(), B, PreparedAutomaticLayout::Scalar)?;
+                bits(&x, &reference);
+                assert_eq!(r, rr);
+                assert_eq!(format!("{p:?}"), format!("{rp:?}"));
+                assert_eq!(g, PreparedAutomaticLayoutProgress::default());
+                for layout in GROUPED {
+                    let (x, r, p, g) = execute_layout(&f, &y, *k, options(), B, layout)?;
+                    bits(&x, &reference);
+                    assert_eq!(r, rr);
+                    same_work(&p, &rp);
+                    assert_eq!(g.grouping_attempts, 1);
+                    assert_eq!(g.completed_groupings, 1);
+                    assert_eq!(g.rejected_groupings, 0);
+                    assert_eq!(
+                        g.grouped_levels_built,
+                        if matches!(
+                            layout,
+                            PreparedAutomaticLayout::FineRow | PreparedAutomaticLayout::FineImage
+                        ) {
+                            1
+                        } else {
+                            rp.structural_attempts
+                        }
+                    );
+                    assert_eq!(
+                        g.maximum_tuple_image_len,
+                        if matches!(
+                            layout,
+                            PreparedAutomaticLayout::FineImage | PreparedAutomaticLayout::AllImage
+                        ) {
+                            keys.len()
+                        } else {
+                            0
+                        }
+                    );
+                    assert!(g.maximum_grouping_payload_bytes > 0);
+                    assert!(p.maximum_admitted_payload_bytes > rp.maximum_admitted_payload_bytes);
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
+#[test]
+fn grouped_component_baselines_and_failed_screens_keep_exact_references() -> Result {
+    let n = 256u32;
+    let mut keys: Vec<_> = (0..2)
+        .flat_map(|c| {
+            (0..n).flat_map(move |i| {
+                (0..2).flat_map(move |j| (0..2).map(move |k| [c * n + i, c * 2 + j, c * 2 + k]))
+            })
+        })
+        .collect();
+    keys.extend(
+        (0..2)
+            .flat_map(|i| (0..2).flat_map(move |j| (0..2).map(move |k| [2 * n + i, 4 + j, 4 + k]))),
+    );
+    keys.push([2 * n + 2, 6, 6]);
+    keys.sort_unstable();
+    let t = PreparedThreeWayTopology::try_from_collapsed([(2 * n + 3) as usize, 7, 7], &keys)?;
+    for generation in 0..2 {
+        let weights: Vec<_> = (0..keys.len())
+            .map(|i| 1. + generation as f64 * (i % 7) as f64 / 8.)
+            .collect();
+        let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&weights))?;
+        let y = targets(&f, 4);
+        for route in 0..3 {
+            let mut o = options();
+            if route == 0 {
+                o.hierarchy = None;
+            }
+            if route == 1 {
+                o.hierarchy
+                    .as_mut()
+                    .unwrap()
+                    .criteria
+                    .maximum_estimated_energy_factor = 1e-12;
+                o.hierarchy
+                    .as_mut()
+                    .unwrap()
+                    .criteria
+                    .maximum_observed_energy_factor = Some(1e-12);
+            }
+            let (reference, rr, rp) = execute(&f, &y, 4, o, B)?;
+            assert_eq!(
+                (
+                    rp.large_components,
+                    rp.dense_components,
+                    rp.singleton_components
+                ),
+                (2, 1, 1)
+            );
+            for layout in GROUPED {
+                let (x, r, p, g) = execute_layout(&f, &y, 4, o, B, layout)?;
+                bits(&x, &reference);
+                assert_eq!(r, rr);
+                same_work(&p, &rp);
+                assert_eq!(g.grouping_attempts, 2 + rp.hierarchy_rejections);
+                assert_eq!(g.completed_groupings, g.grouping_attempts);
+                assert_eq!(g.rejected_groupings, 0);
+                if matches!(
+                    layout,
+                    PreparedAutomaticLayout::FineImage | PreparedAutomaticLayout::AllImage
+                ) {
+                    assert_eq!(
+                        g.maximum_tuple_image_len,
+                        if route == 0 { 0 } else { 4 * n as usize }
+                    );
+                    assert!(g.maximum_tuple_image_len < f.weights().len());
+                }
+            }
+        }
+    }
+    // Additional exact kernel modes: tied second/third factors, weak links.
+    let t = large_problem(128, false)?;
+    let w: Vec<_> = (0..t.topology().tuple_count())
+        .map(|i| if i % 2 == 0 { 1. } else { 1. / 64. })
+        .collect();
+    let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&w))?;
+    let y = targets(&f, 3);
+    let mut rejected_options = options();
+    rejected_options
+        .hierarchy
+        .as_mut()
+        .unwrap()
+        .criteria
+        .maximum_estimated_energy_factor = 1e-12;
+    rejected_options
+        .hierarchy
+        .as_mut()
+        .unwrap()
+        .criteria
+        .maximum_observed_energy_factor = Some(1e-12);
+    let (reference, rr, rp) = execute(&f, &y, 3, rejected_options, B)?;
+    assert_eq!(rp.quality_rejections, 1);
+    for layout in GROUPED {
+        let (x, r, p, g) = execute_layout(&f, &y, 3, rejected_options, B, layout)?;
+        assert_eq!(g.completed_groupings, 2);
+        assert_eq!(g.rejected_groupings, 0);
+        bits(&x, &reference);
+        assert_eq!(r, rr);
+        same_work(&p, &rp);
+    }
+    Ok(())
+}
+
+#[test]
+fn grouped_global_recovery_and_validation_keep_report_contract() -> Result {
+    let keys: Vec<_> = (0..3)
+        .flat_map(|i| (0..4).flat_map(move |j| (0..2).map(move |k| [i, j, k])))
+        .collect();
+    let t = PreparedThreeWayTopology::try_from_collapsed([3, 4, 2], &keys)?;
+    let w: Vec<_> = (0..keys.len())
+        .map(|i| 2f64.powi((i % 7) as i32 - 3))
+        .collect();
+    let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&w))?;
+    let y = targets(&f, 3);
+    let mut o = options();
+    o.terminal_relative_tolerance = 0.9;
+    let (reference, rr, rp) = execute(&f, &y, 3, o, B)?;
+    assert!(rp.global_fallback_columns > 0);
+    for layout in GROUPED {
+        let (mut x, mut r, mut p, mut g) = execute_layout(&f, &y, 3, o, B, layout)?;
+        bits(&x, &reference);
+        assert_eq!(r, rr);
+        same_work(&p, &rp);
+        assert_eq!(g.grouping_attempts, 1);
+        assert_eq!(g.grouped_levels_built, 1);
+        let gg = g;
+        let pp = format!("{p:?}");
+        let mut invalid = y.clone();
+        invalid[0] = f64::NAN;
+        assert!(
+            solve_prepared_automatic_batch_into_with_layout(
+                &f,
+                PreparedAutomaticBatch {
+                    targets: &invalid,
+                    columns: 3,
+                    coefficients: &mut x,
+                    reports: &mut r
+                },
+                o,
+                B,
+                layout,
+                &mut p,
+                &mut g
+            )
+            .is_err()
+        );
+        bits(&x, &reference);
+        assert_eq!(r, rr);
+        assert_eq!(g, gg);
+        assert_eq!(format!("{p:?}"), pp);
+    }
+    Ok(())
+}
+
+#[test]
+fn grouped_budget_accounts_one_owner_and_denied_setup_recovers_on_reuse() -> Result {
+    use multiway_incidence::PreparedTupleGrouping;
+    let keys: Vec<_> = (0..512)
+        .flat_map(|i| (0..2).flat_map(move |j| (0..2).map(move |k| [i, j, k])))
+        .collect();
+    let t = PreparedThreeWayTopology::try_from_collapsed([512, 2, 2], &keys)?;
+    let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::UnitTuples)?;
+    let y = targets(&f, 3);
+    let mut o = options();
+    o.hierarchy = None;
+    let caller = 8 * (y.len() + 3 * f.diagonal().len())
+        + 3 * std::mem::size_of::<Option<PreparedAutomaticColumnReport>>();
+    let setup =
+        PreparedTupleGrouping::setup_payload_bound(&t, caller + f.retained_payload_bytes()?)?;
+    for layout in GROUPED {
+        let (x, r, p, g) = execute_layout(&f, &y, 3, o, B, layout)?;
+        let groups = PreparedTupleGrouping::try_new(&t)?;
+        assert_eq!(
+            g.maximum_grouping_payload_bytes,
+            groups.retained_payload_bytes()?
+        );
+        // Even image layouts use the grouped baseline's LSMR-only row path.
+        let mode = GroupedGramianMode::RowGather;
+        assert_eq!(g.maximum_tuple_image_len, 0);
+        let owner = PreparedBaseline::new(&f, o.fallback).with_grouping(&groups, mode)?;
+        let solve = PreparedLsmrWorkspace::setup_payload_bound(&owner, o.lsmr, caller)?;
+        let certificate = caller
+            + t.retained_payload_bytes()?
+            + f.retained_payload_bytes()?
+            + t.projection_workspace_required_bytes()?
+            + PreparedCertificateWorkspace::required_payload_bytes(&f)?;
+        assert_eq!(
+            p.maximum_admitted_payload_bytes,
+            setup.max(solve).max(certificate)
+        );
+        let (exact, er, ep, eg) = execute_layout(
+            &f,
+            &y,
+            3,
+            o,
+            PreparedHierarchyBudget {
+                maximum_payload_bytes: p.maximum_admitted_payload_bytes,
+                ..B
+            },
+            layout,
+        )?;
+        bits(&x, &exact);
+        assert_eq!(r, er);
+        same_work(&p, &ep);
+        assert_eq!(g, eg);
+        let (shifted, sr, sp, sg) = execute_layout(
+            &f,
+            &y,
+            3,
+            o,
+            PreparedHierarchyBudget {
+                additional_live_payload_bytes: 1234,
+                ..B
+            },
+            layout,
+        )?;
+        bits(&x, &shifted);
+        assert_eq!(r, sr);
+        same_work(&p, &sp);
+        assert_eq!(g, sg);
+        assert_eq!(
+            sp.maximum_admitted_payload_bytes,
+            p.maximum_admitted_payload_bytes + 1234
+        );
+        assert_eq!(
+            sp.maximum_requested_payload_bytes,
+            p.maximum_requested_payload_bytes + 1234
+        );
+        let mut output = vec![17.; x.len()];
+        let mut reports = vec![None; 3];
+        let mut progress = PreparedAutomaticProgress::default();
+        let mut layouts = PreparedAutomaticLayoutProgress::default();
+        assert!(
+            solve_prepared_automatic_batch_into_with_layout(
+                &f,
+                PreparedAutomaticBatch {
+                    targets: &y,
+                    columns: 3,
+                    coefficients: &mut output,
+                    reports: &mut reports
+                },
+                o,
+                PreparedHierarchyBudget {
+                    maximum_payload_bytes: setup - 1,
+                    ..B
+                },
+                layout,
+                &mut progress,
+                &mut layouts
+            )
+            .is_err()
+        );
+        assert_eq!(reports, vec![None; 3]);
+        assert_eq!(layouts.grouping_attempts, 2);
+        assert_eq!(layouts.rejected_groupings, 2);
+        assert_eq!(layouts.completed_groupings, 0);
+        assert_eq!(layouts.maximum_tuple_image_len, 0);
+        assert_eq!(
+            layouts.last_rejected_grouping.unwrap().scope,
+            PreparedAutomaticGroupingScope::GlobalBaseline
+        );
+        assert!(progress.maximum_requested_payload_bytes >= setup);
+        assert!(progress.maximum_admitted_payload_bytes < setup);
+        solve_prepared_automatic_batch_into_with_layout(
+            &f,
+            PreparedAutomaticBatch {
+                targets: &y,
+                columns: 3,
+                coefficients: &mut output,
+                reports: &mut reports,
+            },
+            o,
+            B,
+            layout,
+            &mut progress,
+            &mut layouts,
+        )?;
+        bits(&output, &x);
+        assert_eq!(reports, r);
+        assert_eq!(layouts, g);
+    }
+    Ok(())
+}

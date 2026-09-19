@@ -117,7 +117,7 @@ campaign holdout have not been consumed.
 
 All required Rust1.85 checks, 90 Python checks and seven release groups pass,
 including 120 protocol comparisons. The [qualification records](../benchmarks/results/2026-09-19/component-driver-qualification/README.md)
-preserve eleven debug/release-identical peak controls and 1,980 certified columns
+preserve eleven debug/release-identical peak controls and 1,760 certified columns
 per configuration. Self-review covers owner lifetimes, shared arithmetic,
 admission/failure semantics and measurement scope; it is not external review.
 Source freeze precedes the unchanged supplied-map compatibility regression.

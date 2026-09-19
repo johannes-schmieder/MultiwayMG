@@ -2,7 +2,7 @@
 
 The [records](records.json) preserve eleven serial setup/execute/drop peak-memory
 controls, identical between Rust 1.85 debug and release. Each repeats twice at
-K=1,2,4,8,16,17,32: 1,980 accepted columns per configuration. All net allocation
+K=1,2,4,8,16,17,32: 1,760 accepted columns per configuration. All net allocation
 counts/bytes are zero; caller/input owners are separately charged to admission.
 Positive controls validate simultaneous, disjoint and realloc lifetimes. This
 is requested heap accounting, not RSS or parallel allocation measurement.
@@ -23,3 +23,10 @@ raw log hashes are preserved; full logs live outside the repository under
 
 See [the API and limitations](../../../../docs/ISSUE5_COMPONENT_DRIVER.md).
 No automatic timing, competitive/default promotion or holdout result is claimed.
+
+Count correction (2026-09-19, M6j review): the earlier derived total of 1,980
+was an arithmetic error. Eleven controls, two repetitions and widths summing
+to 80 give 1,760 certified columns in each LSMR-enabled debug/release build.
+The minimal-feature executable exercises component-root controls only.
+`records.json` records the correction and original file hash; every raw peak,
+allocation record, source hash and numerical outcome is unchanged.

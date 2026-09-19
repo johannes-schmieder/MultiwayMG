@@ -1,0 +1,95 @@
+[
+  {
+    "current_rss_budget_violations": 0,
+    "current_source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "exact_signature_comparisons": 8400,
+    "omitted_from_cross_source_signature": [
+      "phases_ns",
+      "total_ns",
+      "overhead_ns"
+    ],
+    "previous_source": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+    "profile": "smoke",
+    "qualification": {
+      "certified_measured_columns": 80000,
+      "complete_certification_gate_passed": true,
+      "failed_measured_runs": 0,
+      "failed_warmup_runs": 0,
+      "processes": 8400
+    },
+    "raw_journal_sha256": {
+      "current": "1ca06e63e331e11ee7da708ed7bbd5181f33249efb436ff27ff6c3139f709d76",
+      "previous": "53326f69865577313cd864e9e218b1c97ede1ed13d9fa94f607cc26abf73bb4e"
+    },
+    "scope": "All input, schedule, numerical, work, payload, route, error and ABI records exact. Resources, provenance and timing may change. This frozen probe invokes scalar only; no grouped performance claim.",
+    "unchanged_fields": [
+      "processes",
+      "certified_measured_columns",
+      "failed_measured_runs",
+      "failed_warmup_runs",
+      "complete_certification_gate_passed"
+    ]
+  },
+  {
+    "current_rss_budget_violations": 0,
+    "current_source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "exact_signature_comparisons": 8400,
+    "omitted_from_cross_source_signature": [
+      "phases_ns",
+      "total_ns",
+      "overhead_ns"
+    ],
+    "previous_source": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+    "profile": "development",
+    "qualification": {
+      "certified_measured_columns": 79925,
+      "complete_certification_gate_passed": false,
+      "failed_measured_runs": 35,
+      "failed_warmup_runs": 7,
+      "processes": 8400
+    },
+    "raw_journal_sha256": {
+      "current": "2591ad14b37b9ada47f155b5d57592085fed9a23f562ea63fa6d68f3611195f1",
+      "previous": "e1af1b4f685297faea9128348beb6e03175551fb746128c88edd2b331f936590"
+    },
+    "scope": "All input, schedule, numerical, work, payload, route, error and ABI records exact. Resources, provenance and timing may change. This frozen probe invokes scalar only; no grouped performance claim.",
+    "unchanged_fields": [
+      "processes",
+      "certified_measured_columns",
+      "failed_measured_runs",
+      "failed_warmup_runs",
+      "complete_certification_gate_passed"
+    ]
+  },
+  {
+    "current_rss_budget_violations": 0,
+    "current_source": "49fcf604d386b86b977dfacf55562c6d2abff334",
+    "exact_signature_comparisons": 8400,
+    "omitted_from_cross_source_signature": [
+      "phases_ns",
+      "total_ns",
+      "overhead_ns"
+    ],
+    "previous_source": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+    "profile": "linux-smoke",
+    "qualification": {
+      "certified_measured_columns": 80000,
+      "complete_certification_gate_passed": true,
+      "failed_measured_runs": 0,
+      "failed_warmup_runs": 0,
+      "processes": 8400
+    },
+    "raw_journal_sha256": {
+      "current": "264a1b14c05408e4d44734d7323e7fbfc7aba1f48c7be29be544374fce280ed3",
+      "previous": "03c5639ca160b9711eb4ebbc4bfea92defcf784c61572b9210ef6f0f1beca0ac"
+    },
+    "scope": "All input, schedule, numerical, work, payload, route, error and ABI records exact. Resources, provenance and timing may change. This frozen probe invokes scalar only; no grouped performance claim.",
+    "unchanged_fields": [
+      "processes",
+      "certified_measured_columns",
+      "failed_measured_runs",
+      "failed_warmup_runs",
+      "complete_certification_gate_passed"
+    ]
+  }
+]
