@@ -34,7 +34,7 @@ impl Default for PreparedLsmrOptions {
     }
 }
 impl PreparedLsmrOptions {
-    fn validate(self) -> Result<Self, MultiwayError> {
+    pub(crate) fn validate(self) -> Result<Self, MultiwayError> {
         if !self.tolerance.is_finite()
             || self.tolerance <= 0.0
             || !self.certificate_tolerance.is_finite()

@@ -120,6 +120,7 @@ workspace = true
 
 [dev-dependencies]
 stats_alloc = "=0.1.10"
+allocation-counter = "=0.8.1"
 
 [[test]]
 name = "workspace_allocations"
@@ -129,3 +130,8 @@ harness = false
 [[example]]
 name = "prepared_serial_benchmark"
 required-features = ["lsmr"]
+
+[[test]]
+name = "automatic_allocation_peaks"
+path = "tests/automatic_allocation_peaks.rs"
+harness = false

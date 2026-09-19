@@ -6,6 +6,9 @@ use crate::{
     components::partition::{self, Partition},
 };
 
+mod component_root;
+pub use component_root::PreparedComponentRoot;
+
 /// Layout of the source rows used to construct a prepared topology.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum PreparedTopologySource {

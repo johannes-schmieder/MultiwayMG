@@ -189,10 +189,7 @@ impl OperatorData<'_> {
             .zip(self.weights.iter())
             .zip(targets)
         {
-            let value = weight * target;
-            for factor in 0..3 {
-                rhs[self.topology.global_index(factor, tuple[factor])] += value;
-            }
+            accumulate_weighted_target(self.topology, tuple, weight, target, rhs);
         }
         Ok(())
     }
@@ -270,4 +267,20 @@ pub(crate) fn validate_len(
         return Err(crate::error::dimension(context, expected, actual));
     }
     Ok(())
+}
+
+// Original tuple order is controlled by the caller. Component-restricted RHS
+// accumulation shares this exact multiplication and factor-order addition.
+#[inline]
+pub(crate) fn accumulate_weighted_target(
+    topology: &ThreeWayTopology,
+    tuple: [u32; 3],
+    weight: f64,
+    target: f64,
+    rhs: &mut [f64],
+) {
+    let value = weight * target;
+    for factor in 0..3 {
+        rhs[topology.global_index(factor, tuple[factor])] += value;
+    }
 }

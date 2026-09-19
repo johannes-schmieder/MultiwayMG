@@ -39,6 +39,14 @@ mod pcg_kernel;
 mod pcg_trace;
 mod preconditioner;
 mod prepared_action;
+#[cfg(feature = "lsmr")]
+mod prepared_automatic;
+#[cfg(feature = "lsmr")]
+pub use prepared_automatic::{
+    PreparedAutomaticBatch, PreparedAutomaticColumnReport, PreparedAutomaticHierarchyOptions,
+    PreparedAutomaticOptions, PreparedAutomaticProgress, PreparedAutomaticRejection,
+    PreparedAutomaticStage, solve_prepared_automatic_batch_into,
+};
 mod prepared_aggregation;
 mod prepared_baseline;
 mod prepared_cycle_quality;

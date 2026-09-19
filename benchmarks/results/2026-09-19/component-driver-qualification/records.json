@@ -1,0 +1,316 @@
+{
+  "certified_columns_per_configuration": 1980,
+  "checks": {
+    "release-v1": [
+      {
+        "exit": 0,
+        "name": "complete-all"
+      },
+      {
+        "exit": 0,
+        "name": "components-all"
+      },
+      {
+        "exit": 0,
+        "name": "complete-minimal"
+      },
+      {
+        "exit": 0,
+        "name": "components-minimal"
+      },
+      {
+        "exit": 0,
+        "name": "component-private"
+      },
+      {
+        "exit": 0,
+        "name": "probe-build"
+      },
+      {
+        "exit": 0,
+        "name": "protocol"
+      }
+    ],
+    "required-v1": [
+      {
+        "exit": 0,
+        "name": "format"
+      },
+      {
+        "exit": 0,
+        "name": "clippy"
+      },
+      {
+        "exit": 0,
+        "name": "all"
+      },
+      {
+        "exit": 0,
+        "name": "minimal"
+      },
+      {
+        "exit": 0,
+        "name": "docs"
+      },
+      {
+        "exit": 0,
+        "name": "python"
+      }
+    ]
+  },
+  "configuration": [
+    "debug-all",
+    "release-all"
+  ],
+  "log_sha256": {
+    "release-v1/complete-all.log": "4f8c284c690f6bd8ac038f8ee0e8072dd9620e50a2fd56dd92f54a4b07130c10",
+    "release-v1/complete-minimal.log": "b8e01769724164acd005b40dd7a1647ac48dcc46b10a2968a15f74541303f937",
+    "release-v1/component-private.log": "e33b30525c1f5bc3b1aec05d895d7267d54596a24169468056b21cb088530a19",
+    "release-v1/components-all.log": "abf3190bf6419f6686eb54a48b242e1f016be9b42bce2fa48254be8cfde8defd",
+    "release-v1/components-minimal.log": "c0b009f92956be59dc03b1003f9e32cd5a1ec085f61ee9624b579ebb18ed7a58",
+    "release-v1/probe-build.log": "dda381522cb05005c16b642362f55d452e64b3fd4b7b4c1a697d54e1dba47e4a",
+    "release-v1/protocol.log": "a2b0ce772a149d578136074817f0741190a31b5a48a9b931c3907a0e881edd51",
+    "required-v1/all.log": "43e525311fdd65e95f676be524f5c4a90955b2e89119b2463bb3d239c06d60e9",
+    "required-v1/clippy.log": "f7e06cccac3e97902d77b966d5f63e3d34e816b4af3c0e08e59881c0dbc3a57a",
+    "required-v1/docs.log": "70e4bfd42a997f03482dfa0dff35e9592970ab691104f109667edf16f9152192",
+    "required-v1/format.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "required-v1/minimal.log": "e2e365493f1278c9d3aa86e114b0f8524b5b6e0e70ce0adcdc9c7de12adfb77b",
+    "required-v1/python.log": "64d3b70f9fc549c3f080118b23250908c8c27435e424479049ad56f81205febd"
+  },
+  "records": [
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 31200,
+        "bytes_total": 31200,
+        "count_current": 0,
+        "count_max": 3,
+        "count_total": 3
+      },
+      "coefficients": 900,
+      "route_counts": [
+        300,
+        0,
+        0,
+        0
+      ],
+      "tuples": 300
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 704,
+        "bytes_total": 976,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "coefficients": 6,
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 8
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 273504,
+        "bytes_total": 280720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "coefficients": 130,
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 504
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 1046504,
+        "bytes_total": 1060720,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "coefficients": 255,
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 1004
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 1054704,
+        "bytes_total": 1068976,
+        "count_current": 0,
+        "count_max": 5,
+        "count_total": 10
+      },
+      "coefficients": 256,
+      "route_counts": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "tuples": 1008
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 424392,
+        "bytes_total": 737868,
+        "count_current": 0,
+        "count_max": 65,
+        "count_total": 114
+      },
+      "coefficients": 516,
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 193520,
+        "bytes_total": 214104,
+        "count_current": 0,
+        "count_max": 20,
+        "count_total": 23
+      },
+      "coefficients": 516,
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 2048
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 730208,
+        "bytes_total": 1251630,
+        "count_current": 0,
+        "count_max": 85,
+        "count_total": 154
+      },
+      "coefficients": 1028,
+      "route_counts": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 386032,
+        "bytes_total": 427096,
+        "count_current": 0,
+        "count_max": 20,
+        "count_total": 23
+      },
+      "coefficients": 1028,
+      "route_counts": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "tuples": 4096
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 7360,
+        "bytes_total": 43216,
+        "count_current": 0,
+        "count_max": 9,
+        "count_total": 288
+      },
+      "coefficients": 240,
+      "route_counts": [
+        0,
+        40,
+        0,
+        0
+      ],
+      "tuples": 320
+    },
+    {
+      "allocations": {
+        "bytes_current": 0,
+        "bytes_max": 531120,
+        "bytes_total": 1672776,
+        "count_current": 0,
+        "count_max": 77,
+        "count_total": 248
+      },
+      "coefficients": 1032,
+      "route_counts": [
+        0,
+        0,
+        2,
+        0
+      ],
+      "tuples": 4096
+    }
+  ],
+  "repetitions": 2,
+  "route_count_fields": [
+    "singletons",
+    "dense",
+    "accepted_hierarchies",
+    "baseline_components"
+  ],
+  "scope": "serial requested live heap; source/frame/caller prepared outside counter and added to admission",
+  "source_sha256": {
+    "Cargo.lock": "be54e5563a4b0dc7a73a4c47d6ddeaf1aaa40df49463265e1aaeda3378ce0b23",
+    "crates/multiway-incidence/src/component_layout.rs": "674e9eae2becfa4e3144db2d51cbfd086ccdb4bc06900179e6e5847fa6bf1d72",
+    "crates/multiway-incidence/src/kernels.rs": "e02e5e5b1ea6fb4a58d6ebf3eefa5ca2adb600bb012b6d12ad6b5fabad2a7b25",
+    "crates/multiway-incidence/src/lib.rs": "98f227ad241970fcccaddaa804bd66df5067902d49193d93c55a12b092b88f0c",
+    "crates/multiway-incidence/src/prepared.rs": "f3ccedde32587c2166eb698c17f14892c6d9441708b58e3d93aa2f24b68b8d6a",
+    "crates/multiway-incidence/src/prepared/component_root.rs": "673adfda62d66a9767982f4e8b30ef826dd35e776c5c5c70fc4bbb3eff2528c5",
+    "crates/multiway-incidence/src/prepared/component_root_tests.rs": "181e15ca93e10f3eaf87fc14a1eb15f66c7812abeb67f6f89a6c26e28cc56186",
+    "crates/multiway-incidence/tests/component_layout.rs": "98099c7ece7ae8d2c49fd33a5f5a7f1f5eca126421b3cfebd89efb1bf4d8756f",
+    "crates/multiway-mg/Cargo.toml": "a784b585a85eb0225b20494d52526bfd25a1bedc63fbd1f278f27d953287aa60",
+    "crates/multiway-mg/src/dense.rs": "b49c652352022b61c7b8368ad04c864b4b2755023b3af2077a64adf399052825",
+    "crates/multiway-mg/src/lib.rs": "0a3157baedc9a1802519c94e8125340c1049892357afbc5ad39da8db53a38a1a",
+    "crates/multiway-mg/src/prepared_automatic.rs": "0ddc6ab95a9ddd0b791d8137dd18607aa39265a6ea72c9d5d64c0f32c372aa40",
+    "crates/multiway-mg/src/prepared_automatic/hierarchy.rs": "1fad8cdc94da541f4eaadb1371c18827d5237a543769fa6b6019dd8d628ee407",
+    "crates/multiway-mg/src/prepared_cycle_quality.rs": "d3c241296bb2cb647ac9b0b3d9a22666826a99b29254d5396501e301cb2231a3",
+    "crates/multiway-mg/src/prepared_lsmr.rs": "eb3171348530be27891e8240bb96a428299a6d2619465c9d405accad00a97e17",
+    "crates/multiway-mg/tests/automatic_allocation_peaks.rs": "1046181cf3d5b2d7c25aea646c49da502ce2f1800168ab2cbf7fe9f814f377d6",
+    "crates/multiway-mg/tests/prepared_automatic.rs": "893487b32baef194e51875952426044f414ea56f15afd2b97bdea68dbb270a8d"
+  },
+  "widths": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    17,
+    32
+  ]
+}
