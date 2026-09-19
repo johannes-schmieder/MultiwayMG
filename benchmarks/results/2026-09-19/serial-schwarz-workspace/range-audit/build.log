@@ -1,0 +1,46 @@
+   Compiling autocfg v1.5.1
+   Compiling proc-macro2 v1.0.107
+   Compiling quote v1.0.47
+   Compiling unicode-ident v1.0.24
+   Compiling crossbeam-utils v0.8.22
+   Compiling crossbeam-epoch v0.9.20
+   Compiling thiserror v2.0.20
+   Compiling cfg-if v1.0.4
+   Compiling crossbeam-deque v0.8.7
+   Compiling rayon-core v1.13.0
+   Compiling rawpointer v0.2.1
+   Compiling bytemuck v1.25.2
+   Compiling paste v1.0.15
+   Compiling either v1.18.0
+   Compiling typenum v1.20.1
+   Compiling chacha20 v0.10.2
+   Compiling getrandom v0.4.3
+   Compiling thread_local v1.1.10
+   Compiling safe_arch v0.7.4
+   Compiling wide v0.7.33
+   Compiling rand v0.10.2
+   Compiling num-traits v0.2.19
+   Compiling matrixmultiply v0.3.11
+   Compiling rayon v1.12.0
+   Compiling num-complex v0.4.6
+   Compiling num-integer v0.1.47
+   Compiling approx v0.5.1
+   Compiling num-rational v0.4.2
+   Compiling simba v0.9.1
+   Compiling ndarray v0.17.2
+   Compiling syn v3.0.5
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.20
+   Compiling cobs v0.3.0
+   Compiling multiway-incidence v0.1.0 (/Users/johannes/Git/MultiwayMG/crates/multiway-incidence)
+   Compiling serde v1.0.229
+   Compiling heapless v0.7.17
+   Compiling approx-chol v0.5.0
+   Compiling schwarz-precond v0.4.0 (https://github.com/johannes-schmieder/within?rev=fad1d462d44e7d5b5226370021d69dab4e854669#fad1d462)
+   Compiling nalgebra v0.33.3
+   Compiling postcard v1.1.3
+   Compiling within v0.4.0 (https://github.com/johannes-schmieder/within?rev=fad1d462d44e7d5b5226370021d69dab4e854669#fad1d462)
+   Compiling multiway-mg v0.1.0 (/Users/johannes/Git/MultiwayMG/crates/multiway-mg)
+   Compiling m6n-range-audit v0.0.0 (/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6n/range-audit)
+    Finished `release` profile [optimized] target(s) in 13.19s
+     Running `/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/release/m6n-range-audit`

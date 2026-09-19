@@ -1,0 +1,17 @@
+{
+  "scope": "external exploratory mathematical audit; not performance qualification or candidate selection",
+  "multiwaymg_source": "aa7a6a9b92bb2021b59dcdf0d82740849f89f80c",
+  "within_pin": "fad1d462d44e7d5b5226370021d69dab4e854669",
+  "rust": "1.85.0",
+  "rayon_num_threads": 1,
+  "files": {
+    "Cargo.toml": "7a29dea6220dd83b201fba02f197a38e8ecc61f478e7fbc8be51980ca5552332",
+    "Cargo.lock": "4baa2a5900b18827bd22c4fc44b563b9219cdc7c3ea38fa34e7c5b5a068ddf3d",
+    "main-v1.rs": "8a5729893fb06467b0c914f5206d8e76c22c438877c92423fe353b8550fad29e",
+    "src/main.rs": "acd5b0757d4863acb3a267104ddbf6f481ba711e50359f015d95a5e2608523eb",
+    "build.log": "e6ff212060f7d3dd7290639051b24b1e397894839b8d34ee09735e2a3fed94ca",
+    "build-expanded.log": "08878661966c61b2afee1a6ea3ee2a5383ce01d92af5456d1ebb1d3f1b959216",
+    "results.csv": "a82097694f6e525aab4fe3a4a94f907ae9a064ef8486473a145c16fc8a9925f4",
+    "results-expanded.csv": "a0ba4a9a0c2a6ec256b80bc0871b75c97d2ac7bf5c5506bdfff6c902ce33ccb0"
+  }
+}

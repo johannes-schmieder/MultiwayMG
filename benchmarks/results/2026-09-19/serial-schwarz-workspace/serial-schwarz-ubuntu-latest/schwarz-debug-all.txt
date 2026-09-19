@@ -1,0 +1,13 @@
+[1m[32m   Compiling[0m schwarz-precond v0.4.0 (/home/runner/work/within/within/crates/schwarz-precond)
+[1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 0.28s
+[1m[32m     Running[0m tests/serial_schwarz.rs (target/debug/deps/serial_schwarz-2757ded45dd35366)
+
+running 3 tests
+test changed_local_dimensions_reject_before_output_and_recover ... ok
+test dense_reference_transactional_failure_shapes_and_reuse ... ok
+test stored_domain_order_is_observable_and_empty_domains_are_safe ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+[1m[32m     Running[0m tests/serial_schwarz_allocations.rs (target/debug/deps/serial_schwarz_allocations-ee1c0e11e9cde28e)
+serial Schwarz: 1 allocation, 288016 bytes; first+64 repeats, typed denials, local failure/reuse: zero outer allocations; exact drop

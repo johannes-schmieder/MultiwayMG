@@ -43,10 +43,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cargo test --locked -p multiway-mg --no-default-features --test workspace_allocations --test automatic_allocation_peaks 2>&1 | tee allocation-evidence/debug-minimal.txt
-          cargo test --locked -p multiway-mg --all-features --test workspace_allocations --test automatic_allocation_peaks 2>&1 | tee allocation-evidence/debug-all.txt
-          cargo test --locked --release -p multiway-mg --no-default-features --test workspace_allocations --test automatic_allocation_peaks 2>&1 | tee allocation-evidence/release-minimal.txt
-          cargo test --locked --release -p multiway-mg --all-features --test workspace_allocations --test automatic_allocation_peaks 2>&1 | tee allocation-evidence/release-all.txt
+          cargo test --locked -p multiway-mg --no-default-features --test workspace_allocations --test automatic_allocation_peaks --test within_serial_workspace 2>&1 | tee allocation-evidence/debug-minimal.txt
+          cargo test --locked -p multiway-mg --all-features --test workspace_allocations --test automatic_allocation_peaks --test within_serial_workspace 2>&1 | tee allocation-evidence/debug-all.txt
+          cargo test --locked --release -p multiway-mg --no-default-features --test workspace_allocations --test automatic_allocation_peaks --test within_serial_workspace 2>&1 | tee allocation-evidence/release-minimal.txt
+          cargo test --locked --release -p multiway-mg --all-features --test workspace_allocations --test automatic_allocation_peaks --test within_serial_workspace 2>&1 | tee allocation-evidence/release-all.txt
       - uses: actions/upload-artifact@v4
         if: always()
         with:

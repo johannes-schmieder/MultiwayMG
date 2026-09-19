@@ -1,0 +1,19 @@
+   Compiling schwarz-precond v0.4.0 (/Users/johannes/Git/within-multiwaymg/crates/schwarz-precond)
+   Compiling within v0.4.0 (/Users/johannes/Git/within-multiwaymg/crates/within)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.23s
+     Running tests/serial_preconditioner.rs (/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/target/debug/deps/serial_preconditioner-28ec8a870b62ccdf)
+
+running 2 tests
+test diagonal_action_uses_no_workspace_array_and_validates_before_output ... ok
+test real_pair_actions_match_one_worker_pooled_reference_and_repeat_across_pools ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running tests/serial_preconditioner_allocations.rs (/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/target/debug/deps/serial_preconditioner_allocations-baefe84b8e5aa56d)
+
+thread 'main' panicked at crates/within/tests/serial_preconditioner_allocations.rs:41:17:
+assertion `left == right` failed: first tensor approximate=false weighted=false
+  left: (0, 0, 2)
+ right: (0, 0, 0)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `--test serial_preconditioner_allocations`

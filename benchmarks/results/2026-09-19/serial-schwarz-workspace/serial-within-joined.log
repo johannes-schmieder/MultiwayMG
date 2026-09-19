@@ -1,0 +1,19 @@
+   Compiling within v0.4.0 (/Users/johannes/Git/within-multiwaymg/crates/within)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.30s
+     Running tests/serial_preconditioner_allocations.rs (/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/target/debug/deps/serial_preconditioner_allocations-baefe84b8e5aa56d)
+tensor approximate=false weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+tensor approximate=false weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+tensor approximate=true weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+tensor approximate=true weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=false weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=false weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=true weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=true weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=false weighted=false: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=false weighted=true: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=true weighted=false: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=true weighted=true: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=false weighted=false: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=false weighted=true: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=true weighted=false: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=true weighted=true: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop

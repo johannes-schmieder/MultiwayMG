@@ -1,0 +1,107 @@
+[
+  {
+    "metadata": {
+      "id": 10587621206,
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4NzYyMTIwNg==",
+      "name": "serial-schwarz-ubuntu-latest",
+      "size_in_bytes": 5872,
+      "url": "https://api.github.com/repos/johannes-schmieder/within/actions/artifacts/10587621206",
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/within/actions/artifacts/10587621206/zip",
+      "expired": false,
+      "digest": "sha256:a0fb34a3dc37a6c3db9fe288feb74efb7ff840393bdd0cad50e728e417ee6426",
+      "created_at": "2026-09-19T15:53:14Z",
+      "updated_at": "2026-09-19T15:53:14Z",
+      "expires_at": "2026-12-18T15:50:23Z",
+      "workflow_run": {
+        "id": 35453056818,
+        "repository_id": 1359415326,
+        "head_repository_id": 1359415326,
+        "head_branch": "codex/multiwaymg-serial-schwarz",
+        "head_sha": "b69d07d49eecc7d1b11b5837efbc8495150f4589"
+      }
+    },
+    "zip_sha256": "a0fb34a3dc37a6c3db9fe288feb74efb7ff840393bdd0cad50e728e417ee6426",
+    "provider_digest_verified": true,
+    "files": {
+      "schwarz-release-all.txt": "5c487824fd9f4a55c934953815e9f714754b7b0d1b7c241a6f66ac36e602bad5",
+      "schwarz-debug-minimal.txt": "0927bd5c8429891466dfd8df9ce1e7ef1debb25bac78cbda2cecc8ee5047c355",
+      "metadata.txt": "17eccecc189d468db85b87f1d807d3b82155227783e3541ec2772cb9021229b7",
+      "within-debug.txt": "969ff95badffad56678a540d9a723f6d3d8ccdf86b124f056d088061d800e5ef",
+      "schwarz-release-minimal.txt": "059a20237fa1c3accd19360afc8c6cc2b0f27c6ee4984e0d4dd4434fda1ba563",
+      "schwarz-debug-all.txt": "ede4ccab42bb30107c81c174d3f98819fd295288e5951438be746082139e3cca",
+      "within-release.txt": "6d7ae715d4b467333476f65a9cfd800bcb1d8febb255e9a1d9db4b5234081626"
+    },
+    "concrete_controls_per_profile": 16,
+    "exact_control_records": true
+  },
+  {
+    "metadata": {
+      "id": 10586998696,
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4Njk5ODY5Ng==",
+      "name": "serial-schwarz-macos-latest",
+      "size_in_bytes": 5765,
+      "url": "https://api.github.com/repos/johannes-schmieder/within/actions/artifacts/10586998696",
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/within/actions/artifacts/10586998696/zip",
+      "expired": false,
+      "digest": "sha256:5f055094586af0d7ca4695bc1515471948c4ea7cd3266145d024f7fa1d5d086a",
+      "created_at": "2026-09-19T15:55:05Z",
+      "updated_at": "2026-09-19T15:55:05Z",
+      "expires_at": "2026-12-18T15:50:23Z",
+      "workflow_run": {
+        "id": 35453056818,
+        "repository_id": 1359415326,
+        "head_repository_id": 1359415326,
+        "head_branch": "codex/multiwaymg-serial-schwarz",
+        "head_sha": "b69d07d49eecc7d1b11b5837efbc8495150f4589"
+      }
+    },
+    "zip_sha256": "5f055094586af0d7ca4695bc1515471948c4ea7cd3266145d024f7fa1d5d086a",
+    "provider_digest_verified": true,
+    "files": {
+      "schwarz-release-all.txt": "9118739cb478067becf5ab2094d0fac6e1f3b517e5993d4bd05963e783d5b393",
+      "schwarz-debug-minimal.txt": "4d81d751add588ae80a318415b601b8f871ebef85e2b8847472817211c9c2390",
+      "metadata.txt": "22e70878d7d627fa575cd9affacacb0b5243bb156774e824f4284e5fb5c5f898",
+      "within-debug.txt": "c16431294314fdd6de15c31ffce212f012b805af830bb1fc209477a6a076a8fd",
+      "schwarz-release-minimal.txt": "0048a890311aeb56e153d814afb9d210836040b905a2ff29e348486e8fc15a88",
+      "schwarz-debug-all.txt": "3cc698af29afcbff8883665b02094a5125d76edabf486535cfca88595ffea28b",
+      "within-release.txt": "8076cd5006d25fadcfba822f00c7f6b9a775c97dd84e300aec22b3b657c0374d"
+    },
+    "concrete_controls_per_profile": 16,
+    "exact_control_records": true
+  },
+  {
+    "metadata": {
+      "id": 10586809257,
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4NjgwOTI1Nw==",
+      "name": "serial-schwarz-windows-latest",
+      "size_in_bytes": 5848,
+      "url": "https://api.github.com/repos/johannes-schmieder/within/actions/artifacts/10586809257",
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/within/actions/artifacts/10586809257/zip",
+      "expired": false,
+      "digest": "sha256:882baa4c5514919753f4e1ddbefdd60a7d588c88ad00909dd206d354a13fd744",
+      "created_at": "2026-09-19T15:56:54Z",
+      "updated_at": "2026-09-19T15:56:54Z",
+      "expires_at": "2026-12-18T15:50:23Z",
+      "workflow_run": {
+        "id": 35453056818,
+        "repository_id": 1359415326,
+        "head_repository_id": 1359415326,
+        "head_branch": "codex/multiwaymg-serial-schwarz",
+        "head_sha": "b69d07d49eecc7d1b11b5837efbc8495150f4589"
+      }
+    },
+    "zip_sha256": "882baa4c5514919753f4e1ddbefdd60a7d588c88ad00909dd206d354a13fd744",
+    "provider_digest_verified": true,
+    "files": {
+      "schwarz-release-all.txt": "cc858052196bcb06401021bf89913d628a3f6818abed41e60d136bb8d1aa9ee9",
+      "schwarz-debug-minimal.txt": "5d23fbc086d836dacad22609f7634a709cd0cd97ab024510e3163b1c67a1c1c9",
+      "metadata.txt": "2e6ac5a834aa50b99ca0ef52d6e5d48217bd4a79bc03ee70e3726704313659de",
+      "within-debug.txt": "9ef1e2a29995658f95860c881c6f2c8fd75fa4f98c4106e9000f3939edc59e62",
+      "schwarz-release-minimal.txt": "7cf990212a80880b546e8511bc04778618c83c1d9ee4c6c7d523e5528c5288ca",
+      "schwarz-debug-all.txt": "c5f8b8d8830daf58037f301bcff7a80b9c913658eb6fec92c47bf6ad141bb800",
+      "within-release.txt": "a59a54b210ee652f54e7b0037e239906319c5c8923400ffc39f5200dfe9bd35a"
+    },
+    "concrete_controls_per_profile": 16,
+    "exact_control_records": true
+  }
+]

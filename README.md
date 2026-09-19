@@ -138,7 +138,11 @@ and the earlier [complete evidence](benchmarks/results/2026-09-19/prepared-autom
 of the existing index array. All 45,360 regression records preserve exact results
 and all 432,000 measured columns certify. Current development remains about 1.80x
 slower than grouped MAP; no paired sort-removal speedup is inferred. Next is the
-[sparse-terminal memory and execution boundary](docs/ISSUE5_SPARSE_TERMINAL_BOUNDARY.md).
+[sparse-terminal memory and execution boundary](docs/ISSUE5_SPARSE_TERMINAL_BOUNDARY.md). The
+[serial Schwarz dependency workspace](docs/ISSUE5_SERIAL_SCHWARZ_WORKSPACE.md) now provides fixed-order,
+owner-bound action scratch with transactional output. Its qualification covers
+real factors and first/repeated allocations; factor-memory and numerical-range
+admission remain separate requirements before sparse-terminal integration.
 
 ## The problem
 

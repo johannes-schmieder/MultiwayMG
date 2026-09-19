@@ -1,0 +1,156 @@
+[1m[32m Downloading[0m crates ...
+[1m[32m  Downloaded[0m clap_lex v1.1.0
+[1m[32m  Downloaded[0m rand_xorshift v0.4.0
+[1m[32m  Downloaded[0m stable_deref_trait v1.2.1
+[1m[32m  Downloaded[0m cobs v0.3.0
+[1m[32m  Downloaded[0m wait-timeout v0.2.1
+[1m[32m  Downloaded[0m embedded-io v0.6.1
+[1m[32m  Downloaded[0m ciborium-ll v0.2.2
+[1m[32m  Downloaded[0m plotters-svg v0.3.7
+[1m[32m  Downloaded[0m walkdir v2.5.0
+[1m[32m  Downloaded[0m bit-vec v0.8.0
+[1m[32m  Downloaded[0m zmij v1.0.23
+[1m[32m  Downloaded[0m tinytemplate v1.2.1
+[1m[32m  Downloaded[0m matrixmultiply v0.3.11
+[1m[32m  Downloaded[0m heapless v0.7.17
+[1m[32m  Downloaded[0m rand v0.10.2
+[1m[32m  Downloaded[0m approx-chol v0.5.0
+[1m[32m  Downloaded[0m plotters v0.3.7
+[1m[32m  Downloaded[0m regex v1.13.1
+[1m[32m  Downloaded[0m serde_json v1.0.151
+[1m[32m  Downloaded[0m clap_builder v4.6.2
+[1m[32m  Downloaded[0m proptest v1.11.0
+[1m[32m  Downloaded[0m portable-atomic v1.14.0
+[1m[32m  Downloaded[0m criterion v0.7.0
+[1m[32m  Downloaded[0m itertools v0.13.0
+[1m[32m  Downloaded[0m ndarray v0.17.2
+[1m[32m  Downloaded[0m getrandom v0.4.3
+[1m[32m  Downloaded[0m criterion-plot v0.6.0
+[1m[32m  Downloaded[0m ciborium v0.2.2
+[1m[32m  Downloaded[0m chacha20 v0.10.1
+[1m[32m  Downloaded[0m regex-syntax v0.8.11
+[1m[32m  Downloaded[0m rustix v1.1.4
+[1m[32m  Downloaded[0m tempfile v3.27.0
+[1m[32m  Downloaded[0m semver v1.0.28
+[1m[32m  Downloaded[0m postcard v1.1.3
+[1m[32m  Downloaded[0m clap v4.6.4
+[1m[32m  Downloaded[0m rusty-fork v0.3.1
+[1m[32m  Downloaded[0m oorandom v11.1.5
+[1m[32m  Downloaded[0m fastrand v2.5.0
+[1m[32m  Downloaded[0m same-file v1.0.6
+[1m[32m  Downloaded[0m rand_core v0.10.1
+[1m[32m  Downloaded[0m hash32 v0.2.1
+[1m[32m  Downloaded[0m fnv v1.0.7
+[1m[32m  Downloaded[0m anstyle v1.0.14
+[1m[32m  Downloaded[0m regex-automata v0.4.16
+[1m[32m  Downloaded[0m anes v0.1.6
+[1m[32m  Downloaded[0m plotters-backend v0.3.7
+[1m[32m  Downloaded[0m itoa v1.0.18
+[1m[32m  Downloaded[0m errno v0.3.14
+[1m[32m  Downloaded[0m bit-set v0.8.0
+[1m[32m  Downloaded[0m aho-corasick v1.1.4
+[1m[32m  Downloaded[0m unarray v0.1.4
+[1m[32m  Downloaded[0m rustc_version v0.4.1
+[1m[32m  Downloaded[0m rawpointer v0.2.1
+[1m[32m  Downloaded[0m quick-error v1.2.3
+[1m[32m  Downloaded[0m embedded-io v0.4.0
+[1m[32m  Downloaded[0m cast v0.3.0
+[1m[32m  Downloaded[0m ciborium-io v0.2.2
+[1m[32m   Compiling[0m serde_core v1.0.229
+[1m[32m   Compiling[0m num-traits v0.2.19
+[1m[32m   Compiling[0m serde v1.0.229
+[1m[32m   Compiling[0m zerocopy v0.8.55
+[1m[32m   Compiling[0m zerocopy-derive v0.8.55
+[1m[32m   Compiling[0m rand_core v0.10.1
+[1m[32m   Compiling[0m getrandom v0.4.3
+[1m[32m   Compiling[0m either v1.17.0
+[1m[32m   Compiling[0m semver v1.0.28
+[1m[32m   Compiling[0m rustc_version v0.4.1
+[1m[32m   Compiling[0m rustix v1.1.4
+[1m[32m   Compiling[0m zmij v1.0.23
+[1m[32m   Compiling[0m heapless v0.7.17
+[1m[32m   Compiling[0m errno v0.3.14
+[1m[32m   Compiling[0m matrixmultiply v0.3.11
+[1m[32m   Compiling[0m regex-syntax v0.8.11
+[1m[32m   Compiling[0m serde_json v1.0.151
+[1m[32m   Compiling[0m bitflags v2.13.1
+[1m[32m   Compiling[0m byteorder v1.5.0
+[1m[32m   Compiling[0m hash32 v0.2.1
+[1m[32m   Compiling[0m half v2.7.1
+[1m[32m   Compiling[0m rayon v1.12.0
+[1m[32m   Compiling[0m chacha20 v0.10.1
+[1m[32m   Compiling[0m itoa v1.0.18
+[1m[32m   Compiling[0m rawpointer v0.2.1
+[1m[32m   Compiling[0m plotters-backend v0.3.7
+[1m[32m   Compiling[0m stable_deref_trait v1.2.1
+[1m[32m   Compiling[0m memchr v2.8.3
+[1m[32m   Compiling[0m anstyle v1.0.14
+[1m[32m   Compiling[0m clap_lex v1.1.0
+[1m[32m   Compiling[0m portable-atomic v1.14.0
+[1m[32m   Compiling[0m ciborium-io v0.2.2
+[1m[32m   Compiling[0m fastrand v2.5.0
+[1m[32m   Compiling[0m tempfile v3.27.0
+[1m[32m   Compiling[0m ciborium-ll v0.2.2
+[1m[32m   Compiling[0m clap_builder v4.6.2
+[1m[32m   Compiling[0m plotters-svg v0.3.7
+[1m[32m   Compiling[0m rand v0.10.2
+[1m[32m   Compiling[0m ppv-lite86 v0.2.21
+[1m[32m   Compiling[0m regex-automata v0.4.16
+[1m[32m   Compiling[0m cobs v0.3.0
+[1m[32m   Compiling[0m itertools v0.13.0
+[1m[32m   Compiling[0m num-complex v0.4.6
+[1m[32m   Compiling[0m num-integer v0.1.46
+[1m[32m   Compiling[0m wait-timeout v0.2.1
+[1m[32m   Compiling[0m cast v0.3.0
+[1m[32m   Compiling[0m fnv v1.0.7
+[1m[32m   Compiling[0m bit-vec v0.8.0
+[1m[32m   Compiling[0m same-file v1.0.6
+[1m[32m   Compiling[0m quick-error v1.2.3
+[1m[32m   Compiling[0m rusty-fork v0.3.1
+[1m[32m   Compiling[0m walkdir v2.5.0
+[1m[32m   Compiling[0m bit-set v0.8.0
+[1m[32m   Compiling[0m criterion-plot v0.6.0
+[1m[32m   Compiling[0m schwarz-precond v0.4.0 (/Users/runner/work/within/within/crates/schwarz-precond)
+[1m[32m   Compiling[0m ndarray v0.17.2
+[1m[32m   Compiling[0m regex v1.13.1
+[1m[32m   Compiling[0m postcard v1.1.3
+[1m[32m   Compiling[0m clap v4.6.4
+[1m[32m   Compiling[0m approx-chol v0.5.0
+[1m[32m   Compiling[0m rand_chacha v0.9.0
+[1m[32m   Compiling[0m tinytemplate v1.2.1
+[1m[32m   Compiling[0m plotters v0.3.7
+[1m[32m   Compiling[0m ciborium v0.2.2
+[1m[32m   Compiling[0m rand v0.9.5
+[1m[32m   Compiling[0m rand_xorshift v0.4.0
+[1m[32m   Compiling[0m unarray v0.1.4
+[1m[32m   Compiling[0m anes v0.1.6
+[1m[32m   Compiling[0m oorandom v11.1.5
+[1m[32m   Compiling[0m within v0.4.0 (/Users/runner/work/within/within/crates/within)
+[1m[32m   Compiling[0m proptest v1.11.0
+[1m[32m   Compiling[0m criterion v0.7.0
+[1m[32m    Finished[0m `test` profile [unoptimized + debuginfo] target(s) in 16.18s
+[1m[32m     Running[0m tests/serial_preconditioner.rs (target/debug/deps/serial_preconditioner-d20621db6663bb72)
+
+running 2 tests
+test diagonal_action_uses_no_workspace_array_and_validates_before_output ... ok
+test real_pair_actions_match_one_worker_pooled_reference_and_repeat_across_pools ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+[1m[32m     Running[0m tests/serial_preconditioner_allocations.rs (target/debug/deps/serial_preconditioner_allocations-1d7d28ec0b1f5499)
+latin approximate=false weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+latin approximate=false weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+latin approximate=true weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+latin approximate=true weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=false weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=false weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=true weighted=false: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+nested approximate=true weighted=true: n=15 outer_bytes=360; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=false weighted=false: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=false weighted=true: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=true weighted=false: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+disconnected-interleaved approximate=true weighted=true: n=18 outer_bytes=288; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=false weighted=false: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=false weighted=true: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=true weighted=false: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
+unbalanced approximate=true weighted=true: n=25 outer_bytes=632; first+64 repeat/static rejection/reuse=0 allocations; exact drop
