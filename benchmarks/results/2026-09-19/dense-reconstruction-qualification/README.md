@@ -24,3 +24,17 @@ gates successfully; see `checks-slices.json`. The first iterator version's
 checks are retained above, separately from its rejected performance evidence in
 [the result record](../dense-reconstruction-v1/README.md). New measurements follow
 a fresh source freeze; no prior negative records are replaced.
+
+## Retained source and cross-platform closure
+
+Measured source55388b14028386effa35e7faaa3a6aa7a9e02b5e passes all36 source/PR
+jobs in35446761648/35446761654 and35446763608/35446763630. Full job receipts are
+`slices-source-ci.json`; the rejected revision's green36-job receipts remain in
+`iterator-source-ci.json` and do not establish a performance win.
+
+`slices-cross-platform-allocations.json` and the six raw platform/build logs
+match all39 M6l controls and four zero-allocation denials, including6,240 certified
+columns per configuration. Provider digests and artifact provenance are in the
+[measurement evidence](../dense-reconstruction-v1/README.md). Final evidence-head
+CI and guarded self-review remain a separate merge gate; self-review is not
+independent external approval.

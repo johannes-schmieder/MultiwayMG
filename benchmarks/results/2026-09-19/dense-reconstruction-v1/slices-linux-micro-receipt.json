@@ -1,0 +1,20 @@
+{
+  "id": 10585159789,
+  "node_id": "MDg6QXJ0aWZhY3QxMDU4NTE1OTc4OQ==",
+  "name": "dense-reconstruction",
+  "size_in_bytes": 944423,
+  "url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10585159789",
+  "archive_download_url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10585159789/zip",
+  "expired": false,
+  "digest": "sha256:c9026874c4887706170058d9b564df3b5937489caaf211e6d86935389d2af537",
+  "created_at": "2026-09-19T13:47:27Z",
+  "updated_at": "2026-09-19T13:47:27Z",
+  "expires_at": "2026-12-18T13:46:43Z",
+  "workflow_run": {
+    "id": 35446761648,
+    "repository_id": 1356311395,
+    "head_repository_id": 1356311395,
+    "head_branch": "codex/standalone-m6m-dense-reconstruction",
+    "head_sha": "55388b14028386effa35e7faaa3a6aa7a9e02b5e"
+  }
+}

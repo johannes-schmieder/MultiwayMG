@@ -1,0 +1,369 @@
+
+/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6m/slices-linux-micro-download/dense-reconstruction/probe:	file format elf64-x86-64
+
+Disassembly of section .text:
+
+000000000005b380 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E>:
+   5b380: 55                           	pushq	%rbp
+   5b381: 41 57                        	pushq	%r15
+   5b383: 41 56                        	pushq	%r14
+   5b385: 41 55                        	pushq	%r13
+   5b387: 41 54                        	pushq	%r12
+   5b389: 53                           	pushq	%rbx
+   5b38a: 48 83 ec 68                  	subq	$0x68, %rsp
+   5b38e: 48 8b 46 38                  	movq	0x38(%rsi), %rax
+   5b392: 48 39 c8                     	cmpq	%rcx, %rax
+   5b395: 0f 85 e6 01 00 00            	jne	0x5b581 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x201>
+   5b39b: 4c 39 c9                     	cmpq	%r9, %rcx
+   5b39e: 0f 85 07 02 00 00            	jne	0x5b5ab <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x22b>
+   5b3a4: 48 8b 84 24 a8 00 00 00      	movq	0xa8(%rsp), %rax
+   5b3ac: 48 39 c1                     	cmpq	%rax, %rcx
+   5b3af: 0f 85 20 02 00 00            	jne	0x5b5d5 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x255>
+   5b3b5: 48 85 c9                     	testq	%rcx, %rcx
+   5b3b8: 0f 84 b0 01 00 00            	je	0x5b56e <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x1ee>
+   5b3be: 48 89 d3                     	movq	%rdx, %rbx
+   5b3c1: 48 8b 56 18                  	movq	0x18(%rsi), %rdx
+   5b3c5: 48 8d 41 ff                  	leaq	-0x1(%rcx), %rax
+   5b3c9: 49 b9 ff ff ff ff ff ff ff 1f	movabsq	$0x1fffffffffffffff, %r9 # imm = 0x1FFFFFFFFFFFFFFF
+   5b3d3: 49 21 c1                     	andq	%rax, %r9
+   5b3d6: 4c 89 4c 24 30               	movq	%r9, 0x30(%rsp)
+   5b3db: 4c 39 ca                     	cmpq	%r9, %rdx
+   5b3de: 0f 86 2b 02 00 00            	jbe	0x5b60f <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x28f>
+   5b3e4: 48 8b 84 24 a0 00 00 00      	movq	0xa0(%rsp), %rax
+   5b3ec: 4c 8d 14 c8                  	leaq	(%rax,%rcx,8), %r10
+   5b3f0: 4c 8b 76 08                  	movq	0x8(%rsi), %r14
+   5b3f4: 4c 8b 5e 20                  	movq	0x20(%rsi), %r11
+   5b3f8: 4c 8b 66 30                  	movq	0x30(%rsi), %r12
+   5b3fc: 4c 8d 2c cd 00 00 00 00      	leaq	(,%rcx,8), %r13
+   5b404: 4c 8d 0c d5 00 00 00 00      	leaq	(,%rdx,8), %r9
+   5b40c: 31 ed                        	xorl	%ebp, %ebp
+   5b40e: 4c 8b 3d 73 74 18 00         	movq	0x187473(%rip), %r15    # 0x1e2888 <_GLOBAL_OFFSET_TABLE_+0xcf0>
+   5b415: 4c 89 74 24 10               	movq	%r14, 0x10(%rsp)
+   5b41a: 49 39 eb                     	cmpq	%rbp, %r11
+   5b41d: 0f 86 ec 01 00 00            	jbe	0x5b60f <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x28f>
+   5b423: 4c 89 64 24 50               	movq	%r12, 0x50(%rsp)
+   5b428: 4c 89 5c 24 58               	movq	%r11, 0x58(%rsp)
+   5b42d: 4c 89 54 24 60               	movq	%r10, 0x60(%rsp)
+   5b432: 4c 89 4c 24 28               	movq	%r9, 0x28(%rsp)
+   5b437: 48 89 54 24 18               	movq	%rdx, 0x18(%rsp)
+   5b43c: 48 89 0c 24                  	movq	%rcx, (%rsp)
+   5b440: 4c 89 44 24 08               	movq	%r8, 0x8(%rsp)
+   5b445: 48 89 7c 24 20               	movq	%rdi, 0x20(%rsp)
+   5b44a: 48 89 44 24 48               	movq	%rax, 0x48(%rsp)
+   5b44f: 48 83 c0 08                  	addq	$0x8, %rax
+   5b453: 48 89 44 24 40               	movq	%rax, 0x40(%rsp)
+   5b458: 48 8d 45 01                  	leaq	0x1(%rbp), %rax
+   5b45c: 48 89 44 24 38               	movq	%rax, 0x38(%rsp)
+   5b461: 0f 57 d2                     	xorps	%xmm2, %xmm2
+   5b464: 45 31 e4                     	xorl	%r12d, %r12d
+   5b467: 66 0f 1f 84 00 00 00 00 00   	nopw	(%rax,%rax)
+   5b470: f2 42 0f 10 0c 23            	movsd	(%rbx,%r12), %xmm1
+   5b476: f2 43 0f 10 04 26            	movsd	(%r14,%r12), %xmm0
+   5b47c: 41 ff d7                     	callq	*%r15
+   5b47f: 66 0f 28 d0                  	movapd	%xmm0, %xmm2
+   5b483: 49 83 c4 08                  	addq	$0x8, %r12
+   5b487: 4d 39 e5                     	cmpq	%r12, %r13
+   5b48a: 75 e4                        	jne	0x5b470 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0xf0>
+   5b48c: 48 8b 0c 24                  	movq	(%rsp), %rcx
+   5b490: 48 39 cd                     	cmpq	%rcx, %rbp
+   5b493: 0f 84 a8 01 00 00            	je	0x5b641 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x2c1>
+   5b499: 4c 8b 64 24 50               	movq	0x50(%rsp), %r12
+   5b49e: f2 41 0f 59 14 ec            	mulsd	(%r12,%rbp,8), %xmm2
+   5b4a4: 48 8b 44 24 48               	movq	0x48(%rsp), %rax
+   5b4a9: f2 0f 11 10                  	movsd	%xmm2, (%rax)
+   5b4ad: 4c 8b 4c 24 28               	movq	0x28(%rsp), %r9
+   5b4b2: 4d 01 ce                     	addq	%r9, %r14
+   5b4b5: 48 8b 54 24 40               	movq	0x40(%rsp), %rdx
+   5b4ba: 48 89 d0                     	movq	%rdx, %rax
+   5b4bd: 48 8b 6c 24 38               	movq	0x38(%rsp), %rbp
+   5b4c2: 4c 8b 54 24 60               	movq	0x60(%rsp), %r10
+   5b4c7: 4c 39 d2                     	cmpq	%r10, %rdx
+   5b4ca: 48 8b 7c 24 20               	movq	0x20(%rsp), %rdi
+   5b4cf: 4c 8b 44 24 08               	movq	0x8(%rsp), %r8
+   5b4d4: 48 8b 54 24 18               	movq	0x18(%rsp), %rdx
+   5b4d9: 48 8b b4 24 a0 00 00 00      	movq	0xa0(%rsp), %rsi
+   5b4e1: 4c 8b 5c 24 58               	movq	0x58(%rsp), %r11
+   5b4e6: 0f 85 2e ff ff ff            	jne	0x5b41a <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x9a>
+   5b4ec: 4c 3b 5c 24 30               	cmpq	0x30(%rsp), %r11
+   5b4f1: 0f 86 31 01 00 00            	jbe	0x5b628 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x2a8>
+   5b4f7: 49 8d 04 c8                  	leaq	(%r8,%rcx,8), %rax
+   5b4fb: 45 31 f6                     	xorl	%r14d, %r14d
+   5b4fe: 4c 39 f2                     	cmpq	%r14, %rdx
+   5b501: 0f 86 21 01 00 00            	jbe	0x5b628 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x2a8>
+   5b507: 48 89 04 24                  	movq	%rax, (%rsp)
+   5b50b: 4c 89 44 24 08               	movq	%r8, 0x8(%rsp)
+   5b510: 4d 8d 60 08                  	leaq	0x8(%r8), %r12
+   5b514: 49 ff c6                     	incq	%r14
+   5b517: 66 0f 57 d2                  	xorpd	%xmm2, %xmm2
+   5b51b: 31 db                        	xorl	%ebx, %ebx
+   5b51d: 48 8b 6c 24 10               	movq	0x10(%rsp), %rbp
+   5b522: f2 0f 10 0c 1e               	movsd	(%rsi,%rbx), %xmm1
+   5b527: f2 0f 10 45 00               	movsd	(%rbp), %xmm0
+   5b52c: 41 ff d7                     	callq	*%r15
+   5b52f: 48 8b b4 24 a0 00 00 00      	movq	0xa0(%rsp), %rsi
+   5b537: 66 0f 28 d0                  	movapd	%xmm0, %xmm2
+   5b53b: 48 03 6c 24 28               	addq	0x28(%rsp), %rbp
+   5b540: 48 83 c3 08                  	addq	$0x8, %rbx
+   5b544: 49 39 dd                     	cmpq	%rbx, %r13
+   5b547: 75 d9                        	jne	0x5b522 <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x1a2>
+   5b549: 48 8b 44 24 08               	movq	0x8(%rsp), %rax
+   5b54e: f2 0f 11 10                  	movsd	%xmm2, (%rax)
+   5b552: 48 83 44 24 10 08            	addq	$0x8, 0x10(%rsp)
+   5b558: 4d 89 e0                     	movq	%r12, %r8
+   5b55b: 48 8b 04 24                  	movq	(%rsp), %rax
+   5b55f: 49 39 c4                     	cmpq	%rax, %r12
+   5b562: 48 8b 7c 24 20               	movq	0x20(%rsp), %rdi
+   5b567: 48 8b 54 24 18               	movq	0x18(%rsp), %rdx
+   5b56c: 75 90                        	jne	0x5b4fe <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x17e>
+   5b56e: 48 b8 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rax # imm = 0x8000000000000017
+   5b578: 48 83 c0 07                  	addq	$0x7, %rax
+   5b57c: 48 89 07                     	movq	%rax, (%rdi)
+   5b57f: eb 7c                        	jmp	0x5b5fd <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x27d>
+   5b581: 48 ba 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rdx # imm = 0x8000000000000017
+   5b58b: 48 89 17                     	movq	%rdx, (%rdi)
+   5b58e: 48 8d 15 55 a4 12 00         	leaq	0x12a455(%rip), %rdx    # 0x1859ea <anon.539d8598aac1d5a5dd30c8a49a0d3285.106.llvm.12905820520287225038+0x94>
+   5b595: 48 89 57 08                  	movq	%rdx, 0x8(%rdi)
+   5b599: 48 c7 47 10 22 00 00 00      	movq	$0x22, 0x10(%rdi)
+   5b5a1: 48 89 47 18                  	movq	%rax, 0x18(%rdi)
+   5b5a5: 48 89 4f 20                  	movq	%rcx, 0x20(%rdi)
+   5b5a9: eb 52                        	jmp	0x5b5fd <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x27d>
+   5b5ab: 48 b8 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rax # imm = 0x8000000000000017
+   5b5b5: 48 89 07                     	movq	%rax, (%rdi)
+   5b5b8: 48 8d 05 06 a4 12 00         	leaq	0x12a406(%rip), %rax    # 0x1859c5 <anon.539d8598aac1d5a5dd30c8a49a0d3285.106.llvm.12905820520287225038+0x6f>
+   5b5bf: 48 89 47 08                  	movq	%rax, 0x8(%rdi)
+   5b5c3: 48 c7 47 10 25 00 00 00      	movq	$0x25, 0x10(%rdi)
+   5b5cb: 48 89 4f 18                  	movq	%rcx, 0x18(%rdi)
+   5b5cf: 4c 89 4f 20                  	movq	%r9, 0x20(%rdi)
+   5b5d3: eb 28                        	jmp	0x5b5fd <_ZN11multiway_mg5dense15traversal_tests15old_application17hc6de33ac81e28c69E+0x27d>
+   5b5d5: 48 ba 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rdx # imm = 0x8000000000000017
+   5b5df: 48 89 17                     	movq	%rdx, (%rdi)
+   5b5e2: 48 8d 15 c1 a3 12 00         	leaq	0x12a3c1(%rip), %rdx    # 0x1859aa <anon.539d8598aac1d5a5dd30c8a49a0d3285.106.llvm.12905820520287225038+0x54>
+   5b5e9: 48 89 57 08                  	movq	%rdx, 0x8(%rdi)
+   5b5ed: 48 c7 47 10 1b 00 00 00      	movq	$0x1b, 0x10(%rdi)
+   5b5f5: 48 89 4f 18                  	movq	%rcx, 0x18(%rdi)
+   5b5f9: 48 89 47 20                  	movq	%rax, 0x20(%rdi)
+   5b5fd: 48 89 f8                     	movq	%rdi, %rax
+   5b600: 48 83 c4 68                  	addq	$0x68, %rsp
+   5b604: 5b                           	popq	%rbx
+   5b605: 41 5c                        	popq	%r12
+   5b607: 41 5d                        	popq	%r13
+   5b609: 41 5e                        	popq	%r14
+   5b60b: 41 5f                        	popq	%r15
+   5b60d: 5d                           	popq	%rbp
+   5b60e: c3                           	retq
+   5b60f: 48 8d 3d 0c a3 12 00         	leaq	0x12a30c(%rip), %rdi    # 0x185922 <anon.539d8598aac1d5a5dd30c8a49a0d3285.25.llvm.12905820520287225038+0x423>
+   5b616: 48 8d 15 b3 3b 17 00         	leaq	0x173bb3(%rip), %rdx    # 0x1cf1d0 <anon.539d8598aac1d5a5dd30c8a49a0d3285.107.llvm.12905820520287225038+0x48>
+   5b61d: be 1b 00 00 00               	movl	$0x1b, %esi
+   5b622: ff 15 f0 6f 18 00            	callq	*0x186ff0(%rip)         # 0x1e2618 <_GLOBAL_OFFSET_TABLE_+0xa80>
+   5b628: 48 8d 3d f3 a2 12 00         	leaq	0x12a2f3(%rip), %rdi    # 0x185922 <anon.539d8598aac1d5a5dd30c8a49a0d3285.25.llvm.12905820520287225038+0x423>
+   5b62f: 48 8d 15 6a 3b 17 00         	leaq	0x173b6a(%rip), %rdx    # 0x1cf1a0 <anon.539d8598aac1d5a5dd30c8a49a0d3285.107.llvm.12905820520287225038+0x18>
+   5b636: be 1b 00 00 00               	movl	$0x1b, %esi
+   5b63b: ff 15 d7 6f 18 00            	callq	*0x186fd7(%rip)         # 0x1e2618 <_GLOBAL_OFFSET_TABLE_+0xa80>
+   5b641: 48 8d 15 70 3b 17 00         	leaq	0x173b70(%rip), %rdx    # 0x1cf1b8 <anon.539d8598aac1d5a5dd30c8a49a0d3285.107.llvm.12905820520287225038+0x30>
+   5b648: 48 89 cf                     	movq	%rcx, %rdi
+   5b64b: 48 89 ce                     	movq	%rcx, %rsi
+   5b64e: ff 15 0c 77 18 00            	callq	*0x18770c(%rip)         # 0x1e2d60 <_GLOBAL_OFFSET_TABLE_+0x11c8>
+   5b654: 66 2e 0f 1f 84 00 00 00 00 00	nopw	%cs:(%rax,%rax)
+   5b65e: 66 90                        	nop
+
+00000000000a4f60 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E>:
+   a4f60: 55                           	pushq	%rbp
+   a4f61: 41 57                        	pushq	%r15
+   a4f63: 41 56                        	pushq	%r14
+   a4f65: 41 55                        	pushq	%r13
+   a4f67: 41 54                        	pushq	%r12
+   a4f69: 53                           	pushq	%rbx
+   a4f6a: 48 83 ec 78                  	subq	$0x78, %rsp
+   a4f6e: 48 8b 46 38                  	movq	0x38(%rsi), %rax
+   a4f72: 48 39 c8                     	cmpq	%rcx, %rax
+   a4f75: 0f 85 7d 01 00 00            	jne	0xa50f8 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x198>
+   a4f7b: 4c 39 c9                     	cmpq	%r9, %rcx
+   a4f7e: 0f 85 a1 01 00 00            	jne	0xa5125 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x1c5>
+   a4f84: 48 8b 84 24 b8 00 00 00      	movq	0xb8(%rsp), %rax
+   a4f8c: 48 39 c1                     	cmpq	%rax, %rcx
+   a4f8f: 0f 85 bd 01 00 00            	jne	0xa5152 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x1f2>
+   a4f95: 48 85 c9                     	testq	%rcx, %rcx
+   a4f98: 0f 84 01 03 00 00            	je	0xa529f <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x33f>
+   a4f9e: 49 89 d6                     	movq	%rdx, %r14
+   a4fa1: 4c 8b 6e 18                  	movq	0x18(%rsi), %r13
+   a4fa5: 48 8d 41 ff                  	leaq	-0x1(%rcx), %rax
+   a4fa9: 48 ba ff ff ff ff ff ff ff 1f	movabsq	$0x1fffffffffffffff, %rdx # imm = 0x1FFFFFFFFFFFFFFF
+   a4fb3: 48 21 c2                     	andq	%rax, %rdx
+   a4fb6: 49 39 d5                     	cmpq	%rdx, %r13
+   a4fb9: 0f 86 c0 01 00 00            	jbe	0xa517f <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x21f>
+   a4fbf: 4c 89 c3                     	movq	%r8, %rbx
+   a4fc2: 48 8b 84 24 b0 00 00 00      	movq	0xb0(%rsp), %rax
+   a4fca: 48 8d 14 c8                  	leaq	(%rax,%rcx,8), %rdx
+   a4fce: 48 89 54 24 38               	movq	%rdx, 0x38(%rsp)
+   a4fd3: 4c 8b 66 08                  	movq	0x8(%rsi), %r12
+   a4fd7: 48 8b 56 20                  	movq	0x20(%rsi), %rdx
+   a4fdb: 4c 8b 46 30                  	movq	0x30(%rsi), %r8
+   a4fdf: 4c 8d 3c cd 00 00 00 00      	leaq	(,%rcx,8), %r15
+   a4fe7: 4a 8d 34 ed 00 00 00 00      	leaq	(,%r13,8), %rsi
+   a4fef: 48 89 74 24 30               	movq	%rsi, 0x30(%rsp)
+   a4ff4: 31 f6                        	xorl	%esi, %esi
+   a4ff6: 4c 89 e5                     	movq	%r12, %rbp
+   a4ff9: 48 39 f2                     	cmpq	%rsi, %rdx
+   a4ffc: 0f 86 7d 01 00 00            	jbe	0xa517f <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x21f>
+   a5002: 4c 89 44 24 18               	movq	%r8, 0x18(%rsp)
+   a5007: 4c 89 64 24 60               	movq	%r12, 0x60(%rsp)
+   a500c: 48 89 54 24 28               	movq	%rdx, 0x28(%rsp)
+   a5011: 4c 89 6c 24 40               	movq	%r13, 0x40(%rsp)
+   a5016: 48 89 0c 24                  	movq	%rcx, (%rsp)
+   a501a: 48 89 7c 24 20               	movq	%rdi, 0x20(%rsp)
+   a501f: 48 89 44 24 10               	movq	%rax, 0x10(%rsp)
+   a5024: 48 83 c0 08                  	addq	$0x8, %rax
+   a5028: 48 89 44 24 08               	movq	%rax, 0x8(%rsp)
+   a502d: 48 89 74 24 50               	movq	%rsi, 0x50(%rsp)
+   a5032: 48 8d 46 01                  	leaq	0x1(%rsi), %rax
+   a5036: 48 89 44 24 70               	movq	%rax, 0x70(%rsp)
+   a503b: 0f 57 d2                     	xorps	%xmm2, %xmm2
+   a503e: 45 31 ed                     	xorl	%r13d, %r13d
+   a5041: 4c 8b 25 40 d8 13 00         	movq	0x13d840(%rip), %r12    # 0x1e2888 <_GLOBAL_OFFSET_TABLE_+0xcf0>
+   a5048: 0f 1f 84 00 00 00 00 00      	nopl	(%rax,%rax)
+   a5050: f2 43 0f 10 0c 2e            	movsd	(%r14,%r13), %xmm1
+   a5056: f2 42 0f 10 44 2d 00         	movsd	(%rbp,%r13), %xmm0
+   a505d: 41 ff d4                     	callq	*%r12
+   a5060: 66 0f 28 d0                  	movapd	%xmm0, %xmm2
+   a5064: 49 83 c5 08                  	addq	$0x8, %r13
+   a5068: 4d 39 ef                     	cmpq	%r13, %r15
+   a506b: 75 e3                        	jne	0xa5050 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0xf0>
+   a506d: 48 8b 0c 24                  	movq	(%rsp), %rcx
+   a5071: 48 8b 44 24 50               	movq	0x50(%rsp), %rax
+   a5076: 48 39 c8                     	cmpq	%rcx, %rax
+   a5079: 4c 8b 64 24 60               	movq	0x60(%rsp), %r12
+   a507e: 0f 84 57 02 00 00            	je	0xa52db <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x37b>
+   a5084: 4c 8b 44 24 18               	movq	0x18(%rsp), %r8
+   a5089: f2 41 0f 59 14 c0            	mulsd	(%r8,%rax,8), %xmm2
+   a508f: 48 8b 44 24 10               	movq	0x10(%rsp), %rax
+   a5094: f2 0f 11 10                  	movsd	%xmm2, (%rax)
+   a5098: 48 03 6c 24 30               	addq	0x30(%rsp), %rbp
+   a509d: 48 8b 54 24 08               	movq	0x8(%rsp), %rdx
+   a50a2: 48 89 d0                     	movq	%rdx, %rax
+   a50a5: 48 8b 74 24 70               	movq	0x70(%rsp), %rsi
+   a50aa: 48 3b 54 24 38               	cmpq	0x38(%rsp), %rdx
+   a50af: 48 8b 7c 24 20               	movq	0x20(%rsp), %rdi
+   a50b4: 4c 8b 6c 24 40               	movq	0x40(%rsp), %r13
+   a50b9: 48 8b 54 24 28               	movq	0x28(%rsp), %rdx
+   a50be: 0f 85 35 ff ff ff            	jne	0xa4ff9 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x99>
+   a50c4: 45 31 f6                     	xorl	%r14d, %r14d
+   a50c7: 48 89 df                     	movq	%rbx, %rdi
+   a50ca: 31 f6                        	xorl	%esi, %esi
+   a50cc: 4c 89 fa                     	movq	%r15, %rdx
+   a50cf: 49 89 cf                     	movq	%rcx, %r15
+   a50d2: ff 15 e0 cb 13 00            	callq	*0x13cbe0(%rip)         # 0x1e1cb8 <_GLOBAL_OFFSET_TABLE_+0x120>
+   a50d8: 4d 39 ef                     	cmpq	%r13, %r15
+   a50db: 4d 0f 42 ef                  	cmovbq	%r15, %r13
+   a50df: 4d 89 ef                     	movq	%r13, %r15
+   a50e2: 49 83 e7 fe                  	andq	$-0x2, %r15
+   a50e6: 48 8b 84 24 b0 00 00 00      	movq	0xb0(%rsp), %rax
+   a50ee: 4c 89 7c 24 08               	movq	%r15, 0x8(%rsp)
+   a50f3: e9 cb 00 00 00               	jmp	0xa51c3 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x263>
+   a50f8: 48 ba 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rdx # imm = 0x8000000000000017
+   a5102: 48 89 17                     	movq	%rdx, (%rdi)
+   a5105: 48 8d 15 8c 67 0e 00         	leaq	0xe678c(%rip), %rdx     # 0x18b898 <anon.2827b020d4a909775deb8da5dc3993d5.40.llvm.17761815143151801229>
+   a510c: 48 89 57 08                  	movq	%rdx, 0x8(%rdi)
+   a5110: 48 c7 47 10 22 00 00 00      	movq	$0x22, 0x10(%rdi)
+   a5118: 48 89 47 18                  	movq	%rax, 0x18(%rdi)
+   a511c: 48 89 4f 20                  	movq	%rcx, 0x20(%rdi)
+   a5120: e9 8b 01 00 00               	jmp	0xa52b0 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x350>
+   a5125: 48 b8 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rax # imm = 0x8000000000000017
+   a512f: 48 89 07                     	movq	%rax, (%rdi)
+   a5132: 48 8d 05 3a 67 0e 00         	leaq	0xe673a(%rip), %rax     # 0x18b873 <anon.2827b020d4a909775deb8da5dc3993d5.39.llvm.17761815143151801229>
+   a5139: 48 89 47 08                  	movq	%rax, 0x8(%rdi)
+   a513d: 48 c7 47 10 25 00 00 00      	movq	$0x25, 0x10(%rdi)
+   a5145: 48 89 4f 18                  	movq	%rcx, 0x18(%rdi)
+   a5149: 4c 89 4f 20                  	movq	%r9, 0x20(%rdi)
+   a514d: e9 5e 01 00 00               	jmp	0xa52b0 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x350>
+   a5152: 48 ba 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rdx # imm = 0x8000000000000017
+   a515c: 48 89 17                     	movq	%rdx, (%rdi)
+   a515f: 48 8d 15 54 67 0e 00         	leaq	0xe6754(%rip), %rdx     # 0x18b8ba <anon.2827b020d4a909775deb8da5dc3993d5.40.llvm.17761815143151801229+0x22>
+   a5166: 48 89 57 08                  	movq	%rdx, 0x8(%rdi)
+   a516a: 48 c7 47 10 1b 00 00 00      	movq	$0x1b, 0x10(%rdi)
+   a5172: 48 89 4f 18                  	movq	%rcx, 0x18(%rdi)
+   a5176: 48 89 47 20                  	movq	%rax, 0x20(%rdi)
+   a517a: e9 31 01 00 00               	jmp	0xa52b0 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x350>
+   a517f: 48 8d 3d d8 65 0e 00         	leaq	0xe65d8(%rip), %rdi     # 0x18b75e <anon.2827b020d4a909775deb8da5dc3993d5.0.llvm.17761815143151801229+0x2a6>
+   a5186: 48 8d 15 d3 e5 12 00         	leaq	0x12e5d3(%rip), %rdx    # 0x1d3760 <anon.2827b020d4a909775deb8da5dc3993d5.1.llvm.17761815143151801229+0x158>
+   a518d: be 1b 00 00 00               	movl	$0x1b, %esi
+   a5192: ff 15 80 d4 13 00            	callq	*0x13d480(%rip)         # 0x1e2618 <_GLOBAL_OFFSET_TABLE_+0xa80>
+   a5198: 48 8b 44 24 18               	movq	0x18(%rsp), %rax
+   a519d: 48 83 c0 08                  	addq	$0x8, %rax
+   a51a1: 4c 8b 74 24 10               	movq	0x10(%rsp), %r14
+   a51a6: 49 ff c6                     	incq	%r14
+   a51a9: 4c 03 64 24 30               	addq	0x30(%rsp), %r12
+   a51ae: 48 3b 44 24 38               	cmpq	0x38(%rsp), %rax
+   a51b3: 48 8b 7c 24 20               	movq	0x20(%rsp), %rdi
+   a51b8: 4c 8b 7c 24 08               	movq	0x8(%rsp), %r15
+   a51bd: 0f 84 dc 00 00 00            	je	0xa529f <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x33f>
+   a51c3: 4c 3b 74 24 28               	cmpq	0x28(%rsp), %r14
+   a51c8: 0f 84 f4 00 00 00            	je	0xa52c2 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x362>
+   a51ce: 4c 89 74 24 10               	movq	%r14, 0x10(%rsp)
+   a51d3: f2 0f 10 00                  	movsd	(%rax), %xmm0
+   a51d7: f2 0f 11 04 24               	movsd	%xmm0, (%rsp)
+   a51dc: 49 83 fd 02                  	cmpq	$0x2, %r13
+   a51e0: 48 89 44 24 18               	movq	%rax, 0x18(%rsp)
+   a51e5: 73 0b                        	jae	0xa51f2 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x292>
+   a51e7: 31 ed                        	xorl	%ebp, %ebp
+   a51e9: 4c 8b 3d 98 d6 13 00         	movq	0x13d698(%rip), %r15    # 0x1e2888 <_GLOBAL_OFFSET_TABLE_+0xcf0>
+   a51f0: eb 7e                        	jmp	0xa5270 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x310>
+   a51f2: 31 ed                        	xorl	%ebp, %ebp
+   a51f4: 4c 8b 35 8d d6 13 00         	movq	0x13d68d(%rip), %r14    # 0x1e2888 <_GLOBAL_OFFSET_TABLE_+0xcf0>
+   a51fb: 0f 1f 44 00 00               	nopl	(%rax,%rax)
+   a5200: 41 0f 10 04 ec               	movups	(%r12,%rbp,8), %xmm0
+   a5205: 0f 29 44 24 40               	movaps	%xmm0, 0x40(%rsp)
+   a520a: 0f 10 14 eb                  	movups	(%rbx,%rbp,8), %xmm2
+   a520e: 0f 29 54 24 50               	movaps	%xmm2, 0x50(%rsp)
+   a5213: f2 0f 10 0c 24               	movsd	(%rsp), %xmm1
+   a5218: 41 ff d6                     	callq	*%r14
+   a521b: 0f 29 44 24 60               	movaps	%xmm0, 0x60(%rsp)
+   a5220: 66 0f 28 44 24 40            	movapd	0x40(%rsp), %xmm0
+   a5226: 66 0f 15 c0                  	unpckhpd	%xmm0, %xmm0            # xmm0 = xmm0[1,1]
+   a522a: 66 0f 28 54 24 50            	movapd	0x50(%rsp), %xmm2
+   a5230: 66 0f 15 d2                  	unpckhpd	%xmm2, %xmm2            # xmm2 = xmm2[1,1]
+   a5234: f2 0f 10 0c 24               	movsd	(%rsp), %xmm1
+   a5239: 41 ff d6                     	callq	*%r14
+   a523c: 66 0f 28 4c 24 60            	movapd	0x60(%rsp), %xmm1
+   a5242: 66 0f 14 c8                  	unpcklpd	%xmm0, %xmm1            # xmm1 = xmm1[0],xmm0[0]
+   a5246: 66 0f 11 0c eb               	movupd	%xmm1, (%rbx,%rbp,8)
+   a524b: 48 83 c5 02                  	addq	$0x2, %rbp
+   a524f: 49 39 ef                     	cmpq	%rbp, %r15
+   a5252: 75 ac                        	jne	0xa5200 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x2a0>
+   a5254: 4c 89 fd                     	movq	%r15, %rbp
+   a5257: 4d 39 fd                     	cmpq	%r15, %r13
+   a525a: 4d 89 f7                     	movq	%r14, %r15
+   a525d: 0f 84 35 ff ff ff            	je	0xa5198 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x238>
+   a5263: 66 66 66 66 2e 0f 1f 84 00 00 00 00 00       	nopw	%cs:(%rax,%rax)
+   a5270: 4d 89 ee                     	movq	%r13, %r14
+   a5273: 4c 8d 6d 01                  	leaq	0x1(%rbp), %r13
+   a5277: f2 41 0f 10 04 ec            	movsd	(%r12,%rbp,8), %xmm0
+   a527d: f2 0f 10 14 eb               	movsd	(%rbx,%rbp,8), %xmm2
+   a5282: f2 0f 10 0c 24               	movsd	(%rsp), %xmm1
+   a5287: 41 ff d7                     	callq	*%r15
+   a528a: f2 0f 11 04 eb               	movsd	%xmm0, (%rbx,%rbp,8)
+   a528f: 4c 89 ed                     	movq	%r13, %rbp
+   a5292: 4d 39 ee                     	cmpq	%r13, %r14
+   a5295: 4d 89 f5                     	movq	%r14, %r13
+   a5298: 75 d6                        	jne	0xa5270 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x310>
+   a529a: e9 f9 fe ff ff               	jmp	0xa5198 <_ZN11multiway_mg5dense18DensePseudoinverse16solve_with_modal17hf0eb4288a17f6f58E+0x238>
+   a529f: 48 b8 17 00 00 00 00 00 00 80	movabsq	$-0x7fffffffffffffe9, %rax # imm = 0x8000000000000017
+   a52a9: 48 83 c0 07                  	addq	$0x7, %rax
+   a52ad: 48 89 07                     	movq	%rax, (%rdi)
+   a52b0: 48 89 f8                     	movq	%rdi, %rax
+   a52b3: 48 83 c4 78                  	addq	$0x78, %rsp
+   a52b7: 5b                           	popq	%rbx
+   a52b8: 41 5c                        	popq	%r12
+   a52ba: 41 5d                        	popq	%r13
+   a52bc: 41 5e                        	popq	%r14
+   a52be: 41 5f                        	popq	%r15
+   a52c0: 5d                           	popq	%rbp
+   a52c1: c3                           	retq
+   a52c2: 48 8d 3d 5a 63 0e 00         	leaq	0xe635a(%rip), %rdi     # 0x18b623 <anon.2827b020d4a909775deb8da5dc3993d5.0.llvm.17761815143151801229+0x16b>
+   a52c9: 48 8d 15 c8 e3 12 00         	leaq	0x12e3c8(%rip), %rdx    # 0x1d3698 <anon.2827b020d4a909775deb8da5dc3993d5.1.llvm.17761815143151801229+0x90>
+   a52d0: be 1d 00 00 00               	movl	$0x1d, %esi
+   a52d5: ff 15 3d d3 13 00            	callq	*0x13d33d(%rip)         # 0x1e2618 <_GLOBAL_OFFSET_TABLE_+0xa80>
+   a52db: 48 8d 15 66 e4 12 00         	leaq	0x12e466(%rip), %rdx    # 0x1d3748 <anon.2827b020d4a909775deb8da5dc3993d5.1.llvm.17761815143151801229+0x140>
+   a52e2: 48 89 cf                     	movq	%rcx, %rdi
+   a52e5: 48 89 ce                     	movq	%rcx, %rsi
+   a52e8: ff 15 72 da 13 00            	callq	*0x13da72(%rip)         # 0x1e2d60 <_GLOBAL_OFFSET_TABLE_+0x11c8>
+   a52ee: 66 90                        	nop

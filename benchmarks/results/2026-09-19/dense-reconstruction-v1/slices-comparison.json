@@ -1,0 +1,34 @@
+{
+  "collections": [
+    {
+      "baseline_journal_sha256": "336ea6d6b187aece9bddbc885e76943e73e95ffe77b9fc3272dba2757588a5e2",
+      "candidate_journal_sha256": "e58588b0bc56975eed4a47903fec2acc87b62fa29094fd26358907b27337b859",
+      "exact_m6l_records": 15120,
+      "label": "mac-smoke"
+    },
+    {
+      "baseline_journal_sha256": "79db07fea58c01258637c06c6538a67edf259f17cb4a7c67c85f6d866d72a3bf",
+      "candidate_journal_sha256": "e340795e29343fd437db15b201b6fa787c33982afd047981c972cf0ff50a6e8e",
+      "exact_m6l_records": 15120,
+      "label": "mac-development"
+    },
+    {
+      "baseline_journal_sha256": "80cab148c3bc3096bae4c69886a81e0bfa8cdf62cee0b0a070e4d82d686d4a5a",
+      "candidate_journal_sha256": "dc35a9b27f3958ee4d397d25bf1971a1e9a0f0345e46c468af29931a36cb4154",
+      "exact_m6l_records": 15120,
+      "label": "linux-smoke"
+    },
+    {
+      "baseline_journal_sha256": "80cab148c3bc3096bae4c69886a81e0bfa8cdf62cee0b0a070e4d82d686d4a5a",
+      "candidate_journal_sha256": "ee4407582e2ca0a908505e916de31cbd03122f02a9ded00729e98d1d8b6d0fc6",
+      "exact_m6l_records": 15120,
+      "label": "iterator-linux-smoke"
+    }
+  ],
+  "competitive_qualification": false,
+  "default_selected": false,
+  "exact_cross_platform_micro_records": 192,
+  "linux_micro_balanced_geomean": 1.1102966539627266,
+  "mac_micro_balanced_geomean": 1.3776533193843934,
+  "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e"
+}

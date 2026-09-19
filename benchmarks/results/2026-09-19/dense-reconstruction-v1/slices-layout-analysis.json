@@ -1,0 +1,482 @@
+[
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 1.0800251991967273,
+        "family": "uniform",
+        "repeated": 1.0954046563030508,
+        "single": 0.9921782993016555
+      },
+      {
+        "all": 1.074493365175535,
+        "family": "communities",
+        "repeated": 1.0900840814404413,
+        "single": 0.9855216764426157
+      },
+      {
+        "all": 1.0801096966724162,
+        "family": "chain",
+        "repeated": 1.099242303120247,
+        "single": 0.9721078597053573
+      },
+      {
+        "all": 1.116797684579449,
+        "family": "pair-dominant",
+        "repeated": 1.1343133874854454,
+        "single": 1.017239433697836
+      },
+      {
+        "all": 1.0753363844486934,
+        "family": "nested",
+        "repeated": 1.0889125440349152,
+        "single": 0.9973609937925951
+      },
+      {
+        "all": 1.0494959621317348,
+        "family": "hubs",
+        "repeated": 1.057865299051304,
+        "single": 1.00065225011023
+      },
+      {
+        "all": 1.0719201255774127,
+        "family": "ragged",
+        "repeated": 1.0799046025444425,
+        "single": 1.0252378285260009
+      },
+      {
+        "all": 1.0460599105181456,
+        "family": "tensor",
+        "repeated": 1.0548601243612619,
+        "single": 0.9947791077431772
+      },
+      {
+        "all": 1.0637761897340616,
+        "family": "worker-firm-occupation",
+        "repeated": 1.0790287667377059,
+        "single": 0.9766832041018633
+      },
+      {
+        "all": 1.0656975555542845,
+        "family": "exporter-importer-product",
+        "repeated": 1.0816232373637182,
+        "single": 0.9749486300703487
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 50,
+      "dense_components": 50,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 1,
+      "global_projection": 40,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 1,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2424832
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2473984
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2473984
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2473984
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 2441216
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 4456,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 2392064
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 2375680
+      }
+    ],
+    "profile": "mac-smoke"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 0.39921995260595844,
+        "family": "uniform",
+        "repeated": 0.4261807584696495,
+        "single": 0.26972589539384884
+      },
+      {
+        "all": 0.6580678371215901,
+        "family": "communities",
+        "repeated": 0.7081922457340021,
+        "single": 0.4236309229592325
+      },
+      {
+        "all": 0.6110848131413809,
+        "family": "chain",
+        "repeated": 0.6606735438467641,
+        "single": 0.3826387397044388
+      },
+      {
+        "all": 0.5425311375723444,
+        "family": "pair-dominant",
+        "repeated": 0.5661314663734057,
+        "single": 0.42021245038654115
+      },
+      {
+        "all": 0.775064913223628,
+        "family": "nested",
+        "repeated": 0.815866931807359,
+        "single": 0.5697056856444569
+      },
+      {
+        "all": 0.4653620474430762,
+        "family": "hubs",
+        "repeated": 0.48794810000010863,
+        "single": 0.35018290671639946
+      },
+      {
+        "all": 0.8916738263823153,
+        "family": "ragged",
+        "repeated": 0.9576445154601749,
+        "single": 0.5810535746013917
+      },
+      {
+        "all": 0.40441310587685364,
+        "family": "tensor",
+        "repeated": 0.4245843035501276,
+        "single": 0.30199026384891986
+      },
+      {
+        "all": 0.5408699450476994,
+        "family": "worker-firm-occupation",
+        "repeated": 0.5560005585506707,
+        "single": 0.4583514167268392
+      },
+      {
+        "all": 0.44486633716538,
+        "family": "exporter-importer-product",
+        "repeated": 0.4610159894828664,
+        "single": 0.3591789518635893
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 29,
+      "baseline_components": 9,
+      "candidate_accepted_pairs": 10877,
+      "candidate_pair_entries": 1232190,
+      "candidate_proposals": 604813,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 2970660,
+      "candidate_unique_candidates": 227604,
+      "components": 108,
+      "dense_components": 14,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 0,
+      "global_projection": 40,
+      "hierarchy_attempts": 38,
+      "hierarchy_rejections": 9,
+      "large_components": 38,
+      "provisional_input_tuples": 186954,
+      "quality_rejections": 9,
+      "rejections": 9,
+      "screen_cycle": 1028,
+      "screen_defects": 1028,
+      "screen_energy": 1208,
+      "screen_gramian": 1208,
+      "screen_projections": 2236,
+      "singleton_components": 56,
+      "structural_attempts": 56,
+      "structural_input_tuples": 495110
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 7816764,
+        "maximum_grouping_bytes": 249528,
+        "maximum_requested_bytes": 7816764,
+        "maximum_rss_bytes": 10633216
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 7682084,
+        "maximum_grouping_bytes": 249528,
+        "maximum_requested_bytes": 7682084,
+        "maximum_rss_bytes": 10928128
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 7706484,
+        "maximum_grouping_bytes": 139248,
+        "maximum_requested_bytes": 7706484,
+        "maximum_rss_bytes": 10616832
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 7571804,
+        "maximum_grouping_bytes": 139248,
+        "maximum_requested_bytes": 7571804,
+        "maximum_rss_bytes": 10338304
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 7432556,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 7432556,
+        "maximum_rss_bytes": 10354688
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 6204928,
+        "maximum_grouping_bytes": 139184,
+        "maximum_requested_bytes": 6204928,
+        "maximum_rss_bytes": 8650752
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 6065744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 6065744,
+        "maximum_rss_bytes": 8650752
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 6204928,
+        "maximum_grouping_bytes": 139184,
+        "maximum_requested_bytes": 6204928,
+        "maximum_rss_bytes": 8617984
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 6065744,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 6065744,
+        "maximum_rss_bytes": 8404992
+      }
+    ],
+    "profile": "mac-development"
+  },
+  {
+    "all_image_vs_grouped_map_by_family": [
+      {
+        "all": 1.3593565305354707,
+        "family": "uniform",
+        "repeated": 1.4326261620308036,
+        "single": 0.9920564357525998
+      },
+      {
+        "all": 1.258053793218981,
+        "family": "communities",
+        "repeated": 1.311993761087642,
+        "single": 0.977921201197341
+      },
+      {
+        "all": 1.3507764939121123,
+        "family": "chain",
+        "repeated": 1.4213369981491024,
+        "single": 0.9951810432573799
+      },
+      {
+        "all": 1.4172469477817824,
+        "family": "pair-dominant",
+        "repeated": 1.5024084354934384,
+        "single": 0.9985978633024086
+      },
+      {
+        "all": 1.2806210046314237,
+        "family": "nested",
+        "repeated": 1.3408264820739089,
+        "single": 0.9720953642464218
+      },
+      {
+        "all": 1.145945531981494,
+        "family": "hubs",
+        "repeated": 1.17959743031596,
+        "single": 0.9632630972204744
+      },
+      {
+        "all": 1.2491992175029125,
+        "family": "ragged",
+        "repeated": 1.2921763615590536,
+        "single": 1.019744032628086
+      },
+      {
+        "all": 1.1428548542791703,
+        "family": "tensor",
+        "repeated": 1.1759216457095854,
+        "single": 0.9630907971231012
+      },
+      {
+        "all": 1.2076919554781642,
+        "family": "worker-firm-occupation",
+        "repeated": 1.2552462360016532,
+        "single": 0.957898840371005
+      },
+      {
+        "all": 1.2273697893534772,
+        "family": "exporter-importer-product",
+        "repeated": 1.277667941551707,
+        "single": 0.9645395002675492
+      }
+    ],
+    "automatic_counts_once_per_input_at_k1": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 50,
+      "dense_components": 50,
+      "global_certificate_adjoint": 80,
+      "global_certificate_incidence": 40,
+      "global_fallback_columns": 1,
+      "global_projection": 40,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 1,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "memories": [
+      {
+        "arm": "automatic/all-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3522560
+      },
+      {
+        "arm": "automatic/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3461120
+      },
+      {
+        "arm": "automatic/fine-image",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3567616
+      },
+      {
+        "arm": "automatic/fine-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3510272
+      },
+      {
+        "arm": "automatic/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3510272
+      },
+      {
+        "arm": "components-map/all-row",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 2216,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3485696
+      },
+      {
+        "arm": "components-map/scalar",
+        "maximum_admitted_bytes": 205960,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205960,
+        "maximum_rss_bytes": 3510272
+      },
+      {
+        "arm": "global-map/all-row",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 4456,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 3469312
+      },
+      {
+        "arm": "global-map/scalar",
+        "maximum_admitted_bytes": 205192,
+        "maximum_grouping_bytes": 0,
+        "maximum_requested_bytes": 205192,
+        "maximum_rss_bytes": 3506176
+      }
+    ],
+    "profile": "linux-smoke"
+  }
+]

@@ -1,0 +1,10 @@
+55388b14028386effa35e7faaa3a6aa7a9e02b5e
+event=push sha=55388b14028386effa35e7faaa3a6aa7a9e02b5e run=35446761654
+rustc 1.85.0 (4d91de4e4 2025-02-17)
+binary: rustc
+commit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688
+commit-date: 2025-02-17
+host: x86_64-pc-windows-msvc
+release: 1.85.0
+LLVM version: 19.1.7
+MINGW64_NT-10.0-26100 runnervmvmocb 3.6.10-710e5275.x86_64 2026-07-28 09:32 UTC x86_64 Msys

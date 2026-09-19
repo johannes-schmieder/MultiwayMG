@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6l merged; M6m dense reconstruction in qualification; terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6l merged; M6m dense reconstruction qualified (PR66); terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1137,3 +1137,23 @@ for measurement, not an implemented layout or selected default.
   micro/smoke data and the explicitly withdrawn2,154-attempt development run.
   Revise to plain contiguous column slices, retaining storage/FMA order and
   repeating qualification as a new source candidate, without overwriting data.
+
+- M6m contiguous-slice source `55388b1` is retained after complete qualification:
+  application old/stream1.377653 ARM and1.110297 generic x86, preserving small-size
+  negatives. Exact measured ARM assembly vectorizes independent outputs; generic
+  x86 retains libm fma. All45,360 full-process M6l signatures and432,000 measured
+  certificates pass; six platform/build allocation logs retain39 controls plus
+  four denials. All36 measured-source/PR jobs pass. Final evidence-head review/CI
+  and actual-main verification precede the next increment.
+- Complete development automatic all-image remains1.81x slower than grouped MAP,
+  despite1.234817x versus automatic scalar; all17 comparisons and every negative
+  family are retained. No paired cross-revision solver speedup, default promotion,
+  calibration or holdout claim. The rejected iterator and withdrawn partial run
+  remain preserved, including its separately completed Linux smoke.
+- Next: remove only the redundant canonical pair sort with unchanged order and
+  memory; separately test forward-transform interleaving. Sparse-terminal bounded
+  admission is still required. A forward/adjoint smoother pair would change the
+  numerical cycle and needs a separate proof, screen and full-cost policy. Existing
+  modified LSMR is metric-preconditioned, not ordinary right preconditioning by
+  an inverse Gramian. M7 explicit pools, M8 panels, M9 replay and M10 qualification
+  retain the accepted gates and resource limits.

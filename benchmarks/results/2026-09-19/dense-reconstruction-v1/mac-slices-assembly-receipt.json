@@ -1,0 +1,8 @@
+{
+  "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+  "binary_sha256": "cef4cef4aed524d24c322b453dd2f6a8b45bde6513d7df4a2bfdbf4c2f2508ed",
+  "assembly_sha256": "3bebc26a179409e5f1e430c35553329c91c0aa3272cbaf741c2242ca645ba205",
+  "reconstruction": "four two-lane FMA instructions per eight-output chunk plus scalar tail; no lane reduction",
+  "forward_transform": "unchanged scalar FMADD dependent chain",
+  "old_reference": "scalar FMADD strided reconstruction"
+}

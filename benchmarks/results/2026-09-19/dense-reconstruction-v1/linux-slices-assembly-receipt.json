@@ -1,0 +1,7 @@
+{
+  "source": "55388b14028386effa35e7faaa3a6aa7a9e02b5e",
+  "binary_sha256": "60c5d63fcae009439aafff8cde03bf3dafa65d711b369eecd0696c6b9d372a5c",
+  "assembly_sha256": "b085c73aabc51ff6912c026eb9924cb6a9dee1040d7092a04a806ecab7ae3ad4",
+  "fma_got_address": "0x1e2888",
+  "scope": "Both exact measured functions retain libm fma calls. Candidate reconstruction is unrolled into independent scalar calls; no inline vector FMA claim, no assumption about libm internal dispatch."
+}

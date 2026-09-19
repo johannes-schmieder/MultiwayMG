@@ -228,11 +228,15 @@ with exact uninstrumented references and no speedup claim. A separate [full-cost
 now certifies 505,800 measured columns across 51,840 complete processes. All-level
 image improves automatic scalar by 1.23x/1.31x on Mac development/expanded, yet
 remains 1.86x/2.80x slower than matched grouped MAP. Complete costs and negative
-results are preserved; no default or competitive promotion follows. The current
-[dense reconstruction increment](ISSUE5_DENSE_RECONSTRUCTION.md) tests
-contiguous eigenvector traversal with unchanged arithmetic and storage. Application
-measurements and full-cost regression must qualify it before retention. See the
-[complete evidence](../benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md).
+results are preserved; no default or competitive promotion follows. The qualified
+[dense reconstruction increment](ISSUE5_DENSE_RECONSTRUCTION.md) streams
+contiguous columns with unchanged arithmetic and storage. Fixed application-only
+ratios are1.38x on ARM and1.11x on generic x86, with tiny-size regressions retained.
+All45,360 complete-process regression records preserve exact numerical/work/
+memory signatures and432,000 measured columns certify. Complete development
+still trails grouped MAP by1.81x; no competitive or default promotion follows.
+See the [dense evidence](../benchmarks/results/2026-09-19/dense-reconstruction-v1/README.md)
+and the earlier [complete evidence](../benchmarks/results/2026-09-19/prepared-automatic-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

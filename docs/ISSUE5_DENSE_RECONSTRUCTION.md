@@ -11,7 +11,7 @@ MAP on development/expanded. No default or competitive promotion follows.
 
 ## Candidate and numerical boundary
 
-The eigenvectors already use column-major storage. Reconstruction currently
+The eigenvectors already use column-major storage. Before M6m, reconstruction
 reads each row with a stride and a dependent FMA chain. The candidate streams
 columns, updating independent output entries. Each output starts at positive
 zero and visits modes in exactly the original ascending order, with the same
@@ -120,3 +120,73 @@ The plain-slice revision passes all repeated required/135 Python, release and
 actual debug/release protocol gates. Both protocols retain1,125 exact pairs.
 [Rejected-revision evidence](../benchmarks/results/2026-09-19/dense-reconstruction-v1/README.md)
 and independently verified copies/archives are preserved before the new freeze.
+
+## Qualified contiguous-slice revision
+
+Source `55388b14028386effa35e7faaa3a6aa7a9e02b5e`, tree
+`50c9adc72b7452b2cd906dd5d914801670846dc6`, passes the complete declared
+qualification. Its fixed old/stream application geometric means are1.377653 on
+Mac ARM and1.110297 on generic Linux x86. Dimensions3/6 still regress on Mac;
+dimension3 regresses on x86. Preserve every size and sample; no size selector,
+extra storage, native flags, rank threshold or default changes are introduced.
+The exact measured ARM binary uses vector FMAs across independent outputs;
+generic x86 retains libm fma calls. These are application-only results.
+
+Mac smoke/development and Linux smoke certify432,000 measured columns across
+45,360 processes, with zero failed warmup/measured processes. All45,360 records
+exactly match M6l schedule/input/math/work/payload/layout/routing signatures.
+Six debug/release Linux/macOS/Windows allocation records match all39 controls
+and four allocation-free denials. The measured-source and PR CI runs pass all36
+jobs:35446761648/35446761654 and35446763608/35446763630. Final evidence-head
+CI and guarded review remain required before merging PR66.
+
+All17 complete-cost comparisons are retained. Development automatic all-image
+is1.234817x automatic scalar, but0.554050x grouped MAP (about1.81x slower),
+withK1/repeated ratios0.400390/0.584871. Every whole family remains below grouped
+MAP. These are within-source layout/control comparisons; cross-source full-solver
+timings are unpaired. Nine development quality rejections and the smoke global
+fallback remain charged internal work, not missing or discarded processes.
+Smoke has no recursive hierarchy attempts and supplies no MG performance claim.
+
+Originals, independent copies and every archive member validate; Linux derived
+geometric means have eight archival last-bit differences in each completed
+layout artifact, within the predeclared1e-14 relative bound. Raw fields, hashes
+and scientific signatures remain exact. Both micro summaries and Mac layout
+summaries recompute exactly. The rejected iterator's Linux smoke is also fully
+preserved and matches15,120 M6l records. It does not complete the withdrawn Mac
+development collection. See [all evidence](../benchmarks/results/2026-09-19/dense-reconstruction-v1/README.md)
+and [full-cost tables](../benchmarks/results/2026-09-19/dense-reconstruction-v1/complete-layouts.md).
+
+Retain the contiguous slice implementation as a bounded application improvement.
+Expanded reruns are not required because numerical/work/storage/routing policy,
+terminal cap and correctness at the tested cap/tail boundaries remain unchanged.
+M6 terminal admission and M7–M10 remain open; no competitive claim follows.
+
+## Next development increments
+
+First remove the provably redundant canonical pair-marginal sort at the prepared
+boundary. Preserve all six visitation orders and the proposal reduction order;
+reset existing source IDs only for the canonical neighbor0/factor1 order. Generic
+unprepared topology has no canonical-order guarantee. Verify irregular tuples,
+compact/wide IDs, arithmetic, admission and all downstream scientific records.
+Do not introduce a second ID buffer or radix histograms without charging them.
+
+Then evaluate forward-transform interleaving independently: several modal dot
+products can share a RHS load while preserving each ascending-row FMA chain.
+Generic x86 libm calls may spill accumulators, and tiny sizes already regress;
+inspect and measure both platforms before retention. No transpose is justified
+by the current reconstruction evidence.
+
+A cheaper forward/adjoint triangular cycle is a separate numerical-policy
+experiment, not a loop substitution. It requires a symmetry/range/positivity
+argument including projection and unobserved coordinates, actual-cycle screening,
+and full charged comparisons against the existing symmetric-MAP cycle. Current
+modified Golub–Kahan LSMR uses the preconditioner as a metric; do not incorrectly
+analyze it as ordinary right preconditioning by an inverse Gramian.
+
+The sparse-terminal boundary remains mandatory before declaring M6 complete:
+fixed-generation bounded setup/fill/retained memory, explicit serial application
+with caller-owned scratch, and fail-closed fallback. An opaque pooled dependency
+or RSS measured after factorization does not establish pre-admission. Then follow
+M7's one explicit pool and edge-balanced deterministic reductions, M8's independent
+bounded panels, M9's current-weight replay and M10's frozen untouched holdout.
