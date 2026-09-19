@@ -20,4 +20,10 @@ ten adversarial diagnostic tests and final debug/release protocol qualification
 cover the final six-field diagnostic output. Initial five-field development
 streams remain preserved separately and do not enter final qualification.
 
-Committed-source diagnostic collection and cross-platform CI are pending.
+All 39 records and four zero-allocation denials also match on Linux, macOS and
+Windows in debug/release (`cross-platform.json`, source run35436270925).
+Linux debug/release actual probes each pass all 1,125 pairs, 225 legacy and 900
+layout comparisons plus malformed/CLI controls (`linux-protocol.json`). Source
+Rust/allocation CI35436270926/35436270925 and PR CI35436272117/35436272105 pass.
+Committed-source diagnostic evidence is preserved in
+[`prepared-automatic-diagnostic-v1`](../prepared-automatic-diagnostic-v1/README.md).

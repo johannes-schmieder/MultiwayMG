@@ -101,5 +101,17 @@ pass 1,125 reference/profile pairs, 225 frozen scalar comparisons, 900 layout
 comparisons, 26 malformed inputs and ten CLI checks. Active allocation records
 exactly match all 39 M6j controls and four zero-allocation denials. See the
 [qualification receipts](../benchmarks/results/2026-09-19/automatic-diagnostic-qualification/README.md).
-Committed-source collection, source CI and evidence review follow. M6 admission/
-terminal choices and M7–M10 remain open.
+The [committed-source evidence](../benchmarks/results/2026-09-19/prepared-automatic-diagnostic-v1/README.md)
+now validates 6,480 Mac smoke/development and Linux smoke processes, 3,240 exact
+observer pairs and 88,560 certified columns with no failures. All 1,080 same-route
+scalar records match M6j. Every layout preserves math/work; both TLS capacities
+are explicit (592/6,960 bytes), and the shared inline record is 6,608 bytes.
+Cross-platform allocator records match Linux/macOS/Windows debug/release.
+
+One-RHS development scalar driver attribution is dominated by screening (35.05%)
+and structural preparation (22.19%); coarse factor is 12.44%, local solve 27.77%.
+At K32, local solve is 90.43%. These perturbed, sum-weighted diagnostic shares
+identify work to examine, not removable overhead or speedups. Family differences
+remain in full records. Proceed with a separate matched, uninstrumented grouped
+layout experiment before numerical-policy trials. Source and PR CI pass; final
+evidence-head checks/merge follow. M6 admission/terminal and M7–M10 remain open.
