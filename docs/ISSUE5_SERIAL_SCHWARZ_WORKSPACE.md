@@ -101,6 +101,10 @@ calibration, holdout or competitive claim changes here.
 
 All eight downstream required groups (including 135 Python tests) and eight
 release scientific/protocol groups pass locally at the paired pins. Both actual
-protocol builds preserve 1,125 exact reference/profile pairs, 225 legacy and900
-layout comparisons, with malformed/CLI rejection checks. Source/PR CI and guarded
-actual-main verification remain before integration delivery.
+protocol builds preserve 1,125 exact reference/profile pairs, 225 legacy and 900
+layout comparisons, with malformed/CLI rejection checks. Source `3f6a0da` passes all 36 source/PR jobs. The complete Linux smoke certifies
+144,000 measured columns and preserves all 15,120 M6n signatures. Six platform/
+build allocation records retain all 39 controls and four denials. Provider digests,
+copies and every archive member validate; eight timing-geomean last-bit differences
+are recorded within the unchanged archival tolerance. Final evidence-head CI and
+guarded actual-main verification remain before integration delivery.

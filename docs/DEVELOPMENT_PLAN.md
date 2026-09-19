@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6n merged; M6o serial Schwarz dependency merged, integration in qualification; terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6n merged; M6o serial Schwarz dependency merged, integration qualified pending final CI/merge; terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1193,7 +1193,9 @@ for measurement, not an implemented layout or selected default.
   to `b8f1712`. Both runtime pins move together in the integration branch. One
   caller-owned array supplies fixed-order serial action and transactional output;
   old APIs/routing remain unchanged. Three platform/build allocator artifacts
-  agree, and an external downstream preflight certifies 160 independent RHS.
-  Required/release downstream checks and exact-source/PR CI precede integration
-  merge. Opaque factor memory/permutation allocations and numerical-range
+  agree. The real paired-pin integration certifies 160 independent RHS in debug
+  and release; all eight required and eight release groups pass. Source `3f6a0da`
+  passes all 36 source/PR jobs. Complete Linux smoke preserves 15,120 M6n records
+  and 144,000 certificates; six allocation logs preserve all 39 controls/four
+  denials. Final evidence-head CI and guarded merge precede delivery. Opaque factor memory/permutation allocations and numerical-range
   eligibility remain explicit open gates, not silently admitted estimates.

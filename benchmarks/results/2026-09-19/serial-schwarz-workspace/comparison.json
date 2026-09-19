@@ -1,0 +1,9 @@
+[
+  {
+    "baseline_journal_sha256": "e71f24bdf54a1b664bc7634af5a1fed5b5515d2153914a186fb3b5a71e8aaeaf",
+    "baseline_source": "f4a611d61287e2375c1812232f1df1ac451605a1",
+    "exact_m6n_records": 15120,
+    "label": "linux-smoke",
+    "new_journal_sha256": "4b6ac7056d163cfa8b7876f8e9a7eda9394879f69c0ac58e77e4f3b20e7c0929"
+  }
+]

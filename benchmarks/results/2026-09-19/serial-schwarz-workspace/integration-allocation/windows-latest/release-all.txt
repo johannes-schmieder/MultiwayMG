@@ -1,0 +1,252 @@
+   Compiling schwarz-precond v0.4.0 (https://github.com/johannes-schmieder/within?rev=69110db2733a29bce7b6151466ece95c6249713f#69110db2)
+   Compiling multiway-incidence v0.1.0 (D:\a\MultiwayMG\MultiwayMG\crates\multiway-incidence)
+   Compiling within v0.4.0 (https://github.com/johannes-schmieder/within?rev=69110db2733a29bce7b6151466ece95c6249713f#69110db2)
+   Compiling multiway-mg v0.1.0 (D:\a\MultiwayMG\MultiwayMG\crates\multiway-mg)
+    Finished `release` profile [optimized] target(s) in 38.46s
+     Running tests\automatic_allocation_peaks.rs (target\release\deps\automatic_allocation_peaks-312f7dcd58796485.exe)
+V=900 E=300 route=(300, 0, 0, 0) peak=AllocationInfo { count_total: 3, count_current: 0, count_max: 3, bytes_total: 31200, bytes_current: 0, bytes_max: 31200 }
+V=6 E=8 route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 976, bytes_current: 0, bytes_max: 704 }
+V=130 E=504 route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 280720, bytes_current: 0, bytes_max: 273504 }
+V=255 E=1004 route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 1060720, bytes_current: 0, bytes_max: 1046504 }
+V=256 E=1008 route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 1068976, bytes_current: 0, bytes_max: 1054704 }
+V=516 E=2048 route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 114, count_current: 0, count_max: 65, bytes_total: 737868, bytes_current: 0, bytes_max: 424392 }
+V=516 E=2048 route=(0, 0, 0, 1) peak=AllocationInfo { count_total: 23, count_current: 0, count_max: 20, bytes_total: 214104, bytes_current: 0, bytes_max: 193520 }
+V=1028 E=4096 route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 154, count_current: 0, count_max: 85, bytes_total: 1251630, bytes_current: 0, bytes_max: 730208 }
+V=1028 E=4096 route=(0, 0, 0, 1) peak=AllocationInfo { count_total: 23, count_current: 0, count_max: 20, bytes_total: 427096, bytes_current: 0, bytes_max: 386032 }
+V=240 E=320 route=(0, 40, 0, 0) peak=AllocationInfo { count_total: 288, count_current: 0, count_max: 9, bytes_total: 43216, bytes_current: 0, bytes_max: 7360 }
+V=1032 E=4096 route=(0, 0, 2, 0) peak=AllocationInfo { count_total: 248, count_current: 0, count_max: 77, bytes_total: 1672776, bytes_current: 0, bytes_max: 531120 }
+denied grouped layout=FineRow allocations=AllocationInfo { count_total: 0, count_current: 0, count_max: 0, bytes_total: 0, bytes_current: 0, bytes_max: 0 }
+denied grouped layout=AllRow allocations=AllocationInfo { count_total: 0, count_current: 0, count_max: 0, bytes_total: 0, bytes_current: 0, bytes_max: 0 }
+denied grouped layout=FineImage allocations=AllocationInfo { count_total: 0, count_current: 0, count_max: 0, bytes_total: 0, bytes_current: 0, bytes_max: 0 }
+denied grouped layout=AllImage allocations=AllocationInfo { count_total: 0, count_current: 0, count_max: 0, bytes_total: 0, bytes_current: 0, bytes_max: 0 }
+grouped layout=FineRow V=130 E=504 changed=false route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 280720, bytes_current: 0, bytes_max: 273504 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 0, completed_groupings: 0, rejected_groupings: 0, grouped_levels_built: 0, maximum_grouping_payload_bytes: 0, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=130 E=504 changed=false route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 280720, bytes_current: 0, bytes_max: 273504 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 0, completed_groupings: 0, rejected_groupings: 0, grouped_levels_built: 0, maximum_grouping_payload_bytes: 0, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineImage V=130 E=504 changed=false route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 280720, bytes_current: 0, bytes_max: 273504 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 0, completed_groupings: 0, rejected_groupings: 0, grouped_levels_built: 0, maximum_grouping_payload_bytes: 0, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllImage V=130 E=504 changed=false route=(0, 1, 0, 0) peak=AllocationInfo { count_total: 10, count_current: 0, count_max: 5, bytes_total: 280720, bytes_current: 0, bytes_max: 273504 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 0, completed_groupings: 0, rejected_groupings: 0, grouped_levels_built: 0, maximum_grouping_payload_bytes: 0, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineRow V=516 E=2048 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 118, count_current: 0, count_max: 68, bytes_total: 758484, bytes_current: 0, bytes_max: 444992 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20600, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineRow V=516 E=2048 changed=true route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 118, count_current: 0, count_max: 68, bytes_total: 763090, bytes_current: 0, bytes_max: 447292 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20600, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineRow V=516 E=2048 changed=false route=(0, 0, 0, 1) peak=AllocationInfo { count_total: 26, count_current: 0, count_max: 22, bytes_total: 234656, bytes_current: 0, bytes_max: 214056 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20536, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=516 E=2048 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 121, count_current: 0, count_max: 70, bytes_total: 762692, bytes_current: 0, bytes_max: 449192 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 24800, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=516 E=2048 changed=true route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 121, count_current: 0, count_max: 70, bytes_total: 767314, bytes_current: 0, bytes_max: 451508 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 24816, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=516 E=2048 changed=false route=(0, 0, 0, 1) peak=AllocationInfo { count_total: 26, count_current: 0, count_max: 22, bytes_total: 234656, bytes_current: 0, bytes_max: 214056 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20536, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineImage V=516 E=2048 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 118, count_current: 0, count_max: 68, bytes_total: 791252, bytes_current: 0, bytes_max: 461376 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20600, maximum_tuple_image_len: 2048, last_rejected_grouping: None }
+grouped layout=FineImage V=516 E=2048 changed=true route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 118, count_current: 0, count_max: 68, bytes_total: 795858, bytes_current: 0, bytes_max: 463676 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20600, maximum_tuple_image_len: 2048, last_rejected_grouping: None }
+grouped layout=FineImage V=516 E=2048 changed=false route=(0, 0, 0, 1) peak=AllocationInfo { count_total: 26, count_current: 0, count_max: 22, bytes_total: 234656, bytes_current: 0, bytes_max: 214056 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20536, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllImage V=516 E=2048 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 121, count_current: 0, count_max: 70, bytes_total: 795460, bytes_current: 0, bytes_max: 465576 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 24800, maximum_tuple_image_len: 2048, last_rejected_grouping: None }
+grouped layout=AllImage V=516 E=2048 changed=true route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 121, count_current: 0, count_max: 70, bytes_total: 800082, bytes_current: 0, bytes_max: 467892 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 24816, maximum_tuple_image_len: 2048, last_rejected_grouping: None }
+grouped layout=AllImage V=516 E=2048 changed=false route=(0, 0, 0, 1) peak=AllocationInfo { count_total: 26, count_current: 0, count_max: 22, bytes_total: 234656, bytes_current: 0, bytes_max: 214056 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 20536, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineRow V=1028 E=4096 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 158, count_current: 0, count_max: 88, bytes_total: 1292726, bytes_current: 0, bytes_max: 771288 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 41080, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=1028 E=4096 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 164, count_current: 0, count_max: 92, bytes_total: 1305238, bytes_current: 0, bytes_max: 783784 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 3, maximum_grouping_payload_bytes: 53576, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineImage V=1028 E=4096 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 158, count_current: 0, count_max: 88, bytes_total: 1358262, bytes_current: 0, bytes_max: 804056 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 1, maximum_grouping_payload_bytes: 41080, maximum_tuple_image_len: 4096, last_rejected_grouping: None }
+grouped layout=AllImage V=1028 E=4096 changed=false route=(0, 0, 1, 0) peak=AllocationInfo { count_total: 164, count_current: 0, count_max: 92, bytes_total: 1370774, bytes_current: 0, bytes_max: 816552 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 1, completed_groupings: 1, rejected_groupings: 0, grouped_levels_built: 3, maximum_grouping_payload_bytes: 53576, maximum_tuple_image_len: 4096, last_rejected_grouping: None }
+grouped layout=FineRow V=529 E=2057 changed=false route=(1, 1, 2, 0) peak=AllocationInfo { count_total: 183, count_current: 0, count_max: 60, bytes_total: 1081448, bytes_current: 0, bytes_max: 357148 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10360, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineRow V=529 E=2057 changed=false route=(1, 1, 0, 2) peak=AllocationInfo { count_total: 79, count_current: 0, count_max: 34, bytes_total: 335812, bytes_current: 0, bytes_max: 161180 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineRow, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10296, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=529 E=2057 changed=false route=(1, 1, 2, 0) peak=AllocationInfo { count_total: 183, count_current: 0, count_max: 60, bytes_total: 1081448, bytes_current: 0, bytes_max: 357148 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10360, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllRow V=529 E=2057 changed=false route=(1, 1, 0, 2) peak=AllocationInfo { count_total: 79, count_current: 0, count_max: 34, bytes_total: 335812, bytes_current: 0, bytes_max: 161180 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllRow, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10296, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=FineImage V=529 E=2057 changed=false route=(1, 1, 2, 0) peak=AllocationInfo { count_total: 183, count_current: 0, count_max: 60, bytes_total: 1114216, bytes_current: 0, bytes_max: 357148 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10360, maximum_tuple_image_len: 1024, last_rejected_grouping: None }
+grouped layout=FineImage V=529 E=2057 changed=false route=(1, 1, 0, 2) peak=AllocationInfo { count_total: 79, count_current: 0, count_max: 34, bytes_total: 335812, bytes_current: 0, bytes_max: 161180 } inventory=PreparedAutomaticLayoutProgress { requested_layout: FineImage, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10296, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+grouped layout=AllImage V=529 E=2057 changed=false route=(1, 1, 2, 0) peak=AllocationInfo { count_total: 183, count_current: 0, count_max: 60, bytes_total: 1114216, bytes_current: 0, bytes_max: 357148 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10360, maximum_tuple_image_len: 1024, last_rejected_grouping: None }
+grouped layout=AllImage V=529 E=2057 changed=false route=(1, 1, 0, 2) peak=AllocationInfo { count_total: 79, count_current: 0, count_max: 34, bytes_total: 335812, bytes_current: 0, bytes_max: 161180 } inventory=PreparedAutomaticLayoutProgress { requested_layout: AllImage, grouping_attempts: 2, completed_groupings: 2, rejected_groupings: 0, grouped_levels_built: 2, maximum_grouping_payload_bytes: 10296, maximum_tuple_image_len: 0, last_rejected_grouping: None }
+automatic diagnostic regions valid; TLS bytes=592 report=Report { valid: true, elapsed_ns: 4333379900, unattributed_ns: 54699300, regions: [Region { calls: 1072, elapsed_ns: 2209100 }, Region { calls: 252, elapsed_ns: 1330700 }, Region { calls: 252, elapsed_ns: 5280600 }, Region { calls: 784, elapsed_ns: 323196900 }, Region { calls: 910, elapsed_ns: 138873300 }, Region { calls: 420, elapsed_ns: 275553100 }, Region { calls: 280, elapsed_ns: 7597500 }, Region { calls: 172, elapsed_ns: 2761600 }, Region { calls: 4, elapsed_ns: 400 }, Region { calls: 336, elapsed_ns: 5109500 }, Region { calls: 336, elapsed_ns: 272403800 }, Region { calls: 336, elapsed_ns: 512176300 }, Region { calls: 532, elapsed_ns: 21176400 }, Region { calls: 532, elapsed_ns: 2560059400 }, Region { calls: 546, elapsed_ns: 150952000 }, Region { calls: 0, elapsed_ns: 0 }, Region { calls: 0, elapsed_ns: 0 }] }
+component roots and automatic live-allocation peaks passed
+     Running tests\within_serial_workspace.rs (target\release\deps\within_serial_workspace-f0de7b3c71502c4d.exe)
+
+running 1 test
+test owner_bound_serial_dependency_action_drives_certified_independent_rhs ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests\workspace_allocations.rs (target\release\deps\workspace_allocations-529184c8a287f80e.exe)
+issue5-complete-map-cycle-allocation-v1
+positive-controls allocations=1 reallocations=1
+operators first-and-64-repeated allocations=0 reallocations=0 deallocations=0
+bounded flat candidates (adjacent=false): 10 setup arrays, three retained parent arrays; no hidden sort/reallocation; budget rejection allocates zero and numerical failure releases all arrays
+bounded flat candidates (adjacent=true): 10 setup arrays, three retained parent arrays; no hidden sort/reallocation; budget rejection allocates zero and numerical failure releases all arrays
+explicit baselines: identity/diagonal/MAP have zero/two/four action arrays plus optional image; complete PCG adds ten, LSMR sixteen; first/repeated/RHS32/rejection/failure recovery allocate zero, exact setup/admission/drop
+prepared-topology source=Observations rows=5 setup_bound=308 allocated=180 freed_setup=24 retained=156 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Collapsed rows=1 setup_bound=132 allocated=84 freed_setup=24 retained=60 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Observations rows=3 setup_bound=356 allocated=240 freed_setup=48 retained=192 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Collapsed rows=2 setup_bound=264 allocated=168 freed_setup=48 retained=120 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Observations rows=24 setup_bound=1232 allocated=1040 freed_setup=72 retained=968 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Collapsed rows=24 setup_bound=648 allocated=456 freed_setup=72 retained=384 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Observations rows=108 setup_bound=4256 allocated=2444 freed_setup=72 retained=2372 release=exact read/scatter/reject_allocations=0
+prepared-topology source=Collapsed rows=27 setup_bound=684 allocated=492 freed_setup=72 retained=420 release=exact read/scatter/reject_allocations=0
+PASS prepared-topology cases=8 borrowed-owner checks and array lifetime accounting
+symbolic-coarse tuples=1 bound=220 allocated=156 scratch_released=48 retained=108 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=1 bound=40 retained=40 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=1 bound=40 retained=40 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=1 bound=40 retained=40 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=1 bound=220 allocated=156 scratch_released=48 retained=108 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=1 bound=40 retained=40 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=1 bound=40 retained=40 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=1 bound=40 retained=40 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=2 bound=432 allocated=304 scratch_released=96 retained=208 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=2 bound=72 retained=72 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=2 bound=72 retained=72 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=2 bound=72 retained=72 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=2 bound=432 allocated=304 scratch_released=96 retained=208 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=2 bound=72 retained=72 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=2 bound=72 retained=72 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=2 bound=72 retained=72 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=24 bound=1160 allocated=632 scratch_released=80 retained=552 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=24 bound=776 retained=488 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=24 bound=776 retained=520 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=24 bound=776 retained=584 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=24 bound=1160 allocated=632 scratch_released=80 retained=552 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=24 bound=776 retained=488 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=24 bound=776 retained=520 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=24 bound=776 retained=584 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=64 bound=2656 allocated=1376 scratch_released=96 retained=1280 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=64 bound=2056 retained=1288 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=64 bound=2056 retained=1288 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=64 bound=2056 retained=1288 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-coarse tuples=64 bound=2656 allocated=1376 scratch_released=96 retained=1280 release=exact read/scatter/reject_allocations=0
+symbolic-pair pair=OneTwo tuples=64 bound=2056 retained=1288 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=OneThree tuples=64 bound=2056 retained=1288 release=exact read/scatter/endpoints/reject_allocations=0
+symbolic-pair pair=TwoThree tuples=64 bound=2056 retained=1288 release=exact read/scatter/endpoints/reject_allocations=0
+PASS symbolic-maps coarse=8 pair=24 exact exclusive lifetimes and allocation-free symbolic operations
+weight-frame input=Observations tuples=1 new_setup=96 retained=72 old_live=72 live_budget=364 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitObservations tuples=1 new_setup=96 retained=72 old_live=72 live_budget=324 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=1 new_setup=96 retained=72 old_live=72 live_budget=332 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=1 new_setup=96 retained=72 old_live=72 live_budget=324 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=1 new_setup=96 retained=72 old_live=72 live_budget=236 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=1 new_setup=96 retained=72 old_live=72 live_budget=228 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Observations tuples=2 new_setup=192 retained=144 old_live=144 live_budget=552 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitObservations tuples=2 new_setup=192 retained=144 old_live=144 live_budget=528 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=2 new_setup=192 retained=144 old_live=144 live_budget=544 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=2 new_setup=192 retained=144 old_live=144 live_budget=528 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=2 new_setup=192 retained=144 old_live=144 live_budget=472 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=2 new_setup=192 retained=144 old_live=144 live_budget=456 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Observations tuples=24 new_setup=560 retained=488 old_live=488 live_budget=2208 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitObservations tuples=24 new_setup=560 retained=488 old_live=488 live_budget=2016 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=24 new_setup=560 retained=488 old_live=488 live_budget=2208 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=24 new_setup=560 retained=488 old_live=488 live_budget=2016 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=24 new_setup=560 retained=488 old_live=488 live_budget=1624 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=24 new_setup=560 retained=488 old_live=488 live_budget=1432 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Observations tuples=27 new_setup=608 retained=536 old_live=536 live_budget=4380 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitObservations tuples=27 new_setup=608 retained=536 old_live=536 live_budget=3516 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=27 new_setup=608 retained=536 old_live=536 live_budget=3732 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=27 new_setup=608 retained=536 old_live=536 live_budget=3516 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=Tuples tuples=27 new_setup=608 retained=536 old_live=536 live_budget=1780 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame input=UnitTuples tuples=27 new_setup=608 retained=536 old_live=536 live_budget=1564 first/repeat/read/copy/reject_allocations=0 release=exact rebuild16=balanced
+weight-frame failed input/duplicate/degree construction allocations=0/1/4 all releases balanced
+PASS weight-frames cases=24 exact setup/retained/destruction/overlap; allocation-free reads and static rejection
+coarse-replay fine_tuples=1 coarse_tuples=1 new_setup=96 retained=72 live_budget=516 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=1 edges=1 new_setup=56 retained=24 live_budget=348 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=1 edges=1 new_setup=56 retained=24 live_budget=348 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=1 edges=1 new_setup=56 retained=24 live_budget=348 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=1 coarse_tuples=1 new_setup=96 retained=72 live_budget=420 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=1 edges=1 new_setup=56 retained=24 live_budget=252 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=1 edges=1 new_setup=56 retained=24 live_budget=252 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=1 edges=1 new_setup=56 retained=24 live_budget=252 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=2 coarse_tuples=2 new_setup=192 retained=144 live_budget=904 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=2 edges=2 new_setup=112 retained=48 live_budget=568 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=2 edges=2 new_setup=112 retained=48 live_budget=568 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=2 edges=2 new_setup=112 retained=48 live_budget=568 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=2 coarse_tuples=2 new_setup=192 retained=144 live_budget=832 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=2 edges=2 new_setup=112 retained=48 live_budget=496 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=2 edges=2 new_setup=112 retained=48 live_budget=496 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=2 edges=2 new_setup=112 retained=48 live_budget=496 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=24 coarse_tuples=4 new_setup=176 retained=136 live_budget=2356 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=24 edges=6 new_setup=168 retained=88 live_budget=2200 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=24 edges=8 new_setup=208 retained=112 live_budget=2296 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=24 edges=12 new_setup=264 retained=152 live_budget=2456 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=24 coarse_tuples=4 new_setup=176 retained=136 live_budget=1772 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=24 edges=6 new_setup=168 retained=88 live_budget=1616 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=24 edges=8 new_setup=208 retained=112 live_budget=1712 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=24 edges=12 new_setup=264 retained=152 live_budget=1872 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=64 coarse_tuples=8 new_setup=256 retained=208 live_budget=6400 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=64 edges=16 new_setup=320 retained=192 live_budget=6408 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=64 edges=16 new_setup=320 retained=192 live_budget=6408 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=64 edges=16 new_setup=320 retained=192 live_budget=6408 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+coarse-replay fine_tuples=64 coarse_tuples=8 new_setup=256 retained=208 live_budget=3832 read/copy/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneTwo fine_tuples=64 edges=16 new_setup=320 retained=192 live_budget=3840 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=OneThree fine_tuples=64 edges=16 new_setup=320 retained=192 live_budget=3840 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+pair-replay pair=TwoThree fine_tuples=64 edges=16 new_setup=320 retained=192 live_budget=3840 read/copy/write/reject_allocations=0 release=exact changed16=balanced
+weight-replay numerical failure allocations=1/4/2 all partial arrays released
+PASS weight-replay coarse=8 pair=24 exact lifetimes; changed-frame cycles balanced; reads/static rejection allocate nothing
+frame-operator views: construction/first/repeat64/rejection allocations=0; exclusive heap=0
+grouped tuple kernels/MAP: two retained grouping arrays plus one released cursor; first/repeat32/errors allocate zero, all payload released exactly
+complete grouped hierarchy: all prefixes/modes first/repeat32/errors allocate zero; one optional image, exact grouping/PCG/LSMR capacities and release
+complete hierarchy: exact structural/numerical release, changed-frame16 balanced, first/repeat32 actions allocation-free
+incremental structure: two fixed descriptor arrays, ten reservations per append, zero descriptor reallocations/finish allocations; exact failed and retained release; terminal-only zero arrays
+component permutation: three retained arrays, one released cursor; one separately released temporary inverse; connected identity and first/repeat permutations allocate zero; exact byte release
+provisional replay: five allocations, predecessor freed before finishing; consume reuses weights and releases three arrays; admission/invalid input allocate zero; reduction/degree overflow release all temporary payload
+actual recursive screen: two arrays, three coefficient vectors; first/repeat32 screens, rejection, numerical failure, recovery and tail applications allocate zero; unchanged cycle payload and exact release
+prepared MAP: first/repeat32 and static/numerical failures allocate zero; four setup arrays released exactly
+complete prepared cycle: first/repeat32 and failure/recovery allocations=0; all 14 workspace arrays released exactly
+complete prepared PCG: first/scalar and RHS1,2,4,8,16,17,32 allocations=0; exact 24-array release
+prepared original-operator certificate: first/repeat32 failures and recovery allocations=0; exact two-array release
+complete prepared native/gated LSMR: first/scalar and RHS1,2,4,8,16,17,32, vetoes and error/recovery allocations=0; all 30 arrays released per workspace
+fork integration: frame incidence + mutable MAP + LSMR + original certificate; first/repeat32 allocations=0
+pcg generic-first/repeated/rebound and static binding/dimension rejection allocations=0
+payload dimension=96 shared=15808 exclusive=5936 working_set=85152 extra_live=1032 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-latin-depth-2-seed-800	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=238	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=31	reprepare_reallocations=0
+payload dimension=96 shared=15808 exclusive=5936 working_set=85176 extra_live=1056 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-latin-depth-2-seed-800-fresh-weights	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=261	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=33408 exclusive=6952 working_set=120312 extra_live=1824 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-latin-depth-3-seed-801	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=360	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=9	reprepare_reallocations=23
+payload dimension=192 shared=33408 exclusive=6952 working_set=120336 extra_live=1848 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-latin-depth-3-seed-801-fresh-weights	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=392	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=96 shared=8948 exclusive=5936 working_set=80044 extra_live=2784 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-weak-chain-depth-2-seed-802	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=1917	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=96 shared=8948 exclusive=5936 working_set=80140 extra_live=2880 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-weak-chain-depth-2-seed-802-fresh-weights	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=2009	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=18708 exclusive=6952 working_set=108924 extra_live=5136 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-weak-chain-depth-3-seed-803	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=4776	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=18708 exclusive=6952 working_set=109548 extra_live=5760 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-weak-chain-depth-3-seed-803-fresh-weights	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=5608	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=96 shared=28352 exclusive=5936 working_set=97672 extra_live=1008 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-nearly-nested-depth-2-seed-804	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=215	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=96 shared=28352 exclusive=5936 working_set=97672 extra_live=1008 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-nearly-nested-depth-2-seed-804-fresh-weights	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=215	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=60288 exclusive=6952 working_set=147192 extra_live=1824 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-nearly-nested-depth-3-seed-805	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=360	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=60288 exclusive=6952 working_set=147216 extra_live=1848 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-nearly-nested-depth-3-seed-805-fresh-weights	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=392	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=96 shared=28352 exclusive=5936 working_set=97696 extra_live=1032 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-dominant-pair-depth-2-seed-806	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=238	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=96 shared=28352 exclusive=5936 working_set=97720 extra_live=1056 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-dominant-pair-depth-2-seed-806-fresh-weights	dimension=96	setup_allocations=8	outer_bytes=52704	trace_bytes=48024	owned_solve_allocations=261	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=33408 exclusive=6952 working_set=120600 extra_live=2112 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-communities-depth-3-seed-807	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=744	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=192 shared=33408 exclusive=6952 working_set=120696 extra_live=2208 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg recursive-communities-depth-3-seed-807-fresh-weights	dimension=192	setup_allocations=8	outer_bytes=57312	trace_bytes=48024	owned_solve_allocations=872	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=0
+payload dimension=6 shared=368 exclusive=400 working_set=49784 extra_live=96 clone_allocate_release=exact report/reject/solve_allocations=0
+pcg disconnected-terminal-only	dimension=6	setup_allocations=8	outer_bytes=48456	trace_bytes=48024	owned_solve_allocations=13	first_allocations=0	repeat8_allocations=0	copy_allocations=2	diagnostic_allocations=1	reprepare_allocations=0	reprepare_reallocations=2
+PASS prepared-pcg cases=17 plus generic control; first/repeated/zero/limit/reprepared/recovered solves allocate nothing; trace/solution storage charged
+reprepare recursive-latin-depth-2-seed-800 allocations=23 reallocations=0 bytes_allocated=8904 bytes_deallocated=0
+recursive-latin-depth-2-seed-800	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-latin-depth-2-seed-800-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-latin-depth-2-seed-800-fresh-weights	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-latin-depth-3-seed-801 allocations=9 reallocations=17 bytes_allocated=10376 bytes_deallocated=48
+recursive-latin-depth-3-seed-801	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-latin-depth-3-seed-801-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-latin-depth-3-seed-801-fresh-weights	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-weak-chain-depth-2-seed-802 allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=32
+recursive-weak-chain-depth-2-seed-802	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-weak-chain-depth-2-seed-802-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-weak-chain-depth-2-seed-802-fresh-weights	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-weak-chain-depth-3-seed-803 allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=80
+recursive-weak-chain-depth-3-seed-803	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-weak-chain-depth-3-seed-803-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-weak-chain-depth-3-seed-803-fresh-weights	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-nearly-nested-depth-2-seed-804 allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=32
+recursive-nearly-nested-depth-2-seed-804	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-nearly-nested-depth-2-seed-804-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-nearly-nested-depth-2-seed-804-fresh-weights	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-nearly-nested-depth-3-seed-805 allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=80
+recursive-nearly-nested-depth-3-seed-805	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-nearly-nested-depth-3-seed-805-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-nearly-nested-depth-3-seed-805-fresh-weights	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-dominant-pair-depth-2-seed-806 allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=32
+recursive-dominant-pair-depth-2-seed-806	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-dominant-pair-depth-2-seed-806-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-dominant-pair-depth-2-seed-806-fresh-weights	dimension=96	depth=2	setup_allocations=23	retained_bytes=8904	ordinary_allocations=23	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-communities-depth-3-seed-807 allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=80
+recursive-communities-depth-3-seed-807	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare recursive-communities-depth-3-seed-807-fresh-weights allocations=0 reallocations=0 bytes_allocated=0 bytes_deallocated=0
+recursive-communities-depth-3-seed-807-fresh-weights	dimension=192	depth=3	setup_allocations=32	retained_bytes=19280	ordinary_allocations=32	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+reprepare disconnected-terminal-only allocations=0 reallocations=1 bytes_allocated=72 bytes_deallocated=0
+disconnected-terminal-only	dimension=6	depth=0	setup_allocations=5	retained_bytes=416	ordinary_allocations=5	first_allocations=0	repeat64_allocations=0	reallocations=0	deallocations=0
+PASS cases=17 first/repeated/reprepared complete applies and exact fresh exclusive payload
