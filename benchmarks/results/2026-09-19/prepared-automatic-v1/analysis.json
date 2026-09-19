@@ -1,0 +1,1333 @@
+[
+  {
+    "automatic_counts_once_per_cell": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "dense_components": 350,
+      "global_fallback_columns": 77,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "quality_rejections": 0,
+      "singleton_components": 0
+    },
+    "automatic_family_geomeans_vs_components_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 0.9970079893212244,
+        "qualified_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 0.9971659378035931,
+        "qualified_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 0.9940467205816749,
+        "qualified_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 0.9999075582342127,
+        "qualified_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 0.9910176717830769,
+        "qualified_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 0.9901901339067871,
+        "qualified_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": 0.9925597367742981,
+        "qualified_cells": 28
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 1.0048431341203672,
+        "qualified_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 0.9956478503107465,
+        "qualified_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 1.0063507846274873,
+        "qualified_cells": 28
+      }
+    },
+    "automatic_family_geomeans_vs_global_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 1.1452504847154417,
+        "qualified_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 1.1094941576053918,
+        "qualified_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 1.081104307347127,
+        "qualified_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 1.0653760497945484,
+        "qualified_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 1.0888515792534144,
+        "qualified_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 1.1640619303196325,
+        "qualified_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": 1.088281475620732,
+        "qualified_cells": 28
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 1.0578827111650255,
+        "qualified_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 1.1365741652122339,
+        "qualified_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 1.0789711079576911,
+        "qualified_cells": 28
+      }
+    },
+    "automatic_last_rejection_histogram_once_per_cell": {
+      "Certification: unrepresentable numerical quantity in automatic original certificate rejected": 7
+    },
+    "automatic_width_geomeans_vs_global_map": {
+      "1": {
+        "expected_cells": 40,
+        "geomean": 1.0058073244598693,
+        "qualified_cells": 40
+      },
+      "16": {
+        "expected_cells": 40,
+        "geomean": 1.1567131783900104,
+        "qualified_cells": 40
+      },
+      "17": {
+        "expected_cells": 40,
+        "geomean": 1.1557652695751006,
+        "qualified_cells": 40
+      },
+      "2": {
+        "expected_cells": 40,
+        "geomean": 1.0129904619725043,
+        "qualified_cells": 40
+      },
+      "32": {
+        "expected_cells": 40,
+        "geomean": 1.294330654972943,
+        "qualified_cells": 40
+      },
+      "4": {
+        "expected_cells": 40,
+        "geomean": 1.0311713142551195,
+        "qualified_cells": 40
+      },
+      "8": {
+        "expected_cells": 40,
+        "geomean": 1.079188911954945,
+        "qualified_cells": 40
+      }
+    },
+    "automatic_work_once_per_cell": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 350,
+      "dense_components": 350,
+      "global_certificate_adjoint": 6400,
+      "global_certificate_incidence": 3200,
+      "global_fallback_columns": 77,
+      "global_projection": 3200,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 77,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "balanced": {
+      "automatic": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.1010643857033273,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.1177955312688272,
+        "single_rhs_geomean": 1.0058073244598693
+      },
+      "components-map": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.1045323408773708,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.1225574004810468,
+        "single_rhs_geomean": 1.0022999584057173
+      },
+      "global-diagonal": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.0095382449916466,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.0105200479515362,
+        "single_rhs_geomean": 1.0036674267671333
+      },
+      "global-identity": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 0.9824488877365306,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 0.9782560624109757,
+        "single_rhs_geomean": 1.007985928268537
+      }
+    },
+    "certificates": 80000,
+    "complete": true,
+    "eligible_cells": {
+      "automatic": 280,
+      "components-map": 280,
+      "global-diagonal": 280,
+      "global-identity": 280,
+      "global-map": 280
+    },
+    "failures": [],
+    "maximum_admitted_payload_bytes": {
+      "automatic": 205960,
+      "components-map": 205960,
+      "global-diagonal": 205192,
+      "global-identity": 205192,
+      "global-map": 205192
+    },
+    "peak_rss_bytes": {
+      "automatic": 2392064,
+      "components-map": 2392064,
+      "global-diagonal": 2359296,
+      "global-identity": 2359296,
+      "global-map": 2408448
+    },
+    "processes": 8400,
+    "profile": "smoke",
+    "source_commit": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+    "weighted_incidence_action_count_ratio_vs_global_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 7
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      }
+    },
+    "work_ratio_scope": "nominal outer action counts; excludes screens, construction and hierarchy internal actions; no tuple-weighted or time interpretation"
+  },
+  {
+    "automatic_counts_once_per_cell": {
+      "accepted_hierarchies": 203,
+      "baseline_components": 63,
+      "dense_components": 98,
+      "global_fallback_columns": 0,
+      "hierarchy_attempts": 266,
+      "hierarchy_rejections": 63,
+      "large_components": 266,
+      "quality_rejections": 63,
+      "singleton_components": 392
+    },
+    "automatic_family_geomeans_vs_components_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 0.6350123697854373,
+        "qualified_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 0.6980573483237456,
+        "qualified_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 0.42941113710030165,
+        "qualified_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 0.43732550653678237,
+        "qualified_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 0.808678816176473,
+        "qualified_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 0.5384367621270418,
+        "qualified_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": 0.7634307530150307,
+        "qualified_cells": 28
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 0.3851917271872239,
+        "qualified_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 0.38267718736586165,
+        "qualified_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 0.5094530971947586,
+        "qualified_cells": 28
+      }
+    },
+    "automatic_family_geomeans_vs_global_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 0.6223719287855636,
+        "qualified_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 0.683247618258383,
+        "qualified_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 0.41734490552690934,
+        "qualified_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 0.42097754066321597,
+        "qualified_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 0.8000303990354514,
+        "qualified_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 0.5305182238432106,
+        "qualified_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": 0.9935125378171337,
+        "qualified_cells": 28
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 0.368541373167635,
+        "qualified_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 0.3668360769863377,
+        "qualified_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 0.5033622952595593,
+        "qualified_cells": 28
+      }
+    },
+    "automatic_last_rejection_histogram_once_per_cell": {
+      "Screening: unrepresentable numerical quantity in automatic recursive cycle quality rejected": 63
+    },
+    "automatic_width_geomeans_vs_global_map": {
+      "1": {
+        "expected_cells": 40,
+        "geomean": 0.3750966280434341,
+        "qualified_cells": 40
+      },
+      "16": {
+        "expected_cells": 40,
+        "geomean": 0.6459699942008637,
+        "qualified_cells": 40
+      },
+      "17": {
+        "expected_cells": 40,
+        "geomean": 0.6490176928736857,
+        "qualified_cells": 40
+      },
+      "2": {
+        "expected_cells": 40,
+        "geomean": 0.43026845158606564,
+        "qualified_cells": 40
+      },
+      "32": {
+        "expected_cells": 40,
+        "geomean": 0.6912554186139962,
+        "qualified_cells": 40
+      },
+      "4": {
+        "expected_cells": 40,
+        "geomean": 0.5027585712305552,
+        "qualified_cells": 40
+      },
+      "8": {
+        "expected_cells": 40,
+        "geomean": 0.576091308057838,
+        "qualified_cells": 40
+      }
+    },
+    "automatic_work_once_per_cell": {
+      "accepted_hierarchies": 203,
+      "baseline_components": 63,
+      "candidate_accepted_pairs": 76139,
+      "candidate_pair_entries": 8625330,
+      "candidate_proposals": 4233691,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 20794620,
+      "candidate_unique_candidates": 1593228,
+      "components": 756,
+      "dense_components": 98,
+      "global_certificate_adjoint": 6400,
+      "global_certificate_incidence": 3200,
+      "global_fallback_columns": 0,
+      "global_projection": 3200,
+      "hierarchy_attempts": 266,
+      "hierarchy_rejections": 63,
+      "large_components": 266,
+      "provisional_input_tuples": 1308678,
+      "quality_rejections": 63,
+      "rejections": 63,
+      "screen_cycle": 7196,
+      "screen_defects": 7196,
+      "screen_energy": 8456,
+      "screen_gramian": 8456,
+      "screen_projections": 15652,
+      "singleton_components": 392,
+      "structural_attempts": 392,
+      "structural_input_tuples": 3465770
+    },
+    "balanced": {
+      "automatic": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 0.5409039196411253,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 0.5749317463027784,
+        "single_rhs_geomean": 0.3750966280434341
+      },
+      "components-map": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.0031261992316602,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.0098487955952318,
+        "single_rhs_geomean": 0.9637200664252729
+      },
+      "global-diagonal": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.0678876471914374,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.07504182808503,
+        "single_rhs_geomean": 1.025951347672115
+      },
+      "global-identity": {
+        "complete_coverage": false,
+        "equal_family_width_geomean": null,
+        "expected_cells": 280,
+        "qualified_cells": 273,
+        "repeated_rhs_geomean": null,
+        "single_rhs_geomean": null
+      }
+    },
+    "certificates": 79925,
+    "complete": false,
+    "eligible_cells": {
+      "automatic": 280,
+      "components-map": 280,
+      "global-diagonal": 280,
+      "global-identity": 273,
+      "global-map": 280
+    },
+    "failures": [
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k1",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 302984,
+            "fine": 306080,
+            "maximum_admitted": 1111264,
+            "maximum_requested": 1111264
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 1002,
+            "candidate_checks": 306,
+            "candidate_vetoes": 306,
+            "final_certificate_adjoint": 2,
+            "final_certificate_incidence": 1,
+            "gate_certificate_adjoint": 612,
+            "gate_certificate_incidence": 306,
+            "gate_projection": 307,
+            "weighted_adjoint": 1002,
+            "weighted_incidence": 1001
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      },
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k2",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 391768,
+            "fine": 306080,
+            "maximum_admitted": 1200048,
+            "maximum_requested": 1200048
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 2003,
+            "candidate_checks": 306,
+            "candidate_vetoes": 306,
+            "final_certificate_adjoint": 4,
+            "final_certificate_incidence": 2,
+            "gate_certificate_adjoint": 612,
+            "gate_certificate_incidence": 306,
+            "gate_projection": 308,
+            "weighted_adjoint": 2003,
+            "weighted_incidence": 2001
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      },
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k4",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 569336,
+            "fine": 306080,
+            "maximum_admitted": 1377616,
+            "maximum_requested": 1377616
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 3973,
+            "candidate_checks": 1011,
+            "candidate_vetoes": 1009,
+            "final_certificate_adjoint": 8,
+            "final_certificate_incidence": 4,
+            "gate_certificate_adjoint": 2022,
+            "gate_certificate_incidence": 1011,
+            "gate_projection": 1015,
+            "weighted_adjoint": 3973,
+            "weighted_incidence": 3969
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      },
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k8",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 924472,
+            "fine": 306080,
+            "maximum_admitted": 1732752,
+            "maximum_requested": 1732752
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 7950,
+            "candidate_checks": 2149,
+            "candidate_vetoes": 2144,
+            "final_certificate_adjoint": 16,
+            "final_certificate_incidence": 8,
+            "gate_certificate_adjoint": 4298,
+            "gate_certificate_incidence": 2149,
+            "gate_projection": 2157,
+            "weighted_adjoint": 7950,
+            "weighted_incidence": 7942
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      },
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k16",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 1634744,
+            "fine": 306080,
+            "maximum_admitted": 2443024,
+            "maximum_requested": 2443024
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 15898,
+            "candidate_checks": 4272,
+            "candidate_vetoes": 4263,
+            "final_certificate_adjoint": 32,
+            "final_certificate_incidence": 16,
+            "gate_certificate_adjoint": 8544,
+            "gate_certificate_incidence": 4272,
+            "gate_projection": 4288,
+            "weighted_adjoint": 15898,
+            "weighted_incidence": 15882
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      },
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k17",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 1723528,
+            "fine": 306080,
+            "maximum_admitted": 2531808,
+            "maximum_requested": 2531808
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 15898,
+            "candidate_checks": 4272,
+            "candidate_vetoes": 4263,
+            "final_certificate_adjoint": 34,
+            "final_certificate_incidence": 17,
+            "gate_certificate_adjoint": 8544,
+            "gate_certificate_incidence": 4272,
+            "gate_projection": 4289,
+            "weighted_adjoint": 15898,
+            "weighted_incidence": 15882
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      },
+      {
+        "case": "nested-balanced-heterogeneous-s10001-k32",
+        "failures": 5,
+        "record": {
+          "counts": {
+            "accepted_hierarchies": 0,
+            "baseline_components": 0,
+            "candidate_accepted_pairs": 0,
+            "candidate_pair_entries": 0,
+            "candidate_proposals": 0,
+            "candidate_truncated_neighbors": 0,
+            "candidate_tuple_visits": 0,
+            "candidate_unique_candidates": 0,
+            "components": 0,
+            "dense_components": 0,
+            "global_certificate_adjoint": 0,
+            "global_certificate_incidence": 0,
+            "global_fallback_columns": 0,
+            "global_projection": 0,
+            "hierarchy_attempts": 0,
+            "hierarchy_rejections": 0,
+            "large_components": 0,
+            "provisional_input_tuples": 0,
+            "quality_rejections": 0,
+            "rejections": 0,
+            "screen_cycle": 0,
+            "screen_defects": 0,
+            "screen_energy": 0,
+            "screen_gramian": 0,
+            "screen_projections": 0,
+            "singleton_components": 0,
+            "structural_attempts": 0,
+            "structural_input_tuples": 0
+          },
+          "payload_bytes": {
+            "caller": 3055288,
+            "fine": 306080,
+            "maximum_admitted": 3863568,
+            "maximum_requested": 3863568
+          },
+          "progress": {
+            "column": null,
+            "component": null,
+            "stage": null
+          },
+          "solve_work": {
+            "action": 29680,
+            "candidate_checks": 7625,
+            "candidate_vetoes": 7608,
+            "final_certificate_adjoint": 64,
+            "final_certificate_incidence": 32,
+            "gate_certificate_adjoint": 15250,
+            "gate_certificate_incidence": 7625,
+            "gate_projection": 7657,
+            "weighted_adjoint": 29680,
+            "weighted_incidence": 29650
+          },
+          "status": "complete"
+        },
+        "route": "global-identity"
+      }
+    ],
+    "maximum_admitted_payload_bytes": {
+      "automatic": 7432556,
+      "components-map": 6065744,
+      "global-diagonal": 6056784,
+      "global-identity": 6052232,
+      "global-map": 6065744
+    },
+    "peak_rss_bytes": {
+      "automatic": 10321920,
+      "components-map": 8601600,
+      "global-diagonal": 8372224,
+      "global-identity": 8388608,
+      "global-map": 8437760
+    },
+    "processes": 8400,
+    "profile": "development",
+    "source_commit": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+    "weighted_incidence_action_count_ratio_vs_global_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 0.3690279592709066,
+        "qualifying_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 0.539197466327985,
+        "qualifying_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 0.5818268009501436,
+        "qualifying_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 0.6563733406868308,
+        "qualifying_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 1.0,
+        "qualifying_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 0.9439172429165622,
+        "qualifying_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 14
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 0.7077397901482873,
+        "qualifying_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 0.664560809748833,
+        "qualifying_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 0.5616572500532444,
+        "qualifying_cells": 28
+      }
+    },
+    "work_ratio_scope": "nominal outer action counts; excludes screens, construction and hierarchy internal actions; no tuple-weighted or time interpretation"
+  },
+  {
+    "automatic_counts_once_per_cell": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "dense_components": 350,
+      "global_fallback_columns": 77,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "quality_rejections": 0,
+      "singleton_components": 0
+    },
+    "automatic_family_geomeans_vs_components_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 0.9990669368300102,
+        "qualified_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 1.0018532859827276,
+        "qualified_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 1.0022539334181908,
+        "qualified_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 1.0014139104353803,
+        "qualified_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 0.9964505739503118,
+        "qualified_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 0.9988094756505763,
+        "qualified_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": 1.0012032040891712,
+        "qualified_cells": 28
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 0.9992906631632723,
+        "qualified_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 1.0043683557430418,
+        "qualified_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 0.998393516531898,
+        "qualified_cells": 28
+      }
+    },
+    "automatic_family_geomeans_vs_global_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": 1.5311174199633237,
+        "qualified_cells": 28
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": 1.370420379182967,
+        "qualified_cells": 28
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": 1.319520161345635,
+        "qualified_cells": 28
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": 1.2226570468620106,
+        "qualified_cells": 28
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": 1.388346266240187,
+        "qualified_cells": 28
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": 1.5995255050047952,
+        "qualified_cells": 28
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": 1.3505059795604917,
+        "qualified_cells": 28
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": 1.213392453923574,
+        "qualified_cells": 28
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": 1.539418492969849,
+        "qualified_cells": 28
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": 1.2658321112783038,
+        "qualified_cells": 28
+      }
+    },
+    "automatic_last_rejection_histogram_once_per_cell": {
+      "Certification: unrepresentable numerical quantity in automatic original certificate rejected": 7
+    },
+    "automatic_width_geomeans_vs_global_map": {
+      "1": {
+        "expected_cells": 40,
+        "geomean": 0.9924560556878715,
+        "qualified_cells": 40
+      },
+      "16": {
+        "expected_cells": 40,
+        "geomean": 1.6651854198839982,
+        "qualified_cells": 40
+      },
+      "17": {
+        "expected_cells": 40,
+        "geomean": 1.6547026540565122,
+        "qualified_cells": 40
+      },
+      "2": {
+        "expected_cells": 40,
+        "geomean": 1.050203750279612,
+        "qualified_cells": 40
+      },
+      "32": {
+        "expected_cells": 40,
+        "geomean": 2.1057155496608595,
+        "qualified_cells": 40
+      },
+      "4": {
+        "expected_cells": 40,
+        "geomean": 1.1479800319847824,
+        "qualified_cells": 40
+      },
+      "8": {
+        "expected_cells": 40,
+        "geomean": 1.3326323282749686,
+        "qualified_cells": 40
+      }
+    },
+    "automatic_work_once_per_cell": {
+      "accepted_hierarchies": 0,
+      "baseline_components": 0,
+      "candidate_accepted_pairs": 0,
+      "candidate_pair_entries": 0,
+      "candidate_proposals": 0,
+      "candidate_truncated_neighbors": 0,
+      "candidate_tuple_visits": 0,
+      "candidate_unique_candidates": 0,
+      "components": 350,
+      "dense_components": 350,
+      "global_certificate_adjoint": 6400,
+      "global_certificate_incidence": 3200,
+      "global_fallback_columns": 77,
+      "global_projection": 3200,
+      "hierarchy_attempts": 0,
+      "hierarchy_rejections": 0,
+      "large_components": 0,
+      "provisional_input_tuples": 0,
+      "quality_rejections": 0,
+      "rejections": 77,
+      "screen_cycle": 0,
+      "screen_defects": 0,
+      "screen_energy": 0,
+      "screen_gramian": 0,
+      "screen_projections": 0,
+      "singleton_components": 0,
+      "structural_attempts": 0,
+      "structural_input_tuples": 0
+    },
+    "balanced": {
+      "automatic": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.3741377058806834,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.450719398938762,
+        "single_rhs_geomean": 0.9924560556878715
+      },
+      "components-map": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.3737146236820699,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.450586058328432,
+        "single_rhs_geomean": 0.9908653821866471
+      },
+      "global-diagonal": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.1888725257096489,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.2183050891129557,
+        "single_rhs_geomean": 1.026622281153606
+      },
+      "global-identity": {
+        "complete_coverage": true,
+        "equal_family_width_geomean": 1.1389324893700092,
+        "expected_cells": 280,
+        "qualified_cells": 280,
+        "repeated_rhs_geomean": 1.159164020653646,
+        "single_rhs_geomean": 1.0247466745844775
+      }
+    },
+    "certificates": 80000,
+    "complete": true,
+    "eligible_cells": {
+      "automatic": 280,
+      "components-map": 280,
+      "global-diagonal": 280,
+      "global-identity": 280,
+      "global-map": 280
+    },
+    "failures": [],
+    "maximum_admitted_payload_bytes": {
+      "automatic": 205960,
+      "components-map": 205960,
+      "global-diagonal": 205192,
+      "global-identity": 205192,
+      "global-map": 205192
+    },
+    "peak_rss_bytes": {
+      "automatic": 3342336,
+      "components-map": 3334144,
+      "global-diagonal": 3325952,
+      "global-identity": 3334144,
+      "global-map": 3354624
+    },
+    "processes": 8400,
+    "profile": "linux-smoke",
+    "source_commit": "bc0267c48512607bab5a61ddf41c65e4ec88d36d",
+    "weighted_incidence_action_count_ratio_vs_global_map": {
+      "chain": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "communities": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "exporter-importer-product": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "hubs": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "nested": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "pair-dominant": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "ragged": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "tensor": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 7
+      },
+      "uniform": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      },
+      "worker-firm-occupation": {
+        "expected_cells": 28,
+        "geomean": null,
+        "qualifying_cells": 0
+      }
+    },
+    "work_ratio_scope": "nominal outer action counts; excludes screens, construction and hierarchy internal actions; no tuple-weighted or time interpretation"
+  }
+]

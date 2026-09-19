@@ -1,0 +1,71 @@
+[
+  {
+    "accepted_columns": {
+      "measured:automatic": 16000,
+      "measured:components-map": 16000,
+      "measured:global-diagonal": 16000,
+      "measured:global-identity": 16000,
+      "measured:global-map": 16000,
+      "warmup:automatic": 3200,
+      "warmup:components-map": 3200,
+      "warmup:global-diagonal": 3200,
+      "warmup:global-identity": 3200,
+      "warmup:global-map": 3200
+    },
+    "maximum_rss_bytes": 2408448,
+    "measured_retries": 0,
+    "process_statuses": {
+      "returned": 8400
+    },
+    "profile": "smoke",
+    "rejected_columns": {},
+    "rss_overruns": 0
+  },
+  {
+    "accepted_columns": {
+      "measured:automatic": 16000,
+      "measured:components-map": 16000,
+      "measured:global-diagonal": 16000,
+      "measured:global-identity": 15925,
+      "measured:global-map": 16000,
+      "warmup:automatic": 3200,
+      "warmup:components-map": 3200,
+      "warmup:global-diagonal": 3200,
+      "warmup:global-identity": 3185,
+      "warmup:global-map": 3200
+    },
+    "maximum_rss_bytes": 10321920,
+    "measured_retries": 0,
+    "process_statuses": {
+      "returned": 8400
+    },
+    "profile": "development",
+    "rejected_columns": {
+      "measured:global-identity": 75,
+      "warmup:global-identity": 15
+    },
+    "rss_overruns": 0
+  },
+  {
+    "accepted_columns": {
+      "measured:automatic": 16000,
+      "measured:components-map": 16000,
+      "measured:global-diagonal": 16000,
+      "measured:global-identity": 16000,
+      "measured:global-map": 16000,
+      "warmup:automatic": 3200,
+      "warmup:components-map": 3200,
+      "warmup:global-diagonal": 3200,
+      "warmup:global-identity": 3200,
+      "warmup:global-map": 3200
+    },
+    "maximum_rss_bytes": 3354624,
+    "measured_retries": 0,
+    "process_statuses": {
+      "returned": 8400
+    },
+    "profile": "linux-smoke",
+    "rejected_columns": {},
+    "rss_overruns": 0
+  }
+]

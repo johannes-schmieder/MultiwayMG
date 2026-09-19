@@ -38,7 +38,9 @@ jobs:
           PYTHONDONTWRITEBYTECODE: "1"
         run: python3 -m unittest discover -s scripts -p 'test_*.py'
       - name: Test prepared benchmark input boundary
-        run: cargo test --locked -p multiway-mg --all-features --example prepared_serial_benchmark
+        run: |
+          cargo test --locked -p multiway-mg --all-features --example prepared_serial_benchmark
+          cargo test --locked -p multiway-mg --all-features --example prepared_automatic_benchmark
       - name: Build documentation
         env:
           RUSTDOCFLAGS: -D warnings
@@ -345,4 +347,38 @@ jobs:
         with:
           name: prepared-layout-smoke
           path: ${{ runner.temp }}/prepared-layout-smoke/
+          if-no-files-found: error
+
+
+  prepared-automatic:
+    name: Complete automatic and baseline development smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Build uninstrumented debug protocol fixture
+        run: cargo build --locked -p multiway-mg --no-default-features --features lsmr --example prepared_automatic_benchmark
+      - name: Verify debug construction, controls and failure records
+        run: python3 scripts/check_prepared_automatic_probe.py target/debug/examples/prepared_automatic_benchmark "$RUNNER_TEMP/prepared-automatic-protocol-debug"
+      - name: Collect committed uninstrumented five-route smoke
+        run: python3 scripts/prepared_automatic.py "$RUNNER_TEMP/prepared-automatic-smoke" --profile smoke
+      - name: Verify release construction, controls and failure records
+        run: python3 scripts/check_prepared_automatic_probe.py target/release/examples/prepared_automatic_benchmark "$RUNNER_TEMP/prepared-automatic-protocol-release"
+      - name: Require complete accounting, repeatability and original certification
+        run: python3 scripts/validate_prepared_automatic.py "$RUNNER_TEMP/prepared-automatic-smoke" --require-certification > "$RUNNER_TEMP/prepared-automatic-validation.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: prepared-automatic-smoke
+          path: |
+            ${{ runner.temp }}/prepared-automatic-smoke/
+            ${{ runner.temp }}/prepared-automatic-protocol-debug/
+            ${{ runner.temp }}/prepared-automatic-protocol-release/
+            ${{ runner.temp }}/prepared-automatic-validation.json
           if-no-files-found: error
