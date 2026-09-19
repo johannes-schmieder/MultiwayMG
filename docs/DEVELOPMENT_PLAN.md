@@ -1035,3 +1035,40 @@ for measurement, not an implemented layout or selected default.
   arms. Keep numerical-policy changes distinct from layout-only comparisons.
   M6 sparse terminal/admission, M7 deterministic bounded CPU execution, M8 RHS
   panels, M9 fresh-weight replay and M10 frozen competitive qualification remain.
+
+- M6j PR63 merged as `e07239dcf72bef50a2ffd0dc91e07beb61d2d2cc`; clean main
+  matches reviewed tree `cfd4bd8d22de2f25062007859fa7215539e4e41b`. Final source
+  CI35433548967/35433548974 and PR CI35433550855/35433550864 passed, as did
+  post-merge CI35433990078/35433990086.
+- M6k implements opt-in fixed-size disjoint automatic diagnostics and a separate
+  explicit-layout schema2 probe. All required Rust1.85 gates, 115 Python tests,
+  four collector tests, two integration tests and release qualification pass.
+  Active debug/release allocation records exactly match all 39 M6j controls
+  (6,240 certified columns/configuration) and four zero-allocation denials.
+  Final debug and release probes each pass 2,250 reference/profile processes,
+  225 legacy comparisons, 900 layout comparisons, 26 malformed inputs and ten
+  CLI checks. Both profiler TLS capacities are explicit; the reference/profile
+  inline record is 6,608 bytes on this Mac. The separate frozen source policy
+  has nine arms, K1/8/32 and smoke/development profiles. Source CI and committed-
+  source collection precede evidence review. No speedup/default claim follows.
+
+- M6k source `0caa551` in PR64 passes source Rust/allocation
+  CI35436270926/35436270925 and PR CI35436272117/35436272105. Mac smoke/development
+  and Linux smoke preserve 6,480 processes, 3,240 exact reference/profile pairs
+  and 88,560 certified columns; zero failed processes or RSS violations. All
+  1,080 scalar comparisons exactly match M6j, and all layouts preserve math/work.
+  Six Linux/macOS/Windows debug/release configurations match all 39 controls
+  and four denials. Automatic/kernel TLS592/6960 and inline Record6608 are
+  explicit. Three copies and every deterministic archive member independently
+  revalidate with exact summaries. Local Python-path/build-only failures are
+  preserved; no measured solver retry. One-RHS scalar development attribution:
+  screening35.05%, structure22.19%, coarse factor12.44%, local solve27.77%; at K32
+  local solve90.43%. These diagnostic shares are not speedups or removable costs.
+  Final evidence-head review/CI precede guarded merge.
+- Next M6l freezes a separate uninstrumented complete-cost grouped experiment:
+  all five automatic layouts, matched scalar/all-row component/global MAP,
+  paired rotated repetitions, requested/live payload and process RSS, charged
+  failures, and larger development inputs within the strict boundary. Preserve
+  the current numerical policy during layout comparisons and retain M6i/M6j
+  negative economics. Subsequent terminal-depth/admission or screening policy
+  candidates must use separate evidence; instrumentation is not a selector.

@@ -1,0 +1,36 @@
+{
+  "debug": {
+    "binary_sha256": {
+      "instrumented": "8f4bc2b81ebc602bb5cc35eff86a5f3b9704d03e27eede26ef470d0175157865",
+      "legacy": "64d4a070aea3a8d32a575c00391bceddd41d8f9214a2cd5aa100a971a617482b",
+      "reference": "2abdfa2fffdfc4bc7bc6a7ef95065608becf7844fedc5abb88e80aa9c928c217"
+    },
+    "checks": {
+      "cli": 10,
+      "layout": 900,
+      "legacy": 225,
+      "malformed": 26,
+      "paired": 1125
+    },
+    "complete": true,
+    "performance_measurement": false,
+    "processes": 2250
+  },
+  "release": {
+    "binary_sha256": {
+      "instrumented": "4d95ec3586b096bddcfc22e3b0db0bd847d67591977ca834cad5563791623b11",
+      "legacy": "45e583383807096e3331c51ac0a6cc5748a718c95ff4fe7ae9c9e15ea95963d2",
+      "reference": "9eacff5cdd1282f6f35882bde69509591735cb96820e248a5a145f9359474309"
+    },
+    "checks": {
+      "cli": 10,
+      "layout": 900,
+      "legacy": 225,
+      "malformed": 26,
+      "paired": 1125
+    },
+    "complete": true,
+    "performance_measurement": false,
+    "processes": 2250
+  }
+}

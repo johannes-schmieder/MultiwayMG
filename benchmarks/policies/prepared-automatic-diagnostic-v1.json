@@ -1,0 +1,160 @@
+{
+  "families": [
+    "uniform",
+    "communities",
+    "chain",
+    "pair-dominant",
+    "nested",
+    "hubs",
+    "ragged",
+    "tensor",
+    "worker-firm-occupation",
+    "exporter-importer-product"
+  ],
+  "shapes": [
+    "balanced",
+    "unbalanced"
+  ],
+  "weights": [
+    "unit",
+    "heterogeneous"
+  ],
+  "seeds": [
+    10001
+  ],
+  "profiles": {
+    "smoke": {
+      "balanced": [
+        16,
+        16,
+        16
+      ],
+      "unbalanced": [
+        32,
+        8,
+        4
+      ],
+      "draws": 512
+    },
+    "development": {
+      "balanced": [
+        128,
+        128,
+        128
+      ],
+      "unbalanced": [
+        512,
+        32,
+        16
+      ],
+      "draws": 16384
+    }
+  },
+  "parameters": {
+    "native_tolerance": 1e-08,
+    "certificate_tolerance": 1e-08,
+    "terminal_relative_tolerance": 1e-12,
+    "minimum_affinity": 0.02,
+    "maximum_estimated_energy_factor": 0.8,
+    "maximum_observed_energy_factor": 1.05,
+    "maximum_structural_defect": 1e-10,
+    "correction_damping": 1.0,
+    "relative_zero_tolerance": 1e-13,
+    "max_iterations": 1000,
+    "local_window": 8,
+    "maximum_transitions": 8,
+    "maximum_tuple_multiplier": 4,
+    "maximum_coefficient_multiplier": 3,
+    "test_vectors": 2,
+    "power_iterations": 8,
+    "tail_iterations": 4,
+    "screen_seed": 5573008032362218289,
+    "process_budget_bytes": 1073741824,
+    "usize_bytes": 8,
+    "report_slot_bytes": 32
+  },
+  "timeout_seconds": 60,
+  "process_budget_bytes": 1073741824,
+  "workers": 1,
+  "input_boundary": "canonical_unique_tuples",
+  "schema": 1,
+  "scope": "prepared_automatic_diagnostic_only",
+  "widths": [
+    1,
+    8,
+    32
+  ],
+  "repetitions": 1,
+  "arms": [
+    {
+      "route": "automatic",
+      "layout": "scalar"
+    },
+    {
+      "route": "automatic",
+      "layout": "fine-row"
+    },
+    {
+      "route": "automatic",
+      "layout": "all-row"
+    },
+    {
+      "route": "automatic",
+      "layout": "fine-image"
+    },
+    {
+      "route": "automatic",
+      "layout": "all-image"
+    },
+    {
+      "route": "components-map",
+      "layout": "scalar"
+    },
+    {
+      "route": "components-map",
+      "layout": "all-row"
+    },
+    {
+      "route": "global-map",
+      "layout": "scalar"
+    },
+    {
+      "route": "global-map",
+      "layout": "all-row"
+    }
+  ],
+  "builds": {
+    "reference": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "-p",
+      "multiway-mg",
+      "--no-default-features",
+      "--features",
+      "lsmr",
+      "--example",
+      "prepared_automatic_diagnostic"
+    ],
+    "instrumented": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "-p",
+      "multiway-mg",
+      "--no-default-features",
+      "--features",
+      "lsmr,profiling",
+      "--example",
+      "prepared_automatic_diagnostic"
+    ]
+  },
+  "comparison": "exact reference/instrumented numerical, work, payload, routing and layout records; no speedup inference",
+  "phases": "17 disjoint coarse driver regions; fixed current-thread TLS; overhead and destruction outside regions remain in unattributed driver time",
+  "order": "rotate arms by case and alternate reference/profile order by case+arm; diagnostic collection, not paired speed measurement",
+  "baseline_alias_scope": "fine/all row/image baseline aliases allocate identical single fine rows with no image; all-row represents grouped baselines",
+  "seed_scope": "only development seed 10001; calibration and holdout untouched",
+  "failure_scope": "preserve every attempt, returned error, certification rejection, timeout and launch/protocol failure; incomplete pairs do not fabricate profile shares"
+}

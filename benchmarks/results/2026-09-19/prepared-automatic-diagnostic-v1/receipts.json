@@ -1,0 +1,80 @@
+[
+  {
+    "archive_bytes": 2743671,
+    "archive_sha256": "67c6e4dfb64637eaea4c2d3f65b21157f77d8af8528b1ca7583179fc603fa1af",
+    "binary_sha256": {
+      "instrumented": "eb84e203f7e1411506234acfb0d1f3d8bf74d3c54d928546da25bcd70fc60c61",
+      "reference": "a836dbf42a99727980ae2b0765f44d12274094a00f49fb1682e45491e575a99f"
+    },
+    "certified_columns": 29520,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "exact_reference_profile_pairs": 1080,
+    "failed_processes": 0,
+    "github_run": null,
+    "journal_sha256": "5895bd042c53e57dbdbd46ae361d67e291c5964ca28336bf63bb955ef00f5cdd",
+    "label": "mac-smoke",
+    "manifest_sha256": "162ea9654ca7374712218227b3083d6c8302ce885eb5c508e2b695c7fab1e6a1",
+    "policy_sha256": "25295f04b6218a7c5c488259ac9beb985beca04f3dfdb7fd184705dc0d1d0ec5",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6k/automatic-diagnostic/mac-smoke-diagnostic-0caa551.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/automatic-diagnostic/mac-smoke-diagnostic-0caa551.tar.gz",
+    "processes": 2160,
+    "recomputed_summary_exact": true,
+    "source_commit": "0caa55192cb8be2d427999d98b2b720913252dda",
+    "source_tree": "ea596b27d0c635d06921f06b822d949ae80f1102",
+    "summary_sha256": "45af021333179728fa292444241826efbc977c2381086f5132fab68646136713"
+  },
+  {
+    "archive_bytes": 3090240,
+    "archive_sha256": "25e283c8e319eafdcb645357ebb28e974e0819fa98cc04a49dd1aa13b3af2924",
+    "binary_sha256": {
+      "instrumented": "eb84e203f7e1411506234acfb0d1f3d8bf74d3c54d928546da25bcd70fc60c61",
+      "reference": "a836dbf42a99727980ae2b0765f44d12274094a00f49fb1682e45491e575a99f"
+    },
+    "certified_columns": 29520,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "exact_reference_profile_pairs": 1080,
+    "failed_processes": 0,
+    "github_run": null,
+    "journal_sha256": "5adc35a6f7fef7d3d2493cd2dff3c1dd5a37ca410a98db7a2fe2e2040c31f5fc",
+    "label": "mac-development",
+    "manifest_sha256": "baf53b30a79b83ad53dffc802f64a236a3467cfed508d3e1e4e6bc2254cd6a88",
+    "policy_sha256": "25295f04b6218a7c5c488259ac9beb985beca04f3dfdb7fd184705dc0d1d0ec5",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6k/automatic-diagnostic/mac-development-diagnostic-0caa551.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/automatic-diagnostic/mac-development-diagnostic-0caa551.tar.gz",
+    "processes": 2160,
+    "recomputed_summary_exact": true,
+    "source_commit": "0caa55192cb8be2d427999d98b2b720913252dda",
+    "source_tree": "ea596b27d0c635d06921f06b822d949ae80f1102",
+    "summary_sha256": "64ffe48431745ffcb9457db91153742ba83964fd28bbd49c82f6507aaeb68b2a"
+  },
+  {
+    "archive_bytes": 2821484,
+    "archive_sha256": "680dde2d2782084da8238d274b08f49ce31ab112c45b9749858f02ed08d3c673",
+    "binary_sha256": {
+      "instrumented": "4d95ec3586b096bddcfc22e3b0db0bd847d67591977ca834cad5563791623b11",
+      "reference": "9eacff5cdd1282f6f35882bde69509591735cb96820e248a5a145f9359474309"
+    },
+    "certified_columns": 29520,
+    "competitive_qualification": false,
+    "complete_certification_gate_passed": true,
+    "default_selected": false,
+    "exact_reference_profile_pairs": 1080,
+    "failed_processes": 0,
+    "github_run": 35436270926,
+    "journal_sha256": "6d39fcf32bbaaed17363dfd7bdc97cd9ca9d5860b0d050c4d869409f56ca8232",
+    "label": "linux-smoke",
+    "manifest_sha256": "637f5e43e915d7e7ab532a6f68895b8e39de5d937d6ee6091aa3bfaaea601b94",
+    "policy_sha256": "25295f04b6218a7c5c488259ac9beb985beca04f3dfdb7fd184705dc0d1d0ec5",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6k/automatic-diagnostic/linux-smoke-diagnostic-0caa551.tar.gz",
+    "preserved_archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/automatic-diagnostic/linux-smoke-diagnostic-0caa551.tar.gz",
+    "processes": 2160,
+    "recomputed_summary_exact": true,
+    "source_commit": "0caa55192cb8be2d427999d98b2b720913252dda",
+    "source_tree": "ea596b27d0c635d06921f06b822d949ae80f1102",
+    "summary_sha256": "311c232f198c6fdfa14ad9e79c1d1a21a4ffb210082714578f72bfa1057f7cce"
+  }
+]

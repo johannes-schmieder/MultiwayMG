@@ -222,7 +222,10 @@ now connects row/image layouts to component-scoped ownership and matched
 baselines, with no dead baseline image or default promotion. Local and three-
 platform allocation qualification passes; [scalar compatibility evidence](../benchmarks/results/2026-09-19/prepared-automatic-grouped-compatibility/README.md)
 preserves all 25,200 M6i records, including known negatives. Grouped economics
-and terminal/admission decisions remain open in M6. See the
+and terminal/admission decisions remain open in M6. [Separate automatic cost diagnostics](ISSUE5_AUTOMATIC_DIAGNOSTICS.md)
+now preserve [6,480 diagnostic processes](../benchmarks/results/2026-09-19/prepared-automatic-diagnostic-v1/README.md)
+with exact uninstrumented references and no speedup claim. A separate full-cost
+grouped experiment follows. See the
 [complete evidence](../benchmarks/results/2026-09-06/prepared-layout-v1/README.md).
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.

@@ -973,3 +973,91 @@ fn grouped_budget_accounts_one_owner_and_denied_setup_recovers_on_reuse() -> Res
     }
     Ok(())
 }
+
+#[cfg(feature = "profiling")]
+fn disjoint_profile(r: automatic_profiling::Report) {
+    assert!(
+        r.valid,
+        "overlapping/incomplete automatic diagnostic: {r:?}"
+    );
+    assert_eq!(
+        r.elapsed_ns,
+        r.unattributed_ns + r.regions.iter().map(|r| r.elapsed_ns).sum::<u128>()
+    );
+}
+
+#[cfg(feature = "profiling")]
+#[test]
+fn automatic_diagnostics_preserve_exact_inactive_results() -> Result {
+    use automatic_profiling::{Phase, collect};
+    let keys: Vec<_> = (0..512)
+        .flat_map(|i| (0..2).flat_map(move |j| (0..2).map(move |k| [i, j, k])))
+        .collect();
+    let t = PreparedThreeWayTopology::try_from_collapsed([512, 2, 2], &keys)?;
+    for generation in 0..2 {
+        let weights: Vec<_> = (0..keys.len())
+            .map(|i| 1. + generation as f64 * (i % 7) as f64 / 8.)
+            .collect();
+        let f = ThreeWayWeightFrame::try_new(&t, WeightFrameInput::Tuples(&weights))?;
+        let y = targets(&f, 4);
+        for layout in std::iter::once(PreparedAutomaticLayout::Scalar).chain(GROUPED) {
+            for hierarchy in [false, true] {
+                let mut o = options();
+                if !hierarchy {
+                    o.hierarchy = None;
+                }
+                let (reference, rr, rp, rg) = execute_layout(&f, &y, 4, o, B, layout)?;
+                let (result, diagnostic) = collect(|| execute_layout(&f, &y, 4, o, B, layout))?;
+                let (x, r, p, g) = result?;
+                bits(&x, &reference);
+                assert_eq!(r, rr);
+                assert_eq!(format!("{p:?}"), format!("{rp:?}"));
+                assert_eq!(g, rg);
+                disjoint_profile(diagnostic);
+                let calls = |phase: Phase| diagnostic.regions[phase as usize].calls;
+                assert_eq!(calls(Phase::OriginalCertificate), 1);
+                assert_eq!(calls(Phase::LocalWorkspace), 1);
+                assert_eq!(calls(Phase::LocalSolve), 1);
+                assert_eq!(calls(Phase::StructuralPreparation), u64::from(hierarchy));
+                assert_eq!(calls(Phase::NumericalReplay), u64::from(hierarchy));
+                assert_eq!(calls(Phase::CoarseFactor), u64::from(hierarchy));
+                assert_eq!(calls(Phase::Screening), u64::from(hierarchy));
+                assert_eq!(
+                    calls(Phase::HierarchyGrouping)
+                        + calls(Phase::ComponentGrouping)
+                        + calls(Phase::GlobalGrouping),
+                    g.grouping_attempts as u64
+                );
+                assert_eq!(calls(Phase::GlobalSolve), 0);
+            }
+        }
+    }
+    Ok(())
+}
+
+#[cfg(feature = "profiling")]
+#[test]
+fn automatic_diagnostics_charge_disconnected_rejected_and_global_paths() -> Result {
+    use automatic_profiling::{Phase, collect};
+    // Existing independent coefficient/certificate/work checks now run with the
+    // observer active, including extra-nullity quality rejection and group denial.
+    let (result, diagnostic) = collect(|| -> Result {
+        grouped_component_baselines_and_failed_screens_keep_exact_references()?;
+        grouped_global_recovery_and_validation_keep_report_contract()?;
+        grouped_budget_accounts_one_owner_and_denied_setup_recovers_on_reuse()
+    })?;
+    result?;
+    disjoint_profile(diagnostic);
+    for phase in automatic_profiling::PHASES {
+        assert!(
+            diagnostic.regions[phase as usize].calls > 0,
+            "unexercised {phase:?}"
+        );
+    }
+    // Denied global grouping is recorded despite no global workspace being built.
+    assert!(
+        diagnostic.regions[Phase::GlobalGrouping as usize].calls
+            > diagnostic.regions[Phase::GlobalWorkspace as usize].calls
+    );
+    Ok(())
+}

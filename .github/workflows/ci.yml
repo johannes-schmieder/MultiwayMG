@@ -41,6 +41,7 @@ jobs:
         run: |
           cargo test --locked -p multiway-mg --all-features --example prepared_serial_benchmark
           cargo test --locked -p multiway-mg --all-features --example prepared_automatic_benchmark
+          cargo test --locked -p multiway-mg --all-features --example prepared_automatic_diagnostic
       - name: Build documentation
         env:
           RUSTDOCFLAGS: -D warnings
@@ -381,4 +382,56 @@ jobs:
             ${{ runner.temp }}/prepared-automatic-protocol-debug/
             ${{ runner.temp }}/prepared-automatic-protocol-release/
             ${{ runner.temp }}/prepared-automatic-validation.json
+          if-no-files-found: error
+
+  prepared-automatic-diagnostic:
+    name: Complete automatic cost diagnostic contract
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      RAYON_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      MKL_NUM_THREADS: "1"
+      VECLIB_MAXIMUM_THREADS: "1"
+      NUMEXPR_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85.0"
+      - uses: Swatinem/rust-cache@v2
+      - name: Build separate debug reference and profile probes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir "$RUNNER_TEMP/automatic-diagnostic-debug-binaries"
+          cargo build --locked -p multiway-mg --no-default-features --features lsmr --example prepared_automatic_benchmark --example prepared_automatic_diagnostic
+          cp target/debug/examples/prepared_automatic_benchmark "$RUNNER_TEMP/automatic-diagnostic-debug-binaries/legacy"
+          cp target/debug/examples/prepared_automatic_diagnostic "$RUNNER_TEMP/automatic-diagnostic-debug-binaries/reference"
+          cargo build --locked -p multiway-mg --no-default-features --features lsmr,profiling --example prepared_automatic_diagnostic
+          cp target/debug/examples/prepared_automatic_diagnostic "$RUNNER_TEMP/automatic-diagnostic-debug-binaries/instrumented"
+      - name: Check actual debug diagnostic protocols
+        run: python3 scripts/check_prepared_automatic_diagnostic.py "$RUNNER_TEMP/automatic-diagnostic-debug-binaries/reference" "$RUNNER_TEMP/automatic-diagnostic-debug-binaries/instrumented" "$RUNNER_TEMP/automatic-diagnostic-debug-binaries/legacy" "$RUNNER_TEMP/automatic-diagnostic-protocol-debug"
+      - name: Collect separate release reference and instrumented smoke
+        run: python3 scripts/prepared_automatic_diagnostic.py "$RUNNER_TEMP/automatic-diagnostic-smoke" --profile smoke
+      - name: Check actual release diagnostic protocols
+        shell: bash
+        run: |
+          set -euo pipefail
+          cargo build --locked --release -p multiway-mg --no-default-features --features lsmr --example prepared_automatic_benchmark
+          python3 scripts/check_prepared_automatic_diagnostic.py "$RUNNER_TEMP/automatic-diagnostic-smoke/reference-probe" "$RUNNER_TEMP/automatic-diagnostic-smoke/instrumented-probe" target/release/examples/prepared_automatic_benchmark "$RUNNER_TEMP/automatic-diagnostic-protocol-release"
+      - name: Validate complete diagnostic smoke
+        run: python3 scripts/validate_prepared_automatic_diagnostic.py "$RUNNER_TEMP/automatic-diagnostic-smoke" --require-certification > "$RUNNER_TEMP/automatic-diagnostic-validation.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: automatic-diagnostic-smoke
+          path: |
+            ${{ runner.temp }}/automatic-diagnostic-debug-binaries/
+            ${{ runner.temp }}/automatic-diagnostic-protocol-debug/
+            ${{ runner.temp }}/automatic-diagnostic-protocol-release/
+            ${{ runner.temp }}/automatic-diagnostic-smoke/
+            ${{ runner.temp }}/automatic-diagnostic-validation.json
           if-no-files-found: error

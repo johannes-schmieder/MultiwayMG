@@ -12,6 +12,20 @@ use multiway_incidence::{
     PreparedComponentLayout, PreparedComponentRecoding, PreparedComponentRoot,
     PreparedComponentView, PreparedHierarchyBudget, ThreeWayWeightFrame,
 };
+// These scopes compile to ordinary blocks in authoritative uninstrumented builds.
+macro_rules! automatic_span {
+    ($phase:ident) => {
+        #[cfg(feature = "profiling")]
+        let _automatic_span =
+            crate::automatic_profiling::span(crate::automatic_profiling::Phase::$phase);
+    };
+}
+macro_rules! automatic_measured {
+    ($phase:ident, $expression:expr) => {{
+        automatic_span!($phase);
+        $expression
+    }};
+}
 mod hierarchy;
 mod layout;
 pub use layout::{
@@ -407,6 +421,7 @@ fn components(
 ) -> Result<(), MultiwayError> {
     let topology = frame.topology();
     if progress.components == frame.weights().len() {
+        automatic_span!(DirectSolve);
         // Every supported component has >=1 tuple, hence all have exactly one.
         for id in 0..frame.weights().len() {
             singleton(frame, batch, id);
@@ -421,7 +436,7 @@ fn components(
         maximum,
         progress,
     )?;
-    let layout = PreparedComponentLayout::try_new(topology, b)?;
+    let layout = automatic_measured!(Partition, PreparedComponentLayout::try_new(topology, b))?;
     admit(
         add(
             add(caller, fine_payload(frame)?)?,
@@ -435,7 +450,7 @@ fn components(
         maximum,
         progress,
     )?;
-    let recoding = PreparedComponentRecoding::try_new(&layout, b)?;
+    let recoding = automatic_measured!(Partition, PreparedComponentRecoding::try_new(&layout, b))?;
     let mappings = add(
         layout.retained_payload_bytes()?,
         recoding.retained_payload_bytes()?,
@@ -448,6 +463,7 @@ fn components(
         progress.column = None;
         let view = layout.component(c).expect("bounded component index");
         if view.tuple_count() == 1 {
+            automatic_span!(DirectSolve);
             view.tuple_ids().for_each(|id| singleton(frame, batch, id));
             increment(&mut progress.singleton_components, 1)?;
         } else if view.dimension() <= PREPARED_DENSE_TERMINAL_LIMIT {
@@ -461,11 +477,14 @@ fn components(
                 maximum,
                 progress,
             )?;
-            let terminal = DensePseudoinverse::from_component(
-                frame,
-                &recoding,
-                c,
-                options.terminal_relative_tolerance,
+            let terminal = automatic_measured!(
+                DirectFactor,
+                DensePseudoinverse::from_component(
+                    frame,
+                    &recoding,
+                    c,
+                    options.terminal_relative_tolerance,
+                )
             )?;
             admit(
                 add(original_live, terminal.retained_payload_bytes()?)?,
@@ -485,14 +504,17 @@ fn components(
                     maximum,
                     progress,
                 )?;
-                let root = PreparedComponentRoot::try_new(&recoding, c, b)?;
+                let root = automatic_measured!(
+                    LocalRoot,
+                    PreparedComponentRoot::try_new(&recoding, c, b)
+                )?;
                 let b = payload_budget(maximum, add(caller, recoding.retained_payload_bytes()?)?);
                 admit(
                     root.weight_frame_setup_payload_bound(frame, b)?,
                     maximum,
                     progress,
                 )?;
-                let local = root.try_weight_frame(frame, b)?;
+                let local = automatic_measured!(LocalFrame, root.try_weight_frame(frame, b))?;
                 admit(
                     add(original_live, fine_payload(&local)?)?,
                     maximum,
@@ -530,6 +552,7 @@ fn dense_columns(
     batch: &mut PreparedAutomaticBatch<'_>,
     progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
+    automatic_span!(DirectSolve);
     // Explicit 6KiB maximum stack scratch, independent of component/RHS counts.
     let mut rhs = [0.; PREPARED_DENSE_TERMINAL_LIMIT];
     let mut out = [0.; PREPARED_DENSE_TERMINAL_LIMIT];
@@ -599,54 +622,65 @@ fn solve_columns<P: PreparedSolverAction>(
     other: usize,
     progress: &mut Progress<'_>,
 ) -> Result<(), MultiwayError> {
-    let gathered = if view.is_some() {
-        owner.fine_frame().weights().len()
-    } else {
-        0
-    };
-    admit(
-        PreparedLsmrWorkspace::setup_payload_bound(owner, options, add(other, bytes(gathered)?)?)?,
-        maximum,
-        progress,
-    )?;
-    let mut target = vector(gathered)?;
-    let other = add(other, bytes(target.capacity())?)?;
-    let mut workspace =
-        PreparedLsmrWorkspace::try_new_with_payload_budget(owner, options, maximum, other)?;
-    admit(
-        workspace.payload_report(other)?.total_payload_bytes,
-        maximum,
-        progress,
-    )?;
-    let e = batch.targets.len() / batch.columns;
-    let v = batch.coefficients.len() / batch.columns;
-    for j in 0..batch.columns {
-        progress.column = Some(j);
-        let original = &batch.targets[j * e..(j + 1) * e];
-        let target = if let Some(view) = view {
-            view.gather_tuple_values(original, &mut target)?;
-            &target[..]
+    let (mut target, mut workspace) = automatic_measured!(LocalWorkspace, {
+        let gathered = if view.is_some() {
+            owner.fine_frame().weights().len()
         } else {
-            original
+            0
         };
-        match solve_prepared_least_squares_with_certificate_gate(owner, target, &mut workspace) {
-            Ok(result) => {
-                solve_work(result.report.solve.work, result.report.gate, progress)?;
-                if let Some(view) = view {
-                    view.scatter_coefficients(
-                        result.coefficients,
-                        &mut batch.coefficients[j * v..(j + 1) * v],
-                    )?;
-                } else {
-                    batch.coefficients[j * v..(j + 1) * v].copy_from_slice(result.coefficients);
+        admit(
+            PreparedLsmrWorkspace::setup_payload_bound(
+                owner,
+                options,
+                add(other, bytes(gathered)?)?,
+            )?,
+            maximum,
+            progress,
+        )?;
+        let target = vector(gathered)?;
+        let other = add(other, bytes(target.capacity())?)?;
+        let workspace =
+            PreparedLsmrWorkspace::try_new_with_payload_budget(owner, options, maximum, other)?;
+        admit(
+            workspace.payload_report(other)?.total_payload_bytes,
+            maximum,
+            progress,
+        )?;
+        (target, workspace)
+    });
+    {
+        automatic_span!(LocalSolve);
+        let e = batch.targets.len() / batch.columns;
+        let v = batch.coefficients.len() / batch.columns;
+        for j in 0..batch.columns {
+            progress.column = Some(j);
+            let original = &batch.targets[j * e..(j + 1) * e];
+            let target = if let Some(view) = view {
+                view.gather_tuple_values(original, &mut target)?;
+                &target[..]
+            } else {
+                original
+            };
+            match solve_prepared_least_squares_with_certificate_gate(owner, target, &mut workspace)
+            {
+                Ok(result) => {
+                    solve_work(result.report.solve.work, result.report.gate, progress)?;
+                    if let Some(view) = view {
+                        view.scatter_coefficients(
+                            result.coefficients,
+                            &mut batch.coefficients[j * v..(j + 1) * v],
+                        )?;
+                    } else {
+                        batch.coefficients[j * v..(j + 1) * v].copy_from_slice(result.coefficients);
+                    }
+                    if !result.report.solve.accepted {
+                        return Err(numerical("automatic component certificate rejected"));
+                    }
                 }
-                if !result.report.solve.accepted {
-                    return Err(numerical("automatic component certificate rejected"));
+                Err(source) => {
+                    solve_work(workspace.last_work(), workspace.last_gate_work(), progress)?;
+                    return Err(source);
                 }
-            }
-            Err(source) => {
-                solve_work(workspace.last_work(), workspace.last_gate_work(), progress)?;
-                return Err(source);
             }
         }
     }
@@ -661,6 +695,7 @@ fn certify_columns(
     base: usize,
     progress: &mut Progress<'_>,
 ) -> Result<[bool; 32], MultiwayError> {
+    automatic_span!(OriginalCertificate);
     let topology = frame.topology();
     admit(
         add(
@@ -749,54 +784,64 @@ fn global_fallback(
         Some(groups) => owner.with_grouping(groups, crate::GroupedGramianMode::RowGather)?,
         None => owner,
     };
-    admit(
-        PreparedLsmrWorkspace::setup_payload_bound(&owner, options.lsmr, other)?,
-        maximum,
-        progress,
-    )?;
-    let mut workspace =
-        PreparedLsmrWorkspace::try_new_with_payload_budget(&owner, options.lsmr, maximum, other)?;
-    admit(
-        workspace.payload_report(other)?.total_payload_bytes,
-        maximum,
-        progress,
-    )?;
-    let e = frame.weights().len();
-    let v = frame.diagonal().len();
-    for (j, &selected) in selected.iter().enumerate().take(batch.columns) {
-        if !selected {
-            continue;
-        }
-        progress.column = Some(j);
-        increment(&mut progress.global_fallback_columns, 1)?;
-        match solve_prepared_least_squares_with_certificate_gate(
+    let mut workspace = automatic_measured!(GlobalWorkspace, {
+        admit(
+            PreparedLsmrWorkspace::setup_payload_bound(&owner, options.lsmr, other)?,
+            maximum,
+            progress,
+        )?;
+        let workspace = PreparedLsmrWorkspace::try_new_with_payload_budget(
             &owner,
-            &batch.targets[j * e..(j + 1) * e],
-            &mut workspace,
-        ) {
-            Ok(result) => {
-                solve_work(result.report.solve.work, result.report.gate, progress)?;
-                batch.coefficients[j * v..(j + 1) * v].copy_from_slice(result.coefficients);
-                let initial_certificate = batch.reports[j].and_then(|r| r.initial_certificate);
-                batch.reports[j] = Some(PreparedAutomaticColumnReport {
-                    initial_certificate,
-                    certified_normal_equation_residual: result
-                        .report
-                        .solve
-                        .certified_normal_equation_residual,
-                    accepted: result.report.solve.accepted,
-                    global_fallback: true,
-                });
-                if !result.report.solve.accepted {
-                    reject(
-                        numerical("automatic global fallback certificate rejected"),
-                        progress,
-                    )?;
-                }
+            options.lsmr,
+            maximum,
+            other,
+        )?;
+        admit(
+            workspace.payload_report(other)?.total_payload_bytes,
+            maximum,
+            progress,
+        )?;
+        workspace
+    });
+    {
+        automatic_span!(GlobalSolve);
+        let e = frame.weights().len();
+        let v = frame.diagonal().len();
+        for (j, &selected) in selected.iter().enumerate().take(batch.columns) {
+            if !selected {
+                continue;
             }
-            Err(source) => {
-                solve_work(workspace.last_work(), workspace.last_gate_work(), progress)?;
-                return Err(source);
+            progress.column = Some(j);
+            increment(&mut progress.global_fallback_columns, 1)?;
+            match solve_prepared_least_squares_with_certificate_gate(
+                &owner,
+                &batch.targets[j * e..(j + 1) * e],
+                &mut workspace,
+            ) {
+                Ok(result) => {
+                    solve_work(result.report.solve.work, result.report.gate, progress)?;
+                    batch.coefficients[j * v..(j + 1) * v].copy_from_slice(result.coefficients);
+                    let initial_certificate = batch.reports[j].and_then(|r| r.initial_certificate);
+                    batch.reports[j] = Some(PreparedAutomaticColumnReport {
+                        initial_certificate,
+                        certified_normal_equation_residual: result
+                            .report
+                            .solve
+                            .certified_normal_equation_residual,
+                        accepted: result.report.solve.accepted,
+                        global_fallback: true,
+                    });
+                    if !result.report.solve.accepted {
+                        reject(
+                            numerical("automatic global fallback certificate rejected"),
+                            progress,
+                        )?;
+                    }
+                }
+                Err(source) => {
+                    solve_work(workspace.last_work(), workspace.last_gate_work(), progress)?;
+                    return Err(source);
+                }
             }
         }
     }

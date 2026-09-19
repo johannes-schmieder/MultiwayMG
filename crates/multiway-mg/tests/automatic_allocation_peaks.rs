@@ -476,8 +476,25 @@ mod automatic {
 fn main() -> Result {
     controls();
     roots()?;
-    #[cfg(feature = "lsmr")]
+    #[cfg(all(feature = "lsmr", not(feature = "profiling")))]
     automatic::check()?;
+    #[cfg(all(feature = "lsmr", feature = "profiling"))]
+    {
+        // Initialize fixed profiler TLS before individual allocation regions.
+        // Every measured solve then executes active hooks; their heap delta must
+        // remain exactly the same as the frozen uninstrumented controls.
+        let (result, report) = multiway_mg::automatic_profiling::collect(automatic::check)?;
+        result?;
+        assert!(report.valid, "{report:?}");
+        assert_eq!(
+            report.elapsed_ns,
+            report.unattributed_ns + report.regions.iter().map(|r| r.elapsed_ns).sum::<u128>()
+        );
+        println!(
+            "automatic diagnostic regions valid; TLS bytes={} report={report:?}",
+            multiway_mg::automatic_profiling::thread_local_payload_bytes()
+        );
+    }
     println!("component roots and automatic live-allocation peaks passed");
     Ok(())
 }
