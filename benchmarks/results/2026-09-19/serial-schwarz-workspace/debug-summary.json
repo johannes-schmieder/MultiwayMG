@@ -1,0 +1,17 @@
+{
+  "binary_sha256": {
+    "instrumented": "1dd77ac8118bfb87c511c77dbd19089c4377fcb7673dcd4bfcb63ed2c66a0ef3",
+    "legacy": "c5f55179764715b9f8b52320bc91f680a5ac74fd1b5ba13fdb9a6249fcae834c",
+    "reference": "43ded28d433e0a1163632fc6206d84385e2f8cfe0e1d1c1a7a788a5b3fb1514c"
+  },
+  "checks": {
+    "cli": 10,
+    "layout": 900,
+    "legacy": 225,
+    "malformed": 26,
+    "paired": 1125
+  },
+  "complete": true,
+  "performance_measurement": false,
+  "processes": 2250
+}

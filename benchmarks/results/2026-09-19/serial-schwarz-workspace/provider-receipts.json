@@ -1,0 +1,102 @@
+[
+  {
+    "metadata": {
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10587487631/zip",
+      "created_at": "2026-09-19T16:16:34Z",
+      "digest": "sha256:19c4449995ff2679c9623797819cc892843a5b3b62518e92a06e4e602915570f",
+      "expired": false,
+      "expires_at": "2026-12-18T16:14:30Z",
+      "id": 10587487631,
+      "name": "automatic-layout-smoke",
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4NzQ4NzYzMQ==",
+      "size_in_bytes": 35717911,
+      "updated_at": "2026-09-19T16:16:34Z",
+      "url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10587487631",
+      "workflow_run": {
+        "head_branch": "codex/standalone-m6o-serial-schwarz",
+        "head_repository_id": 1356311395,
+        "head_sha": "3f6a0da00b33f3bf52240a32faaf6843263ccb7f",
+        "id": 35454316359,
+        "repository_id": 1356311395
+      }
+    },
+    "provider_digest_verified": true,
+    "zip_bytes": 35717911,
+    "zip_sha256": "19c4449995ff2679c9623797819cc892843a5b3b62518e92a06e4e602915570f"
+  },
+  {
+    "metadata": {
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10588275523/zip",
+      "created_at": "2026-09-19T16:19:02Z",
+      "digest": "sha256:06e85598cd0c4fc3d08e194e31eb04507b20cfb7154bc42ce349dcf5cabcfcbd",
+      "expired": false,
+      "expires_at": "2026-12-18T16:14:30Z",
+      "id": 10588275523,
+      "name": "allocation-evidence-windows-latest",
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4ODI3NTUyMw==",
+      "size_in_bytes": 18434,
+      "updated_at": "2026-09-19T16:19:02Z",
+      "url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10588275523",
+      "workflow_run": {
+        "head_branch": "codex/standalone-m6o-serial-schwarz",
+        "head_repository_id": 1356311395,
+        "head_sha": "3f6a0da00b33f3bf52240a32faaf6843263ccb7f",
+        "id": 35454316394,
+        "repository_id": 1356311395
+      }
+    },
+    "provider_digest_verified": true,
+    "zip_bytes": 18434,
+    "zip_sha256": "06e85598cd0c4fc3d08e194e31eb04507b20cfb7154bc42ce349dcf5cabcfcbd"
+  },
+  {
+    "metadata": {
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10587712491/zip",
+      "created_at": "2026-09-19T16:17:57Z",
+      "digest": "sha256:6309bb979e6f84b40bde2cc21c84ea119dbbbed7381798f74982403d7bc8e398",
+      "expired": false,
+      "expires_at": "2026-12-18T16:14:30Z",
+      "id": 10587712491,
+      "name": "allocation-evidence-ubuntu-latest",
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4NzcxMjQ5MQ==",
+      "size_in_bytes": 18468,
+      "updated_at": "2026-09-19T16:17:57Z",
+      "url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10587712491",
+      "workflow_run": {
+        "head_branch": "codex/standalone-m6o-serial-schwarz",
+        "head_repository_id": 1356311395,
+        "head_sha": "3f6a0da00b33f3bf52240a32faaf6843263ccb7f",
+        "id": 35454316394,
+        "repository_id": 1356311395
+      }
+    },
+    "provider_digest_verified": true,
+    "zip_bytes": 18468,
+    "zip_sha256": "6309bb979e6f84b40bde2cc21c84ea119dbbbed7381798f74982403d7bc8e398"
+  },
+  {
+    "metadata": {
+      "archive_download_url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10587577505/zip",
+      "created_at": "2026-09-19T16:17:25Z",
+      "digest": "sha256:039e9f4a76472ed6336b60652e7775e8f18688737a5871980d2353a35ebe2053",
+      "expired": false,
+      "expires_at": "2026-12-18T16:14:30Z",
+      "id": 10587577505,
+      "name": "allocation-evidence-macos-latest",
+      "node_id": "MDg6QXJ0aWZhY3QxMDU4NzU3NzUwNQ==",
+      "size_in_bytes": 18549,
+      "updated_at": "2026-09-19T16:17:25Z",
+      "url": "https://api.github.com/repos/johannes-schmieder/MultiwayMG/actions/artifacts/10587577505",
+      "workflow_run": {
+        "head_branch": "codex/standalone-m6o-serial-schwarz",
+        "head_repository_id": 1356311395,
+        "head_sha": "3f6a0da00b33f3bf52240a32faaf6843263ccb7f",
+        "id": 35454316394,
+        "repository_id": 1356311395
+      }
+    },
+    "provider_digest_verified": true,
+    "zip_bytes": 18549,
+    "zip_sha256": "039e9f4a76472ed6336b60652e7775e8f18688737a5871980d2353a35ebe2053"
+  }
+]

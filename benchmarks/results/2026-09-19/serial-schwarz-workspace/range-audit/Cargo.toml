@@ -1,0 +1,6 @@
+[package]
+name = "m6n-range-audit"
+version = "0.0.0"
+edition = "2021"
+[dependencies]
+multiway-mg = { path = "/Users/johannes/Git/MultiwayMG/crates/multiway-mg", default-features = false, features = ["within-comparator"] }

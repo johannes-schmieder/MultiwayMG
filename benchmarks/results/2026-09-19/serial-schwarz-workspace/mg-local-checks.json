@@ -1,0 +1,328 @@
+{
+  "required-v1": [
+    {
+      "name": "format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.5083107920363545,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 4.606830625096336,
+      "log_sha256": "60f1fc7816c77ec63000d101a6214050749ac768a94543ff5cae88c615429152"
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-features"
+      ],
+      "exit": 0,
+      "seconds": 201.01656275009736,
+      "log_sha256": "e8106e4d9792472d621e0590e9040bfc2d8d756eb86c5b54668e7bf640198c52"
+    },
+    {
+      "name": "minimal",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "seconds": 67.80913833295926,
+      "log_sha256": "c630b81058ba530b89ea258c0be9a6e49624bce135e79a60390bd0fb394a841c"
+    },
+    {
+      "name": "docs",
+      "command": [
+        "cargo",
+        "doc",
+        "--locked",
+        "--workspace",
+        "--all-features",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "seconds": 0.927585625089705,
+      "log_sha256": "a74fd76ef287a96f0d921dee5a64259ca3aa965407391ef1461263e4f08de1f2"
+    },
+    {
+      "name": "python",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0,
+      "seconds": 34.87180608417839,
+      "log_sha256": "00a42e05d2c5ce66af1b58cd2f6d2419607bdc116b36ee960ca62e306a5f1536"
+    },
+    {
+      "name": "automatic-probe-unit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "seconds": 0.6038854168727994,
+      "log_sha256": "2b73f7d6f99c64ad9b20417e4d790693253800b287a0bf2020e033e428953ab4"
+    },
+    {
+      "name": "diagnostic-probe-unit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_diagnostic"
+      ],
+      "exit": 0,
+      "seconds": 0.7020856658928096,
+      "log_sha256": "0dfc64ad6e17be283aef62b61ae567982692243107c6ca9abf335bd134d6cea1"
+    }
+  ],
+  "release-v1": [
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--test",
+        "prepared_aggregation",
+        "--test",
+        "prepared_adjacent_aggregation",
+        "--test",
+        "operator_workspaces",
+        "--test",
+        "workspace_allocations",
+        "--test",
+        "automatic_allocation_peaks",
+        "--test",
+        "prepared_automatic",
+        "--test",
+        "prepared_baseline",
+        "--test",
+        "prepared_hierarchy",
+        "--test",
+        "prepared_grouped_hierarchy",
+        "--test",
+        "prepared_cycle_quality",
+        "--test",
+        "prepared_pcg",
+        "--test",
+        "prepared_lsmr",
+        "--test",
+        "hierarchy_workspace",
+        "--test",
+        "cycle_probe",
+        "--test",
+        "within_comparator",
+        "--test",
+        "within_serial_workspace"
+      ],
+      "exit": 0,
+      "seconds": 14.238857500022277,
+      "log_sha256": "9446ba2017c39358514778a66942bea30d7f1d7eb0333e75dc290e22d8470ec7"
+    },
+    {
+      "name": "candidate-all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--lib",
+        "prepared_aggregation::failure_tests"
+      ],
+      "exit": 0,
+      "seconds": 3.718264832859859,
+      "log_sha256": "28bae8ca81ede10baed9390df625ed12e4ec30e97ebe845ae6417b66ba5fe912"
+    },
+    {
+      "name": "minimal",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--test",
+        "prepared_aggregation",
+        "--test",
+        "prepared_adjacent_aggregation",
+        "--test",
+        "operator_workspaces",
+        "--test",
+        "workspace_allocations",
+        "--test",
+        "automatic_allocation_peaks",
+        "--test",
+        "prepared_automatic",
+        "--test",
+        "prepared_baseline",
+        "--test",
+        "prepared_hierarchy",
+        "--test",
+        "prepared_grouped_hierarchy",
+        "--test",
+        "prepared_cycle_quality",
+        "--test",
+        "prepared_pcg",
+        "--test",
+        "prepared_lsmr",
+        "--test",
+        "hierarchy_workspace",
+        "--test",
+        "cycle_probe",
+        "--test",
+        "within_comparator",
+        "--test",
+        "within_serial_workspace"
+      ],
+      "exit": 0,
+      "seconds": 14.856622458901256,
+      "log_sha256": "d63e7c0f62aeab64e08097fe319e7c614184308d1e071739f5baf3e4fed285a8"
+    },
+    {
+      "name": "candidate-minimal",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--lib",
+        "prepared_aggregation::failure_tests"
+      ],
+      "exit": 0,
+      "seconds": 3.2198678329586983,
+      "log_sha256": "24b54f197e5ad65e0a06884e4cf5a4cd0e10b46585b696abfd35820e23455e8a"
+    },
+    {
+      "name": "component-root",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--all-features",
+        "--lib",
+        "component_root"
+      ],
+      "exit": 0,
+      "seconds": 2.783003833144903,
+      "log_sha256": "53e9cf682abb1dac23f978db179a92a98260b19641381fbffdb9d1b026a9ecf7"
+    },
+    {
+      "name": "component-layout",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--all-features",
+        "--test",
+        "component_layout"
+      ],
+      "exit": 0,
+      "seconds": 0.8329435831401497,
+      "log_sha256": "424b3a9da9aac380347231e54536335d171dfddad3c3323c526ec4eff84b4d7f"
+    },
+    {
+      "name": "debug-protocol",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/debug-probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/release-v1/debug-protocol"
+      ],
+      "exit": 0,
+      "seconds": 35.272131541976705,
+      "log_sha256": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a"
+    },
+    {
+      "name": "release-protocol",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/release-probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/release-v1/release-protocol"
+      ],
+      "exit": 0,
+      "seconds": 20.970103916944936,
+      "log_sha256": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a"
+    }
+  ],
+  "changed_boundary_files": {
+    "Cargo.toml": "7a633faa9a66314d91c63b4faddf73af1cfad249aade0e28df8b86735684999e",
+    "Cargo.lock": "4ba5fb1bc212b63ad0f2e222f783bbd8853f9c0d8632bb9df195f8a46d53703f",
+    ".github/workflows/issue5-workspace-allocations.yml": "dadd87266e2e4d2e7a081112287861d48ae5a05b5d85c55e4b5ba503e6ebab6e",
+    "crates/multiway-mg/tests/within_serial_workspace.rs": "0a41d31dd4decb976745cffb5335c3ad4088e378b085ba50f25848b3ac7113b5"
+  },
+  "external_log_root": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6o",
+  "minimum_rust": "1.85.0",
+  "predecessor": "172f0d8521e7a59073ca68769533e7b6afa009b6",
+  "fork_merge": "69110db2733a29bce7b6151466ece95c6249713f",
+  "debug_protocol_binaries": {
+    "reference": "43ded28d433e0a1163632fc6206d84385e2f8cfe0e1d1c1a7a788a5b3fb1514c",
+    "instrumented": "1dd77ac8118bfb87c511c77dbd19089c4377fcb7673dcd4bfcb63ed2c66a0ef3",
+    "legacy": "c5f55179764715b9f8b52320bc91f680a5ac74fd1b5ba13fdb9a6249fcae834c"
+  },
+  "release_protocol_binaries": {
+    "reference": "7de4f83778c4501493751d4b6dafaf988c7e7a271dc196d7a9ba271d834ca03f",
+    "instrumented": "3c1c20f876becf55ff68bfd3fe5785e021fd9bd2693dbe00d2761b8122499f80",
+    "legacy": "aebb12f960ea557e6f348c6e8dea9603e4120863983e31e5f7a8316dce8aae36"
+  }
+}

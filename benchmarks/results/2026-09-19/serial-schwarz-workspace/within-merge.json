@@ -1,0 +1,11 @@
+{
+  "mergeCommit": {
+    "oid": "69110db2733a29bce7b6151466ece95c6249713f"
+  },
+  "mergedAt": "2026-09-19T16:01:04Z",
+  "state": "MERGED",
+  "url": "https://github.com/johannes-schmieder/within/pull/4",
+  "actual_fork_head": "69110db2733a29bce7b6151466ece95c6249713f",
+  "reviewed_tree": "b8f17126eeb750e6775a7bede3b7975dd0bca153",
+  "clean": true
+}

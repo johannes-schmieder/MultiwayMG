@@ -1,0 +1,11 @@
+{
+  "mergeCommit": {
+    "oid": "172f0d8521e7a59073ca68769533e7b6afa009b6"
+  },
+  "mergedAt": "2026-09-19T15:29:52Z",
+  "state": "MERGED",
+  "url": "https://github.com/johannes-schmieder/MultiwayMG/pull/67",
+  "actual_main": "172f0d8521e7a59073ca68769533e7b6afa009b6",
+  "reviewed_tree": "893f24d6ce84e5e2bfb06273b4a598ddd9993616",
+  "clean": true
+}

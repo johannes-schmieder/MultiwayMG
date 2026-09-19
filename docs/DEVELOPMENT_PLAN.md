@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6m merged; M6n canonical pair ordering qualified; final delivery pending; terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6n merged; M6o serial Schwarz dependency merged, integration qualified pending final CI/merge; terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1185,3 +1185,17 @@ for measurement, not an implemented layout or selected default.
   cannot make opaque local factors admitted or allocation-free. Full numerical
   range preservation is distinct from structural factor-shift projection. M7–M10
   and their frozen acceptance/resource limits remain unchanged.
+
+- M6n PR67 merged as `172f0d8`, actual clean main matching reviewed tree `893f24d`.
+  All 36 final and 18 post-merge jobs pass; complete cost/negative evidence remains.
+- M6o [serial Schwarz workspace](ISSUE5_SERIAL_SCHWARZ_WORKSPACE.md) merged in
+  within PR4 as `69110db`, with 13 source/PR jobs green and actual fork tree equal
+  to `b8f1712`. Both runtime pins move together in the integration branch. One
+  caller-owned array supplies fixed-order serial action and transactional output;
+  old APIs/routing remain unchanged. Three platform/build allocator artifacts
+  agree. The real paired-pin integration certifies 160 independent RHS in debug
+  and release; all eight required and eight release groups pass. Source `3f6a0da`
+  passes all 36 source/PR jobs. Complete Linux smoke preserves 15,120 M6n records
+  and 144,000 certificates; six allocation logs preserve all 39 controls/four
+  denials. Final evidence-head CI and guarded merge precede delivery. Opaque factor memory/permutation allocations and numerical-range
+  eligibility remain explicit open gates, not silently admitted estimates.

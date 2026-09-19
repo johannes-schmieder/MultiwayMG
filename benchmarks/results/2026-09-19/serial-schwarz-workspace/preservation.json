@@ -1,0 +1,61 @@
+[
+  {
+    "archive": "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6o/preserved/linux-smoke.tar.gz",
+    "archive_bytes": 8599823,
+    "archive_sha256": "59c133e6cd71acf4626c27030df3cd05544027a2aca8cb32a34ae120f9709c5d",
+    "binary_sha256": "dffced3b4f6d1c132278235f981feec1bb2dcff6f336b54657d209a1ac5f455e",
+    "complete_validation": true,
+    "copy_and_every_member_exact": true,
+    "derived_geomean_rounding": [
+      {
+        "path": "/cells/0/comparisons/15/paired_process_geomean",
+        "recomputed": 0.9649134719600805,
+        "stored": 0.9649134719600806
+      },
+      {
+        "path": "/cells/104/comparisons/5/paired_process_geomean",
+        "recomputed": 0.9992438135092323,
+        "stored": 0.9992438135092322
+      },
+      {
+        "path": "/cells/137/comparisons/14/paired_process_geomean",
+        "recomputed": 1.474913380630515,
+        "stored": 1.4749133806305152
+      },
+      {
+        "path": "/cells/213/comparisons/12/paired_process_geomean",
+        "recomputed": 0.9656693110822728,
+        "stored": 0.9656693110822729
+      },
+      {
+        "path": "/cells/243/comparisons/7/paired_process_geomean",
+        "recomputed": 1.2781751292797494,
+        "stored": 1.2781751292797492
+      },
+      {
+        "path": "/cells/260/comparisons/2/paired_process_geomean",
+        "recomputed": 0.9820009736327361,
+        "stored": 0.982000973632736
+      },
+      {
+        "path": "/cells/272/comparisons/12/paired_process_geomean",
+        "recomputed": 1.7075813075595958,
+        "stored": 1.7075813075595956
+      },
+      {
+        "path": "/cells/278/comparisons/3/paired_process_geomean",
+        "recomputed": 1.4524544051806783,
+        "stored": 1.452454405180678
+      }
+    ],
+    "files": 30245,
+    "journal_sha256": "4b6ac7056d163cfa8b7876f8e9a7eda9394879f69c0ac58e77e4f3b20e7c0929",
+    "label": "linux-smoke",
+    "manifest_sha256": "7bb8be33590fa76bff5e19a8441c6d48262b2980e3a91259c50eee30724cb388",
+    "portable_archive": "$GIT_HOME/MultiwayMG-assessments/2026-09-19-m6o/preserved/linux-smoke.tar.gz",
+    "raw_bytes": 161710366,
+    "source_commit": "3f6a0da00b33f3bf52240a32faaf6843263ccb7f",
+    "source_tree": "5b1ff0fbdbee89887a9eddd5b8d041ccf2740421",
+    "summary_sha256": "055d980d63112f82676910019fabd4e69f73a5cbcde67b0706ad18e40639cb29"
+  }
+]

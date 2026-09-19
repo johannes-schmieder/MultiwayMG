@@ -1,0 +1,137 @@
+[
+  {
+    "label": "fmt",
+    "command": [
+      "cargo",
+      "fmt",
+      "--all",
+      "--",
+      "--check"
+    ],
+    "exit_code": 0,
+    "seconds": 0.1605526669882238,
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "label": "clippy",
+    "command": [
+      "cargo",
+      "clippy",
+      "--locked",
+      "--workspace",
+      "--all-targets",
+      "--all-features",
+      "--",
+      "-D",
+      "warnings"
+    ],
+    "exit_code": 0,
+    "seconds": 0.6680951660964638,
+    "log_sha256": "fa066252645a31a913f575cadb8682f86af2eecd13aec6a06efed49a133c879c"
+  },
+  {
+    "label": "all",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace",
+      "--all-features"
+    ],
+    "exit_code": 0,
+    "seconds": 13.485031667165458,
+    "log_sha256": "6934977b70a80c9c10217b91076d247b38dc9214c407b18016a6ab60504d66a1"
+  },
+  {
+    "label": "minimal",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--workspace",
+      "--no-default-features"
+    ],
+    "exit_code": 0,
+    "seconds": 11.320378915872425,
+    "log_sha256": "5c57dc64b5d87ac8506736f15901fe16067e228f5249331f66dea5ac45825260"
+  },
+  {
+    "label": "docs",
+    "command": [
+      "cargo",
+      "doc",
+      "--locked",
+      "--workspace",
+      "--all-features",
+      "--no-deps"
+    ],
+    "exit_code": 0,
+    "seconds": 0.42977954214438796,
+    "log_sha256": "15c29470d68baecd92b08332ec0486cd5f0567d31e996de5d7667ce6757273d7"
+  },
+  {
+    "label": "release-schwarz-all-features",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "crates/schwarz-precond/Cargo.toml",
+      "--all-features",
+      "--test",
+      "workspace",
+      "--test",
+      "workspace_allocations",
+      "--test",
+      "serial_schwarz",
+      "--test",
+      "serial_schwarz_allocations"
+    ],
+    "exit_code": 0,
+    "seconds": 0.10923104197718203,
+    "log_sha256": "c3998c9aca7b9d915bbd1adf94a797fd2ad72326a395ea9b05e83a526ed2f51b"
+  },
+  {
+    "label": "release-schwarz-no-default-features",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "crates/schwarz-precond/Cargo.toml",
+      "--no-default-features",
+      "--test",
+      "workspace",
+      "--test",
+      "workspace_allocations",
+      "--test",
+      "serial_schwarz",
+      "--test",
+      "serial_schwarz_allocations"
+    ],
+    "exit_code": 0,
+    "seconds": 0.09456550003960729,
+    "log_sha256": "62d936f5674e85fb2b73fa68ba735ad697f670fa4e09489561dbaf0bce1edd51"
+  },
+  {
+    "label": "release-within",
+    "command": [
+      "cargo",
+      "test",
+      "--locked",
+      "--release",
+      "--manifest-path",
+      "crates/within/Cargo.toml",
+      "--all-features",
+      "--test",
+      "serial_preconditioner",
+      "--test",
+      "serial_preconditioner_allocations"
+    ],
+    "exit_code": 0,
+    "seconds": 7.702798750018701,
+    "log_sha256": "093a044176763ed05966f5eeb9c47d718430db3304053d02df6e148e4c600354"
+  }
+]
