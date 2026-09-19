@@ -1,0 +1,159 @@
+{
+  "failed_head": "94f3dce211681ff0c061f47fc090fcd2c392c321",
+  "failed_run": 35443493898,
+  "failed_job": 105898347363,
+  "artifact_id": 10584189948,
+  "artifact_bytes": 26021293,
+  "artifact_sha256": "06f5b226237ee9b6cadf2ec42c0acfacb053a97b3721e2cf89d11b7a3a83d8ee",
+  "failed_log_sha256": "da9e8d86b1efc1befb927a9579ecdda9edbe2b161adfcaa4e3dce44220254349",
+  "raw_hardware": {
+    "instrumented": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               GenuineIntel\nModel name:                              INTEL(R) XEON(R) PLATINUM 8573C\nCPU family:                              6\nModel:                                   207\nThread(s) per core:                      2\nCore(s) per socket:                      2\nSocket(s):                               1\nStepping:                                2\nCPU(s) scaling MHz:                      156%\nCPU max MHz:                             2300.0000\nCPU min MHz:                             800.0000\nBogoMIPS:                                4600.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves user_shstk avx_vnni avx512_bf16 vnmi avx512vbmi umip waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid cldemote movdiri movdir64b fsrm serialize tsxldtrk ibt amx_bf16 avx512_fp16 amx_tile amx_int8 arch_capabilities\nVirtualization:                          VT-x\nHypervisor vendor:                       Microsoft\nVirtualization type:                     full\nL1d cache:                               96 KiB (2 instances)\nL1i cache:                               64 KiB (2 instances)\nL2 cache:                                4 MiB (2 instances)\nL3 cache:                                260 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Mitigation; Aligned branch/return thunks\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Vulnerable\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Retpoline\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n",
+    "reference": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           48 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               GenuineIntel\nModel name:                              INTEL(R) XEON(R) PLATINUM 8573C\nCPU family:                              6\nModel:                                   207\nThread(s) per core:                      2\nCore(s) per socket:                      2\nSocket(s):                               1\nStepping:                                2\nCPU(s) scaling MHz:                      152%\nCPU max MHz:                             2300.0000\nCPU min MHz:                             800.0000\nBogoMIPS:                                4600.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology tsc_reliable nonstop_tsc cpuid aperfmperf tsc_known_freq pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch tpr_shadow ept vpid ept_ad fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves user_shstk avx_vnni avx512_bf16 vnmi avx512vbmi umip waitpkg avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq la57 rdpid cldemote movdiri movdir64b fsrm serialize tsxldtrk ibt amx_bf16 avx512_fp16 amx_tile amx_int8 arch_capabilities\nVirtualization:                          VT-x\nHypervisor vendor:                       Microsoft\nVirtualization type:                     full\nL1d cache:                               96 KiB (2 instances)\nL1i cache:                               64 KiB (2 instances)\nL2 cache:                                4 MiB (2 instances)\nL3 cache:                                260 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Mitigation; Aligned branch/return thunks\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Vulnerable\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Vulnerable\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Retpoline\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n"
+  },
+  "recomputed_with_repair": {
+    "schema": 1,
+    "scope": "prepared_automatic_diagnostic_only",
+    "profile": "smoke",
+    "processes": 2160,
+    "exact_reference_profile_pairs": 1080,
+    "eligible_pairs": 1080,
+    "expected_pairs": 1080,
+    "certified_columns": 29520,
+    "expected_columns": 29520,
+    "failed_processes": 0,
+    "failed_process_seconds": 0.0,
+    "all_process_seconds": 4.673739769,
+    "complete_certification_gate_passed": true,
+    "performance_measurement": false,
+    "competitive_qualification": false,
+    "default_selected": false,
+    "timing_scope": "perturbed current-thread diagnostic regions only; no speedups or cross-build CPU comparisons"
+  },
+  "checks": [
+    {
+      "name": "format",
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "seconds": 0.6976016671396792
+    },
+    {
+      "name": "clippy",
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "seconds": 0.289759875042364
+    },
+    {
+      "name": "all",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-features"
+      ],
+      "exit": 0,
+      "seconds": 182.95986687508412
+    },
+    {
+      "name": "minimal",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "seconds": 43.460671541979536
+    },
+    {
+      "name": "docs",
+      "command": [
+        "cargo",
+        "doc",
+        "--locked",
+        "--workspace",
+        "--all-features",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "seconds": 0.06914570787921548
+    },
+    {
+      "name": "python",
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0,
+      "seconds": 34.954423874849454
+    },
+    {
+      "name": "automatic-probe-unit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "seconds": 0.09620224987156689
+    },
+    {
+      "name": "diagnostic-probe-unit",
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_diagnostic"
+      ],
+      "exit": 0,
+      "seconds": 0.0959024999756366
+    }
+  ],
+  "log_sha256": {
+    "all.log": "48d3f84e48f631a99aee48ab5fac2ecd11b5512603fea27588762d4eb1b2e682",
+    "automatic-probe-unit.log": "c8ef6f0b5b1dcabbe85a965d4c43fa9352bb0a19ebf39c8bc3661c6f4dcb111a",
+    "clippy.log": "5604fc8f0c276397a55db4bd7008236712075c0ad37d3b3a0f1fe362b1b85a36",
+    "diagnostic-probe-unit.log": "5c2f021e9b151e97152143cd6b9a8b784ebaceaf3a65a9692d1f8f2280e71414",
+    "docs.log": "b144feda786534dfd4f9d0a1d79ed237b6134dfaaa3d98ab737fd6e41fd05df0",
+    "format.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "minimal.log": "fe1bf63e152b76aa1fd8905aff6836e01437617712444c030b4f50450db70916",
+    "python.log": "e68c31a17821e4948b884ccbff8ee4694d514d924f3292a28e72a7b7edf0893b"
+  },
+  "source_sha256": {
+    "validate_prepared_automatic_diagnostic.py": "41f3c4207806152df5f8c2083d50ce798958547ff4d5809a2a17d92b7cbfd524",
+    "test_prepared_automatic_diagnostic.py": "721f54b20cb3d17ede52ba4d96c2094de430b8392cd18689c074728ab51377dd"
+  },
+  "scope": "Narrow diagnostic hardware identity repair after a preserved CI failure. No solver rerun, numerical policy change or original artifact edit; historical run remains failed. Separate new-head CI required."
+}

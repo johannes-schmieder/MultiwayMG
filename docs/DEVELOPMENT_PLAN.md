@@ -1111,3 +1111,11 @@ for measurement, not an implemented layout or selected default.
   opaque pooled dependency and call it admitted. M7 fixed hub-segment reductions,
   M8 bounded independent panels, M9 current-frame replay and M10 competitive
   qualification remain open.
+
+- M6l final evidence CI35443493898 exposed an existing diagnostic hardware
+  comparison bug: instantaneous Linux scaling152%/156% differed. Preserve the
+  failed run/artifact and raw snapshots; exclude only two explicitly identified
+  instantaneous-clock values from hardware identity, with strict syntax/presence
+  and five regression tests. Repaired validation accepts all1,080 exact pairs
+  and29,520 columns from that original artifact. No benchmark or policy changes;
+  fresh final-source and PR gates are required before merge.

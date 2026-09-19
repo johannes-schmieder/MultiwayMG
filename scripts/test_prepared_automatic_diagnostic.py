@@ -141,4 +141,33 @@ class DiagnosticCollectionTests(unittest.TestCase):
             else:next(r for r in args[1] if r['build']=='instrumented')['probe']['columns'][0]['certificate']=1.0
             with self.subTest(mode=mode),self.assertRaises(ValueError):self.validate(args)
 
+class HardwareIdentityTests(unittest.TestCase):
+    snapshot='Model name: Example CPU\nCPU(s): 4\nCPU(s) scaling MHz: 152%\nCPU max MHz: 2300.0000\nCPU min MHz: 800.0000\nCPU MHz: 1400.25\n'
+    def identity(self,s,system='Linux'):
+        from validate_prepared_automatic_diagnostic import hardware_identity
+        return hardware_identity(system,s)
+    def test_only_instantaneous_clocks_may_differ(self):
+        changed=self.snapshot.replace('152%','156%').replace('1400.25','1700.50')
+        self.assertEqual(self.identity(self.snapshot),self.identity(changed))
+        self.assertIn('152%',self.snapshot) # Raw input is retained unchanged.
+    def test_model_topology_limits_and_unknown_fields_remain_exact(self):
+        for old,new in [('Example CPU','Other CPU'),('CPU(s): 4','CPU(s): 8'),('2300.0000','2400.0000'),('800.0000','900.0000')]:
+            with self.subTest(old=old):self.assertNotEqual(self.identity(self.snapshot),self.identity(self.snapshot.replace(old,new)))
+        self.assertNotEqual(self.identity(self.snapshot),self.identity(self.snapshot+'Unknown MHz: 12\n'))
+    def test_clock_presence_and_platform_remain_exact(self):
+        self.assertNotEqual(self.identity(self.snapshot),self.identity(self.snapshot.replace('CPU MHz: 1400.25\n','')))
+        self.assertNotEqual(self.identity(self.snapshot,'Darwin'),self.identity(self.snapshot.replace('152%','156%'),'Darwin'))
+    def test_malformed_and_duplicate_clock_snapshots_fail(self):
+        for changed in [self.snapshot.replace('152%','NaN%'),self.snapshot.replace('152%','156'),self.snapshot.replace('1400.25','inf'),self.snapshot.replace('1400.25','-1'),self.snapshot.replace('1400.25','9'*400),self.snapshot+'CPU MHz: 1500\n']:
+            with self.subTest(changed=changed),self.assertRaises(ValueError):self.identity(changed)
+    def test_collection_allows_clock_change_but_rejects_cpu_change(self):
+        from validate_prepared_automatic_diagnostic import validate_records
+        args=collection_fixture()
+        for meta in args[0]['provenance'].values():meta.update(system='Linux',hardware=self.snapshot,affinity=dict(status='measured',cpus=[0,1]))
+        for row in args[1]:row['resources']['method']='gnu_time_v'
+        args[0]['provenance']['instrumented']['hardware']=self.snapshot.replace('152%','156%')
+        self.assertTrue(validate_records(*args)['complete_certification_gate_passed'])
+        args[0]['provenance']['instrumented']['hardware']=self.snapshot.replace('Example CPU','Other CPU')
+        with self.assertRaisesRegex(ValueError,'provenance differs: hardware'):validate_records(*args)
+
 if __name__=='__main__':unittest.main()

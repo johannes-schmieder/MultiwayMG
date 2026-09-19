@@ -35,3 +35,9 @@ All four provider ZIP digests were independently verified against GitHub.
 
 No default, calibration, holdout or competitive claim follows. Final evidence-head
 review/CI and verified-main merge remain the delivery gates.
+
+The final CI provenance failure and narrow repair are documented in
+[the result document](../../../../docs/ISSUE5_AUTOMATIC_LAYOUT_ECONOMICS.md#diagnostic-provenance-repair-after-final-ci).
+The failed artifact remains preserved unchanged; repaired validation accepts its
+1,080 exact pairs and 29,520 certified columns. The original failed run is not
+relabeled as successful. See `provenance-repair.json` for checks and hashes.

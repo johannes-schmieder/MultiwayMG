@@ -25,7 +25,8 @@ schema2 boundary is useful independently of its optional observer. The new
 performance validator rejects profiling=true, any regions/report or either
 nonzero profiler TLS capacity before numerical/outer-cost schema projection.
 It retains explicit layout/grouping and common inline record size. The diagnostic
-policy and frozen v1 timing validators remain unchanged. Instrumented records
+policy and frozen v1 timing validators remain unchanged. A later diagnostic
+hardware-provenance repair is documented below. Instrumented records
 cannot enter this timing experiment.
 
 Each case runs one warmup and five measured isolated processes per arm. Rotate
@@ -138,3 +139,30 @@ declared policy and equally built controls. No compiler flag, default layout or
 numerical-policy change is made here. M6 remains open; M7 bounded deterministic
 parallelism, M8 independent RHS panels, M9 fresh-weight replay and M10 untouched
 competitive qualification follow.
+
+## Diagnostic provenance repair after final CI
+
+Final evidence head `94f3dce` exposed an existing diagnostic-validator bug in
+push CI35443493898, job105898347363. Its two raw Linux `lscpu` snapshots differ
+only in `CPU(s) scaling MHz` (152% versus 156%). The original byte comparison
+incorrectly treated instantaneous clock state as a different CPU. The failed
+job/log and artifact10584189948 remain preserved; its 26,021,293-byte ZIP matches
+provider SHA256 `06f5b226237ee9b6cadf2ec42c0acfacb053a97b3721e2cf89d11b7a3a83d8ee`.
+
+The repair preserves both raw snapshots and all stable fields exactly, including
+CPU model, topology, limits and unknown fields. Only the values of Linux
+`CPU MHz` and `CPU(s) scaling MHz` are excluded from identity comparison; field
+presence, finite nonnegative decimal syntax and uniqueness are checked. Darwin
+remains exact. Five regression tests cover clock variation, different hardware,
+missing/malformed/duplicate clock fields and the complete collection validator.
+This explicitly repairs provenance interpretation after a failure; it changes
+no numerical/performance policy or measured result. There was no process retry.
+
+Revalidation of the original failed artifact with this repair certifies all
+29,520 columns in 2,160 processes and exactly matches 1,080 reference/profile pairs,
+with zero failed processes. The historical run remains failed; a fresh source/PR
+CI must qualify the corrected validator. These diagnostics are separate from the
+four authoritative uninstrumented layout collections and their timing results.
+
+All required Rust1.85 checks and all 131 Python tests pass after the repair;
+`provenance-repair.json` retains the commands, log hashes and raw hardware pair.

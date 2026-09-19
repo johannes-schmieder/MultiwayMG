@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Reconstruct and validate cold diagnostic pairs without inferring speedups."""
-import argparse,json,subprocess
+import argparse,json,re,subprocess
 from pathlib import Path
 from prepared_serial import ROOT,THREAD_ENV,sha,resources
 from prepared_automatic_diagnostic import FILES,POLICY,SCOPES,schedule
@@ -8,6 +8,22 @@ from automatic_recipes import case_id,generate
 from automatic_diagnostic_protocol import check_diagnostic,parse_output,signature
 from automatic_diagnostic_runner import check_reference,check_common
 from validate_prepared_serial import require,integer,finite,no_nonfinite,hash_string
+
+def hardware_identity(system,raw):
+    """Keep raw snapshots; compare identity without Linux instantaneous clocks."""
+    require(isinstance(raw,str) and raw,'missing hardware snapshot')
+    if system!='Linux':return raw
+    identity=[];seen=set()
+    for line in raw.splitlines():
+        key,separator,value=line.strip().partition(':')
+        if separator and key in ['CPU MHz','CPU(s) scaling MHz']:
+            require(key not in seen,'duplicate instantaneous CPU clock');seen.add(key)
+            pattern=r'[0-9]+(?:\.[0-9]+)?' + ('%' if key=='CPU(s) scaling MHz' else '')
+            require(re.fullmatch(pattern,value.strip()) is not None,'malformed instantaneous CPU clock')
+            finite(float(value.strip().removesuffix('%')),'instantaneous CPU clock')
+            identity.append(key+': <instantaneous clock snapshot>')
+        else:identity.append(line)
+    return '\n'.join(identity)
 
 def validate_records(m,runs,policy):
     no_nonfinite(m)
@@ -29,8 +45,9 @@ def validate_records(m,runs,policy):
             for cpu in cpus:integer(cpu,'CPU')
         else:require(meta['system']=='Darwin' and a.get('reason'),'missing placement limitation')
     a,b=m['provenance']['reference'],m['provenance']['instrumented']
-    for key in ['source_commit','source_tree','source_hashes','rustc','target','system','hardware','affinity','sdk_environment','cargo_config_hashes']:
+    for key in ['source_commit','source_tree','source_hashes','rustc','target','system','affinity','sdk_environment','cargo_config_hashes']:
         require(a[key]==b[key],'reference/profile provenance differs: '+key)
+    require(hardware_identity(a['system'],a['hardware'])==hardware_identity(b['system'],b['hardware']),'reference/profile provenance differs: hardware')
     expected=list(schedule(policy));require(len(runs)==len(expected),'missing/extra diagnostic attempts')
     cache={};pairs={};last_end=0;failed=0;failed_ns=0;columns=0
     for index,(row,spec) in enumerate(zip(runs,expected)):
