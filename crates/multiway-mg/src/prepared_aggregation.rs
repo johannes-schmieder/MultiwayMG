@@ -1,7 +1,8 @@
 //! Bounded flat-array pair-neighborhood proposals for prepared frames.
 use crate::{MultiwayError, PairNeighborhoodAggregationOptions};
 use multiway_incidence::{
-    FactorAggregation, PreparedHierarchyBudget, ThreeWayWeightFrame, WeightFrameBinding,
+    FactorAggregation, PreparedHierarchyBudget, PreparedThreeWayTopology, ThreeWayWeightFrame,
+    WeightFrameBinding,
 };
 
 /// Explicit proposal coverage; neither choice is an automatic quality decision.
@@ -122,7 +123,26 @@ impl SourceIds {
             Ok(Self::Wide(ids))
         }
     }
-    fn sort(&mut self, tuples: &[[u32; 3]], factor: usize, neighbor: usize) {
+    fn sort(&mut self, topology: &PreparedThreeWayTopology, factor: usize, neighbor: usize) {
+        // Prepared keys are canonical (a, b, c). The (a, b, source ID) order
+        // is therefore identity, but earlier pair passes have permuted IDs.
+        // Restore the existing array rather than sorting or skipping the pass.
+        if factor == 1 && neighbor == 0 {
+            match self {
+                Self::Compact(ids) => {
+                    for (id, value) in ids.iter_mut().enumerate() {
+                        *value = id as u32;
+                    }
+                }
+                Self::Wide(ids) => {
+                    for (id, value) in ids.iter_mut().enumerate() {
+                        *value = id;
+                    }
+                }
+            }
+            return;
+        }
+        let tuples = topology.topology().tuples();
         match self {
             Self::Compact(ids) => ids.sort_unstable_by_key(|&id| {
                 let i = id as usize;
@@ -362,7 +382,7 @@ impl<'frame, 'topology> PreparedPairNeighborhoodCandidate<'frame, 'topology> {
                 proposals.clear();
                 for neighbor in 0..3 {
                     if neighbor != factor {
-                        ids.sort(tuples, factor, neighbor);
+                        ids.sort(frame.topology(), factor, neighbor);
                         masses.clear();
                         ids.visit(|id| {
                             work.tuple_visits += 1;
@@ -618,39 +638,74 @@ mod failure_tests {
                 std::mem::size_of::<usize>()
             );
         }
-        let tuples: Vec<_> = (0..3)
-            .flat_map(|i| (0..2).flat_map(move |j| (0..4).map(move |k| [i, j, k])))
-            .collect();
-        let mut compact = SourceIds::Compact((0..tuples.len()).rev().map(|i| i as u32).collect());
-        let mut wide = SourceIds::Wide((0..tuples.len()).rev().collect());
-        for factor in 0..3 {
-            for neighbor in 0..3 {
-                if factor != neighbor {
-                    compact.sort(&tuples, factor, neighbor);
-                    wide.sort(&tuples, factor, neighbor);
-                    let mut a = Vec::new();
-                    let mut b = Vec::new();
-                    compact
-                        .visit(|i| {
-                            a.push(i);
-                            Ok(())
-                        })
-                        .unwrap();
-                    wide.visit(|i| {
-                        b.push(i);
-                        Ok(())
-                    })
-                    .unwrap();
-                    assert_eq!(a, b);
-                    assert!(a.windows(2).all(|w| (
-                        tuples[w[0]][neighbor],
-                        tuples[w[0]][factor],
-                        w[0]
-                    ) < (
-                        tuples[w[1]][neighbor],
-                        tuples[w[1]][factor],
-                        w[1]
-                    )));
+        let cases = [
+            (
+                [3, 2, 4],
+                (0..3)
+                    .flat_map(|i| (0..2).flat_map(move |j| (0..4).map(move |k| [i, j, k])))
+                    .collect::<Vec<_>>(),
+            ),
+            (
+                [3, 4, 5],
+                vec![
+                    [0, 0, 2],
+                    [0, 0, 4],
+                    [0, 2, 0],
+                    [0, 3, 3],
+                    [1, 0, 1],
+                    [1, 2, 0],
+                    [1, 2, 4],
+                    [1, 3, 2],
+                    [2, 1, 1],
+                    [2, 1, 3],
+                    [2, 3, 4],
+                ],
+            ),
+            ([1; 3], vec![[0; 3]]),
+        ];
+        for (counts, mut observations) in cases {
+            // Enter through the raw boundary: ordering and duplicates must be
+            // resolved by the prepared owner before the shortcut is available.
+            observations.reverse();
+            observations.push(observations[0]);
+            observations.rotate_left(1);
+            let topology =
+                PreparedThreeWayTopology::try_from_observations(counts, &observations).unwrap();
+            let tuples = topology.topology().tuples();
+            for start in 0..3 {
+                let mut initial: Vec<_> = (0..tuples.len()).collect();
+                if start == 1 {
+                    initial.reverse();
+                } else if start == 2 {
+                    initial.rotate_left(tuples.len() / 2);
+                }
+                let mut compact = SourceIds::Compact(initial.iter().map(|&id| id as u32).collect());
+                let mut wide = SourceIds::Wide(initial);
+                // Repeat the real six-pass schedule: identity restoration must
+                // work after other sorts, including across successive cycles.
+                for _ in 0..2 {
+                    for factor in 0..3 {
+                        for neighbor in 0..3 {
+                            if factor == neighbor {
+                                continue;
+                            }
+                            let mut expected: Vec<_> = (0..tuples.len()).collect();
+                            expected.sort_unstable_by_key(|&id| {
+                                (tuples[id][neighbor], tuples[id][factor], id)
+                            });
+                            compact.sort(&topology, factor, neighbor);
+                            wide.sort(&topology, factor, neighbor);
+                            for ids in [&compact, &wide] {
+                                let mut actual = Vec::new();
+                                ids.visit(|id| {
+                                    actual.push(id);
+                                    Ok(())
+                                })
+                                .unwrap();
+                                assert_eq!(actual, expected);
+                            }
+                        }
+                    }
                 }
             }
         }

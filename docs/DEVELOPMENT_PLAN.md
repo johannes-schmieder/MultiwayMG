@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6l merged; M6m dense reconstruction qualified (PR66); terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6m merged; M6n canonical pair ordering in qualification; terminal/admission work remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1157,3 +1157,13 @@ for measurement, not an implemented layout or selected default.
   modified LSMR is metric-preconditioned, not ordinary right preconditioning by
   an inverse Gramian. M7 explicit pools, M8 panels, M9 replay and M10 qualification
   retain the accepted gates and resource limits.
+
+- M6m PR66 merged as `98ad3e5`; actual clean main equals reviewed tree `5980275`.
+  All36 final source/PR jobs pass, with exact head/base guards. Its complete
+  evidence and negative full-solver economics remain unchanged.
+- M6n [canonical pair ordering](ISSUE5_CANONICAL_PAIR_ORDER.md) removes only the
+  third source-ID comparison sort: canonical prepared tuples prove its output is
+  identity, so reset the existing compact/wide array after earlier permutations.
+  All six visit orders, floating-point reductions, capacities and admission
+  boundaries stay fixed. Required/release gates and complete automatic regression
+  must qualify it before retention; no unpaired timing speedup claim.
