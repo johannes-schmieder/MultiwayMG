@@ -1035,3 +1035,19 @@ for measurement, not an implemented layout or selected default.
   arms. Keep numerical-policy changes distinct from layout-only comparisons.
   M6 sparse terminal/admission, M7 deterministic bounded CPU execution, M8 RHS
   panels, M9 fresh-weight replay and M10 frozen competitive qualification remain.
+
+- M6j PR63 merged as `e07239dcf72bef50a2ffd0dc91e07beb61d2d2cc`; clean main
+  matches reviewed tree `cfd4bd8d22de2f25062007859fa7215539e4e41b`. Final source
+  CI35433548967/35433548974 and PR CI35433550855/35433550864 passed, as did
+  post-merge CI35433990078/35433990086.
+- M6k implements opt-in fixed-size disjoint automatic diagnostics and a separate
+  explicit-layout schema2 probe. All required Rust1.85 gates, 115 Python tests,
+  four collector tests, two integration tests and release qualification pass.
+  Active debug/release allocation records exactly match all 39 M6j controls
+  (6,240 certified columns/configuration) and four zero-allocation denials.
+  Final debug and release probes each pass 2,250 reference/profile processes,
+  225 legacy comparisons, 900 layout comparisons, 26 malformed inputs and ten
+  CLI checks. Both profiler TLS capacities are explicit; the reference/profile
+  inline record is 6,608 bytes on this Mac. The separate frozen source policy
+  has nine arms, K1/8/32 and smoke/development profiles. Source CI and committed-
+  source collection precede evidence review. No speedup/default claim follows.

@@ -1,0 +1,368 @@
+{
+  "final_targeted": {
+    "clippy-final.log": {
+      "exit": 0,
+      "sha256": "ca8ef63672c4d938bcc294c57490699de516668514b353eafbf3579a7e6176be"
+    },
+    "probe-debug-v2.log": {
+      "exit": 0,
+      "sha256": "65c4c0de68a558d3a4e694867b1ea170004e23a5b42960c0847d458913fd024a"
+    },
+    "profiler-release.log": {
+      "exit": 0,
+      "sha256": "a15728cf17bc907646c645436288f75ca6fb6aedf43dd09cd909b02e93e3f133"
+    },
+    "python-protocol-final.log": {
+      "exit": 0,
+      "sha256": "b866951fc44aa5517ad7a170882a364248a9d592771094e26775e31e2db9d59c"
+    }
+  },
+  "release-v1": [
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--features",
+        "lsmr",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-debug-build",
+      "seconds": 0.040986834
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "scripts/check_prepared_automatic_probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/debug/examples/prepared_automatic_benchmark",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/release-v1/automatic-debug-protocol"
+      ],
+      "exit": 0,
+      "name": "automatic-debug-protocol",
+      "seconds": 3.749667375
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--test",
+        "prepared_automatic",
+        "--test",
+        "automatic_allocation_peaks",
+        "--test",
+        "prepared_baseline",
+        "--test",
+        "prepared_grouped_hierarchy",
+        "--test",
+        "prepared_hierarchy",
+        "--test",
+        "prepared_pcg",
+        "--test",
+        "prepared_lsmr",
+        "--test",
+        "workspace_allocations"
+      ],
+      "exit": 0,
+      "name": "complete-all",
+      "seconds": 19.549771084
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--all-features",
+        "--test",
+        "component_layout"
+      ],
+      "exit": 0,
+      "name": "components-all",
+      "seconds": 0.8135830829999975
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--test",
+        "prepared_automatic",
+        "--test",
+        "automatic_allocation_peaks",
+        "--test",
+        "prepared_baseline",
+        "--test",
+        "prepared_grouped_hierarchy",
+        "--test",
+        "prepared_hierarchy",
+        "--test",
+        "prepared_pcg",
+        "--test",
+        "prepared_lsmr",
+        "--test",
+        "workspace_allocations"
+      ],
+      "exit": 0,
+      "name": "complete-minimal",
+      "seconds": 12.325116083000001
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--no-default-features",
+        "--test",
+        "component_layout"
+      ],
+      "exit": 0,
+      "name": "components-minimal",
+      "seconds": 1.7994594589999977
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-incidence",
+        "--all-features",
+        "--lib",
+        "component_root"
+      ],
+      "exit": 0,
+      "name": "component-private",
+      "seconds": 2.7884738340000013
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--features",
+        "lsmr",
+        "--example",
+        "prepared_serial_benchmark"
+      ],
+      "exit": 0,
+      "name": "probe-build",
+      "seconds": 2.987883625000002
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "scripts/check_prepared_layout_probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/release/examples/prepared_serial_benchmark",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/release-v1/protocol"
+      ],
+      "exit": 0,
+      "name": "protocol",
+      "seconds": 1.222957790999999
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-unit",
+      "seconds": 0.053202083000002176
+    },
+    {
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "-p",
+        "multiway-mg",
+        "--no-default-features",
+        "--features",
+        "lsmr",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-build",
+      "seconds": 0.5490052500000004
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "scripts/check_prepared_automatic_probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6h/target/release/examples/prepared_automatic_benchmark",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/release-v1/automatic-protocol"
+      ],
+      "exit": 0,
+      "name": "automatic-protocol",
+      "seconds": 2.442967375000002
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_diagnostic"
+      ],
+      "exit": 0,
+      "name": "diagnostic-probe-unit",
+      "seconds": 0.07152437500000275
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/release-probe.py",
+        "/Users/johannes/Git/MultiwayMG-assessments/2026-09-19-m6k/release-v1/diagnostic-release"
+      ],
+      "exit": 0,
+      "name": "diagnostic-release-protocol",
+      "seconds": 18.220355082999994
+    }
+  ],
+  "required-v1": [
+    {
+      "command": [
+        "cargo",
+        "fmt",
+        "--all",
+        "--",
+        "--check"
+      ],
+      "exit": 0,
+      "name": "format",
+      "seconds": 0.50814575
+    },
+    {
+      "command": [
+        "cargo",
+        "clippy",
+        "--locked",
+        "--workspace",
+        "--all-targets",
+        "--all-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "exit": 0,
+      "name": "clippy",
+      "seconds": 0.27995241699999995
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--all-features"
+      ],
+      "exit": 0,
+      "name": "all",
+      "seconds": 200.996999792
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "--workspace",
+        "--no-default-features"
+      ],
+      "exit": 0,
+      "name": "minimal",
+      "seconds": 59.71973033300003
+    },
+    {
+      "command": [
+        "cargo",
+        "doc",
+        "--locked",
+        "--workspace",
+        "--all-features",
+        "--no-deps"
+      ],
+      "exit": 0,
+      "name": "docs",
+      "seconds": 1.0055039160000092
+    },
+    {
+      "command": [
+        "/opt/homebrew/bin/python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0,
+      "name": "python",
+      "seconds": 21.712656707999997
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_benchmark"
+      ],
+      "exit": 0,
+      "name": "automatic-probe-unit",
+      "seconds": 0.6049426669999889
+    },
+    {
+      "command": [
+        "cargo",
+        "test",
+        "--locked",
+        "-p",
+        "multiway-mg",
+        "--all-features",
+        "--example",
+        "prepared_automatic_diagnostic"
+      ],
+      "exit": 0,
+      "name": "diagnostic-probe-unit",
+      "seconds": 0.6884727920000273
+    }
+  ]
+}

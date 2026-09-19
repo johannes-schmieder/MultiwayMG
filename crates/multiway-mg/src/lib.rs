@@ -5,6 +5,8 @@
 //! by the `cmg` crate.
 
 mod aggregation;
+#[cfg(all(feature = "lsmr", feature = "profiling"))]
+pub mod automatic_profiling;
 mod bootstrap;
 mod bootstrap_hierarchy;
 mod bootstrap_portfolio;

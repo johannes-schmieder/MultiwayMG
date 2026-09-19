@@ -139,3 +139,7 @@ harness = false
 [[example]]
 name = "prepared_automatic_benchmark"
 required-features = ["lsmr"]
+
+[[example]]
+name = "prepared_automatic_diagnostic"
+required-features = ["lsmr"]

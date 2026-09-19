@@ -31,7 +31,10 @@ pub(super) fn solve(
         maximum,
         progress,
     )?;
-    let frames = HierarchyWeightFrames::try_new_with_budget(&structure, frame, budget)?;
+    let frames = automatic_measured!(
+        NumericalReplay,
+        HierarchyWeightFrames::try_new_with_budget(&structure, frame, budget)
+    )?;
     let live = add(
         add(add(other, group_bytes)?, fine_payload(frame)?)?,
         add(
@@ -55,24 +58,28 @@ pub(super) fn solve(
         maximum,
         progress,
     )?;
-    let owner = match &groups {
-        Some(groups) => PreparedMapHierarchy::try_new_with_grouping(
-            &frames,
-            groups,
-            progress
-                .layout
-                .requested_layout
-                .mode()
-                .expect("grouped route"),
-            options.terminal_relative_tolerance,
-        )?,
-        None => PreparedMapHierarchy::try_new(&frames, options.terminal_relative_tolerance)?,
-    };
+    let owner = automatic_measured!(
+        CoarseFactor,
+        match &groups {
+            Some(groups) => PreparedMapHierarchy::try_new_with_grouping(
+                &frames,
+                groups,
+                progress
+                    .layout
+                    .requested_layout
+                    .mode()
+                    .expect("grouped route"),
+                options.terminal_relative_tolerance,
+            )?,
+            None => PreparedMapHierarchy::try_new(&frames, options.terminal_relative_tolerance)?,
+        }
+    );
     let with_factor = add(live, owner.retained_payload_bytes()?)?;
     progress.stage = PreparedAutomaticStage::Screening;
     // Screen scratch and its application workspace die before the complete
     // Krylov workspace is allocated. Both setup costs are part of the batch.
     {
+        automatic_span!(Screening);
         admit(
             add(with_factor, owner.workspace_required_bytes()?)?,
             maximum,
@@ -131,6 +138,7 @@ fn structure<'topology>(
     other: usize,
     progress: &mut Progress<'_>,
 ) -> Result<PreparedHierarchyTopology<'topology>, MultiwayError> {
+    automatic_span!(StructuralPreparation);
     let limits = PreparedHierarchyLimits {
         maximum_transitions: h.maximum_transitions,
         maximum_total_tuples: mul(frame.weights().len(), h.maximum_tuple_multiplier)?,

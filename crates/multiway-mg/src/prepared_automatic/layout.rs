@@ -88,6 +88,18 @@ fn tracked<T>(
     progress: &mut Progress<'_>,
     build: impl FnOnce(&mut Progress<'_>) -> Result<(T, usize, usize), MultiwayError>,
 ) -> Result<T, MultiwayError> {
+    #[cfg(feature = "profiling")]
+    let _span = crate::automatic_profiling::span(match scope {
+        PreparedAutomaticGroupingScope::Hierarchy => {
+            crate::automatic_profiling::Phase::HierarchyGrouping
+        }
+        PreparedAutomaticGroupingScope::ComponentBaseline => {
+            crate::automatic_profiling::Phase::ComponentGrouping
+        }
+        PreparedAutomaticGroupingScope::GlobalBaseline => {
+            crate::automatic_profiling::Phase::GlobalGrouping
+        }
+    });
     increment(&mut progress.layout.grouping_attempts, 1)?;
     match build(progress) {
         Ok((groups, bytes, levels)) => {
