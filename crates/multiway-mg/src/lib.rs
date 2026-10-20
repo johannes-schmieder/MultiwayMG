@@ -62,6 +62,8 @@ mod range_projected;
 mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
+#[cfg(feature = "sparse-terminal")]
+mod sparse_terminal;
 mod spectral;
 mod stationary;
 #[cfg(feature = "lsmr")]
@@ -182,6 +184,11 @@ pub use repair::{
 pub use research_pair::{
     FactorPair, PairCmgBuildTiming, PairCmgMemoryReport, PairSubsetCmgPreconditioner,
     estimate_problem_bytes,
+};
+#[cfg(feature = "sparse-terminal")]
+pub use sparse_terminal::{
+    PreparedSparseTerminal, PreparedSparseTerminalOptions, PreparedSparseTerminalReport,
+    SPARSE_TERMINAL_DESIGN_DESCRIPTOR_BOUND, SparseTerminalWorkspace,
 };
 pub use spectral::{
     DenseRangeDecomposition, SpectralAnalysisOptions, SpectralAnalysisReport,

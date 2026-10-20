@@ -304,6 +304,7 @@ impl CycleScreenedMapHierarchyWorkspace {
 
 impl CycleActions for CycleScreenedMapHierarchy {
     type LevelScratch = LevelWorkspace;
+    type TerminalScratch = DensePseudoinverseWorkspace;
     fn level_count(&self) -> usize {
         self.problems.len()
     }

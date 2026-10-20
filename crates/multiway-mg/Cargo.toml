@@ -13,6 +13,7 @@ default = ["cmg", "lsmr"]
 cmg = ["dep:cmg"]
 lsmr = ["dep:schwarz-precond"]
 within-comparator = ["dep:within", "lsmr"]
+sparse-terminal = ["within-comparator"]
 profiling = ["multiway-incidence/profiling"]
 
 [dependencies]
@@ -135,6 +136,12 @@ required-features = ["lsmr"]
 name = "automatic_allocation_peaks"
 path = "tests/automatic_allocation_peaks.rs"
 harness = false
+
+[[test]]
+name = "sparse_terminal_allocations"
+path = "tests/sparse_terminal_allocations.rs"
+harness = false
+required-features = ["sparse-terminal"]
 
 [[example]]
 name = "prepared_automatic_benchmark"

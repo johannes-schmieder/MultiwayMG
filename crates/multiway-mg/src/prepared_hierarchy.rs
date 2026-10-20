@@ -1,9 +1,12 @@
 //! Fixed serial MAP hierarchy attached to immutable supplied-map numerical frames.
+#[cfg(feature = "sparse-terminal")]
+use crate::sparse_terminal::{PreparedSparseTerminal, SparseTerminalWorkspace};
 use crate::{
     DensePseudoinverse, DensePseudoinverseWorkspace, MultiwayError, PreparedMapWorkspace,
     PreparedSymmetricMap,
     cycle_kernel::{self, CycleActions},
 };
+use core::marker::PhantomData;
 use multiway_incidence::{
     HierarchyWeightFrames, PreparedHierarchyGrouping, PreparedStructuralProjectionWorkspace,
     PreparedTupleGrouping, ThreeWayWeightFrame,
@@ -52,7 +55,7 @@ pub enum GroupedGramianMode {
 #[derive(Debug)]
 pub struct PreparedMapHierarchy<'state> {
     frames: &'state HierarchyWeightFrames<'state, 'state, 'state>,
-    terminal: DensePseudoinverse,
+    terminal: Terminal<'state>,
     grouping: Option<(
         &'state PreparedHierarchyGrouping<'state, 'state>,
         GroupedGramianMode,
@@ -83,7 +86,24 @@ pub struct PreparedHierarchyWorkspace<'owner> {
     owner: &'owner PreparedMapHierarchy<'owner>,
     arena: Vec<f64>,
     levels: Vec<LevelScratch<'owner>>,
-    terminal: DensePseudoinverseWorkspace,
+    terminal: TerminalWorkspace<'owner>,
+}
+
+/// The coarsest level's solve: a bounded dense pseudoinverse or, under an explicit
+/// policy, a fixed sparse terminal for a level above the dense cap.
+#[derive(Debug)]
+enum Terminal<'state> {
+    Dense(DensePseudoinverse, PhantomData<&'state ()>),
+    #[cfg(feature = "sparse-terminal")]
+    Sparse(Box<PreparedSparseTerminal<'state>>),
+}
+
+/// Terminal scratch matching the owner's terminal form.
+#[derive(Debug)]
+pub(crate) enum TerminalWorkspace<'owner> {
+    Dense(DensePseudoinverseWorkspace, PhantomData<&'owner ()>),
+    #[cfg(feature = "sparse-terminal")]
+    Sparse(SparseTerminalWorkspace<'owner>),
 }
 #[derive(Debug)]
 pub(crate) struct LevelScratch<'owner> {
@@ -108,7 +128,8 @@ pub struct PreparedHierarchyPayloadReport {
     pub fine_frame_payload_bytes: usize,
     /// Owned coarse numerical arrays and frame descriptors.
     pub coarse_frame_payload_bytes: usize,
-    /// Dense spectral factors and inverse eigenvalues.
+    /// Dense spectral factors and inverse eigenvalues, or a sparse terminal's
+    /// retained `within` preconditioner and range projector.
     pub terminal_payload_bytes: usize,
     /// Borrowed optional grouping arrays/descriptors, counted once at that owner.
     pub grouping_payload_bytes: usize,
@@ -176,9 +197,53 @@ impl<'state> PreparedMapHierarchy<'state> {
         let terminal = DensePseudoinverse::from_frame(last, relative_tolerance)?;
         Ok(Self {
             frames,
-            terminal,
+            terminal: Terminal::Dense(terminal, PhantomData),
             grouping,
         })
+    }
+
+    /// Attach an already admitted sparse terminal for the coarsest frame.
+    ///
+    /// The terminal must have been built for exactly this hierarchy's last
+    /// numerical frame; its dimension is not bounded by the dense cap. An
+    /// optional grouping is validated as for [`Self::try_new_with_grouping`].
+    #[cfg(feature = "sparse-terminal")]
+    pub fn try_new_with_sparse_terminal(
+        frames: &'state HierarchyWeightFrames<'_, '_, '_>,
+        grouping: Option<(
+            &'state PreparedHierarchyGrouping<'_, '_>,
+            GroupedGramianMode,
+        )>,
+        terminal: PreparedSparseTerminal<'state>,
+    ) -> Result<Self, MultiwayError> {
+        if frames.level_count() > PREPARED_HIERARCHY_LEVEL_LIMIT {
+            return Err(MultiwayError::InvalidOption {
+                name: "prepared_hierarchy_levels",
+                message: "must not exceed 64".to_owned(),
+            });
+        }
+        if let Some((groups, _)) = grouping {
+            groups.validate_for(frames.hierarchy())?;
+        }
+        let last = frames
+            .frame(frames.level_count() - 1)
+            .expect("nonempty frame inventory");
+        terminal.validate_for(last)?;
+        Ok(Self {
+            frames,
+            terminal: Terminal::Sparse(Box::new(terminal)),
+            grouping,
+        })
+    }
+
+    /// The sparse terminal, when this hierarchy uses one.
+    #[cfg(feature = "sparse-terminal")]
+    #[must_use]
+    pub fn sparse_terminal(&self) -> Option<&PreparedSparseTerminal<'state>> {
+        match &self.terminal {
+            Terminal::Sparse(terminal) => Some(terminal),
+            Terminal::Dense(..) => None,
+        }
     }
 
     /// Exact borrowed immutable numerical replay owner.
@@ -242,14 +307,23 @@ impl<'state> PreparedMapHierarchy<'state> {
     pub fn depth(&self) -> usize {
         self.frames.level_count() - 1
     }
-    /// Numerical rank retained at the bounded dense terminal.
+    /// Numerical rank at the terminal: the dense factor's retained rank, or the
+    /// exactly certified rank of a sparse terminal's coarse incidence.
     #[must_use]
     pub fn terminal_rank(&self) -> usize {
-        self.terminal.rank()
+        match &self.terminal {
+            Terminal::Dense(dense, _) => dense.rank(),
+            #[cfg(feature = "sparse-terminal")]
+            Terminal::Sparse(sparse) => sparse.rank(),
+        }
     }
     /// Exclusive immutable numerical payload, excluding all borrowed frames/structure.
     pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
-        self.terminal.retained_payload_bytes()
+        match &self.terminal {
+            Terminal::Dense(dense, _) => dense.retained_payload_bytes(),
+            #[cfg(feature = "sparse-terminal")]
+            Terminal::Sparse(sparse) => sparse.retained_payload_bytes(),
+        }
     }
 
     /// Requested exclusive payload for a fresh complete application workspace.
@@ -258,7 +332,14 @@ impl<'state> PreparedMapHierarchy<'state> {
             bytes::<LevelScratch<'_>>(self.frames.level_count())?,
             bytes::<f64>(self.arena_elements()?)?,
         )?;
-        total = add(total, self.terminal.workspace_required_bytes()?)?;
+        total = add(
+            total,
+            match &self.terminal {
+                Terminal::Dense(dense, _) => dense.workspace_required_bytes()?,
+                #[cfg(feature = "sparse-terminal")]
+                Terminal::Sparse(sparse) => sparse.workspace_required_bytes()?,
+            },
+        )?;
         for level in 0..self.frames.level_count() {
             let frame = self.frame_at(level);
             total = add(
@@ -543,11 +624,18 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
             levels.push(LevelScratch { projection, map });
         }
         before("prepared cycle terminal workspace")?;
+        let terminal = match &owner.terminal {
+            Terminal::Dense(dense, _) => {
+                TerminalWorkspace::Dense(dense.application_workspace()?, PhantomData)
+            }
+            #[cfg(feature = "sparse-terminal")]
+            Terminal::Sparse(sparse) => TerminalWorkspace::Sparse(sparse.application_workspace()?),
+        };
         Ok(Self {
             owner,
             arena,
             levels,
-            terminal: owner.terminal.application_workspace()?,
+            terminal,
         })
     }
     /// Exact numerical hierarchy owner, not shape or value equality.
@@ -565,7 +653,14 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
             bytes::<f64>(self.arena.capacity())?,
             bytes::<LevelScratch<'_>>(self.levels.capacity())?,
         )?;
-        total = add(total, self.terminal.retained_bytes()?)?;
+        total = add(
+            total,
+            match &self.terminal {
+                TerminalWorkspace::Dense(dense, _) => dense.retained_bytes()?,
+                #[cfg(feature = "sparse-terminal")]
+                TerminalWorkspace::Sparse(sparse) => sparse.retained_payload_bytes()?,
+            },
+        )?;
         for level in &self.levels {
             total = add(total, level.projection.retained_payload_bytes()?)?;
             if let Some(map) = &level.map {
@@ -578,6 +673,7 @@ impl<'owner> PreparedHierarchyWorkspace<'owner> {
 
 impl<'state> CycleActions for PreparedMapHierarchy<'state> {
     type LevelScratch = LevelScratch<'state>;
+    type TerminalScratch = TerminalWorkspace<'state>;
     fn level_count(&self) -> usize {
         self.frames.level_count()
     }
@@ -663,10 +759,23 @@ impl<'state> CycleActions for PreparedMapHierarchy<'state> {
         &self,
         rhs: &[f64],
         out: &mut [f64],
-        workspace: &mut DensePseudoinverseWorkspace,
+        workspace: &mut TerminalWorkspace<'state>,
     ) -> Result<(), MultiwayError> {
-        self.terminal
-            .solve_into_with_workspace(rhs, out, workspace)?;
+        match (&self.terminal, workspace) {
+            (Terminal::Dense(dense, _), TerminalWorkspace::Dense(workspace, _)) => {
+                dense.solve_into_with_workspace(rhs, out, workspace)?;
+            }
+            #[cfg(feature = "sparse-terminal")]
+            (Terminal::Sparse(sparse), TerminalWorkspace::Sparse(workspace)) => {
+                sparse.apply_with_workspace(rhs, out, workspace)?;
+            }
+            #[cfg(feature = "sparse-terminal")]
+            _ => {
+                return Err(MultiwayError::WorkspaceNotPrepared {
+                    context: "prepared hierarchy terminal form",
+                });
+            }
+        }
         finite(out, "prepared hierarchy terminal")
     }
 }
