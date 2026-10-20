@@ -8,7 +8,9 @@
 use std::time::{Duration, Instant};
 
 use schwarz_precond::ReductionStrategy;
-use within::{Effect, LocalSolverConfig, PreconditionerConfig, Solver};
+use within::{
+    BuildError, Design, Effect, LocalSolverConfig, PreconditionerConfig, SetupLimit, Solver,
+};
 
 use crate::{
     MultiwayError, Preconditioner, ThreeWayProblem,
@@ -42,7 +44,8 @@ impl WithinApproxCholBuildTiming {
         self.design_input_setup
     }
 
-    /// Complete public `within::Solver::new` wall time.
+    /// Complete public `within::Solver::new` wall time, or the checked
+    /// `within::Preconditioner::build_checked` wall time for a checked build.
     #[must_use]
     pub const fn within_solver_setup(self) -> Duration {
         self.within_solver_setup
@@ -74,6 +77,7 @@ pub struct WithinApproxCholMemoryReport {
     projection_workspace_bytes: usize,
     within_retained_bytes: Option<usize>,
     within_local_factor_bytes: Option<usize>,
+    within_setup_peak_bytes: Option<usize>,
 }
 
 impl WithinApproxCholMemoryReport {
@@ -89,11 +93,14 @@ impl WithinApproxCholMemoryReport {
         self.projection_workspace_bytes
     }
 
-    /// Retained bytes in the `within` preconditioner when exposed upstream.
+    /// Retained requested heap payload of the `within` preconditioner.
     ///
-    /// The pinned comparator revision does not expose this complete quantity, so
-    /// the value is currently `None`; see [`Self::within_local_factor_bytes`]. Issue-4 isolated benchmarks must measure the
-    /// complete-process retained and peak RSS rather than inventing a number.
+    /// Reported only by a [checked build](WithinApproxCholPreconditioner::build_checked):
+    /// every array and shared block the preconditioner owns when returned,
+    /// verified against an isolated allocator upstream. It excludes allocator
+    /// overhead, inline objects and the pooled apply buffers `within` allocates on
+    /// first parallel application. `None` for an unchecked build, where Issue-4
+    /// isolated benchmarks must measure complete-process RSS instead.
     #[must_use]
     pub const fn within_retained_bytes(self) -> Option<usize> {
         self.within_retained_bytes
@@ -109,6 +116,16 @@ impl WithinApproxCholMemoryReport {
     #[must_use]
     pub const fn within_local_factor_bytes(self) -> Option<usize> {
         self.within_local_factor_bytes
+    }
+
+    /// Peak live requested payload of a checked `within` setup, `None` when unchecked.
+    ///
+    /// Covers every array of `within`'s serial construction, including its
+    /// `approx-chol` factors and their failed exact attempts, with reallocation
+    /// overlap. It excludes this wrapper's own level-column copies and design.
+    #[must_use]
+    pub const fn within_setup_peak_bytes(self) -> Option<usize> {
+        self.within_setup_peak_bytes
     }
 
     /// Sum of retained categories known exactly or estimated in this wrapper.
@@ -207,6 +224,7 @@ impl WithinApproxCholPreconditioner {
             projection_workspace_bytes: projection.workspace_bytes(),
             within_retained_bytes: None,
             within_local_factor_bytes: inner.local_factor_retained_heap_bytes(),
+            within_setup_peak_bytes: None,
         };
         let build_timing = WithinApproxCholBuildTiming {
             design_input_setup,
@@ -220,6 +238,107 @@ impl WithinApproxCholPreconditioner {
             problem,
             inner,
             warnings,
+            build_timing,
+            memory_report,
+            projection,
+        })
+    }
+
+    /// Build the same comparator through `within`'s checked serial setup.
+    ///
+    /// `within::Preconditioner::build_checked` charges every array of its
+    /// construction to one ledger, against `limit`, and returns a preconditioner
+    /// whose serialized form equals the one [`Self::build`] wraps. A refused
+    /// setup returns [`MultiwayError::WithinSetupBudgetExceeded`] before the
+    /// refused allocation. The memory report then carries `within`'s complete
+    /// retained payload and setup peak. Setup is serial. Three-way problems are
+    /// intercept-only, which is the checked path's scope.
+    pub fn build_checked(
+        problem: ThreeWayProblem,
+        options: WithinApproxCholOptions,
+        limit: SetupLimit,
+    ) -> Result<Self, MultiwayError> {
+        let total_start = Instant::now();
+
+        let input_start = Instant::now();
+        let mut levels: [Vec<u32>; 3] =
+            std::array::from_fn(|_| Vec::with_capacity(problem.topology().tuple_count()));
+        for tuple in problem.topology().tuples() {
+            for factor in 0..3 {
+                levels[factor].push(tuple[factor]);
+            }
+        }
+        let effects = levels
+            .iter()
+            .map(|codes| Effect::new(codes, true, std::iter::empty::<&[f64]>()))
+            .collect::<Result<Vec<_>, _>>()
+            .map_err(|error| MultiwayError::Within(error.to_string()))?;
+        let design =
+            Design::new(effects).map_err(|error| MultiwayError::Within(error.to_string()))?;
+        let design_input_setup = input_start.elapsed();
+
+        let within_start = Instant::now();
+        let (inner, report) = match within::Preconditioner::build_checked(
+            &design,
+            Some(problem.weights()),
+            &options.local_solver,
+            options.reduction,
+            limit,
+        ) {
+            Ok((Some(inner), report)) => (inner, report),
+            Ok((None, _)) => {
+                return Err(MultiwayError::Within(
+                    "within returned no preconditioner".to_owned(),
+                ));
+            }
+            Err(BuildError::SetupBudgetExceeded {
+                context,
+                required,
+                limit,
+            }) => {
+                return Err(MultiwayError::WithinSetupBudgetExceeded {
+                    context,
+                    required,
+                    limit,
+                });
+            }
+            Err(error) => return Err(MultiwayError::Within(error.to_string())),
+        };
+        let within_solver_setup = within_start.elapsed();
+        drop(design);
+        if inner.nrows() != problem.dimension() || inner.ncols() != problem.dimension() {
+            return Err(MultiwayError::Within(format!(
+                "within preconditioner shape {}x{} does not match three-way dimension {}",
+                inner.nrows(),
+                inner.ncols(),
+                problem.dimension()
+            )));
+        }
+        let within_preconditioner_setup = inner.build_duration();
+
+        let projection_start = Instant::now();
+        let projection = StructuralRangeProjector::new(&problem);
+        let projection_setup = projection_start.elapsed();
+        let memory_report = WithinApproxCholMemoryReport {
+            problem_state_bytes_estimate: estimate_three_way_problem_bytes(&problem),
+            projection_workspace_bytes: projection.workspace_bytes(),
+            within_retained_bytes: Some(report.retained_payload_bytes),
+            within_local_factor_bytes: inner.local_factor_retained_heap_bytes(),
+            within_setup_peak_bytes: Some(report.peak_payload_bytes),
+        };
+        let build_timing = WithinApproxCholBuildTiming {
+            design_input_setup,
+            within_solver_setup,
+            within_preconditioner_setup,
+            projection_setup,
+            total: total_start.elapsed(),
+        };
+
+        Ok(Self {
+            problem,
+            inner,
+            // Intercept-only pairs are known Laplacians, which emit no warning.
+            warnings: Vec::new(),
             build_timing,
             memory_report,
             projection,

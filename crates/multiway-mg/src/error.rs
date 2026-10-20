@@ -174,6 +174,17 @@ pub enum MultiwayError {
     #[cfg(feature = "within-comparator")]
     #[error("within comparator failed: {0}")]
     Within(String),
+    /// A checked `within` setup was refused before exceeding its declared payload.
+    #[cfg(feature = "within-comparator")]
+    #[error("{context}: within setup requires {required} payload bytes, limit is {limit}")]
+    WithinSetupBudgetExceeded {
+        /// `within` construction step whose reservation was refused.
+        context: &'static str,
+        /// Live requested payload including the refused reservation.
+        required: usize,
+        /// Declared inclusive limit, not process memory.
+        limit: usize,
+    },
 }
 
 pub(crate) fn dimension(context: &'static str, expected: usize, actual: usize) -> MultiwayError {

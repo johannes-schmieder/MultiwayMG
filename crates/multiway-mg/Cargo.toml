@@ -147,3 +147,7 @@ required-features = ["lsmr"]
 [[example]]
 name = "range_admission_matrix"
 required-features = ["within-comparator"]
+
+[[example]]
+name = "within_setup_admission"
+required-features = ["within-comparator"]

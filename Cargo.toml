@@ -17,8 +17,8 @@ repository = "https://github.com/johannes-schmieder/MultiwayMG"
 thiserror = "2.0.16"
 nalgebra = { version = "0.33.2", default-features = false, features = ["std"] }
 cmg = { git = "https://github.com/johannes-schmieder/CMG", rev = "90e1fe0b0c14065155532711246ede6678bb4935" }
-schwarz-precond = { git = "https://github.com/johannes-schmieder/within", rev = "504fbb7dee84e2d902190c6485cdfef0c83f7ce0", package = "schwarz-precond" }
-within = { git = "https://github.com/johannes-schmieder/within", rev = "504fbb7dee84e2d902190c6485cdfef0c83f7ce0", package = "within" }
+schwarz-precond = { git = "https://github.com/johannes-schmieder/within", rev = "c0a7087a1cddde0db29368658aeccea734de935a", package = "schwarz-precond" }
+within = { git = "https://github.com/johannes-schmieder/within", rev = "c0a7087a1cddde0db29368658aeccea734de935a", package = "within" }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
