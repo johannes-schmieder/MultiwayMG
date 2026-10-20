@@ -4,6 +4,14 @@
 
 ### Added
 
+- Paired within/schwarz-precond pins at `ffc1a56`. It adds
+  `WithinApproxCholPreconditioner::build_checked`, which builds the comparator
+  through within's checked serial setup within a declared payload. Refusals are a
+  typed `MultiwayError::WithinSetupBudgetExceeded`. The memory report gains the
+  complete `within_retained_bytes()` and `within_setup_peak_bytes()`. The new
+  `within_setup_admission` example and collector come with evidence on 80 runs.
+  See `docs/ISSUE5_FACTOR_MEMORY.md`.
+
 - Paired within/schwarz-precond pins at `504fbb7`, which uses the owner approx-chol
   fork for checked factor construction, factor capacity inventories and
   allocation-free permuted solves. The within comparator memory report now

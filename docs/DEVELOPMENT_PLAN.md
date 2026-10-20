@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6p merged (M6p PR #69, main `535ae25`); M6q fork factor scratch/capacity/checked construction merged in approx-chol/within, pin integration in review; within setup admission and terminal integration remain |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6q merged (M6q PR #70, main `7fd4248`); M6r checked within setup merged in approx-chol/within, comparator integration in review; sparse-terminal integration (step 3) remains |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1229,3 +1229,19 @@ for measurement, not an implemented layout or selected default.
   together to `504fbb7`; schwarz-precond is byte-identical, so the automatic route
   is unchanged. Next: within-level checked Schur/cover/setup admission via
   `build_with_limit` with serial construction, then the step-3 terminal policy.
+
+- M6q PR #70 merged as `7fd4248` after all 18 PR jobs passed on `57f998e`.
+- M6r [checked within setup](ISSUE5_FACTOR_MEMORY.md#checked-within-setup-m6r): approx-chol
+  fork PRs #3 (exact sampler reservation, `05c2e58`) and #4 (accounting for a failed
+  build, `43f470a`), and within PR #6 (`Preconditioner::build_checked`, `ffc1a56`).
+  Every executed job is green except within's inherited SemVer check, which is red
+  on its base for the same four 0.4.0 baseline differences. Upstream, 88
+  intercept-only builds are wire-identical to the parallel build, including
+  exact-failure fallbacks. They show zero allocator slack in debug and release on
+  three OSes, and every injected reservation failure is reported. MultiwayMG moves
+  both pins to `ffc1a56` and adds `WithinApproxCholPreconditioner::build_checked` with a
+  typed budget refusal and complete retained/peak accounting. On 80 frozen
+  development runs (source `186b880`), all are admitted at the peak and refused
+  one byte below, and serial actions are bit-identical. The retained payload is
+  1.9–75× the M6q factor inventory. Next: the step-3 generation-bound terminal
+  policy above 256.

@@ -1,0 +1,14 @@
+{
+  "admitted_at_peak": 80,
+  "checked_factor_not_above_unchecked": 80,
+  "checked_to_unchecked_build_time_median": 0.7394459512340257,
+  "maximum_peak_to_retained": 2.1773825065274153,
+  "maximum_retained_bytes": 1628368,
+  "maximum_retained_to_checked_factor": 75.34042553191489,
+  "maximum_setup_peak_bytes": 2584356,
+  "maximum_wrapper_action_difference": 0.0,
+  "minimum_peak_to_retained": 1.0076806915225995,
+  "refused_one_under": 80,
+  "runs": 80,
+  "serial_actions_identical": 80
+}

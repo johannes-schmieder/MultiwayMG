@@ -149,7 +149,10 @@ component and projects fixed actions onto its exact range. On 80 development
 recipe runs it admits all 80, while structural projection fails the 12 with
 additional nullity. The [factor-memory increment](docs/ISSUE5_FACTOR_MEMORY.md) adds checked approx-chol
 construction, factor capacities and allocation-free permuted solves through owner
-forks. within's own setup admission and terminal integration remain open.
+forks. [Checked within setup](docs/ISSUE5_FACTOR_MEMORY.md#checked-within-setup-m6r) now bounds every array
+of the comparator's serial construction. It is admitted at its peak and refused
+one byte below on all 80 development runs, with bit-identical actions.
+Sparse-terminal integration remains open.
 
 ## The problem
 

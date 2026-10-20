@@ -2,9 +2,10 @@
 #![cfg(feature = "within-comparator")]
 
 use multiway_mg::{
-    Preconditioner, ThreeWayProblem, WithinApproxCholOptions, WithinApproxCholPreconditioner,
+    MultiwayError, Preconditioner, ThreeWayProblem, WithinApproxCholOptions,
+    WithinApproxCholPreconditioner,
 };
-use within::{Effect, PreconditionerConfig, Solver};
+use within::{Design, Effect, PreconditionerConfig, SetupLimit, SetupReport, Solver};
 
 fn problem() -> ThreeWayProblem {
     let tuples = vec![
@@ -143,4 +144,196 @@ fn comparator_is_numerically_linear_symmetric_and_positive() {
         memory.problem_state_bytes_estimate() + memory.projection_workspace_bytes(),
         "the factor inventory is reported separately, not added to the estimate"
     );
+}
+
+/// Canonical unique tuples with positive weights spanning `2^±20`, one shared factor
+/// level per block so the pair graphs split into several components.
+fn blocked_problem() -> ThreeWayProblem {
+    let mut tuples = Vec::new();
+    let mut weights = Vec::new();
+    let mut state = 0x6d77_u64;
+    let mut next = |bound: u64| {
+        state = state
+            .wrapping_mul(6_364_136_223_846_793_005)
+            .wrapping_add(1_442_695_040_888_963_407);
+        ((state >> 33) % bound) as u32
+    };
+    for block in 0..3 {
+        // Cover every level of the block, then add random tuples within it.
+        for level in 0..12 {
+            tuples.push([
+                12 * block + level,
+                8 * block + level % 8,
+                5 * block + level % 5,
+            ]);
+        }
+        for _ in 0..60 {
+            tuples.push([
+                12 * block + next(12),
+                8 * block + next(8),
+                5 * block + next(5),
+            ]);
+        }
+    }
+    tuples.sort_unstable();
+    tuples.dedup();
+    for _ in &tuples {
+        weights.push(2.0_f64.powi(next(41) as i32 - 20));
+    }
+    ThreeWayProblem::from_observations([36, 24, 15], &tuples, &weights).unwrap()
+}
+
+/// The `within` preconditioner both ways from the comparator's input shape.
+fn within_both_ways(
+    problem: &ThreeWayProblem,
+    options: &WithinApproxCholOptions,
+) -> (within::Preconditioner, within::Preconditioner, SetupReport) {
+    let mut levels: [Vec<u32>; 3] = std::array::from_fn(|_| Vec::new());
+    for tuple in problem.topology().tuples() {
+        for factor in 0..3 {
+            levels[factor].push(tuple[factor]);
+        }
+    }
+    let effects = || {
+        levels
+            .iter()
+            .map(|codes| Effect::new(codes, true, std::iter::empty::<&[f64]>()).unwrap())
+            .collect::<Vec<_>>()
+    };
+    let solver = Solver::new(
+        effects(),
+        Some(problem.weights().to_vec()),
+        PreconditionerConfig::Additive {
+            local_solver: options.local_solver.clone(),
+            reduction: options.reduction,
+        },
+    )
+    .unwrap();
+    let design = Design::new(effects()).unwrap();
+    let (checked, report) = within::Preconditioner::build_checked(
+        &design,
+        Some(problem.weights()),
+        &options.local_solver,
+        options.reduction,
+        SetupLimit::UNLIMITED,
+    )
+    .unwrap();
+    (
+        solver.preconditioner().unwrap().clone(),
+        checked.unwrap(),
+        report,
+    )
+}
+
+fn serial_action(preconditioner: &within::Preconditioner, x: &[f64]) -> Vec<f64> {
+    let bytes = preconditioner
+        .serial_workspace_required_payload_bytes()
+        .unwrap();
+    let mut workspace = preconditioner.try_serial_workspace(bytes).unwrap();
+    let mut y = vec![0.0; x.len()];
+    workspace.apply(x, &mut y).unwrap();
+    y
+}
+
+#[test]
+fn checked_within_setup_reproduces_the_solver_route_bit_for_bit() {
+    let schur_modes = [within::SchurMode::default(), within::SchurMode::Exact];
+    for problem in [problem(), blocked_problem()] {
+        for schur in schur_modes.clone() {
+            let options = WithinApproxCholOptions {
+                local_solver: within::LocalSolverConfig {
+                    schur,
+                    ..within::LocalSolverConfig::default()
+                },
+                ..WithinApproxCholOptions::default()
+            };
+            let (reference, checked, report) = within_both_ways(&problem, &options);
+            assert!(report.peak_payload_bytes >= report.retained_payload_bytes);
+            for phase in [0.41, 1.3, 2.9] {
+                let x = rhs(&problem, phase);
+                let expected = serial_action(&reference, &x);
+                let actual = serial_action(&checked, &x);
+                for (a, b) in actual.iter().zip(&expected) {
+                    assert_eq!(a.to_bits(), b.to_bits());
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn checked_comparator_reports_complete_within_payload_and_refuses_inclusively() {
+    for problem in [problem(), blocked_problem()] {
+        let options = WithinApproxCholOptions::default();
+        let unchecked =
+            WithinApproxCholPreconditioner::build(problem.clone(), options.clone()).unwrap();
+        let checked = WithinApproxCholPreconditioner::build_checked(
+            problem.clone(),
+            options.clone(),
+            SetupLimit::UNLIMITED,
+        )
+        .unwrap();
+        let (_, _, report) = within_both_ways(&problem, &options);
+
+        let memory = checked.memory_report();
+        assert_eq!(
+            memory.within_retained_bytes(),
+            Some(report.retained_payload_bytes)
+        );
+        assert_eq!(
+            memory.within_setup_peak_bytes(),
+            Some(report.peak_payload_bytes)
+        );
+        // Capacities are not part of a factor's identity: the unaccounted builder
+        // may keep amortized spare capacity that the checked one does not.
+        let factors = memory.within_local_factor_bytes().unwrap();
+        assert!(factors > 0);
+        assert!(report.retained_payload_bytes > factors);
+        assert_eq!(unchecked.memory_report().within_setup_peak_bytes(), None);
+        assert_eq!(
+            memory.known_retained_bytes_estimate(),
+            unchecked.memory_report().known_retained_bytes_estimate()
+        );
+        assert!(checked.warnings().is_empty());
+        assert_eq!(checked.warnings(), unchecked.warnings());
+
+        for phase in [0.29, 0.73] {
+            let x = rhs(&problem, phase);
+            let mut a = vec![0.0; problem.dimension()];
+            let mut b = vec![0.0; problem.dimension()];
+            unchecked.apply(&x, &mut a).unwrap();
+            checked.apply(&x, &mut b).unwrap();
+            let difference: Vec<f64> = a.iter().zip(&b).map(|(&u, &v)| u - v).collect();
+            assert!(max_abs(&difference) <= 1.0e-12 * max_abs(&a).max(1.0));
+        }
+
+        let peak = report.peak_payload_bytes;
+        let at_peak = WithinApproxCholPreconditioner::build_checked(
+            problem.clone(),
+            options.clone(),
+            SetupLimit {
+                maximum_payload_bytes: peak,
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            at_peak.memory_report().within_setup_peak_bytes(),
+            Some(peak)
+        );
+        match WithinApproxCholPreconditioner::build_checked(
+            problem.clone(),
+            options,
+            SetupLimit {
+                maximum_payload_bytes: peak - 1,
+            },
+        ) {
+            Err(MultiwayError::WithinSetupBudgetExceeded {
+                required, limit, ..
+            }) => {
+                assert_eq!(limit, peak - 1);
+                assert!(required > limit && required <= peak);
+            }
+            other => panic!("one byte under the peak must be refused: {other:?}"),
+        }
+    }
 }
