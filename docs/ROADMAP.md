@@ -250,7 +250,9 @@ admission remain separate requirements before sparse-terminal integration. The
 [exact kernel increment](ISSUE5_RANGE_ADMISSION.md) now certifies the complete incidence kernel per
 component and projects fixed actions onto its exact range. On 80 development
 recipe runs it admits all 80, while structural projection fails the 12 with
-additional nullity. Factor-memory admission and terminal integration remain open.
+additional nullity. The [factor-memory increment](ISSUE5_FACTOR_MEMORY.md) adds checked approx-chol
+construction, factor capacities and allocation-free permuted solves through owner
+forks. within's own setup admission and terminal integration remain open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.
