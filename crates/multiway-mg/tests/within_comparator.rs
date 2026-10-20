@@ -134,4 +134,13 @@ fn comparator_is_numerically_linear_symmetric_and_positive() {
     assert!(memory.problem_state_bytes_estimate() > 0);
     assert!(memory.projection_workspace_bytes() > 0);
     assert_eq!(memory.within_retained_bytes(), None);
+    let factors = memory
+        .within_local_factor_bytes()
+        .expect("factor capacity fits usize");
+    assert!(factors > 0, "every pair domain retains a factor");
+    assert_eq!(
+        memory.known_retained_bytes_estimate(),
+        memory.problem_state_bytes_estimate() + memory.projection_workspace_bytes(),
+        "the factor inventory is reported separately, not added to the estimate"
+    );
 }

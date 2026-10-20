@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6o merged (M6o PR #68, main `a49502e`); M6p exact kernel/full-range projection in review; factor-memory admission and terminal integration remain |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6p merged (M6p PR #69, main `535ae25`); M6q fork factor scratch/capacity/checked construction merged in approx-chol/within, pin integration in review; within setup admission and terminal integration remain |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1216,3 +1216,16 @@ for measurement, not an implemented layout or selected default.
   pin, terminal or default change. Next: decide the `approx-chol` factor-memory
   delivery (sparse-terminal step 2) before implementing it, then integrate a
   generation-bound terminal policy above 256 that uses this projector.
+
+- M6p PR #69 merged as `535ae25` after all 18 PR jobs passed on `af01209`.
+- M6q [factor memory](ISSUE5_FACTOR_MEMORY.md): approx-chol fork PR #1 (scratch
+  and capacity, plus the semver discriminant repair) merged as `68fb926`. PR #2
+  (checked construction ledger) merged as `68ad1b9`, whose tree equals the
+  qualified head. within PR #5 (fork pin, dead-region permutation scratch and
+  factor capacity) merged as `504fbb7`. All executed jobs are green except
+  within's inherited SemVer check, which is also red on its base against crates.io
+  0.4.0. The 155 generated builds show zero-slack ledger peaks and are
+  wire-identical to 0.5.0. MultiwayMG moves both within/schwarz-precond pins
+  together to `504fbb7`; schwarz-precond is byte-identical, so the automatic route
+  is unchanged. Next: within-level checked Schur/cover/setup admission via
+  `build_with_limit` with serial construction, then the step-3 terminal policy.

@@ -4,6 +4,11 @@
 
 ### Added
 
+- Paired within/schwarz-precond pins at `504fbb7`, which uses the owner approx-chol
+  fork for checked factor construction, factor capacity inventories and
+  allocation-free permuted solves. The within comparator memory report now
+  includes `within_local_factor_bytes()`. See `docs/ISSUE5_FACTOR_MEMORY.md`.
+
 - Topology-only exact incidence-kernel certificate with a modular rank bound,
   exactly verified integer bases for additional nullity, checked live-payload
   admission and an allocation-free full-range projector; two-sided projection

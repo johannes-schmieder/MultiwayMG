@@ -73,6 +73,7 @@ pub struct WithinApproxCholMemoryReport {
     problem_state_bytes_estimate: usize,
     projection_workspace_bytes: usize,
     within_retained_bytes: Option<usize>,
+    within_local_factor_bytes: Option<usize>,
 }
 
 impl WithinApproxCholMemoryReport {
@@ -90,12 +91,24 @@ impl WithinApproxCholMemoryReport {
 
     /// Retained bytes in the `within` preconditioner when exposed upstream.
     ///
-    /// The pinned comparator revision does not expose this quantity, so the
-    /// value is currently `None`. Issue-4 isolated benchmarks must measure the
+    /// The pinned comparator revision does not expose this complete quantity, so
+    /// the value is currently `None`; see [`Self::within_local_factor_bytes`]. Issue-4 isolated benchmarks must measure the
     /// complete-process retained and peak RSS rather than inventing a number.
     #[must_use]
     pub const fn within_retained_bytes(self) -> Option<usize> {
         self.within_retained_bytes
+    }
+
+    /// Checked retained capacity of every local approximate-Cholesky factor.
+    ///
+    /// Reported by the pinned comparator's
+    /// `Preconditioner::local_factor_retained_heap_bytes`. It counts factor arrays
+    /// only, not cross-tabulations, restriction data, pooled scratch or any
+    /// construction peak, so it is a lower bound on [`Self::within_retained_bytes`]
+    /// and is not added to [`Self::known_retained_bytes_estimate`]. `None` on overflow.
+    #[must_use]
+    pub const fn within_local_factor_bytes(self) -> Option<usize> {
+        self.within_local_factor_bytes
     }
 
     /// Sum of retained categories known exactly or estimated in this wrapper.
@@ -193,6 +206,7 @@ impl WithinApproxCholPreconditioner {
             problem_state_bytes_estimate: estimate_three_way_problem_bytes(&problem),
             projection_workspace_bytes: projection.workspace_bytes(),
             within_retained_bytes: None,
+            within_local_factor_bytes: inner.local_factor_retained_heap_bytes(),
         };
         let build_timing = WithinApproxCholBuildTiming {
             design_input_setup,

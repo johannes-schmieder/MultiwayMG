@@ -20,8 +20,7 @@ dependencies = [
 [[package]]
 name = "approx-chol"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "affa21d606ec089747ab3ef1baff8feac12b5c115e42d4451b01668c9acded56"
+source = "git+https://github.com/johannes-schmieder/approx-chol?rev=68ad1b99dbcf4e3d0145cb4d1aef3f3fc036492c#68ad1b99dbcf4e3d0145cb4d1aef3f3fc036492c"
 dependencies = [
  "num-traits",
  "rand",
@@ -425,7 +424,7 @@ dependencies = [
 [[package]]
 name = "schwarz-precond"
 version = "0.4.0"
-source = "git+https://github.com/johannes-schmieder/within?rev=69110db2733a29bce7b6151466ece95c6249713f#69110db2733a29bce7b6151466ece95c6249713f"
+source = "git+https://github.com/johannes-schmieder/within?rev=504fbb7dee84e2d902190c6485cdfef0c83f7ce0#504fbb7dee84e2d902190c6485cdfef0c83f7ce0"
 dependencies = [
  "rayon",
  "serde",
@@ -574,7 +573,7 @@ dependencies = [
 [[package]]
 name = "within"
 version = "0.4.0"
-source = "git+https://github.com/johannes-schmieder/within?rev=69110db2733a29bce7b6151466ece95c6249713f#69110db2733a29bce7b6151466ece95c6249713f"
+source = "git+https://github.com/johannes-schmieder/within?rev=504fbb7dee84e2d902190c6485cdfef0c83f7ce0#504fbb7dee84e2d902190c6485cdfef0c83f7ce0"
 dependencies = [
  "approx-chol",
  "ndarray",
