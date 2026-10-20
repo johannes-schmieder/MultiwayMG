@@ -14,6 +14,7 @@ mod grouped_operator;
 mod grouping;
 mod hierarchy;
 mod hierarchy_grouping;
+mod kernel_certificate;
 mod kernels;
 mod operator_view;
 mod prepared;
@@ -37,6 +38,10 @@ pub use hierarchy::{
     PreparedHierarchyBudget, PreparedHierarchyBuilder, PreparedHierarchyLimits,
     PreparedHierarchyTopology, PreparedProvisionalFailure, PreparedProvisionalFrame,
     PreparedProvisionalSetup, ProvisionalFrameStage, ProvisionalWeightInput,
+};
+pub use kernel_certificate::{
+    ComponentKernelBasis, ComponentKernelKind, IncidenceKernelCertificate, IncidenceKernelLimits,
+    IncidenceKernelReport, IncidenceRangeProjector, IncidenceRangeProjectorReport,
 };
 pub use operator_view::ThreeWayOperatorView;
 pub use prepared::{

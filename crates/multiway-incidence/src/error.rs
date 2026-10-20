@@ -261,6 +261,47 @@ pub enum IncidenceError {
         /// Operation whose checked arithmetic overflowed.
         context: &'static str,
     },
+    /// Exact kernel certification would exceed its declared live array payload.
+    #[error(
+        "{context}: kernel certification requests {required} payload bytes, budget is {budget}"
+    )]
+    KernelBudgetExceeded {
+        /// Reservation boundary that would exceed the budget.
+        context: &'static str,
+        /// Live requested-array payload including reallocation overlap.
+        required: usize,
+        /// Caller-declared requested-array payload limit, not process memory.
+        budget: usize,
+    },
+    /// A fallible kernel-certification array reservation failed.
+    #[error("kernel certification array allocation failed in {context}")]
+    KernelAllocation {
+        /// Array reservation boundary.
+        context: &'static str,
+    },
+    /// The exact kernel basis could not be reconstructed or independently verified.
+    ///
+    /// This is a fail-closed refusal to certify, not a proof about the kernel.
+    #[error("component {component} kernel was not certified: {reason}")]
+    KernelUncertified {
+        /// Zero-based incidence component.
+        component: usize,
+        /// Fixed description of the failed reconstruction or verification step.
+        reason: &'static str,
+    },
+    /// The floating orthonormal kernel basis missed its declared tolerance.
+    #[error("component {component} kernel projector defect {defect} exceeds tolerance {tolerance}")]
+    KernelProjectorDefect {
+        /// Zero-based incidence component.
+        component: usize,
+        /// Larger of the orthogonality defect and relative incidence residual.
+        defect: f64,
+        /// Caller-declared tolerance.
+        tolerance: f64,
+    },
+    /// A kernel projector names another certificate's prepared topology.
+    #[error("kernel projector belongs to a different prepared topology")]
+    KernelBindingMismatch,
 }
 
 pub(crate) fn dimension(context: &'static str, expected: usize, actual: usize) -> IncidenceError {

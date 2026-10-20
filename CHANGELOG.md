@@ -4,6 +4,11 @@
 
 ### Added
 
+- Topology-only exact incidence-kernel certificate with a modular rank bound,
+  exactly verified integer bases for additional nullity, checked live-payload
+  admission and an allocation-free full-range projector; two-sided projection
+  around fixed actions in `multiway-mg`. See `docs/ISSUE5_RANGE_ADMISSION.md`.
+
 - Compensated coarse-weight and pair-conductance replay with exact parent-frame
   and symbolic-map provenance, rebuilt finite degrees, checked live payload
   admission and allocation/failure tests; see `docs/ISSUE5_WEIGHT_REPLAY.md`.

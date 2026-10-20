@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6n merged; M6o serial Schwarz dependency merged, integration qualified pending final CI/merge; terminal/admission work remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6o merged (M6o PR #68, main `a49502e`); M6p exact kernel/full-range projection in review; factor-memory admission and terminal integration remain |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1199,3 +1199,20 @@ for measurement, not an implemented layout or selected default.
   and 144,000 certificates; six allocation logs preserve all 39 controls/four
   denials. Final evidence-head CI and guarded merge precede delivery. Opaque factor memory/permutation allocations and numerical-range
   eligibility remain explicit open gates, not silently admitted estimates.
+
+- M6o PR #68 merged as `a49502e`; the paired within/schwarz pins at `69110db`
+  are on main.
+- M6p [exact kernel and full-range admission](ISSUE5_RANGE_ADMISSION.md) adds a
+  topology-only incidence-kernel certificate: modular lower bound, exactly verified
+  coprime integer basis for extended components, fail-closed reconstruction and
+  checked live-payload ledger. A deterministic allocation-free projector applies
+  two-sided `P M P` around fixed actions. 400 random supports match independent
+  Bareiss rank. On 80 frozen seed-10001 smoke/development runs, exact nullity
+  matches the dense oracle everywhere. Structural projection admits 68 and fails
+  exactly the 12 additional-nullity runs (leakage up to 2.01e-2). Certified
+  full-range projection admits all 80. The M6o 0.252389/0.176210 negative and an
+  oracle-basis resolution limit (7.7e-10) are preserved. Source `8ed28db`
+  passes the required Rust 1.85.0 groups and all 138 Python tests locally. No routing,
+  pin, terminal or default change. Next: decide the `approx-chol` factor-memory
+  delivery (sparse-terminal step 2) before implementing it, then integrate a
+  generation-bound terminal policy above 256 that uses this projector.

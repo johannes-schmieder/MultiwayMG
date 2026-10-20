@@ -1,0 +1,26 @@
+dimension	560
+tuples	10538
+components	1
+largest_component	560
+exact_rank	558
+exact_nullity	2
+additional_nullity	0
+extended_components	0
+large_extended_components	0
+eliminated_tuples	10520
+stored_pivot_entries	1708
+maximum_basis_magnitude	0
+certificate_peak_bytes	63976
+certificate_retained_bytes	4520
+certification_ns	8376324
+projector_peak_bytes	13496
+projector_retained_bytes	13496
+projector_orthogonality	3.33066907387546962e-15
+projector_residual	0.00000000000000000e0
+projector_ns	734099
+oracle_unit_nullity	2
+oracle_weighted_nullity	2
+action_header	name	full_symmetry	quotient_symmetry	range_leakage	minimum_energy	maximum_energy	negative	near_zero	symmetric	preserves_range	positive_on_range
+action	within-output	6.65229766988887803e-4	1.16952988180756700e-15	4.56596943145299859e-15	1.45296109008232551e-3	8.33931020041606130e-2	0	0	false	true	true
+action	structural-both	5.44560416301269430e-17	1.18169949816559325e-15	4.56278808066633945e-15	1.45296109008229970e-3	8.33931020041603493e-2	0	0	true	true	true
+action	certified-full-both	6.01669379157926789e-17	1.18255356555670309e-15	4.56367750631091376e-15	1.45296109008229385e-3	8.33931020041610155e-2	0	0	true	true	true

@@ -58,6 +58,7 @@ mod prepared_hierarchy;
 #[cfg(feature = "lsmr")]
 mod prepared_lsmr;
 mod prepared_pcg;
+mod range_projected;
 mod repair;
 #[cfg(feature = "cmg")]
 mod research_pair;
@@ -172,6 +173,7 @@ pub use prepared_pcg::{
     PreparedPcgWorkReport, PreparedPcgWorkspace, solve_prepared_pcg_batch_into,
     solve_prepared_pcg_least_squares,
 };
+pub use range_projected::{RangeProjectedAction, apply_range_projected};
 pub use repair::{
     AggregateSplit, AggregationRepairOptions, AggregationRepairResult, AggregationRepairRound,
     AggregationRepairStopReason, repair_aggregation_by_splitting,

@@ -143,3 +143,7 @@ required-features = ["lsmr"]
 [[example]]
 name = "prepared_automatic_diagnostic"
 required-features = ["lsmr"]
+
+[[example]]
+name = "range_admission_matrix"
+required-features = ["within-comparator"]
