@@ -77,7 +77,16 @@ construction ([M6q](ISSUE5_FACTOR_MEMORY.md)). M6r added
 bounds every array of intercept-only construction, including failed exact
 attempts. It is wire-identical to the parallel build, with zero allocator slack.
 On all 80 development runs it is admitted at its peak and refused one byte below.
-The parallel default path stays unaccounted. Step 3 is next.
+The parallel default path stays unaccounted.
+
+Step 3 is delivered as M6s, the
+[generation-bound sparse-terminal policy](ISSUE5_SPARSE_TERMINAL_POLICY.md). It
+admits a fixed `P W P` terminal above 256 under an explicit option, screens the
+actual cycle, certifies against the original operator, and charges construction,
+rejection and fallback. On the frozen development recipes it reaches parity with
+global MAP overall when placed on whole components. It loses at K=1 and wins at
+K=32, while the frozen automatic route stays about 3.1× slower. This completes
+the plan; no default changes.
 
 The modified Golub–Kahan solver is metric-preconditioned; treating its inverse
 Gramian action as ordinary right preconditioning gives an incorrect conditioning

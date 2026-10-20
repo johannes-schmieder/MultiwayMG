@@ -1,17 +1,19 @@
 //! One fixed symmetric V-cycle recurrence for ordinary and prepared owners.
-use crate::{DensePseudoinverseWorkspace, MultiwayError};
+use crate::MultiwayError;
 
 pub(crate) const FRAME_BUFFERS: usize = 4;
 
 // Neither modal terminal scratch nor the tuple image is live across another
 // operator action. One shared image is reborrowed throughout recursion.
-pub(crate) struct CycleSharedScratch<'a> {
-    pub(crate) terminal: &'a mut DensePseudoinverseWorkspace,
+pub(crate) struct CycleSharedScratch<'a, T> {
+    pub(crate) terminal: &'a mut T,
     pub(crate) image: &'a mut [f64],
 }
 
 pub(crate) trait CycleActions {
     type LevelScratch;
+    /// Terminal scratch, dense modal storage or a sparse terminal's serial workspace.
+    type TerminalScratch;
     fn level_count(&self) -> usize;
     fn dimension_at(&self, level: usize) -> usize;
     fn project(
@@ -47,7 +49,7 @@ pub(crate) trait CycleActions {
         &self,
         rhs: &[f64],
         out: &mut [f64],
-        workspace: &mut DensePseudoinverseWorkspace,
+        workspace: &mut Self::TerminalScratch,
     ) -> Result<(), MultiwayError>;
 }
 
@@ -101,7 +103,7 @@ pub(crate) fn apply_level<'a, A: CycleActions, S: CycleScratch<'a>>(
     solution: &mut [f64],
     scratch: S,
     operator_levels: &mut [A::LevelScratch],
-    shared: &mut CycleSharedScratch<'_>,
+    shared: &mut CycleSharedScratch<'_, A::TerminalScratch>,
 ) -> Result<(), MultiwayError> {
     #[cfg(feature = "profiling")]
     let _profile_span =

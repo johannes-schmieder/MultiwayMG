@@ -30,7 +30,7 @@ recurrence and local reorthogonalization window before algorithm experiments.
 | M3 | Narrow pinned within fork: caller-owned LSMR workspace, mutable action adapters, explicit execution, allocating wrappers over the same recurrence; equivalence and allocation gates. | Complete: PR #37, main `1ca043d` |
 | M4 | Complete prepared serial supplied-map solve: numerical MAP hierarchy, PCG and LSMR, certificate workspace, bounded scalar RHS reuse, ownership/memory report; compare fresh construction and dense references. | Complete: PRs #38–#45, main `4fa6401` |
 | M5 | Measure and reduce serial memory traffic: grouped indices, remove empty MAP passes, scratch liveness arena, fused prolong-add, direct dense assembly, replace expensive tree-based setup where measured. | Complete: PRs #46–#53, main `0b8437f`; reference caching evaluated/deferred |
-| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | In progress: M6a–M6q merged (M6q PR #70, main `7fd4248`); M6r checked within setup merged in approx-chol/within, comparator integration in review; sparse-terminal integration (step 3) remains |
+| M6 | Scalable automatic construction: bounded structural candidates before numerical setup, component-local depths, bounded dense/sparse terminals and bottom-up actual-cycle screening. | Complete: M6a–M6s (PRs #54–#72). Bounded structural candidates, component-local depths, dense terminals at most 256 and separately admitted sparse terminals above it, and actual-cycle screening, all fully charged. Economics: frozen automatic remains about 3.1x slower than global MAP on development driver time; the sparse-terminal policy on components reaches parity overall (0.45x at K=1, 2.27x at K=32). No default promotion |
 | M7 | Explicit bounded CPU pool, deterministic reductions, edge-balanced grouped kernels, threading caps and charged thread scaling. | Planned |
 | M8 | Fused 2/4/8 RHS panels, independent convergence, bounded panel concurrency and calibrated structural selector; optional pair-CSR smoother only if charged evidence supports it. | Planned |
 | M9 | Complete current-weight replay, all numerical quantities rebuilt, quality screening, reuse prefix/rebuild suffix once, fail-closed fallback, overlap memory admission and fresh/replay comparison. | Planned |
@@ -1245,3 +1245,34 @@ for measurement, not an implemented layout or selected default.
   one byte below, and serial actions are bit-identical. The retained payload is
   1.9–75× the M6q factor inventory. Next: the step-3 generation-bound terminal
   policy above 256.
+
+- M6r PR #71 merged as `9a6e070` after all 18 PR jobs passed on `7bdcf2e`.
+- M6s [sparse-terminal policy](ISSUE5_SPARSE_TERMINAL_POLICY.md) closes M6.
+  - A fixed `P W P` terminal combines within's checked serial setup and serial
+    action with the certified exact-range projector, and is charged against one
+    limit.
+  - The hierarchy terminal is dense or sparse, with the dense arithmetic
+    unchanged.
+  - An explicit driver policy admits the sparse terminal where coarsening
+    reaches its transition cap above 256, instead of rejecting.
+  - Tests cover 37 supports at three weightings, with additional nullity and two
+    supports above 256: symmetric, exact-range and positive (oracle limits as in
+    M6p).
+  - The policy is bit-identical to the frozen route when inert. Limits are
+    inclusive, and a refusal falls back with a typed rejection.
+  - Terminal and driver allocator proofs caught a 472-byte uncharged boxed
+    descriptor, which is now charged. Peaks fit admitted payload and nothing is
+    retained.
+  - 2,400 measured cold processes on all 80 frozen seed-10001 recipes at K=1/32
+    (source `145227e`, Linux container): every column of every route certifies,
+    and repeats are bit-identical.
+  - Development driver time: frozen automatic is 0.324x global MAP; sparse t0 is
+    1.008x overall (0.448x at K=1, 2.265x at K=32) and 3.11x the frozen route.
+    t1 does not help (0.397x).
+  - t0 wins on nested, pair-dominant, chain, communities and ragged, and loses on
+    uniform, tensor, hubs, worker-firm-occupation and exporter-importer-product.
+  - An initial collection's RSS was contaminated by the collector's pre-exec
+    image. That run was discarded before commit, and the collector now uses
+    GNU time.
+  - No default, routing or competitive promotion. M7 bounded pools, M8 panels and
+    a calibrated selector, M9 replay and M10 holdout qualification remain.
