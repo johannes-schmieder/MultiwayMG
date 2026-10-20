@@ -138,22 +138,19 @@ def summarize(rows):
     return summary
 
 
-def run_process(binary, route, data, env, scratch):
-    """Run one cold process; return status, stdout, stderr, wall ns and its own max RSS."""
-    stdin_path = scratch / 'stdin.bin'
-    stderr_path = scratch / 'stderr.txt'
-    stdin_path.write_bytes(data)
-    with stdin_path.open('rb') as stdin, stderr_path.open('wb') as stderr:
-        started = time.perf_counter_ns()
-        child = subprocess.Popen([str(binary), route], stdin=stdin, stdout=subprocess.PIPE,
-                                 stderr=stderr, env=env)
-        stdout = child.stdout.read()
-        child.stdout.close()
-        _, status, usage = os.wait4(child.pid, 0)
-        wall = time.perf_counter_ns() - started
-    # Linux reports ru_maxrss in KiB; this collector runs only there.
-    return os.waitstatus_to_exitcode(status), stdout, stderr_path.read_bytes(), wall, \
-        usage.ru_maxrss
+def run_process(binary, route, data, env):
+    """Run one cold process under GNU time; return status, stdout, stderr, wall ns, peak RSS.
+
+    `time -v` forks the measured process itself, so its peak RSS excludes this
+    collector's memory, which `exec` would otherwise carry into the child's
+    `ru_maxrss` through the forked pre-exec image.
+    """
+    started = time.perf_counter_ns()
+    child = subprocess.run(['/usr/bin/time', '-v', str(binary), route], input=data,
+                           stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env, timeout=600)
+    wall = time.perf_counter_ns() - started
+    peak = base.resources(child.stderr.decode(), 'Linux')['peak_rss_bytes'] // 1024
+    return child.returncode, child.stdout, child.stderr, wall, peak
 
 
 def main():
@@ -192,7 +189,7 @@ def main():
                     rotated = order[repetition % len(order):] + order[:repetition % len(order)]
                     for route in rotated:
                         status, stdout, stderr, wall, rss = run_process(
-                            binary, route, data, env, out)
+                            binary, route, data, env)
                         if status:
                             raise RuntimeError(f'{profile} {case} {route}: {stderr.decode()}')
                         record = parse_output(stdout.decode())
@@ -209,8 +206,6 @@ def main():
                 journal.flush()
             print(f"recorded {profile} {case['family']} {case['shape']} {case['weights']}",
                   flush=True)
-    (out / 'stdin.bin').unlink()
-    (out / 'stderr.txt').unlink()
     summary = summarize(rows)
     manifest = dict(schema=1, scope='automatic_sparse_terminal_development_only',
                     policy_path=POLICY, routes=ROUTES, widths=WIDTHS,
