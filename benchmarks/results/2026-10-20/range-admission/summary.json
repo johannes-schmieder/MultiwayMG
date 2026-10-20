@@ -1,0 +1,41 @@
+{
+  "actions": {
+    "certified-full-both": {
+      "admitted": 80,
+      "maximum_range_leakage": 8.075131232745428e-11,
+      "maximum_range_leakage_structural_kernel": 8.075131232745428e-11,
+      "maximum_range_leakage_with_additional_nullity": 1.1034336699731143e-12,
+      "positive_on_range": 80,
+      "preserves_range": 80,
+      "symmetric": 80
+    },
+    "structural-both": {
+      "admitted": 68,
+      "maximum_range_leakage": 0.020117272981839553,
+      "maximum_range_leakage_structural_kernel": 8.07513086798628e-11,
+      "maximum_range_leakage_with_additional_nullity": 0.020117272981839553,
+      "positive_on_range": 80,
+      "preserves_range": 68,
+      "symmetric": 80
+    },
+    "within-output": {
+      "admitted": 0,
+      "maximum_range_leakage": 0.020117272981839577,
+      "maximum_range_leakage_structural_kernel": 8.075131655477709e-11,
+      "maximum_range_leakage_with_additional_nullity": 0.020117272981839577,
+      "positive_on_range": 80,
+      "preserves_range": 68,
+      "symmetric": 0
+    }
+  },
+  "additional_nullity_cases": 12,
+  "large_additional_nullity_cases": 6,
+  "maximum_basis_magnitude": 1,
+  "maximum_certificate_peak_bytes": 73144,
+  "maximum_projector_orthogonality": 3.774758283725532e-15,
+  "maximum_projector_residual": 1.1102230246251565e-16,
+  "maximum_stored_pivot_entries": 1728,
+  "oracle_unit_agreement": 80,
+  "oracle_weighted_agreement": 80,
+  "runs": 80
+}

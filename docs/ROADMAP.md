@@ -246,7 +246,11 @@ slower than grouped MAP; no paired sort-removal speedup is inferred. Next is the
 owner-bound action scratch with transactional output. Its qualification covers
 real factors and first/repeated allocations, plus 160 downstream RHS and all
 15,120 unchanged Linux smoke signatures. Factor-memory and numerical-range
-admission remain separate requirements before sparse-terminal integration.
+admission remain separate requirements before sparse-terminal integration. The
+[exact kernel increment](ISSUE5_RANGE_ADMISSION.md) now certifies the complete incidence kernel per
+component and projects fixed actions onto its exact range. On 80 development
+recipe runs it admits all 80, while structural projection fails the 12 with
+additional nullity. Factor-memory admission and terminal integration remain open.
 
 - [ ] Prepared tuple, pair-edge, and hierarchy topology.
 - [ ] Shared candidate construction across smoother tiers.

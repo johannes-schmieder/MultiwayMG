@@ -64,6 +64,16 @@ fork, vendoring, pin change or upstream message has been performed by this audit
    Only then compare complete setup/application costs on the frozen development
    matrix and advance the M6 gate.
 
+## Status
+
+Step 1 merged as M6o ([serial Schwarz workspace](ISSUE5_SERIAL_SCHWARZ_WORKSPACE.md),
+PR #68). The full-range part of step 3 now has an exact, topology-only answer:
+M6p [certifies the complete incidence kernel and projects onto its complement](ISSUE5_RANGE_ADMISSION.md).
+All 80 development recipe runs are admitted under that projection, versus 68 under
+structural projection. Step 2 is not started: it needs a decision on how to deliver
+`approx-chol` factor capacities and permutation scratch. Integration (rest of step 3)
+follows it.
+
 The modified Golub–Kahan solver is metric-preconditioned; treating its inverse
 Gramian action as ordinary right preconditioning gives an incorrect conditioning
 objection. No mathematical invalidity of the current additive method is inferred
