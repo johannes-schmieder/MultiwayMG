@@ -4,6 +4,15 @@
 
 ### Added
 
+- `PreparedSparseTerminal` (feature `sparse-terminal`): a fixed `P W P` terminal
+  from within's checked serial setup and the certified exact-range projector,
+  with charged construction and allocation-free application. It plugs into
+  `PreparedMapHierarchy::try_new_with_sparse_terminal`.
+  `solve_prepared_automatic_batch_into_with_sparse_terminal` admits it where
+  coarsening reaches its transition cap above 256 coordinates. The
+  `prepared_automatic_sparse_benchmark` example and its collector come with
+  complete-cost evidence. See `docs/ISSUE5_SPARSE_TERMINAL_POLICY.md`.
+
 - Paired within/schwarz-precond pins at `ffc1a56`. It adds
   `WithinApproxCholPreconditioner::build_checked`, which builds the comparator
   through within's checked serial setup within a declared payload. Refusals are a

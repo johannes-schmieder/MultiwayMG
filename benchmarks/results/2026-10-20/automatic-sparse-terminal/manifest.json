@@ -1,0 +1,99 @@
+{
+  "build_log_sha256": "92434e198f27984c035c376ec77a7cf9e6ebdde782f8ccb1336ae3329b66ddb7",
+  "policy_path": "benchmarks/policies/prepared-automatic-v1.json",
+  "provenance": {
+    "affinity": {
+      "cpus": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "scope": "inherited_allowed_cpu_set",
+      "status": "measured"
+    },
+    "binary_sha256": "3aae3d33cd418f7e8b77ac25ccefa3b9ecbbfbbfee4c0c93610fa651cd501853",
+    "build_args": [
+      "cargo",
+      "build",
+      "--locked",
+      "--release",
+      "-p",
+      "multiway-mg",
+      "--features",
+      "sparse-terminal",
+      "--example",
+      "prepared_automatic_sparse_benchmark"
+    ],
+    "cargo_config_hashes": {},
+    "compiler_overrides": {},
+    "hardware": "Architecture:                            x86_64\nCPU op-mode(s):                          32-bit, 64-bit\nAddress sizes:                           52 bits physical, 57 bits virtual\nByte Order:                              Little Endian\nCPU(s):                                  4\nOn-line CPU(s) list:                     0-3\nVendor ID:                               GenuineIntel\nModel name:                              Intel(R) Xeon(R) Processor @ 2.10GHz\nCPU family:                              6\nModel:                                   207\nThread(s) per core:                      1\nCore(s) per socket:                      4\nSocket(s):                               1\nStepping:                                2\nBogoMIPS:                                4200.00\nFlags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid tsc_known_freq pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 hle avx2 smep bmi2 erms invpcid rtm avx512f avx512dq rdseed adx smap avx512ifma clflushopt clwb avx512cd sha_ni avx512bw avx512vl xsaveopt xsavec xgetbv1 xsaves avx_vnni avx512_bf16 wbnoinvd arat avx512vbmi umip avx512_vbmi2 gfni vaes vpclmulqdq avx512_vnni avx512_bitalg avx512_vpopcntdq rdpid cldemote movdiri movdir64b fsrm md_clear serialize tsxldtrk amx_bf16 avx512_fp16 amx_tile amx_int8 arch_capabilities\nHypervisor vendor:                       KVM\nVirtualization type:                     full\nL1d cache:                               192 KiB (4 instances)\nL1i cache:                               128 KiB (4 instances)\nL2 cache:                                8 MiB (4 instances)\nL3 cache:                                260 MiB (1 instance)\nNUMA node(s):                            1\nNUMA node0 CPU(s):                       0-3\nVulnerability Gather data sampling:      Not affected\nVulnerability Ghostwrite:                Not affected\nVulnerability Indirect target selection: Not affected\nVulnerability Itlb multihit:             Not affected\nVulnerability L1tf:                      Not affected\nVulnerability Mds:                       Not affected\nVulnerability Meltdown:                  Not affected\nVulnerability Mmio stale data:           Not affected\nVulnerability Old microcode:             Not affected\nVulnerability Reg file data sampling:    Not affected\nVulnerability Retbleed:                  Not affected\nVulnerability Spec rstack overflow:      Not affected\nVulnerability Spec store bypass:         Mitigation; Speculative Store Bypass disabled via prctl\nVulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization\nVulnerability Spectre v2:                Mitigation; Enhanced / Automatic IBRS; IBPB conditional; PBRSB-eIBRS SW sequence; BHI Vulnerable\nVulnerability Srbds:                     Not affected\nVulnerability Tsa:                       Not affected\nVulnerability Tsx async abort:           Not affected\nVulnerability Vmscape:                   Not affected\n",
+    "memory": "MemTotal:       16479424 kB\nMemFree:         8346856 kB\nMemAvailable:   15733368 kB\nBuffers:           32584 kB\nCached:          7467048 kB\nSwapCached:            0 kB\nActive:          2193976 kB\nInactive:        5585468 kB\nActive(anon):         36 kB\nInactive(anon):   294740 kB\nActive(file):    2193940 kB\nInactive(file):  5290728 kB\nUnevictable:        8884 kB\nMlocked:            8884 kB\nSwapTotal:             0 kB\nSwapFree:              0 kB\nZswap:                 0 kB\nZswapped:              0 kB\nDirty:               348 kB\nWriteback:             0 kB\nAnonPages:        288824 kB\nMapped:           174748 kB\nShmem:             14968 kB\nKReclaimable:     220892 kB\nSlab:             264644 kB\nSReclaimable:     220892 kB\nSUnreclaim:        43752 kB\nKernelStack:        1676 kB\nPageTables:         3024 kB\nSecPageTables:         0 kB\nNFS_Unstable:          0 kB\nBounce:                0 kB\nWritebackTmp:          0 kB\nCommitLimit:     8239712 kB\nCommitted_AS:     418528 kB\nVmallocTotal:   34359738367 kB\nVmallocUsed:        6848 kB\nVmallocChunk:          0 kB\nPercpu:              992 kB\nAnonHugePages:         0 kB\nShmemHugePages:        0 kB\nShmemPmdMapped:        0 kB\nFileHugePages:     10240 kB\nFilePmdMapped:         0 kB\nBalloon:               0 kB\nHugePages_Total:       0\nHugePages_Free:        0\nHugePages_Rsvd:        0\nHugePages_Surp:        0\nHugepagesize:       2048 kB\nHugetlb:               0 kB\nDirectMap4k:       20480 kB\nDirectMap2M:     2076672 kB\nDirectMap1G:    16777216 kB\n",
+    "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+    "rustc": "rustc 1.85.0 (4d91de4e4 2025-02-17)\nbinary: rustc\ncommit-hash: 4d91de4e48198da2e33413efdcd9cd2cc0c46688\ncommit-date: 2025-02-17\nhost: x86_64-unknown-linux-gnu\nrelease: 1.85.0\nLLVM version: 19.1.7\n",
+    "rustflags": "",
+    "scheduler": {
+      "JOB_ID": null,
+      "NSLOTS": null,
+      "SLURM_JOB_ID": null
+    },
+    "source_clean": true,
+    "source_commit": "145227e8e90dbfcb297729e81c71e4398121db42",
+    "source_hashes": {
+      "Cargo.lock": "f4dc5c20b7d34e1d3c7b2af1c13eef2f923f8374e587010af431c36c0899181d",
+      "Cargo.toml": "f486cbf2f6ca8341da31524279f4fca06b5a01c39788a70fa5f3167305bb9616",
+      "benchmarks/policies/prepared-automatic-v1.json": "b6252b15c31ceb7ac88468930b048e5d376070eeb289a9aea327a60bdc9c111e",
+      "benchmarks/policies/prepared-serial-gated-v2.json": "692cac2457499c812a2c2033501f2f7dfaa2fadb5929c800eabf5bc93774124a",
+      "benchmarks/policies/prepared-serial-v1.json": "0a6999fbee23062a9359b000e5ed0a4cf412e67cc3ceac03248f3a3c57a1401e",
+      "crates/multiway-mg/Cargo.toml": "7f5c084666a6461af35a2495d99094be0d299074386fa10b082876c6f6fcee8d",
+      "crates/multiway-mg/examples/prepared_automatic_sparse_benchmark.rs": "53156fd39431d481f62c5069f62efca4617326272375820ce1f8c63670265ba2",
+      "crates/multiway-mg/examples/prepared_serial_benchmark.rs": "4e6b69476e9af045a53317b814f92eea857b6290c3f8c041a2ca003c9868c8dc",
+      "crates/multiway-mg/src/prepared_automatic.rs": "db261e9cd0ec365fd9c80aaa0a223778d7bc8c975b823af6fcd83ee01c388f1f",
+      "crates/multiway-mg/src/prepared_automatic/hierarchy.rs": "73e5e74f69deaa5e544f2b4431d5edc1b42b727f143d576daa701502b34e611c",
+      "crates/multiway-mg/src/prepared_hierarchy.rs": "76abd5f9e1a757248859f6f184d9d97cb5b6e99e9eb284666962da6f328bebfc",
+      "crates/multiway-mg/src/sparse_terminal.rs": "1c8be74561fc9d13607c9ae732df64d4e183aafc9e3a8430186202470df9342b",
+      "scripts/automatic_recipes.py": "926a64d6c38178d16748b475e3dcf8d61fec5f392141668aa66c551deb4019a1",
+      "scripts/automatic_sparse_terminal.py": "c2c76936594d82619c41465f6d13d93632fdc5ab9e1c86e85459263f48734838",
+      "scripts/prepared_serial.py": "51aab2a5738f438042be188ca9f466c95f1f201b9c4483c19b831c891ee9cf0c",
+      "scripts/range_admission.py": "46f2415194adcb5f04b0488ddf4a7c16b44ff4a55b7446566e50654769a89222",
+      "scripts/test_automatic_sparse_terminal.py": "233db2ff8ff55776b39cca6f3a0f2d8cf1cb07da4a9d8fefcf4534b0cb15b17b",
+      "scripts/validate_prepared_serial.py": "7c6273d4ca4a85efdce473f5d4586791d184244670340280fcd9a9fbf099d1f4"
+    },
+    "source_tree": "4e6304f1ab1f662d6d1a2595d93367bbd75a0632",
+    "system": "Linux",
+    "target": "x86_64-unknown-linux-gnu",
+    "thread_env": {
+      "BLIS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "RAYON_NUM_THREADS": "1",
+      "VECLIB_MAXIMUM_THREADS": "1"
+    },
+    "uname": {
+      "machine": "x86_64",
+      "node": "vm",
+      "processor": "x86_64",
+      "release": "6.18.44-fc-v139",
+      "system": "Linux",
+      "version": "#1 SMP PREEMPT_DYNAMIC @0"
+    }
+  },
+  "python": "3.13.16 (main, Oct  1 2026, 15:40:24) [GCC 13.3.0]",
+  "repetitions": 3,
+  "routes": [
+    "automatic",
+    "automatic-sparse-t0",
+    "automatic-sparse-t1",
+    "components-map",
+    "global-map"
+  ],
+  "runs_sha256": "0eccf2d22d765e8b664557f624ca824e7e3edb997ac875fb97a0c646a0ca0a45",
+  "schema": 1,
+  "scope": "automatic_sparse_terminal_development_only",
+  "warmups": 1,
+  "widths": [
+    1,
+    32
+  ]
+}

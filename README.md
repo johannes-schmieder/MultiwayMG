@@ -152,7 +152,11 @@ construction, factor capacities and allocation-free permuted solves through owne
 forks. [Checked within setup](docs/ISSUE5_FACTOR_MEMORY.md#checked-within-setup-m6r) now bounds every array
 of the comparator's serial construction. It is admitted at its peak and refused
 one byte below on all 80 development runs, with bit-identical actions.
-Sparse-terminal integration remains open.
+The [sparse-terminal policy](docs/ISSUE5_SPARSE_TERMINAL_POLICY.md) completes M6. It admits a fixed, certified
+`P W P` terminal above 256 coordinates under an explicit option. On the frozen
+development recipes, placing it on whole components reaches parity with global
+MAP overall: 2.2× slower at one RHS, 2.3× faster at 32. The frozen automatic route
+stays about 3.1× slower. No default changes; M7–M10 remain.
 
 ## The problem
 
