@@ -9,6 +9,8 @@ mod grouped_allocations;
 mod grouped_hierarchy_allocations;
 #[path = "support/hierarchy_owner_allocations.rs"]
 mod hierarchy_owner_allocations;
+#[path = "support/kernel_certificate_allocations.rs"]
+mod kernel_certificate_allocations;
 #[cfg(feature = "lsmr")]
 #[path = "support/lsmr_workspace_integration.rs"]
 mod lsmr_workspace_integration;
@@ -260,6 +262,7 @@ fn main() -> Result<()> {
     prepared_aggregation_allocations::run()?;
     prepared_baseline_allocations::run()?;
     prepared_topology_allocations::run()?;
+    kernel_certificate_allocations::run()?;
     symbolic_map_allocations::run()?;
     weight_frame_allocations::run()?;
     weight_replay_allocations::run()?;
