@@ -1,0 +1,12 @@
+dimension	384
+tuples	12277
+unchecked_build_ns	4051038
+checked_build_ns	4258637
+setup_peak_bytes	1088964
+retained_bytes	702424
+checked_factor_bytes	315888
+unchecked_factor_bytes	347712
+admitted_at_peak	true
+refused_one_under	true
+serial_actions_identical	true
+wrapper_action_difference	0.00000000000000000e0

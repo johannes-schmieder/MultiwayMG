@@ -70,10 +70,14 @@ Step 1 merged as M6o ([serial Schwarz workspace](ISSUE5_SERIAL_SCHWARZ_WORKSPACE
 PR #68). The full-range part of step 3 now has an exact, topology-only answer:
 M6p [certifies the complete incidence kernel and projects onto its complement](ISSUE5_RANGE_ADMISSION.md).
 All 80 development recipe runs are admitted under that projection, versus 68 under
-structural projection. Step 2 is largely delivered through an owner `approx-chol` fork
-and within: permutation scratch, factor capacity inventories and checked factor
-construction ([M6q](ISSUE5_FACTOR_MEMORY.md)). within's own Schur, cover and parallel
-setup admission remains, and then the integration in the rest of step 3.
+structural projection. Step 2 is delivered through an owner `approx-chol` fork and within.
+M6q added permutation scratch, factor capacity inventories and checked factor
+construction ([M6q](ISSUE5_FACTOR_MEMORY.md)). M6r added
+[within's checked serial setup](ISSUE5_FACTOR_MEMORY.md#checked-within-setup-m6r), which
+bounds every array of intercept-only construction, including failed exact
+attempts. It is wire-identical to the parallel build, with zero allocator slack.
+On all 80 development runs it is admitted at its peak and refused one byte below.
+The parallel default path stays unaccounted. Step 3 is next.
 
 The modified Golub–Kahan solver is metric-preconditioned; treating its inverse
 Gramian action as ordinary right preconditioning gives an incorrect conditioning
