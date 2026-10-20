@@ -164,3 +164,7 @@ required-features = ["within-comparator"]
 [[example]]
 name = "within_setup_admission"
 required-features = ["within-comparator"]
+
+[[example]]
+name = "prepared_automatic_sparse_benchmark"
+required-features = ["sparse-terminal"]
