@@ -48,6 +48,56 @@ pub(super) fn solve(
         .topology()
         .total_levels();
     if terminal_n > PREPARED_DENSE_TERMINAL_LIMIT {
+        #[cfg(feature = "sparse-terminal")]
+        if let Some(sparse) = progress.sparse {
+            let last = frames
+                .frame(frames.level_count() - 1)
+                .expect("nonempty frame inventory");
+            let remaining =
+                maximum
+                    .checked_sub(live)
+                    .ok_or(MultiwayError::PayloadBudgetExceeded {
+                        required: live,
+                        budget: maximum,
+                    })?;
+            let terminal = automatic_measured!(
+                CoarseFactor,
+                crate::PreparedSparseTerminal::try_new(last, sparse, remaining)
+            );
+            let terminal = match terminal {
+                Ok(terminal) => terminal,
+                Err(error) => {
+                    // A refusal names the live payload it would have needed.
+                    if let MultiwayError::WithinSetupBudgetExceeded { required, .. } = error {
+                        progress.maximum_requested_payload_bytes = progress
+                            .maximum_requested_payload_bytes
+                            .max(live.saturating_add(required));
+                    }
+                    return Err(error);
+                }
+            };
+            let report = terminal.report();
+            admit(add(live, report.peak_payload_bytes)?, maximum, progress)?;
+            increment(&mut progress.sparse_terminals, 1)?;
+            progress.maximum_sparse_terminal_peak_payload_bytes = progress
+                .maximum_sparse_terminal_peak_payload_bytes
+                .max(report.peak_payload_bytes);
+            let grouping = groups.as_ref().map(|groups| {
+                (
+                    groups,
+                    progress
+                        .layout
+                        .requested_layout
+                        .mode()
+                        .expect("grouped route"),
+                )
+            });
+            let owner =
+                PreparedMapHierarchy::try_new_with_sparse_terminal(&frames, grouping, terminal)?;
+            return screen_and_solve(
+                owner, view, batch, options, h, live, maximum, other, progress,
+            );
+        }
         return Err(stagnated(&structure));
     }
     admit(
@@ -74,6 +124,24 @@ pub(super) fn solve(
             None => PreparedMapHierarchy::try_new(&frames, options.terminal_relative_tolerance)?,
         }
     );
+    screen_and_solve(
+        owner, view, batch, options, h, live, maximum, other, progress,
+    )
+}
+
+/// Screen the actual recursive cycle of a complete owner, then solve its columns.
+#[allow(clippy::too_many_arguments)]
+fn screen_and_solve(
+    owner: PreparedMapHierarchy<'_>,
+    view: Option<PreparedComponentView<'_, '_>>,
+    batch: &mut PreparedAutomaticBatch<'_>,
+    options: PreparedAutomaticOptions,
+    h: PreparedAutomaticHierarchyOptions,
+    live: usize,
+    maximum: usize,
+    other: usize,
+    progress: &mut Progress<'_>,
+) -> Result<(), MultiwayError> {
     let with_factor = add(live, owner.retained_payload_bytes()?)?;
     progress.stage = PreparedAutomaticStage::Screening;
     // Screen scratch and its application workspace die before the complete
@@ -156,6 +224,13 @@ fn structure<'topology>(
     let mut predecessor: Option<Vec<f64>> = None;
     while builder.current_level().topology().total_levels() > PREPARED_DENSE_TERMINAL_LIMIT {
         if builder.level_count() - 1 == h.maximum_transitions {
+            // An explicit sparse-terminal policy accepts this capped coarsest
+            // level when it fits its declared cap; the frozen policy rejects.
+            if sparse_terminal_cap(progress)
+                .is_some_and(|cap| builder.current_level().topology().total_levels() <= cap)
+            {
+                break;
+            }
             return Err(MultiwayError::HierarchyStagnated {
                 dimension: builder.current_level().topology().total_levels(),
                 tuples: builder.current_level().topology().tuple_count(),
@@ -285,6 +360,14 @@ fn candidate(
             Err(failure.source)
         }
     }
+}
+#[cfg(feature = "sparse-terminal")]
+fn sparse_terminal_cap(progress: &Progress<'_>) -> Option<usize> {
+    progress.sparse.map(|sparse| sparse.maximum_dimension)
+}
+#[cfg(not(feature = "sparse-terminal"))]
+fn sparse_terminal_cap(_: &Progress<'_>) -> Option<usize> {
+    None
 }
 fn stagnated(h: &PreparedHierarchyTopology<'_>) -> MultiwayError {
     let t = h

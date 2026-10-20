@@ -321,8 +321,12 @@ impl<'state> PreparedMapHierarchy<'state> {
     pub fn retained_payload_bytes(&self) -> Result<usize, MultiwayError> {
         match &self.terminal {
             Terminal::Dense(dense, _) => dense.retained_payload_bytes(),
+            // The boxed terminal descriptor is a heap allocation of its own.
             #[cfg(feature = "sparse-terminal")]
-            Terminal::Sparse(sparse) => sparse.retained_payload_bytes(),
+            Terminal::Sparse(sparse) => add(
+                sparse.retained_payload_bytes()?,
+                core::mem::size_of::<PreparedSparseTerminal<'_>>(),
+            ),
         }
     }
 

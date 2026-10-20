@@ -36,6 +36,10 @@ pub use layout::{
 struct Progress<'a> {
     inner: &'a mut PreparedAutomaticProgress,
     layout: &'a mut PreparedAutomaticLayoutProgress,
+    // The explicit sparse-terminal policy travels with the execution record so
+    // every route sees the same immutable choice; None is the frozen policy.
+    #[cfg(feature = "sparse-terminal")]
+    sparse: Option<&'a crate::PreparedSparseTerminalOptions>,
 }
 impl std::ops::Deref for Progress<'_> {
     type Target = PreparedAutomaticProgress;
@@ -212,6 +216,10 @@ pub struct PreparedAutomaticProgress {
     pub global_certificate_work: CertificateWorkReport,
     /// Latest typed rejection, preserved even after successful fallback.
     pub last_rejection: Option<PreparedAutomaticRejection>,
+    /// Admitted sparse terminals under an explicit sparse-terminal policy.
+    pub sparse_terminals: usize,
+    /// Largest checked construction peak of an admitted sparse terminal.
+    pub maximum_sparse_terminal_peak_payload_bytes: usize,
 }
 
 /// Solve one complete batch with explicit terminal-first component scheduling.
@@ -239,6 +247,8 @@ pub fn solve_prepared_automatic_batch_into(
         &mut Progress {
             inner: progress,
             layout: &mut layout,
+            #[cfg(feature = "sparse-terminal")]
+            sparse: None,
         },
         PreparedAutomaticLayout::Scalar,
     )
@@ -276,6 +286,58 @@ pub fn solve_prepared_automatic_batch_into_with_layout(
         &mut Progress {
             inner: progress,
             layout: layout_progress,
+            #[cfg(feature = "sparse-terminal")]
+            sparse: None,
+        },
+        selected_layout,
+    )
+}
+
+/// Complete automatic execution under an explicit sparse-terminal policy.
+///
+/// Identical to [`solve_prepared_automatic_batch_into_with_layout`] except where
+/// a large component's coarsening reaches the hierarchy's transition cap above
+/// the 256-coordinate dense terminal cap. There the frozen policy rejects the
+/// attempt; this policy instead admits a fixed generation-bound
+/// [`PreparedSparseTerminal`](crate::PreparedSparseTerminal) for that coarsest
+/// level when its dimension is within `sparse.maximum_dimension`, charging its
+/// whole construction against the remaining budget. The resulting hierarchy then
+/// passes the same actual recursive-cycle screen, certificate-gated LSMR solve,
+/// original-problem certification and fallback as any other. Other failures,
+/// including a non-reducing aggregation, keep their typed rejection. A
+/// `maximum_transitions` of zero puts the sparse terminal on the component itself.
+#[cfg(feature = "sparse-terminal")]
+#[allow(clippy::too_many_arguments)]
+pub fn solve_prepared_automatic_batch_into_with_sparse_terminal(
+    frame: &ThreeWayWeightFrame<'_>,
+    batch: PreparedAutomaticBatch<'_>,
+    options: PreparedAutomaticOptions,
+    sparse: &crate::PreparedSparseTerminalOptions,
+    budget: PreparedHierarchyBudget,
+    selected_layout: PreparedAutomaticLayout,
+    progress: &mut PreparedAutomaticProgress,
+    layout_progress: &mut PreparedAutomaticLayoutProgress,
+) -> Result<(), MultiwayError> {
+    crate::sparse_terminal::validate(sparse)?;
+    if options.hierarchy.is_none() {
+        return Err(invalid(
+            "sparse terminal policy without a hierarchy attempt",
+        ));
+    }
+    if sparse.maximum_dimension <= PREPARED_DENSE_TERMINAL_LIMIT {
+        return Err(invalid(
+            "sparse terminal cap at or below the dense terminal cap",
+        ));
+    }
+    run(
+        frame,
+        batch,
+        options,
+        budget,
+        &mut Progress {
+            inner: progress,
+            layout: layout_progress,
+            sparse: Some(sparse),
         },
         selected_layout,
     )

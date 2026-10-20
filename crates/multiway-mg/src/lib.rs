@@ -43,6 +43,8 @@ mod preconditioner;
 mod prepared_action;
 #[cfg(feature = "lsmr")]
 mod prepared_automatic;
+#[cfg(feature = "sparse-terminal")]
+pub use prepared_automatic::solve_prepared_automatic_batch_into_with_sparse_terminal;
 #[cfg(feature = "lsmr")]
 pub use prepared_automatic::{
     PreparedAutomaticBatch, PreparedAutomaticColumnReport, PreparedAutomaticGroupingLocation,

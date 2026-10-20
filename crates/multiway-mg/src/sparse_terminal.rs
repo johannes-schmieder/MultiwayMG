@@ -364,7 +364,7 @@ impl SparseTerminalWorkspace<'_> {
     }
 }
 
-fn validate(options: &PreparedSparseTerminalOptions) -> Result<(), MultiwayError> {
+pub(crate) fn validate(options: &PreparedSparseTerminalOptions) -> Result<(), MultiwayError> {
     if !options.projector_tolerance.is_finite() || options.projector_tolerance <= 0.0 {
         return Err(MultiwayError::InvalidOption {
             name: "sparse_terminal_projector_tolerance",

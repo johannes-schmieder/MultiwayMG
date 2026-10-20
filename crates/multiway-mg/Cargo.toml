@@ -138,6 +138,12 @@ path = "tests/automatic_allocation_peaks.rs"
 harness = false
 
 [[test]]
+name = "sparse_automatic_allocation_peaks"
+path = "tests/sparse_automatic_allocation_peaks.rs"
+harness = false
+required-features = ["sparse-terminal"]
+
+[[test]]
 name = "sparse_terminal_allocations"
 path = "tests/sparse_terminal_allocations.rs"
 harness = false
