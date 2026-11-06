@@ -1,0 +1,31 @@
+{
+  "purpose": "Approved CMG consolidation fixed performance comparison",
+  "cmg": "a4c927f49eb7a5391a63963d2c4c651a51cf1af5",
+  "candidate_source": "238f4d03115f5da032e64c7b57eeacbd2bc742ab",
+  "incumbent_source": "a15391a77bba05f5fb6390266787ee2d43a3c05b",
+  "frozen_original_manifest_sha256": "c9342bb5937375f8e49b4218ad0b1305873e5d7c74ee0ccbb6986c47223841f3",
+  "plan_normalization": "Only task checkout path prefixes replaced with placeholders; original digest retained. No schedule, input, threshold or result changes.",
+  "platform": "macOS Apple Silicon",
+  "schedule": "six balanced AB/BA blocks; all planned runs retained; no retries or exclusions",
+  "acceptance": "complete operation candidate median <= incumbent median + max(5% incumbent median,1ms)",
+  "status": "PASS",
+  "limitations": "Local macOS performance; hosted cross-platform correctness and allocation gates reported separately.",
+  "files": {
+    "b0-candidate/pair-local.tsv": "fe5c86d0a6b6be67dfc120efce1fcf2b0016f87ad8c3b894cf12153bb5437d1e",
+    "b0-incumbent/pair-local.tsv": "3251a16b6ce979681e291ddd4f3f31f292c6e354208579147ab1ff72d369f6e1",
+    "b1-candidate/pair-local.tsv": "1d3b201f8a56a7c59599bb2e1116ed709d17c5ddd189e7f31c5429c81f06b929",
+    "b1-incumbent/pair-local.tsv": "7b9657261d4c907b8e3cab48b4b022ce6759f2990fcaa1fd8e46514edd626152",
+    "b2-candidate/pair-local.tsv": "5acd2ceb15cb208773ccd60ce8e2562c9becf352fd698fd51173e767221fe78a",
+    "b2-incumbent/pair-local.tsv": "43ef101906376b1726a500a4f582dcd081dc1d4fec56884f1f4fc179f31eadfb",
+    "b3-candidate/pair-local.tsv": "d780cf27883fd5f506418c67984ab778de0b6a753f9ab75127ceeebf330d202d",
+    "b3-incumbent/pair-local.tsv": "187dd7da5bf5f705b683233da7367b98515cf98492cb7d31e144724f8bae8859",
+    "b4-candidate/pair-local.tsv": "d98d870058907d51e5ab9f6e128257e7da5cfa982faf50f53edf08840b8f1e08",
+    "b4-incumbent/pair-local.tsv": "4957977ee0dc68b63875b58424c52c55203a71d6974b15f7f410daaf4f6183e1",
+    "b5-candidate/pair-local.tsv": "78bfc09bc59e84ceb72da792e61b36f0c107b85cfc06b7f99ff8339bad145f18",
+    "b5-incumbent/pair-local.tsv": "10fb568367b5e0bbdeb70943b52f1a2f0bd28782a065eba3fc4ea4c92caa0e6b",
+    "plan.normalized.json": "ab745e3003cf28a511d0e4bfc7e96ebbd7cd9780f11407e292106fdd176b6b6d",
+    "raw.json": "6fdf9fd61437780a75ce1a05c9cea91e1cd47244bbeb9a9db51f60096b996a6b",
+    "science.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+    "summary.json": "a392c1c029de6cc729a0647b82e9e47d208a04ce6d0759b8a916bd716980dbed"
+  }
+}
