@@ -22,7 +22,10 @@ pub struct PairCmgOptions {
 impl Default for PairCmgOptions {
     fn default() -> Self {
         Self {
-            cmg: CmgOptions::default(),
+            cmg: CmgOptions {
+                max_levels: 128,
+                ..CmgOptions::default()
+            },
             partition_weight: std::f64::consts::FRAC_1_SQRT_2,
         }
     }

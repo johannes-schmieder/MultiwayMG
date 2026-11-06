@@ -286,6 +286,7 @@ impl PairInverse {
                 let inverse = CmgPreconditioner::build(
                     &domain.graph,
                     CmgOptions {
+                        max_levels: 128,
                         direct_threshold: DIRECT_THRESHOLD,
                         ..CmgOptions::default()
                     },

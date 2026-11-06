@@ -165,6 +165,7 @@ impl ExperimentalHierarchy {
                     problem.clone(),
                     PairCmgSchwarzOptions {
                         cmg: CmgOptions {
+                            max_levels: 128,
                             direct_threshold: DIRECT_THRESHOLD,
                             ..CmgOptions::default()
                         },

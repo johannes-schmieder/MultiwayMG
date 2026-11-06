@@ -44,7 +44,10 @@ pub struct PairCmgSchwarzOptions {
 impl Default for PairCmgSchwarzOptions {
     fn default() -> Self {
         Self {
-            cmg: CmgOptions::default(),
+            cmg: CmgOptions {
+                max_levels: 128,
+                ..CmgOptions::default()
+            },
             fixed_cycles: 1,
             partition_weight: std::f64::consts::FRAC_1_SQRT_2,
             reduction: ReductionStrategy::default(),
@@ -845,6 +848,7 @@ mod tests {
             problem,
             PairCmgSchwarzOptions {
                 cmg: CmgOptions {
+                    max_levels: 128,
                     direct_threshold: 8,
                     ..CmgOptions::default()
                 },

@@ -63,6 +63,7 @@ fn relative_difference(left: &[f64], right: &[f64]) -> f64 {
 fn component_adapter_matches_original_pair_cmg_reference() {
     let problem = connected_problem(18, false);
     let cmg = cmg::CmgOptions {
+        max_levels: 128,
         direct_threshold: 4,
         ..cmg::CmgOptions::default()
     };
@@ -105,6 +106,7 @@ fn fixed_two_cycle_adapter_is_linear_symmetric_positive_and_range_preserving() {
         problem.clone(),
         PairCmgSchwarzOptions {
             cmg: cmg::CmgOptions {
+                max_levels: 128,
                 direct_threshold: 4,
                 ..cmg::CmgOptions::default()
             },
