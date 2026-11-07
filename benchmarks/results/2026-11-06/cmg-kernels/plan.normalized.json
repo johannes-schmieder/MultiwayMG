@@ -1,0 +1,79 @@
+{
+  "schema": "CMG_CONSOLIDATION_BOUNDED_COMPARISON_V1",
+  "frozen_utc": "2026-11-07T00:12:42.797673+00:00",
+  "cmg_candidate": "e5613e81fb3b03c78de98658b372646fa802aabb",
+  "status": "PREDECLARED_NOT_MEASURED",
+  "platform": "macOS arm64",
+  "schedule": [
+    [
+      "incumbent",
+      "candidate"
+    ],
+    [
+      "candidate",
+      "incumbent"
+    ],
+    [
+      "incumbent",
+      "candidate"
+    ],
+    [
+      "candidate",
+      "incumbent"
+    ],
+    [
+      "incumbent",
+      "candidate"
+    ],
+    [
+      "candidate",
+      "incumbent"
+    ]
+  ],
+  "acceptance": {
+    "metric": "median complete operation per cell",
+    "maximum_regression": "max(5% of incumbent median, 0.001 seconds)",
+    "retries": "none; preserve adverse/inconclusive results"
+  },
+  "cmgr": {
+    "incumbent": "7a22308f6ffd6de20c26b08a697fb8d4c66462da",
+    "candidate": "fe53bff2c9597f45f84957f733d01f917f074ad8",
+    "cells": [
+      "connected/1",
+      "connected/4",
+      "disconnected/1",
+      "disconnected/4"
+    ],
+    "timing_scope": "full demean_fixest call including setup/workspaces/certification; one discarded warmup per fresh process",
+    "science": "all finite; FE moment <=1e-8; candidate versus incumbent projection max difference <=1e-9*max(1,abs(x),abs(y))",
+    "candidate_binary_note": "Fresh install from exact fe53bff Git source package; hash must be frozen after build and before measurement."
+  },
+  "multiway": {
+    "incumbent": "a15391a77bba05f5fb6390266787ee2d43a3c05b",
+    "candidate": "e568a2cfd5d43cd1e5b879a404b22d55842c75e9",
+    "command": [
+      "issue4_pair_local",
+      "OUTPUT",
+      "calibration",
+      "cmg-fixed"
+    ],
+    "cells": "all 10 fixtures x RHS counts1,4,16,32; all three internal repetitions retained",
+    "timing_scope": "total_seconds = domain + setup including workspace + solve/certification; quality diagnostics outside timing",
+    "science": "every row certified and recurrence_converged, no error; existing residual gates unchanged"
+  },
+  "files": {
+    "${CONSOLIDATION_ROOT}/performance-e561/cmgr/prepare.R": "2d932f61a5b65d5a207aa81f975fa2ef9abffa314c7f98bc7f6345bb43a5b895",
+    "${CONSOLIDATION_ROOT}/performance-e561/cmgr/compare.R": "7d37d7ee028c9ece1fe602b14d3e5ee2589e8359400502332a57f7fe7a5dcfd6",
+    "${CONSOLIDATION_ROOT}/performance-e561/cmgr/connected.rds": "260e105ee7604eab07c744799179c76307febc9577093fcabebbda1e2bda7062",
+    "${CONSOLIDATION_ROOT}/performance-e561/cmgr/run.R": "77f005fe3fb79c31c50daa1ce2321a5eca916210d67d47b0d1b1898eedb8cf97",
+    "${CONSOLIDATION_ROOT}/performance-e561/cmgr/disconnected.rds": "e036d9309b2505db0bfebc078f9a5ef0678da3aaea439c5eab203f3bd50c0cfe",
+    "${CONSOLIDATION_ROOT}/performance-e561/run.py": "4b27b435af8537e43a9ff274555d198bd4e9b064304cbab689f8c59d2bdf2db7",
+    "${CONSOLIDATION_ROOT}/Rlib-e561/cmgr/libs/cmgr.so": "d9c434523a70bd7d57ed7f0a12ecfa33de6cce00b1c06443414c83e60fddf818",
+    "${CONSOLIDATION_ROOT}/Rlib-incumbent/cmgr/libs/cmgr.so": "4664bcbdb2e1654bb3218599776141016ff42998f784a59b77d71167915159e7",
+    "${MULTIWAY_REPO}/target/release/examples/issue4_pair_local": "cdd22216e6c4cfc016dd47f12feb2e0af12f73cfc34d69c817f7ca52fda775ae",
+    "${CONSOLIDATION_ROOT}/MultiwayMG-incumbent/target/release/examples/issue4_pair_local": "85f6522795c836d00ea8727de1434bb1678a0bac3ea73f2816f4313c63581ca6"
+  },
+  "inventory_validation": "Exact unique cell/repetition inventory, finite nonnegative timing/residuals, expected method/profile; added before any measurements.",
+  "candidate_change": "Reviewed upstream scalar kernels; all options, arithmetic order and cancellation preserved. Prior candidate study retained separately.",
+  "schedule_sha256": "b628ee2ece4b14922e4da515af06b20b75b53ddf3845b110a29045c4db37071a"
+}

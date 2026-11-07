@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "source": "e568a2cfd5d43cd1e5b879a404b22d55842c75e9",
+  "rows": 54,
+  "affected_pair_cmg_rows": 12,
+  "comparison": "All54row fields numerically exact against incumbent; existing submitted-operator residual/symmetry/range/energy certificates retained.",
+  "candidate_sha256": "60fd76386351effc5c79f6e3023624c6b057cc2aade93ecd4a4f673d1b52e36a"
+}
