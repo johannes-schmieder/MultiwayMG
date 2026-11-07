@@ -16,7 +16,7 @@ repository = "https://github.com/johannes-schmieder/MultiwayMG"
 [workspace.dependencies]
 thiserror = "2.0.16"
 nalgebra = { version = "0.33.2", default-features = false, features = ["std"] }
-cmg = { git = "https://github.com/johannes-schmieder/CMG", rev = "a4c927f49eb7a5391a63963d2c4c651a51cf1af5" }
+cmg = { git = "https://github.com/johannes-schmieder/CMG", rev = "e5613e81fb3b03c78de98658b372646fa802aabb" }
 schwarz-precond = { git = "https://github.com/johannes-schmieder/within", rev = "ffc1a5685ef9a049ac802687f2950319d7892bad", package = "schwarz-precond" }
 within = { git = "https://github.com/johannes-schmieder/within", rev = "ffc1a5685ef9a049ac802687f2950319d7892bad", package = "within" }
 
